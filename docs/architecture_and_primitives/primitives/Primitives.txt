@@ -1,0 +1,37 @@
+﻿
+
+
+
+1. Initialization:
+   1. Constant: Generate an n-dimensional tensor of a given shape with a constant number such as 0 or 1
+   2. Random: Generate an n-dimensional tensor of a given shape with pseudo random numbers
+   3. Input: Copy or take as input one n-dimensional tensor into another of identical shape
+2. Size and shape: For an tensor, compute its size along any dimension
+3. Slicing: Ability to select as input for another operation an n-m slice of an n-dimensional tensor
+4. Zero padding: Extend the size of an n-dimensional tensor to each side by a factor of s, and populate the newly created locations with zeros.
+5. Mathematical functions that can be applied to a scalar:
+   1. Exp
+   2. Tanh
+   3. Cos
+   4. Square
+   5. Power
+   6. Absolute value
+   7. Hinge or ReLU
+6. Point-wise functions:
+   1. Function: Using an n-dimensional tensor as an input, create a new n-dimensional tensor with a point-wise unary function (e.g. the list of mathematical functions above) or an LUT
+   2. Addition: Using two n-dimensional tensor of the same size as an input, create a new n-dimensional tensor with a point-wise addition
+   3. Multiplication: Using two n-dimensional tensor of the same size as an input, create a new n-dimensional tensor with a point-wise multiplication
+   4. Division: Using two n-dimensional tensor of the same size as an input, create a new n-dimensional tensor with a point-wise division
+   5. Comparison: Given two n-dimensional tensors of the same size, do a pointwise comparison and create a n-dimensional tensor with its elements denoting the identity of tensor with larger or smaller value at the respective locations. (e.g 0 or 1).
+7. Maxpool: Given a 2-dimensional tensor of nxm, create a 2d tensor of size (n/l)x(m/l) by selecting the maximum value from every non-overlapping region (patch) of lxl. 
+8. Scalar-tensor operations:
+   1. Scale: Multiply a scalar to all elements of a tensor.
+   2. Add: Add a scalar to all elements of a tensor.
+9. Reduction:
+   1. Sum: Reduce an n-dimensional tensor to (n-1)-dimensional by adding elements along one dimension
+   2. Product: Reduce an n-dimensional tensor to (n-1)-dimensional by multiplying elements along one dimension
+10. Expansion: 
+   1. Replication: Using an n-dimensional tensor create (n+1)-dimensional tensor by replicating the original tensor along a new dimension.
+   2. Dilation: Expand the size of an n-dimensional tensor in one of its dimensions by inserting zeros between two consecutive indices.
+11. Concatenation: Take two n-dimensional tensors whose sizes can differ only in one dimension, and concatenate them into a new n-dimensional tensor joined by the only the dimension that is allowed to differ.
+12. Convolution: Compute the result of convolution between an n-dimensional tensor and another n-dimensional tensor

@@ -1,0 +1,82 @@
+
+	Generic memory pool specification
+		Madhav Desai
+
+
+1. Overview
+-----------
+	
+	The generic memory pool provides storage capacity
+	for the AI/ML system.   The memory pool is characterized
+	by the following
+
+	a.  the amount of storage.
+	b.  the page size for the storage.
+	c.  the number of requesters.
+
+2. Behaviour
+-------------
+
+	The memory pool responds to requests from requesters.
+	The requests are as follows
+		
+	a. allocate request:
+		requests allocation of a buffer of necessarily contiguous 
+		pages.  The memory pool responds with a buffer pointer
+		or an invalid value if it is not possible to allocate
+		such a buffer.
+
+	b. read request:
+		Given a pointer, read a burst of double-words from the
+		pointer (as a starting address) and return the burst
+		to the requester.
+
+	c. write request:
+		Given a pointer and the dwords to be written, write those
+		dwords to the addresses specified.  A byte-mask is provided
+		for the last dword to be written.
+
+	d. de-allocate request:
+		requests de-allocation of a previously granted buffer.
+
+
+3. Internal organization
+-------------------------
+
+	Internally, the memory pool is organized into the following
+	functional blocks
+	
+	a.  input ports
+	
+	b.  interconnection network
+
+	c.  memory banks
+		These can be of two types
+			- internal RAM 
+			- external RAM (typically DRAM)..
+
+
+4. Performance parameters
+--------------------------
+
+	a. latency
+
+		should not exceed memory latency by more
+		than 16 clock cycles.
+
+	b. throughput.
+
+		should be > 0.5X peak bandwidth 
+		across all requesters. 
+
+	
+
+5. Cost
+-------------------------
+
+	Should be 
+
+		sub-quadratic in the number of requesters.
+
+		linear in the memory size.
+		

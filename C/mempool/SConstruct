@@ -1,0 +1,8 @@
+import os
+
+env = Environment(ENV = {'PATH' : os.environ['PATH']})
+COMPILATION_FLAGS = ' -g '
+
+env.Append(CPPPATH = './src/:./include:../common/include:')
+env.Library('./lib/libMempool', Glob('src/*.c'), CCFLAGS=COMPILATION_FLAGS)
+env.Program('./bin/test_mempool','util/test_mempool.c',CCFLAGS='-g',LINKFLAGS='-g', LIBS=['Mempool'], LIBPATH=['./lib'])

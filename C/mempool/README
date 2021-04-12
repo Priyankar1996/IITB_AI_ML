@@ -1,0 +1,8 @@
+This is a simple FIFO memory allocator.
+
+De-allocates must be in the same  order as in the  allocates.
+That is, the first allocated must be the first de-allocated.
+
+
+
+

@@ -1,4 +1,6 @@
-﻿// Initialization:
+﻿// NOTE: dimensions are powers of 2.
+
+// Initialization:
 //
 
 //
@@ -50,7 +52,7 @@ int getTensorSizeAndShape (Tensor* tensor, int dim);
 
 // 3. Slicing: Ability to select as input for another operation an n-m slice of an n-dimensional tensor
 //       
-void sliceTensorToPipe (Tensor* src, int ndims, int* n, Tensor* result);
+void sliceTensor(Tensor* src, int ndims, int* n, Tensor* result);
 //
 // Crop?
 // Squeeze?
@@ -77,7 +79,10 @@ void binaryOperatorOnTensor (Tensor* a, Tensor* b, Operation op, Tensor* result)
 void binaryLutOperatorOnTensor (Tensor* a, Tensor* b, LutPointer op, Tensor* result);
 
 // 7. Maxpool: Given a 2-dimensional tensor of nxm, create a 2d tensor of size (n/l)x(m/l) by selecting the maximum value from every non-overlapping region (patch) of lxl. 
-void maxPoolOfTensors (Tensor* src, int l, Tensor* result);
+//      E.g. for a 3-d  tensor, you could say pool along dims 1,2 and leave dim 3 
+//           untouched.
+//   
+void maxPoolOfTensors (Tensor* src, int l, Tensor* result, int* relevant_dimensions);
 //8. Scalar-tensor operations:
    //1. Scale: Multiply a scalar to all elements of a tensor.
    //2. Add: Add a scalar to all elements of a tensor.

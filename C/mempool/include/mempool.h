@@ -42,8 +42,8 @@ typedef struct __MemPoolRequest {
 	//          argument[0] = number of pages requested.
 	//     request type = deallocate
 	//          argument[0] = number of pages to be deallocated
-	//	    Note: request_tag is matched against top of
-	//	          requester stack.
+	//	    Note: request_tag is matched against front of
+	//	          requester queue.
 	//
 	//     read
 	//          argument_0 = number of words requested

@@ -17,15 +17,15 @@ uint32_t getTensorEntryIndexOffset(TensorDescriptor* td, uint32_t* indices)
 	// as [0,0], [0,1], [0,2] --> [0,D2-1] -> [1,0] ...
 	//   
 	int DSTART, DEND, DINCREMENT;
-	DSTART = (td->row_major_form ? (t->number_of_dimensions - 1) : 0);
-	DEND   = (td->row_major_form ? 0 : (t->number_of_dimensions - 1));
+	DSTART = (td->row_major_form ? (td->number_of_dimensions - 1) : 0);
+	DEND   = (td->row_major_form ? 0 : (td->number_of_dimensions - 1));
 	DINCREMENT = (td->row_major_form ? 1 : -1);
 
 	uint32_t SCALE_FACTOR = 1;
 	for(I = DSTART; I != DEND; I = I + DINCREMENT)
 	{
 		ret_value  +=  SCALE_FACTOR*indices(I);
-		SCALE_FACTOR = SCALE_FACTOR*t->dimensions[I];
+		SCALE_FACTOR = SCALE_FACTOR * td->dimensions[I];
 	}
 
 	return(ret_val);

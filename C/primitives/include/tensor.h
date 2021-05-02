@@ -37,6 +37,37 @@ typedef struct __Tensor{
 } Tensor;
 
 
+//
+// Given a tensor descriptor, get the index of the 
+//     byte/half-word/word/double-word 
+// element in the single-dimensional array in which
+// the tensor data is stored.
+//
+// Specify the index vector  of the element
+//    e.g. [2][13][79]
+// and get the offset in the array at which you
+// can find this element.
+//
+uint32_t getTensorEntryIndexOffset(TensorDescriptor* td, uint32_t* indices);
+
+//
+// Extract the values 
+//    [3:5][9:9][11:11]
+// from the tensor data array and 
+// store them in section array.
+//
+uint32_t extractSectionFromTensor(	
+					TensorDescriptor* td, 
+					void* tensor_data_array,
+					uint32_t* indices_low, uint32_t* indices_high,
+					void* section_data_array);
+uint32_t updateTensorArrayFromSection(
+					TensorDescriptor* td, 
+					void* tensor_data_array,
+					uint32_t* indices_low, uint32_t* indices_high,
+					void* section_data_array);
+
+
 // start
 void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, uint16_t mempool, Tensor* result);
 

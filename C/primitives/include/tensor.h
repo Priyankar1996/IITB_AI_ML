@@ -67,6 +67,11 @@ uint32_t updateTensorArrayFromSection(
 					uint32_t* indices_low, uint32_t* indices_high,
 					void* section_data_array);
 
+// To be implemented... manipulation of coordinate index vectors.
+void copyCoordinateVector (int ndim, uint32_t* vec, uint32_t* init_val);
+void incrementCoordinateVector (int ndim, uint32_t* vec, uint8_t row_major_form);
+uint32_t areCoordinateVectorsEqual(int ndim, uint32_t* a, uint32_t* b);
+
 
 // start
 void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, uint16_t mempool, Tensor* result);

@@ -46,6 +46,7 @@ uint32_t extractSectionFromTensor(
 {
 	uint32_t IVECTOR[MAX_DIMENSIONS];
 	
+
 	copyCoordinateVector(td->number_of_dimensions, IVECTOR, indices_low);
 	uint32_t destination_index = 0;
 	while(1)
@@ -54,11 +55,11 @@ uint32_t extractSectionFromTensor(
 		copyTensorEntry(td, section_data_array, destination_index, 
 					tensor_data_array, source_index);
 		
-		incrementCoordinateVector(IVECTOR, td->row_major_form);
+		incrementCoordinateVector(td->number_of_dimensions, IVECTOR, td->row_major_form);
 
 		destination_index++;
 
-		if(areCoordinateVectorsEqual(IVECTOR, indices_high))
+		if(areCoordinateVectorsEqual(td->number_of_dimensions, IVECTOR, indices_high))
 			break;
 
 		
@@ -83,10 +84,10 @@ uint32_t updateTensorArrayFromSection(TensorDescriptor* td,
 		copyTensorEntry(td, tensor_data_array, destination_index, 
 					section_data_array, source_index);
 		
-		incrementCoordinateVector(IVECTOR, td->row_major_form);
+		incrementCoordinateVector(td->number_of_dimensions, IVECTOR, td->row_major_form);
 		source_index++;
 
-		if(areCoordinateVectorsEqual(IVECTOR, indices_high))
+		if(areCoordinateVectorsEqual(td->number_of_dimensions, IVECTOR, indices_high))
 			break;
 
 	}

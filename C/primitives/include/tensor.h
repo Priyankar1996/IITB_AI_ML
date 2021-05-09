@@ -26,6 +26,8 @@ typedef struct __TensorDescriptor {
 
 } TensorDescriptor;
 
+uint32_t sizeofTensorDataInBytes(TensorDataType t);
+
 
 typedef struct __Tensor{
 	TensorDescriptor descriptor;
@@ -61,15 +63,19 @@ uint32_t extractSectionFromTensor(
 					void* tensor_data_array,
 					uint32_t* indices_low, uint32_t* indices_high,
 					void* section_data_array);
-uint32_t updateTensorArrayFromSection(
-					TensorDescriptor* td, 
+uint32_t updateTensorArrayFromSection( TensorDescriptor* td, 
 					void* tensor_data_array,
 					uint32_t* indices_low, uint32_t* indices_high,
 					void* section_data_array);
+void copyTensorEntry(TensorDescriptor* td,
+				void* dest_byte_array, int dest_index,
+				void* src_byte_array, int src_index);
 
 // To be implemented... manipulation of coordinate index vectors.
 void copyCoordinateVector (int ndim, uint32_t* vec, uint32_t* init_val);
-void incrementCoordinateVector (int ndim, uint32_t* vec, uint8_t row_major_form);
+
+// vec[] is incremented, using limits in dims.
+void incrementCoordinateVector (int ndim, uint32_t* dims, uint32_t* vec, uint8_t row_major_form);
 uint32_t areCoordinateVectorsEqual(int ndim, uint32_t* a, uint32_t* b);
 
 

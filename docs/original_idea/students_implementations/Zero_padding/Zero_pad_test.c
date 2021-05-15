@@ -33,11 +33,11 @@ void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, uint16_t me
 
     uint32_t p = 0;
     uint32_t npages,rem;
-    uint32_t consta = 512.0;
+    uint32_t constant_size = 512;
     uint32_t b=0,k;
     npages = ceil(s/512);
     printf("Number of pages required : %d\n",npages);
-    rem = (uint32_t) s % consta;
+    rem = (uint32_t) s % constant_size;
     for(p=0;p<npages;p++)
     {
         if(p != npages - 1)

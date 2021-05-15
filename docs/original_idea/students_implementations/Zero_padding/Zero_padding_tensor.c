@@ -52,6 +52,7 @@ void zeropadtensor(Tensor* src, uint32_t scale_factor, uint32_t constant, Tensor
 
 // Have to write the code for copying the tensor in the new tensor to upscale
 // the  tensor for padding.
+// Previous code did not work.
 void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t scale_factor,Tensor *result) {
   for(uint32_t i = src->mem_pool_buffer_pointer + scale_factor; i < src->descriptor.dimensions; i = i + scale_factor){
 		for (uint32_t j = src->mem_pool_buffer_pointer + scale_factor; j < src->descriptor.dimensions; j = j + 1){

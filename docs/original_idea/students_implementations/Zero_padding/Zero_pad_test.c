@@ -71,37 +71,7 @@ void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, uint16_t me
 
             fprintf(stderr,"\nInfo: wrote into page %d.\n", p);
         }
-        if(p == npages - 1)
-        {
-            req1.request_type = ALLOCATE;
-            req1.request_tag = p;
-            req1.arguments[0] = 1;
-
-            memPoolAccess(&mp_src, &req1, &resp1);
-            if(resp1.status !=  OK)
-            {
-                fprintf(stderr,"Error: could not allocate memory.\n");
-            }
-
-            for(k=0; k < rem; k++)
-            {
-                req1.write_data[k] = b+1;
-                b++;
-            }
-
-            req1.request_type = WRITE;
-            req1.request_tag  = p + npages;
-            req1.arguments[0] = MEMPOOL_PAGE_SIZE;
-            req1.arguments[1] = resp1.allocated_base_address;
-
-            memPoolAccess(&mp_src, &req1, &resp1);
-            if(resp1.status !=  OK)
-            {
-                fprintf(stderr,"Error: could not write into memory.\n");
-            }
-
-            fprintf(stderr,"\nInfo: wrote into page %d.\n", p);
-        }
+       
     }
     result->mem_pool_buffer_pointer = mp_src.mem_pool_buffer;
 }

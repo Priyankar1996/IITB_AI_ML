@@ -128,36 +128,7 @@ void getConstantTensor(int value,Tensor* result){
 
             fprintf(stderr,"\nInfo: wrote into page %d.\n", p);
         }
-        if(p == npages - 1)
-        {
-            req1.request_type = ALLOCATE;
-            req1.request_tag = p;
-            req1.arguments[0] = 1;
-
-            memPoolAccess(&result, &req1, &resp1);
-            if(resp1.status !=  OK)
-            {
-                fprintf(stderr,"Error: could not allocate memory.\n");
-            }
-
-            for(k=0; k < rem; k++)
-            {
-                req1.write_data[k] = 0;
-            }
-
-            req1.request_type = WRITE;
-            req1.request_tag  = p + npages;
-            req1.arguments[0] = MEMPOOL_PAGE_SIZE;
-            req1.arguments[1] = resp1.allocated_base_address;
-
-            memPoolAccess(&result, &req1, &resp1);
-            if(resp1.status !=  OK)
-            {
-                fprintf(stderr,"Error: could not write into memory.\n");
-            }
-
-            fprintf(stderr,"\nInfo: wrote into page %d.\n", p);
-        }
+        
     }
     result->mem_pool_buffer_pointer = result.mem_pool_buffer;
 }

@@ -5,12 +5,9 @@
 #include "tensor.h"
 #include <math.h>
 
-Tensor T1;
-Tensor T2;
-MemPool mp_src;
-MemPool mp_dest;
-MemPoolRequest req1;
-MemPoolResponse resp1;
+// declare global memory pool and initialize two mem-pools one for the source
+// and one for the destination.
+MemPool global_mem_pool_array[256];
 
 //This will be replaced by create tensor function.
 void createTensor (uint32_t ndim, uint32_t *dims, TensorDataType dt, uint32_t mempool, Tensor *result)

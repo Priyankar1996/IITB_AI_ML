@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "../../../../../C/mempool/include/mempool.h"
-#include "../../../../../C/primitives/include/tensor.h"
+#include "mempool.h"
+#include "tensor.h"
+#include "createTensor.h"
 
 #define NPAGES 8
 

@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../../../../../C/mempool/include/mempool.h"
-#include "../../../../../C/primitives/include/tensor.h"
+#include "mempool.h"
+#include "tensor.h"
 
 void fillTensorDescriptor(Tensor *t);
 void printTensorDescriptor(Tensor *t);

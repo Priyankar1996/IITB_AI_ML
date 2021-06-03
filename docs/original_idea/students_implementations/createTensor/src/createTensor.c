@@ -1,4 +1,11 @@
-#include "createTensor.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include "../../../../../C/mempool/include/mempool.h"
+#include "../../../../../C/primitives/include/tensor.h"
+#include "../include/createTensor.h"
 
 void fillTensorDescriptor(Tensor *t)
 // Takes details from the user about the tensor to be created.
@@ -93,11 +100,11 @@ int createTensor(Tensor *t,MemPool *mp, MemPoolRequest *mp_req,MemPoolResponse *
     }
     n_pages = ceil((3+t->descriptor.number_of_dimensions+n_elements)/MEMPOOL_PAGE_SIZE);
     printf("%d",n_pages);
+
     //2.Allocate that many number of pages in the mempool.
     mp_req->request_type = ALLOCATE;
     mp_req->request_tag = mp->write_pointer;
     mp_req->arguments[0] = n_pages;
-    // Should this arguement change to #pages when tensor uses more than 1 page to store data?
 
     memPoolAccess(mp, mp_req, mp_resp);
 
@@ -110,6 +117,7 @@ int createTensor(Tensor *t,MemPool *mp, MemPoolRequest *mp_req,MemPoolResponse *
     {
         printf("Allocated %d pages for the tensor.",n_pages);
     }
+
     //3. Store tensorDescriptor in the memory-pool.
     mp_req->write_data[0] = td.data_type;
     mp_req->write_data[1] = td.row_major_form;

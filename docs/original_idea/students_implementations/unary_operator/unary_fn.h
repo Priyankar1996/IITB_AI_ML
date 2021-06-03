@@ -15,11 +15,16 @@ Square: float32, float64, u8, u16, u32, u64, i8, i16, i32, i64
 Absolute: float32, float64, u8, u16, u32, u64, i8, i16, i32, i64
 
 input: tensor, operation; output: modified tensor
-*/
 
-// as of now float8 and float16 are not added
-// SINE and EXP are calculated upto 9 terms in the expansion 
-// 
+3-staged pipeline: Fetch, Compute, Writeback
+issue: pipelined execution in C model (which is sequential)
+
+as of now float8 and float16 are not added
+SINE and EXP functions used from the C math library 
+*/ 
+
+#define CACHE_SIZE      16 // in dwords so CACHE_SIZE*8 bytes 
+
 typedef enum {
 	SINE, 
 	EXP,

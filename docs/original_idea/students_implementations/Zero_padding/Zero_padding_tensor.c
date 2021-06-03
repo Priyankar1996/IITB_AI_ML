@@ -85,7 +85,7 @@ void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t s
             for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
         {
             readDataBlock(src->mem_pool_identifier,,);
-            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer + size_to_leave(Resultant_tensor->descriptor.dimensions[0]),,);
         }
         }
         
@@ -99,7 +99,7 @@ void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t s
             for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
         {
             readDataBlock(src->mem_pool_identifier,,);
-            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer + size_to_leave(Resultant_tensor->descriptor.dimensions[0]),,);
         }
         }
         }
@@ -116,7 +116,7 @@ void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t s
             for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
         {
             readDataBlock(src->mem_pool_identifier,,);
-            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer + size_to_leave(Resultant_tensor->descriptor.dimensions[0]),,);
         }
         }
         }
@@ -136,7 +136,7 @@ void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t s
             for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
         {
             readDataBlock(src->mem_pool_identifier,,);
-            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer + size_to_leave(Resultant_tensor->descriptor.dimensions[0]),,);
         }
         }
         }
@@ -151,6 +151,16 @@ void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t s
 }
 
 
+uint32_t size_to_leave(Tensor* Resultant_tensor){
+    uint32_t size = sizeofTensorDataInBytes(Resultant_tensor->descriptor.data_type) * Resultant_tensor->descriptor.dimensions[0];
+    return size;
+}
+
+// Here writing the code for the copy_tensor_for_expansion
+// Here we are trying to make the tensor for n dimensions using function call 
+// void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t scale_factor,Tensor *result) {
+
+// }
 
 
 // Have to write the code for filling the upscaled tensor with th initial

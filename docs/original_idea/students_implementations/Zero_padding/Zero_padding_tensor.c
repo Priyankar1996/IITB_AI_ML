@@ -16,6 +16,7 @@ MemPoolResponse resp2;
 
 void copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t scale_factor,Tensor *result);
 void getConstantTensor(int value, Tensor* result);
+uint32_t size_to_leave(Tensor* Resultant_tensor);
 
 // Zero padding: Extend the size of an n-dimensional tensor to each side
 // by a factor of s, and populate the newly created locations with zeros.

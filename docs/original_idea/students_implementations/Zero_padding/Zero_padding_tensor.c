@@ -45,7 +45,7 @@ void zeropadtensor(Tensor* src, uint32_t scale_factor, uint32_t constant, Tensor
 
     // copying the input tensor to the zero intialized tensor so as to create
     // the resultant tensor
-    copy_tensor_for_expansion(&Constant_tensor, &src, scale_factor , &result);
+    copy_tensor_for_expansion(&Constant_tensor, &src, scale_factor);
 
 }
 
@@ -53,13 +53,101 @@ void zeropadtensor(Tensor* src, uint32_t scale_factor, uint32_t constant, Tensor
 // Have to write the code for copying the tensor in the new tensor to upscale
 // the  tensor for padding.
 // Previous code did not work.
+// void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t scale_factor) {
+//   for(uint32_t i = src->mem_pool_buffer_pointer + scale_factor; i < (src->descriptor.dimensions - scale_factor); i = i + scale_factor){
+// 		for (uint32_t j = src->mem_pool_buffer_pointer + scale_factor; j < (src->descriptor.dimensions - scale_factor); j = j + 1){
+// 			// Have to edit the line below for data write.
+//             Resultant_tensor[i][j + scale_factor] = src[i][j];
+// 		}
+// 	}
+// }
+
+
+// Here writing the code for element access of the Tensor
+// in order to access the single element of the Tensor and Reading as well writing the data 
+// accordingly.
 void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t scale_factor,Tensor *result) {
-  for(uint32_t i = src->mem_pool_buffer_pointer + scale_factor; i < src->descriptor.dimensions; i = i + scale_factor){
-		for (uint32_t j = src->mem_pool_buffer_pointer + scale_factor; j < src->descriptor.dimensions; j = j + 1){
-			// Have to edit the line below for data write.
-            result[i][j + scale_factor] = src[i][j];
-		}
-	}
+    switch (Resultant_tensor->descriptor.number_of_dimensions)
+    {
+    case 1:
+        // Code for a single dimension
+        for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
+        {
+            readDataBlock(src->mem_pool_identifier,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+        }
+        
+        break;
+    case 2:
+        // Code for 2 dimensional Tensor
+        for (uint32_t j = scale_factor; j < (Resultant_tensor->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
+        {
+            readDataBlock(src->mem_pool_identifier,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+        }
+        }
+        
+        break;
+    case 3:
+        // Code for 3 dimensional Tensor
+        for (uint32_t k = scale_factor; k < (Resultant_tensor->descriptor.dimensions[2]); k++)
+        {
+            for (uint32_t j = scale_factor; j < (Resultant_tensor->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
+        {
+            readDataBlock(src->mem_pool_identifier,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+        }
+        }
+        }
+        
+        break;
+    case 4:
+        // Code for 4 dimensional Tensor
+        for (uint32_t l = scale_factor; k < Resultant_tensor->descriptor.dimensions[3]; k++)
+        {
+            for (uint32_t k = scale_factor; k < (Resultant_tensor->descriptor.dimensions[2]); k++)
+        {
+            for (uint32_t j = scale_factor; j < (Resultant_tensor->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
+        {
+            readDataBlock(src->mem_pool_identifier,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+        }
+        }
+        }
+        }
+        
+        break;
+    case 5:
+        // Code for 5 dimensional Tensor
+        for (uint32_t m = 0; m < Resultant_tensor->descriptor.dimensions[4]; m++)
+        {
+            for (uint32_t l = scale_factor; k < Resultant_tensor->descriptor.dimensions[3]; k++)
+        {
+            for (uint32_t k = scale_factor; k < (Resultant_tensor->descriptor.dimensions[2]); k++)
+        {
+            for (uint32_t j = scale_factor; j < (Resultant_tensor->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
+        {
+            readDataBlock(src->mem_pool_identifier,,);
+            writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
+        }
+        }
+        }
+        }
+        }
+        
+        break;
+    default:
+        printf("Check the Tensor for errors");
+        break;
+    }
 }
 
 

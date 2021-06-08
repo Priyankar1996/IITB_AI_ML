@@ -1,0 +1,15 @@
+The function maxPoolOfTensors() is used to perform pooling on the input tensor src, and stores the result in dst.
+
+Usage:
+void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode);
+
+Arguments:
+	src                -> Input tensor
+	dst                -> Output tensor
+	l                  -> Length of pooling (pool size)
+	stride             -> Stride of pooling
+	num_dims_to_pool   -> Number of dimensions to be pooled (a positive integer)
+	dims_to_pool       -> Array containing actual dimensions to be pooled
+	mode               -> Mode of operation (floor/ceiling)(0/1)
+	
+

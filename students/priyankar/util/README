@@ -1,0 +1,3 @@
+The testbench creates two tensor and checks whether the descriptors are correctly
+stored in the mempool. This will be extended with filling the tensors and reading
+the tensor's entries.

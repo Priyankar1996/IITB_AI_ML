@@ -1,0 +1,7 @@
+NAME
+    createTensor - creates a Tensor.
+
+DESCRIPTION
+    The createTensor() function takes in inputs from the user about the tensor's
+    descriptor and allocates space for that in the memory-pool.One can create all
+    the required tensors initially and fill them with the necessary values later.

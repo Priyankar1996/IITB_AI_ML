@@ -1,0 +1,9 @@
+                                    CREATETENSOR
+==================================================================================
+Q: How are tensors created?
+A:  As you have noticed in other documents that creating a tensor means allocating
+    storages in mempool, there is a certain discipline followed while storing them.
+    
+    It starts off with allocating spaces in the memory-pool.Then the tensor's 
+    descriptor is stored at the base address of the tensor and leaves spaces 
+    for the elements of the tensor to be filled by other methods.

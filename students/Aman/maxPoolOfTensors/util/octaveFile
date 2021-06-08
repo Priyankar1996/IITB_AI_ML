@@ -1,0 +1,86 @@
+function dst = maxPool(indices, src, dims_to_pool, length, stride,dims);
+  temp = src;
+  j = 1;
+  for i = 1:size(indices,2)
+    indice_low = indices(i);
+    indice_high = indices(i);
+    if (i == dims_to_pool(j))
+      indice_low = 1 + (indices(i)-1)*stride;
+      indice_high = (indices(i)-1)*stride + length;
+      if (j < size(dims_to_pool,2))
+        j = j + 1;
+      end
+    endif
+    if (i < size(indices,2))
+      temp = temp(indice_low:indice_high,:);
+      if (indice_high - indice_low > 0)
+        temp = max(temp);
+      end
+    else
+      temp = temp(indice_low:indice_high);
+    end
+    if (i < size(indices,2) - 1)
+      temp = reshape(temp,dims(i+1:end));
+    end
+  end
+  dst = max(temp);
+endfunction
+
+function indices = getIndices(i, out_dims);
+  temp_var = i-1;
+  temp_var2 = out_dims(1);
+  indices = zeros(size(out_dims,2));
+  indices(1) = rem(temp_var,temp_var2);
+  for j = 2:size(out_dims,2)
+    temp_var = (temp_var - indices(j-1)) / temp_var2;
+    temp_var2 = out_dims(j);
+    indices(j) = rem(temp_var,temp_var2);
+  end
+  indices = indices + 1;
+endfunction
+
+num_dims = input("");
+dims = zeros(1,num_dims);
+for i = 1:num_dims
+  dims(i) = input("");
+end
+length = input("");
+stride = input("");
+mode = input("");
+num_dims_to_pool = input("");
+dims_to_pool = zeros(1,num_dims_to_pool);
+for i = 1:num_dims_to_pool
+  dims_to_pool(i) = input("")+1;
+end
+
+src = zeros(dims);
+input_size = prod(dims);
+for i = 1:input_size
+  src(i) = i;
+end
+
+out_dims = zeros(1,num_dims);
+out_dims = dims;
+for i = 1:num_dims_to_pool
+  if (mode == 1)
+    out_dims(dims_to_pool(i)) = 1 + ceil((dims(dims_to_pool(i)) - length)/stride);
+  else
+    out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - length)/stride);
+  endif
+end
+output_size = prod(out_dims);
+
+dst = zeros(dims);
+for i = 1:output_size
+  indices = getIndices(i,out_dims);
+  dst(i) = maxPool(indices,src,dims_to_pool,length,stride,dims);
+end
+
+printf("Size of output is ");
+for i = 1:num_dims
+  printf("%d ",out_dims(i));
+end
+printf("\n");
+for i = 1:output_size
+  printf("%d %d\n",i, dst(i));
+end

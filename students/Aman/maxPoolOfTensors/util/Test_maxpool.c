@@ -8,7 +8,7 @@ MemPool pool;
 
 int main(int argc, char**argv){
 
-	FILE *file, *outFile;
+	FILE *file, *outFile, *octaveInFile;
 	if ((file = fopen(argv[1],"r")) == NULL){
 		fprintf(stderr,"Input File error\n");
 		exit(-1);
@@ -17,27 +17,35 @@ int main(int argc, char**argv){
 		fprintf(stderr,"Output File error\n");
 		exit(-1);
 	}
-
+	char *oct = "octaveInput.txt";
+	if ((octaveInFile = fopen(oct,"w")) == NULL){
+		fprintf(stderr,"Octave Input File error\n");
+		exit(-1);
+	}
 	Tensor T,B;
 	MemPoolRequest req;
 	MemPoolResponse resp;
 
 	//Take input tensor dimensions: num_diminsions followed by size of each dimension
 	fscanf(file,"%d",&T.descriptor.number_of_dimensions);
+	fprintf(octaveInFile,"%d\n",T.descriptor.number_of_dimensions);
 	for (int i = 0;i < T.descriptor.number_of_dimensions;i++){
-		fscanf(file,"%d",&T.descriptor.dimensions[i]);		
+		fscanf(file,"%d",&T.descriptor.dimensions[i]);
+		fprintf(octaveInFile,"%d\n",T.descriptor.dimensions[i]);
 	}
 	int length,stride,num_dims,mode;
 	fscanf(file,"%d%d%d%d",&length,&stride,&mode,&num_dims);
+	fprintf(octaveInFile,"%d\n%d\n%d\n%d\n",length,stride,mode,num_dims);
 	// mode = 0 for floor, 1 for ceil
 	
 	int dims_to_pool[num_dims];
 	for (int i = 0;i < num_dims;i++){
-		fscanf(file,"%d",&dims_to_pool[i]);		
+		fscanf(file,"%d",&dims_to_pool[i]);
+		fprintf(octaveInFile,"%d\n",dims_to_pool[i]);	
 	}
 
 	int size = getSizeOfTensor(&T);
-	T.descriptor.data_type = u32;
+	
 	int dsize = sizeofTensorDataInBytes(T.descriptor.data_type);
 	initMemPool(&pool,1,3 + 3*size*dsize/(MEMPOOL_PAGE_SIZE*8));
 	
@@ -45,10 +53,14 @@ int main(int argc, char**argv){
 	T.mem_pool_buffer_pointer = 0;
 	T.descriptor.row_major_form = 0;
 	
-	uint32_t temp[size];
+	T.descriptor.data_type = u8;
+	uint8_t temp[size];
+	uint8_t array[size];
 	for (int i = 0; i < size; i++)
 	{
-		temp[i] = i+1;
+		//temp[i] = i+1;					//Sequential data
+		temp[i] = random();					//Random data
+		fprintf(octaveInFile,"%d\n",temp[i]);
 	}
 
 	writeTensor(&T,&req,&resp,size,&temp);
@@ -64,15 +76,15 @@ int main(int argc, char**argv){
 	fprintf(outFile,"\n");
 	size = getSizeOfTensor(&B);
 	
-	uint32_t array[size];
 	readTensor(&B,&req,&resp,size,array);
 	for (int i = 0; i < size; i++)
 	{
 		fprintf(outFile,"%d %d\n",i+1, array[i]);
 	}
 	int system(const char *command);
+	fclose(octaveInFile);
 	char arr[100] = "octave octaveFile <";
-	strcat(arr,argv[1]);
+	strcat(arr,oct);
 	strcat(arr," >OctaveOutFile.txt\n");
 	system(arr);
 	fclose(file);

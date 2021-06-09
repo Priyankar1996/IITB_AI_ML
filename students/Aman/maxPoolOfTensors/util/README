@@ -1,0 +1,2 @@
+Test_maxpool.c is used to test the function declared in ../include/maxPoolOfTensors.h .
+It takes the parameters as user-inputs, fill in sequential/random data and gives a function call to maxPoolOfTensors() with these parameters. It compares the output with another maxPooled tensor computed using GNU Octave, and prints if there are differences in the outputs.

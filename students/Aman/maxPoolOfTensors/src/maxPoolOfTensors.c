@@ -328,7 +328,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	
 	// Define and initialize variables
 	uint8_t row_major = src->descriptor.row_major_form;
-	uint32_t size = getSizeOfTensor(src);
+	uint64_t size = getSizeOfTensor(src);
 	uint8_t x;
 	uint8_t dsize = sizeofTensorDataInBytes(src->descriptor.data_type);
 	int32_t cs = 1;
@@ -390,7 +390,9 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 		return;
 	}
 
-	/* Future optimizations for most common case (2D pool with continuous dims and l = stride)
+	/* //Future optimization
+	//Do the most common case (2D pool with continuous dims and l = stride)
+	//efficiently
 	if (num_dims_to_pool == 2)
 	{
 		return;
@@ -426,7 +428,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 				maxpool1D(&temp_Tensor, size, x, l, stride, cs, dst, mode, &req, &resp);
 			}
 
-			// Intermediate dimensions : from temp_Tensor to temp_Tensor
+			// Intermediate dimensions : From temp_Tensor to temp_Tensor
 			else 
 			{
 				maxpool1D(&temp_Tensor, size, x, l, stride, cs, &temp_Tensor, mode, &req, &resp);

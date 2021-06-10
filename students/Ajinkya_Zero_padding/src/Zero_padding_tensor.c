@@ -4,6 +4,7 @@
 #include "mempool.h"
 #include "tensor.h"
 #include <math.h>
+#include "zero_padding.h"
 
 MemPool 	pool1;
 MemPoolRequest 	req1;

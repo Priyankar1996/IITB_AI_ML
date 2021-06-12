@@ -1,0 +1,3 @@
+test_genRandomTensor.c is test file. It includes preliminary createTensor and preetyprint(which prints 2D slices sequentially) functions which can be later brought out if required. I am unsure as to how to test proper correctness of functions. Output seems to be random for u8, i8, float32, float64 as of now. test is binary file. 
+To make changes to test input, change the fields of corresping variables at the end of test_genRandomTensor.c
+To test, Include paths may need to be changed as required.

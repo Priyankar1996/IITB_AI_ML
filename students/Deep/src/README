@@ -1,0 +1,4 @@
+File names correspond to functions. I had to make changes to tensor.c hence its there so that changes can be compared. 
+
+mtwist.c, mtwist.h are for mersenne Twister PRNG. Currently taken from online source. Other RNGs are not complete yet. 
+Currently only float32, float64, u8, i8 are supported.

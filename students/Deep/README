@@ -1,0 +1,14 @@
+
+I have tried to implement genRandomTensor which generates random numbers of u8, i8, float32, float64 data types and will be extended for other data types. To test there is also a preetyprint function which displays tensor values (2D slices sequentially). Later this can be extended to generate random numbers in some distribution. 
+
+INTERFACE:
+void genRandomTensor(uint32_t seed, RngType t, Tensor* result);
+
+Argument RngType can be one of following
+	mersenne_Twister
+	wichmann_Hill,
+	philox,
+	combRecursive
+This is not explored completely yet and depends on use case. Currently I have borrowed online implementation of mersenne_Twister and default as rand() of C
+
+

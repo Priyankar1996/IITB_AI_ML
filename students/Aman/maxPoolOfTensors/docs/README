@@ -14,8 +14,10 @@ Arguments:
 
 Testbench Usage:
 	Ensure that GNU octave is installed on the device.
-	If using a device with Windows as the operating system, replace "cmp" on line 81 with "comp".
-	Run "gcc Test_maxpool.c -o name_of_executable" on Terminal
-	Run "./name_of_executable Test_inputs/inputFileName.txt" on Terminal
+	If using a device with Windows as the operating system, replace "cmp" on line 81 of Test_maxpool.c with "comp".
+	Run "make compile" to compile.
+	Run "make run" to run the script.
+	Alternatively, use "make all" to both compile and run.
+	Enter the filename (must be present in utils/Test_inputs/) in the prompt.
 	If the output is "If no message is printed after this one, there is no error!!", then the code works.
 	Else, there is a bug in the Code/Testbench(including octave code).

@@ -1,4 +1,4 @@
-#include "../include/maxpoolTensors.h"
+#include "../include/maxPoolOfTensors.h"
 
 void sort(int *array,int *num)
 // Sort the array in ascending order
@@ -112,6 +112,7 @@ uint64_t getBitMask(uint8_t dsize , uint8_t position)
 	default:
 		break;
 	}
+	return 0;
 }
 
 void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, void * temp)
@@ -232,11 +233,8 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 	}
 
 	// Define temporary memory variables
-	// Space = 8*(3+x) bytes; value of x is generally a few hundred
-	// (x is normally the lenth/breadth of feature vector)
-	// 4kB space for x = 509
-	// Future goal: Improve it to make it (24+x*dsize) bytes by packing data in temp_old
-	uint64_t temp_new , temp_old[x], temp_buffer, bitmask;
+	// Future goal: Improve size by packing data in temp_old
+	uint64_t temp_new , temp_old[l], temp_buffer, bitmask;
 	void *temp_var1 , *temp_var2;
 	temp_var1 = temp_old;
 	temp_var2 = &temp_new;
@@ -250,23 +248,24 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 	{	
 		for (k = 0;k < cs;k++)
 		{
-			// Read the line from src
-			req->request_type = READ;
-			for (uint16_t var = 0; var < x; var++)
-			{
-				req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+var*cs)*dsize/8;
-				memPoolAccess(src->mem_pool_identifier,req,resp);
-				// printf("%lu %lu \n",src->mem_pool_identifier->mem_pool_buffer[0] & 0xF, src->mem_pool_identifier->mem_pool_buffer[0] / 0xFFFFFFFF);
-				temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+var*cs)-(8/dsize)*((i*x*cs+k+var*cs)*dsize/8)))));
-				bitmask = getBitMask(dsize,0);
-				temp_old[var] = temp_old[var]&bitmask;
-				// printf("Old %ld\n",temp_old[var]);
-			}
-			
 			for (j = 0; j < num_1D_steps - mode; j++)
 			{	
+				// Read the line from src
+				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
+				req->request_type = READ;
+				for (uint16_t var = 0; var < l; var++)
+				{
+					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
+					memPoolAccess(src->mem_pool_identifier,req,resp);
+					// printf("%lu %lu \n",src->mem_pool_identifier->mem_pool_buffer[0] & 0xF, src->mem_pool_identifier->mem_pool_buffer[0] / 0xFFFFFFFF);
+					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
+					bitmask = getBitMask(dsize,0);
+					temp_old[var] = temp_old[var]&bitmask;
+					// printf("Old %ld\n",temp_old[var]);
+				}
+
 				// Perform max operation
-				maxWithSpacing(l, j*s,temp_var1, dt,temp_var2);
+				maxWithSpacing(l, 0,temp_var1, dt,temp_var2);
 				
 				// Read from dst
 				req->request_type = READ;
@@ -282,12 +281,26 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				req->request_type = WRITE;
 				req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 				req->write_data[0] = temp_buffer;
-				memPoolAccess(dst->mem_pool_identifier,req,resp);	
+				memPoolAccess(dst->mem_pool_identifier,req,resp);
+				// printf("%d %ld\n",i*num_1D_steps*cs + k+j*cs,dst->mem_pool_identifier->mem_pool_buffer[dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)]);
 			}
 			if (mode == ceil)
 			{
+				// Read the line from src
+				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
+				req->request_type = READ;
+				for (uint16_t var = 0; var < l; var++)
+				{
+					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
+					memPoolAccess(src->mem_pool_identifier,req,resp);
+					// printf("%lu %lu \n",src->mem_pool_identifier->mem_pool_buffer[0] & 0xF, src->mem_pool_identifier->mem_pool_buffer[0] / 0xFFFFFFFF);
+					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
+					bitmask = getBitMask(dsize,0);
+					temp_old[var] = temp_old[var]&bitmask;
+					// printf("Old %ld\n",temp_old[var]);
+				}
 				// Perform max operation
-				maxWithSpacing(x - (num_1D_steps-1)*s, j*s, temp_var1, dt,temp_var2);
+				maxWithSpacing(x - (num_1D_steps-1)*s, 0, temp_var1, dt,temp_var2);
 				
 				// Read from dst
 				req->request_type = READ;

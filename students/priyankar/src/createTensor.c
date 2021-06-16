@@ -96,7 +96,7 @@ int createTensor(Tensor *t,MemPool *mp, MemPoolRequest *mp_req,MemPoolResponse *
     
     if((3+t->descriptor.number_of_dimensions+n_elements) % MEMPOOL_PAGE_SIZE > 0)
         n_pages++ ;
-    printf("%u,%u\n",n_pages,x);
+        
     //2.Allocate that many number of pages in the mempool.
     mp_req->request_type = ALLOCATE;
     mp_req->request_tag = mp->write_pointer;

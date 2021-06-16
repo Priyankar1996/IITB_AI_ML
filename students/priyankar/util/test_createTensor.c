@@ -30,9 +30,9 @@ int main(int argc,char* argv[])
     _err_ = createTensor(&b,&pool,&req,&resp) || _err_;
     
     if(_err_)
-		fprintf(stderr,"FAILURE.\n");
-	else
-		fprintf(stderr,"SUCCESS.\n");
+		  fprintf(stderr,"FAILURE.\n");
+	  else
+		  fprintf(stderr,"SUCCESS.\n");
 
 	return(_err_);
 }

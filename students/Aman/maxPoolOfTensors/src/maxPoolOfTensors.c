@@ -53,6 +53,11 @@ void readTensor(Tensor *T, MemPoolRequest *req, MemPoolResponse *resp, int size,
 		req->arguments[0] = ((temp_var*dsize/8 >= MAX_SIZE_OF_REQUEST_IN_WORDS) ? MAX_SIZE_OF_REQUEST_IN_WORDS : 1 - (-temp_var*dsize/8));
 		req->arguments[1] = T->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (size - temp_var)*dsize/8;
 		memPoolAccess(T->mem_pool_identifier,req,resp);
+		if (resp->status == NOT_OK)
+		{
+			fprintf(stderr,"Mempool read error. Called from read()");
+			exit(-1);
+		}
 		uint32_t num_iterations = ((temp_var*dsize/8 >= MAX_SIZE_OF_REQUEST_IN_WORDS) ? MAX_SIZE_OF_REQUEST_IN_WORDS*8/dsize : temp_var);
 		for (int i = 0; i < num_iterations; i++)
 		{
@@ -82,7 +87,12 @@ void writeTensor(Tensor *T, MemPoolRequest *req, MemPoolResponse *resp, int size
 		{
 			copyTensorEntry(&desc,req->write_data,i,array,i+size-temp_var);
 		}
-		memPoolAccess(T->mem_pool_identifier,req,resp);	
+		memPoolAccess(T->mem_pool_identifier,req,resp);
+		if (resp->status == NOT_OK)
+		{
+			fprintf(stderr,"Mempool write error. Called from write()");
+			exit(-1);
+		}
 		temp_var -= num_iterations;
 	}
 }
@@ -235,9 +245,8 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 	// Define temporary memory variables
 	// Future goal: Improve size by packing data in temp_old
 	uint64_t temp_new , temp_old[l], temp_buffer, bitmask;
-	void *temp_var1 , *temp_var2;
+	void *temp_var1;
 	temp_var1 = temp_old;
-	temp_var2 = &temp_new;
 
 	// Stride = 1; number of elements to fetch = 1
 	req->arguments[0] = 1;
@@ -257,6 +266,11 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				{
 					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
 					memPoolAccess(src->mem_pool_identifier,req,resp);
+					if (resp->status == NOT_OK)
+					{
+						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
+						exit(-1);
+					}
 					// printf("%lu %lu \n",src->mem_pool_identifier->mem_pool_buffer[0] & 0xF, src->mem_pool_identifier->mem_pool_buffer[0] / 0xFFFFFFFF);
 					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
 					bitmask = getBitMask(dsize,0);
@@ -265,16 +279,21 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				}
 
 				// Perform max operation
-				maxWithSpacing(l, 0,temp_var1, dt,temp_var2);
+				maxWithSpacing(l, 0,temp_var1, dt,&temp_new);
 				
 				// Read from dst
 				req->request_type = READ;
 				req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 				memPoolAccess(dst->mem_pool_identifier,req,resp);
+				if (resp->status == NOT_OK)
+				{
+					fprintf(stderr,"Mempool read error. Called from maxpool1D()");
+					exit(-1);
+				}
 				
 				// Compute write data
 				bitmask = ~getBitMask(dsize,i*num_1D_steps*cs + k + j*cs - (8/dsize)*((i*num_1D_steps*cs + k + j*cs)*dsize/8));
-				temp_buffer = (resp->read_data[0] & bitmask) + (temp_new << (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
+				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0)) << (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
 				// printf("From m1D: %ld %ld\n", temp_new , temp_buffer);
 				
 				// Write back to dst
@@ -282,6 +301,11 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 				req->write_data[0] = temp_buffer;
 				memPoolAccess(dst->mem_pool_identifier,req,resp);
+				if (resp->status == NOT_OK)
+				{
+					fprintf(stderr,"Mempool write error. Called from maxpool1D()");
+					exit(-1);
+				}
 				// printf("%d %ld\n",i*num_1D_steps*cs + k+j*cs,dst->mem_pool_identifier->mem_pool_buffer[dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)]);
 			}
 			if (mode == ceil)
@@ -293,6 +317,11 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				{
 					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
 					memPoolAccess(src->mem_pool_identifier,req,resp);
+					if (resp->status == NOT_OK)
+					{
+						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
+						exit(-1);
+					}
 					// printf("%lu %lu \n",src->mem_pool_identifier->mem_pool_buffer[0] & 0xF, src->mem_pool_identifier->mem_pool_buffer[0] / 0xFFFFFFFF);
 					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
 					bitmask = getBitMask(dsize,0);
@@ -300,22 +329,32 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 					// printf("Old %ld\n",temp_old[var]);
 				}
 				// Perform max operation
-				maxWithSpacing(x - (num_1D_steps-1)*s, 0, temp_var1, dt,temp_var2);
+				maxWithSpacing(x - (num_1D_steps-1)*s, 0, temp_var1, dt,&temp_new);
 				
 				// Read from dst
 				req->request_type = READ;
 				req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 				memPoolAccess(dst->mem_pool_identifier,req,resp);
+				if (resp->status == NOT_OK)
+					{
+						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
+						exit(-1);
+					}
 				
 				// Compute write data
 				bitmask = ~getBitMask(dsize,i*num_1D_steps*cs + k + j*cs - (8/dsize)*((i*num_1D_steps*cs + k + j*cs)*dsize/8));
-				temp_buffer = (resp->read_data[0] & bitmask) + (temp_new << (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
+				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0))<< (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
 				
 				// Write back to dst
 				req->request_type = WRITE;
 				req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 				req->write_data[0] = temp_buffer;
 				memPoolAccess(dst->mem_pool_identifier,req,resp);
+				if (resp->status == NOT_OK)
+				{
+					fprintf(stderr,"Mempool write error. Called from maxpool1D()");
+					exit(-1);
+				}
 			}
 		}
 	}

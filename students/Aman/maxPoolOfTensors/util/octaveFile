@@ -6,7 +6,7 @@ function dst = maxPool(indices, src, dims_to_pool, length, stride,dims);
     indice_high = indices(i);
     if (i == dims_to_pool(j))
       indice_low = 1 + (indices(i)-1)*stride;
-      indice_high = (indices(i)-1)*stride + length;
+      indice_high = min(dims(i),(indices(i)-1)*stride + length);
       if (j < size(dims_to_pool,2))
         j = j + 1;
       end

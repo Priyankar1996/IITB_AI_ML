@@ -9,7 +9,7 @@ Tested for 4 dimension small tensors ( < 1024 words)
 dimensions: d0 d1 d2 ..... dx ...... dn-1
 
 1.  start with 0 index 
-2. find the unequal dimension => dx
+2. find the unequal dimension (dx)
 3. switch tensor
 4. find start and end indices for copy
 5. request elements required to copy
@@ -19,21 +19,21 @@ dimensions: d0 d1 d2 ..... dx ...... dn-1
 
 we copy tensor from index_start : index_end 
 
-### index_start calc:-
+### `index_start` calc:-
 **row major**:-</br>
 increment [d0:dx] </br>
 **column major**:- </br>
 increment [dx:dn-1]</br>
 
-### index_end calc:- 
+### `index_end` calc:- 
 row major:-</br>
 index_start[0:dx] max(dx+1) ...... max(dn-1)</br>
 column major:-</br>
 max(d0) max (d1) .... index_start[dx:dn-1] </br>
 
-IS == index_start</br>
-IE == index_end</br>
-RS == result_start</br>
+IS == `index_start`</br>
+IE == `index_end`</br>
+RS == `result_start`</br>
 RE == result_end</br>
 
 #### Example  1

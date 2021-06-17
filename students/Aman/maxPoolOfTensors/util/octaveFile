@@ -54,8 +54,8 @@ mode = input("");
 num_dims_to_pool = input("");
 dims_to_pool = zeros(1,num_dims_to_pool);
 for i = 1:num_dims_to_pool
-  if (row_major) dims_to_pool(num_dims_to_pool+1-i) = dims_to_pool - input("");
-  else dims_to_pool(i) = input("")+1;
+  if (row_major) dims_to_pool(num_dims_to_pool+1-i) = num_dims - input("");
+  else dims_to_pool(i) = input("")+1;;
   endif
 end
 
@@ -69,7 +69,7 @@ out_dims = zeros(1,num_dims);
 out_dims = dims;
 for i = 1:num_dims_to_pool
   if (mode == 1)
-    out_dims(dims_to_pool(i)) = 1 + ceil((dims(dims_to_pool(i)) - length)/stride);
+    out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - 1)/stride);
   else
     out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - length)/stride);
   endif

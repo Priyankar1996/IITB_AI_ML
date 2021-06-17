@@ -42,7 +42,7 @@ uint32_t getSizeOfTensor(Tensor *T)
 void readTensor(Tensor *T, MemPoolRequest *req, MemPoolResponse *resp, int size, void *array)
 // Read data of tensor T into array
 {
-	assert(size > 0);
+	// assert(size > 0);
 	TensorDescriptor desc = T->descriptor;
 	uint8_t dsize = sizeofTensorDataInBytes(desc.data_type);
 	req->request_type = READ;
@@ -70,7 +70,7 @@ void readTensor(Tensor *T, MemPoolRequest *req, MemPoolResponse *resp, int size,
 void writeTensor(Tensor *T, MemPoolRequest *req, MemPoolResponse *resp, int size, void *array)
 // Write array data as the data of tensor T 
 {
-	assert(size > 0);
+	// assert(size > 0);
 	TensorDescriptor desc = T->descriptor;
 	uint8_t dsize = sizeofTensorDataInBytes(desc.data_type);
 	req->request_type = WRITE;
@@ -235,7 +235,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 	// Number of pooling units = size of tensor upto dim_to_pool (dim_to_pool not included)
 	int num_units = size/(x*cs);
 	// num_1D_steps = floor/ceil (1 + ((x-l)/s)), i.e. the size of output along dim_to_pool 
-	int num_1D_steps = ((mode == floor) ? 1 + (x-l)/s : 1 - (l-x)/s);
+	int num_1D_steps = ((mode == floor) ? 1 + (x-l)/s : 1 + (x-1)/s);
 	if (l>x)
 	{
 		fprintf(stderr,"Warning: Length exceeds dimension.\n");
@@ -262,7 +262,8 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				// Read the line from src
 				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
 				req->request_type = READ;
-				for (uint16_t var = 0; var < l; var++)
+				uint16_t var_max = ((l < x - j*s) ? l : x - j*s);
+				for (uint16_t var = 0; var < var_max; var++)
 				{
 					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
 					memPoolAccess(src->mem_pool_identifier,req,resp);
@@ -279,7 +280,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				}
 
 				// Perform max operation
-				maxWithSpacing(l, 0,temp_var1, dt,&temp_new);
+				maxWithSpacing(var_max, 0,temp_var1, dt,&temp_new);
 				
 				// Read from dst
 				req->request_type = READ;
@@ -313,7 +314,8 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				// Read the line from src
 				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
 				req->request_type = READ;
-				for (uint16_t var = 0; var < l; var++)
+				uint16_t var_max = ((l < x - (num_1D_steps-1)*s) ? l : x - (num_1D_steps-1)*s);
+				for (uint16_t var = 0; var < var_max; var++)
 				{
 					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
 					memPoolAccess(src->mem_pool_identifier,req,resp);
@@ -329,7 +331,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 					// printf("Old %ld\n",temp_old[var]);
 				}
 				// Perform max operation
-				maxWithSpacing(x - (num_1D_steps-1)*s, 0, temp_var1, dt,&temp_new);
+				maxWithSpacing(var_max, 0, temp_var1, dt,&temp_new);
 				
 				// Read from dst
 				req->request_type = READ;
@@ -381,10 +383,9 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	// Define and initialize variables
 	uint8_t row_major = src->descriptor.row_major_form;
 	uint64_t size = getSizeOfTensor(src);
-	uint8_t x;
+	uint32_t x;
 	uint8_t dsize = sizeofTensorDataInBytes(src->descriptor.data_type);
-	int32_t cs = 1;
-	int8_t i = 0;
+	int64_t cs = 1;
 
 	//Update destination descriptor	
 	dst->descriptor.row_major_form = row_major;
@@ -392,7 +393,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
 	
 	// Decide direction of movement based on row-major/column-major form
-	int iStart,iEnd,iInc,jStart,jEnd,jInc;
+	int8_t i,j,iStart,iEnd,iInc,jStart,jEnd,jInc;
 	if (row_major == 1)
 	{
 		iStart = num_dims_to_pool - 1;
@@ -416,7 +417,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	// maxPool1D : No need of intermediate tensors for 1D op
 	if (num_dims_to_pool == 1)
 	{
-		for (int j = jStart; j != jEnd;j += jInc)
+		for (j = jStart; j != jEnd;j += jInc)
 		// Loop through all dimensions
 		{
 			x = src->descriptor.dimensions[j];
@@ -427,7 +428,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 				maxpool1D(src, size, x, l, stride, cs, dst, mode, &req, &resp);
 
 				// Update parameters
-				int factor = (x<l) ? mode : ((mode == floor) ? 1+(x-l)/stride : 1 - (l-x)/stride);
+				int32_t factor = (x<l) ? mode : ((mode == floor) ? 1+((x-l)/stride) : 1+((x-1)/stride));
 				size = size*factor/x;
 				dst->descriptor.dimensions[j] = factor;
 				cs *= factor;
@@ -460,7 +461,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 
 
 	// Generalised maxPool (num_dims_to_pool > 1)
-	for (int j = jStart; j != jEnd;j += jInc)
+	for (j = jStart; j != jEnd;j += jInc)
 	// Loop through all dimensions
 	{
 		x = src->descriptor.dimensions[j];
@@ -487,7 +488,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 			}
 			
 			// Update parameters
-			int factor = (x<l) ? mode : ((mode == floor) ? 1+(x-l)/stride : 1 - (l-x)/stride);
+			int32_t factor = (x<l) ? mode : ((mode == floor) ? 1+((x-l)/stride) : 1+((x-1)/stride));
 			size = size*factor/x;
 			dst->descriptor.dimensions[j] = factor;
 			cs *= factor;

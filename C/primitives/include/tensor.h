@@ -1,7 +1,7 @@
 #ifndef __tensor_h___
 #define __tensor_h___
 
-#define MAX_DIMENSIONS 64;
+#define MAX_DIMENSIONS 64
 
 typedef enum __TensorDataType {
 	u8, u16, u32, u64, 
@@ -33,7 +33,7 @@ typedef struct __Tensor{
 	TensorDescriptor descriptor;
 
 	// buffer identifier.
-	uint16_t mem_pool_identifier;
+	uintptr_t mem_pool_identifier;
 	uint32_t mem_pool_buffer_pointer;
 
 } Tensor;
@@ -78,9 +78,6 @@ void copyCoordinateVector (int ndim, uint32_t* vec, uint32_t* init_val);
 void incrementCoordinateVector (int ndim, uint32_t* dims, uint32_t* vec, uint8_t row_major_form);
 uint32_t areCoordinateVectorsEqual(int ndim, uint32_t* a, uint32_t* b);
 
-
-// start
-void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, uint16_t mempool, Tensor* result);
 
 
 #endif

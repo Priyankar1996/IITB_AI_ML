@@ -1,18 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include "../include/tensor.h"
+#include <assert.h>
+
 uint32_t sizeofTensorDataInBytes(TensorDataType t)
 {
 	uint32_t ret_val =  0;
 	switch(t)
 	{
-		case u8 | i8 | float8:
+		case u8:
+		case i8:
+		case float8:
 			ret_val = 1;
 			break;
-		case u16 | i16 | float16:
+		case u16:
+		case i16:
+		case float16:
 			ret_val = 2;
 			break;
-		case u32 | i32 | float32:
+		case u32:
+		case i32:
+		case float32:
 			ret_val = 4;
 			break;
-		case u64 | i64 | float64 :
+		case u64:
+		case i64:
+		case float64:
 			ret_val = 8;
 			break;
 		default:
@@ -20,6 +34,7 @@ uint32_t sizeofTensorDataInBytes(TensorDataType t)
 	}
 	return(ret_val);
 }
+
 
 
 void copyCoordinateVector (int ndim, uint32_t* vec, uint32_t* init_val)
@@ -38,9 +53,9 @@ void incrementCoordinateVector (int ndim, uint32_t* dims, uint32_t* vec, uint8_t
 
 	int I;
 	int CARRY = 0;
-	for(I = Istart; I != End; I += deltaI)
+	for(I = Istart; I != Iend; I += deltaI)
 	{
-		if((vec[I] + CARRY) = dims[I])
+		if((vec[I] + CARRY) == dims[I])
 		{
 			vec[I] = 0;
 			CARRY = 1;
@@ -82,7 +97,7 @@ uint32_t areCoordinateVectorsEqual(int ndim, uint32_t* a, uint32_t* b)
 //
 uint32_t getTensorEntryIndexOffset(TensorDescriptor* td, uint32_t* indices)
 {
-	uint32_t ret_value = 0;
+	uint32_t ret_value = 0,I;
 	//
 	// in row major form, the tensor id's are listed
 	// as [0,0], [0,1], [0,2] --> [0,D2-1] -> [1,0] ...
@@ -101,11 +116,11 @@ uint32_t getTensorEntryIndexOffset(TensorDescriptor* td, uint32_t* indices)
 	uint32_t SCALE_FACTOR = 1;
 	for(I = DSTART; I != DEND; I = I + DINCREMENT)
 	{
-		ret_value  +=  SCALE_FACTOR*indices(I);
+		ret_value  +=  SCALE_FACTOR*indices[I];
 		SCALE_FACTOR = SCALE_FACTOR * td->dimensions[I];
 	}
 
-	return(ret_val);
+	return(ret_value);
 }
 
 

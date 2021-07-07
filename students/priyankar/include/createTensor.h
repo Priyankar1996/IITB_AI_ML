@@ -42,7 +42,7 @@ int createTensor(Tensor *t,MemPool *mp);
 //      Values in the memory pool are modified.
 // RETURN VALUES:
 //      0 on Success, 1 on Failure.
-int destroyTensor(Tensor *t, MemPool *mp);
+int destroyTensor(Tensor *t);
 
 
 // ASSUMPTIONS:
@@ -58,7 +58,7 @@ int destroyTensor(Tensor *t, MemPool *mp);
 //      Values in the memory pool are modified.
 // RETURN VALUES:
 //       0 on Success, 1 on Failure.
-int initializeTensor(Tensor *t,uint64_t initial_value, MemPool *mp);
+int initializeTensor(Tensor *t,uint64_t initial_value);
 
 
 // ASSUMPTIONS:
@@ -77,7 +77,6 @@ int initializeTensor(Tensor *t,uint64_t initial_value, MemPool *mp);
 //      Values in the dest mempool are modified.
 // RETURN VALUES:
 //      0 on Success, 1 on Failure.
-int copyTensor(Tensor *src, Tensor *dest, MemPool *mp_src,
-                                          MemPool *mp_dest);
+int copyTensor(Tensor *src, Tensor *dest);
 
 #endif

@@ -1,5 +1,4 @@
 #include "createTensor.h"
-
 int createTensor(Tensor *t,MemPool *mp)
 {
     MemPoolRequest mp_req;
@@ -9,14 +8,14 @@ int createTensor(Tensor *t,MemPool *mp)
     //
     uint16_t i,num_elems=1,n_pages;
     uint32_t dataSize = sizeofTensorDataInBytes(t->descriptor.data_type);
-    t->mem_pool_identifier = mp->mem_pool_index;
+    t->mem_pool_identifier = (uintptr_t)((void*)(mp));
     t->mem_pool_buffer_pointer = mp->write_pointer*512;
     for(i=0;i<t->descriptor.number_of_dimensions;i++)
     {
         num_elems *= t->descriptor.dimensions[i];
     }
 
-    n_pages = CEILING(CEILING((3+MAX_DIMENSIONS)*4 + num_elems*dataSize,8),MEMPOOL_PAGE_SIZE);
+    n_pages = CEILING(CEILING(num_elems*dataSize,8),MEMPOOL_PAGE_SIZE);
     //    
     //Allocate that many pages in the mempool.
     //
@@ -33,41 +32,14 @@ int createTensor(Tensor *t,MemPool *mp)
     }
     else
     {
-        printf("SUCCESS: Allocated %d page(s).%u\n",n_pages);
-        //
-        //Store tensorDescriptor in the memory-pool.
-        //
-        void *array;
-        array = mp_req.write_data;
-
-		*(((uint32_t*)array) + 1) = t->descriptor.data_type;
-        *(((uint32_t*)array) + 2) = t->descriptor.row_major_form;
-        *(((uint32_t*)array) + 3) = t->descriptor.number_of_dimensions;
-        for(i=0;i<t->descriptor.number_of_dimensions;i++)
-        {
-            *(((uint32_t*)array) + 3 + i) = t->descriptor.dimensions[i];
-        }
-        mp_req.request_type = WRITE;
-        mp_req.request_tag = mp->write_pointer+1*1024;
-        mp_req.arguments[0] = CEILING((3+MAX_DIMENSIONS)*4,8);
-	    mp_req.arguments[1] = t->mem_pool_buffer_pointer;
-        memPoolAccess(mp, &mp_req, &mp_resp);
-        if(mp_resp.status !=  OK)
-	    {
-	    	printf("ERROR: Could not write TensorDescriptor into Mempool.\n");
-		    return(1);
-	    }
-        else
-        {
-            printf("SUCCESS: Wrote TensorDescriptor into Mempool.\n");
-            t->mem_pool_buffer_pointer += (uint64_t)34;
-            return(0);
-        }
+        printf("SUCCESS: Allocated %d page(s).Base address is %d\n",n_pages,mp_resp.allocated_base_address);
+        return(0);
     }
 }
 
-int initializeTensor (Tensor* t, uint64_t initial_value, MemPool* mp)
+int initializeTensor (Tensor* t, uint64_t initial_value)
 {
+    MemPool *mp = (MemPool*)(t->mem_pool_identifier);
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
 	uint32_t data_size = sizeofTensorDataInBytes(t->descriptor.data_type); 
@@ -180,8 +152,9 @@ int initializeTensor (Tensor* t, uint64_t initial_value, MemPool* mp)
 	}	
 }
 
-int destroyTensor(Tensor *t, MemPool *mp)
+int destroyTensor(Tensor *t)
 {
+    MemPool *mp = (MemPool*)(t->mem_pool_identifier);
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
     uint32_t data_size = sizeofTensorDataInBytes(t->descriptor.data_type); 
@@ -195,7 +168,6 @@ int destroyTensor(Tensor *t, MemPool *mp)
     //
     // Deallocates the pages provided to the tensor.
     //
-    t->mem_pool_buffer_pointer -= (uint64_t)34;
     mp_req.request_type = DEALLOCATE;
     mp_req.request_tag = t->mem_pool_buffer_pointer;
     mp_req.arguments[0] = n_pages;
@@ -216,9 +188,10 @@ int destroyTensor(Tensor *t, MemPool *mp)
     }
 }
 
-int copyTensor(Tensor *src, Tensor *dest, MemPool *mp_src, MemPool *mp_dest)
+int copyTensor(Tensor *src, Tensor *dest)
 {
-   
+    MemPool *mp_src = (MemPool*)(src->mem_pool_identifier);
+    MemPool *mp_dest = (MemPool*)(dest->mem_pool_identifier);
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
     uint32_t i,j,num_elems=1,flag=0;

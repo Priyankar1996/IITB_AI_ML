@@ -31,8 +31,6 @@ int createTensor(Tensor *t,MemPool *mp);
 
 // ASSUMPTIONS:
 //      1. t has the tensor's description available in it.
-//      2. mp is the pointer to the mempool used to destroy
-//         tensor.
 // SUMMARY:
 //      destroyTensor deallocates the pages containing the tensor  
 //      from the specified mempool in a FIFO manner.
@@ -48,8 +46,7 @@ int destroyTensor(Tensor *t);
 // ASSUMPTIONS:
 //      1. t has the tensor's description available in it.
 //      2. initial_value is the value that the tensor will be
-//         intialised with in the mempool.
-//      3. mp is the pointer to mempool to be used by createTensor.     
+//         intialised with in the mempool.     
 // SUMMARY:
 //      initializeTensor fills up the memory allocated to the tensor
 //      with an initial value.
@@ -65,10 +62,6 @@ int initializeTensor(Tensor *t,uint64_t initial_value);
 //      1. src has the source tensor's description available in it.
 //      2. dest has the destination tensor's description available 
 //         in it.
-//      3. mp_src is the pointer to the mempool to be used by
-//         source Tensor.
-//      4. mp_dest is the pointer to the mempool to be used by
-//         destination tensor.
 // SUMMARY:
 //      copyTensor reads data from src tensor and writes them 
 //      to dest tensor.

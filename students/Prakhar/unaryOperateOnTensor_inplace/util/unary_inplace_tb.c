@@ -2,27 +2,23 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
-#include "../src/unary_fn.c" 
+#include "../src/unary_inplace_fn.c" 
 // tensor.h
 #include "../../../priyankar/src/createTensor.c"  // made some edits to createTensor.c 
 #define NPAGES 8
 #define MIN(a,b) (((a)<(b))?(a):(b))
 int fillTensorValues (Tensor* t,uint32_t num_elems, double offset );
 
-MemPool 	pool_a;
-MemPool 	pool_b;
+MemPool 	pool;
 MemPoolRequest 	req;
 MemPoolResponse resp;
 
 Tensor a;
-Tensor b;
 
-int _err_a = 0;
-int _err_b = 0;
+int _err_ = 0;
 
 int main(){
-    initMemPool(&pool_a,1,NPAGES);
-	initMemPool(&pool_b,1,NPAGES);
+    initMemPool(&pool,1,NPAGES);
 	//define tensor
 	const TensorDataType dataType = float64;
 	const int8_t row_major_form = 1;
@@ -46,15 +42,11 @@ int main(){
 	}
 	// printf("num_elems = %d", num_elems);
 	//create tensor
-    _err_a = createTensor(&a,&pool_a) + _err_a;
-    if(_err_a!=0){
-		fprintf(stderr,"create Tensor a FAILURE.\n");
-	}
+    _err_ = createTensor(&a,&pool) + _err_;
 
-	_err_b = createTensor(&b,&pool_b) + _err_b;
-    if(_err_b!=0){
-		fprintf(stderr,"create Tensor a FAILURE.\n");
-	}
+    if(_err_!=0)
+		fprintf(stderr,"create Tensor FAILURE.\n");
+
 
 	uint32_t element_size = sizeofTensorDataInBytes(a.descriptor.data_type); 
 
@@ -63,7 +55,7 @@ int main(){
 	fillTensorValues(&a, num_elems, offset);
 
 	//call the function
-	unaryOperateOnTensor(&a, &b, operation);
+	unaryOperateOnTensor_inplace(&a, operation);
 
 	//check A (results)
 	req.request_type = READ;
@@ -76,10 +68,10 @@ int main(){
 		int elementsToRead = MIN(elements_left,MAX_SIZE_OF_REQUEST_IN_WORDS);
 		req.request_tag = 1; // confirm dis
 		req.arguments[0] =  elementsToRead; 
-		req.arguments[1] = b.mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter;
+		req.arguments[1] = a.mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter;
 		req.arguments[2] = 1; // stride = 1 as pointwise
 		
-		memPoolAccess((MemPool *)(b.mem_pool_identifier),&req,&resp); 
+		memPoolAccess((MemPool *)(a.mem_pool_identifier),&req,&resp); 
 		
 		if(resp.status == NOT_OK) {
 			fprintf(stderr,"read Tensor FAILURE.\n");
@@ -235,7 +227,6 @@ int main(){
 		}	
 	}
 	destroyTensor(&a);
-	destroyTensor(&b);
 }
 
 

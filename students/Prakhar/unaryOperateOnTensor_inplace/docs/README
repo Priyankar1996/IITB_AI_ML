@@ -1,0 +1,6 @@
+NAME 
+    unaryOperateOnTensor_inplace - performs inplace unary operations on Tensor 
+
+DESCRIPTION
+    The unaryOperateOnTensor_inplace(Tensor *t, Operation op) function takes in input from user as a tensor and the operation to be performed.
+    It writes the output in the input Tensor t itself as inplace function. 

@@ -1,16 +1,14 @@
-#ifndef _unary_fn_h____
-#define _unary_fn_h____
+#ifndef _unary_inplace_fn_h____
+#define _unary_inplace_fn_h____
 
 #include "../../../../C/mempool/include/mempool.h"//mempool.h
 #include "../../../../C/primitives/include/tensor.h"
 #include "../../../../C/primitives/src/tensor.c"
 #include "../../../../C/mempool/src/mempool.c"
 
-
 // Maximum allowed chunk size is 1024 
 #define CHUNK_SIZE      32 // in dwords --> (CHUNK_SIZE*8) bytes 
 
-// Description of available Operation types
 typedef enum {
 	SINE, 
 	EXP,
@@ -26,12 +24,12 @@ typedef enum {
 //      1. The memory space for tensor in a mempool is contiguously allocated
 //      2. Appropriate datatypes are used as per the input data. 
 // SUMMARY:
-//      unaryOperateOnTensor performs unary operation on the given src Tensor
-//		and writes the result to dest Tensor
+//      unaryOperateOnTensor performs unary operation on the given Tensor t
+//		and writes the result back to same Tensor t. 
 // SIDE-EFFECTS:
-//      MemPools of src and dest should be non-overlapping else will lead to issues
+//      NULL
 // RETURN VALUES:
 //      NULL
-void unaryOperateOnTensor(Tensor* src,Tensor* dest, Operation op);
+void unaryOperateOnTensor_inplace(Tensor* t, Operation op);
 
 #endif

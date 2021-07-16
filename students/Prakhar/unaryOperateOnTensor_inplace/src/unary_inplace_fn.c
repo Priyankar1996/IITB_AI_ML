@@ -1,4 +1,4 @@
-#include "../include/unary_fn.h"
+#include "../include/unary_inplace_fn.h"
 #include<stdint.h>
 #include <stdio.h>
 #include <math.h>
@@ -7,9 +7,8 @@
 // 	
 // }
 // contiguous storage in memory pool for all the data types - assumed
-void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
-	// unary operator: performs b = f(a) where f is specified by op
-	// src --> a  || dest --> b
+void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
+	// in-place unary operator: performs a = f(a) where f is specified by op
 	// supported op --> sine, exp, ReLU, square, absolute
 
 	TensorDescriptor td_a = a->descriptor;
@@ -440,7 +439,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 		for(int i=0; i<num_dwords_stored ;i=i+1){
 			req_a.write_data[i] = store_here[i];
 		}
-		memPoolAccess((MemPool *)(b->mem_pool_identifier),&req_a,&mpr);
+		memPoolAccess((MemPool *)(a->mem_pool_identifier),&req_a,&mpr);
 	}
 	return; 
 }

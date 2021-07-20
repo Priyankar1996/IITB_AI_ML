@@ -38,6 +38,7 @@ typedef struct __Tensor{
 
 } Tensor;
 
+uint32_t numberOfElementsInTensor(Tensor *t);
 
 //
 // Given a tensor descriptor, get the index of the 

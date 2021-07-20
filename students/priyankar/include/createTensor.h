@@ -45,8 +45,8 @@ int destroyTensor(Tensor *t);
 
 // ASSUMPTIONS:
 //      1. t has the tensor's description available in it.
-//      2. initial_value is the value that the tensor will be
-//         intialised with in the mempool.     
+//      2. initial_value is the pointer to the initial value to be
+//	   stored in the tensor.     
 // SUMMARY:
 //      initializeTensor fills up the memory allocated to the tensor
 //      with an initial value.
@@ -55,7 +55,7 @@ int destroyTensor(Tensor *t);
 //      Values in the memory pool are modified.
 // RETURN VALUES:
 //       0 on Success, 1 on Failure.
-int initializeTensor(Tensor *t,uint64_t initial_value);
+int initializeTensor(Tensor *t,void* initial_value);
 
 
 // ASSUMPTIONS:

@@ -186,7 +186,7 @@ int main(int argc,char* argv[])
     {
         _err_ = createTensor(a+i,&pool1) || 
                 createTensor(a_diff_pool+i,&pool2) ||
-                initializeTensor(a+i,i) ||
+                initializeTensor(a+i,&i) ||
                 _err_;
         
         _err_ = copyTensor(a+i,a_diff_pool+i) || _err_;

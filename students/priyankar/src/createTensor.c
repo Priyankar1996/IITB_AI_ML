@@ -6,16 +6,14 @@ int createTensor(Tensor *t,MemPool *mp)
     //
     // Calculate number of pages required to store the tensor.
     //
-    uint16_t i,num_elems=1,n_pages;
+    uint16_t i,n_pages;
     uint32_t dataSize = sizeofTensorDataInBytes(t->descriptor.data_type);
     t->mem_pool_identifier = (uintptr_t)((void*)(mp));
     t->mem_pool_buffer_pointer = mp->write_pointer*512;
-    for(i=0;i<t->descriptor.number_of_dimensions;i++)
-    {
-        num_elems *= t->descriptor.dimensions[i];
-    }
+    
+    uint32_t num_elems = numberOfElementsInTensor(t);
 
-    n_pages = CEILING(CEILING(num_elems*dataSize,8),MEMPOOL_PAGE_SIZE);
+    n_pages = CEILING(num_elems*dataSize,8*MEMPOOL_PAGE_SIZE);
     //    
     //Allocate that many pages in the mempool.
     //
@@ -37,20 +35,18 @@ int createTensor(Tensor *t,MemPool *mp)
     }
 }
 
-int initializeTensor (Tensor* t, uint64_t initial_value)
+int initializeTensor (Tensor* t, void* initial_value)
 {
     MemPool *mp = (MemPool*)(t->mem_pool_identifier);
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
 	uint32_t data_size = sizeofTensorDataInBytes(t->descriptor.data_type); 
-    uint32_t i,num_elems = 1;
+    uint32_t i,num_elems = 1,flag = 0;
     
 	TensorDataType dataType = t->descriptor.data_type;
 
-    for(i=0;i<t->descriptor.number_of_dimensions;i++)
-    {
-        num_elems *= t->descriptor.dimensions[i];
-    }
+    num_elems = numberOfElementsInTensor(t);
+
 	mp_req.request_type = WRITE;
 	//mp_req.request_tag = mp->write_pointer+2*1024; 
 
@@ -79,42 +75,42 @@ int initializeTensor (Tensor* t, uint64_t initial_value)
 		{
 			switch(dataType){
 			case u8: ; 
-				uint8_t val8 = (uint8_t) initial_value;
+				uint8_t val8 = *((uint8_t*) initial_value);
 				*(((uint8_t*)array) + i) = val8;
 				break;
 
 			case u16: ;
-				uint16_t val16 = (uint16_t) initial_value;
+				uint16_t val16 = *((uint16_t*) initial_value);
 				*(((uint16_t*)array) + i) = val16;
 				break;
 
 			case u32: ;
-				uint32_t val32 = (uint32_t) initial_value;
+				uint32_t val32 = *((uint32_t*) initial_value);
 				*(((uint32_t*)array) + i) = val32;
 				break;
 
 			case u64: ; 
-				uint64_t val64 = (uint64_t) initial_value;
+				uint64_t val64 = *((uint64_t*) initial_value);
 				*(((uint64_t*)array) + i) = val64;
 				break;
 				
 			case i8: ;
-				int8_t val8i = (int8_t) initial_value;
+				int8_t val8i = *((int8_t*) initial_value);
 				*(((int8_t*)array) + i) = val8i;
 				break;
 
 			case i16: ;
-				int16_t val16i = (int16_t) initial_value;
+				int16_t val16i = *((int16_t*) initial_value);
 				*(((int16_t*)array) + i) = val16i;
 				break;
 
 			case i32: ; 
-				int32_t val32i = (int32_t) initial_value ;
+				int32_t val32i = *((int32_t*) initial_value) ;
 				*(((int32_t*)array) + i) = val32i;
 				break;
 
 			case i64: ;
-				int64_t val64i = (int64_t) initial_value;
+				int64_t val64i = *((int64_t*) initial_value);
 				*(((int64_t*)array) + i) = val64i;
 				break;
 
@@ -127,12 +123,12 @@ int initializeTensor (Tensor* t, uint64_t initial_value)
 				// break;
 
 			case float32: ;
-				float val32f = (float) initial_value;
+				float val32f = *((float*) initial_value);
 				*(((float*)array) + i) = val32f;
 				break;
 
 			case float64: ;
-				double val64f = (double) initial_value;
+				double val64f = *((double*) initial_value);
 				*(((double*)array) + i) = val64f;
 				break;
 				
@@ -140,17 +136,17 @@ int initializeTensor (Tensor* t, uint64_t initial_value)
 		}
 		memPoolAccess(mp, &mp_req, &mp_resp); 
 		if(mp_resp.status == OK) 
-        {
-            printf("SUCCESS: Tensor initialised.\n");
-            return(0);
-		}
+            flag = flag || 0;
         else 
-        {
-			printf("ERROR: Failed to initialise tensor.\n");
-			return(1);
-		}
-	}	
+			flag = flag || 1;
+	}
+    if(flag == 0)
+        printf("SUCCESS: Tensors Initialised.");
+    else    
+        printf("ERROR: Couldn't be initialised.");
+    return flag;	
 }
+
 
 int destroyTensor(Tensor *t)
 {
@@ -159,12 +155,10 @@ int destroyTensor(Tensor *t)
     MemPoolResponse mp_resp;
     uint32_t data_size = sizeofTensorDataInBytes(t->descriptor.data_type); 
     uint32_t i,num_elems = 1,n_pages;
-    for(i=0;i<t->descriptor.number_of_dimensions;i++)
-    {
-        num_elems *= t->descriptor.dimensions[i];
-    }
+    
+    num_elems = numberOfElementsInTensor(t);
         
-    n_pages = CEILING(CEILING((3+MAX_DIMENSIONS)*4+num_elems*data_size,8),MEMPOOL_PAGE_SIZE);
+    n_pages = CEILING(num_elems*data_size,8*MEMPOOL_PAGE_SIZE);
     //
     // Deallocates the pages provided to the tensor.
     //
@@ -198,10 +192,7 @@ int copyTensor(Tensor *src, Tensor *dest)
     
     uint32_t data_size = sizeofTensorDataInBytes(src->descriptor.data_type); 
     
-    for(i=0;i<src->descriptor.number_of_dimensions;i++)
-    {
-        num_elems *= src->descriptor.dimensions[i];
-    }
+    num_elems = numberOfElementsInTensor(src);
     //
     //  Reads a tensor from mempool. The data received is written 
     //  into the write buffer of the requester to the destination
@@ -217,7 +208,7 @@ int copyTensor(Tensor *src, Tensor *dest)
         mp_req.request_type = READ;
         mp_req.arguments[0] = elements_to_read;
         mp_req.arguments[1] = src->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter;
-		mp_req.arguments[2] = 1;//stride
+	    mp_req.arguments[2] = 1;//stride
 
         memPoolAccess(mp_src, &mp_req, &mp_resp);
         if(mp_resp.status !=OK)

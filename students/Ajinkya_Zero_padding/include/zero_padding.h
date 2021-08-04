@@ -25,7 +25,7 @@ void copyTensorEntry(TensorDescriptor* td,void* dest_byte_array, int dest_index,
 
 
 // Used for zero padding
-void zeropadtensor(Tensor* src, uint32_t scale_factor, uint32_t constant, Tensor* result);
+void zeropad(Tensor* src, uint32_t scale_factor, uint32_t constant, Tensor* dest);
 
 
 #endif

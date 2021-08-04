@@ -390,8 +390,8 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         }
         break;
     case 7:
-        // Code for 6 dimensional tensor
-        for (uint32_t p = 0; p < (src->descriptor.dimensions[p] ); p++)
+        // Code for 7 dimensional tensor
+        for (uint32_t p = 0; p < (src->descriptor.dimensions[6] ); p++)
         {
             for (uint32_t n = 0; n < (src->descriptor.dimensions[5] ); n++)
         {

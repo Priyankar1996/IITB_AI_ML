@@ -182,22 +182,24 @@ void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t s
     {
     case 1:
         // Code for a single dimension
-        for (uint32_t i = scale_factor; i < (Resultant_tensor->descriptor.dimensions[0] - scale_factor); i++ )
+        for (uint32_t i = 0; i < (Resultant_tensor->descriptor.dimensions[0]); i++ )
         {
             // readDataBlock(src->mem_pool_identifier,,);
             // writeDataBlock(Resultant_tensor->mem_pool_buffer_pointer,,);
-            uint32_t *address = getTensorEntryIndexOffset(src,i);
+            uint32_t desti[1] = {i+scale_factor};
+            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
+            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
         req.request_type = READ;
         req.request_tag  = req.request_tag + 1;
         req.arguments[0] = 1;
-        req.arguments[1] = src_base;
+        req.arguments[1] = src_base + address1;
         //printf("req arguments[1] is %d",req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(mp1, &req, &resp);
+        memPoolAccess(&mp1, &req, &resp);
         if(resp.status != OK)
         {
             fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
@@ -212,19 +214,19 @@ void  copy_tensor_for_expansion(Tensor *Resultant_tensor,Tensor *src, uint32_t s
         req.request_type = WRITE;
         req.request_tag = req.request_tag + 1;
         req.arguments[0] = 1;
-        req.arguments[1] = dest_base;
+        req.arguments[1] = dest_base + address2;
         req.write_data[0] = temp_buffer;
 
         //generate write req for dest.
-        memPoolAccess(mp2, &req, &resp);
+        memPoolAccess(&mp2, &req, &resp);
         if(resp.status !=  OK)
         {
             fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
         }
         fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
 
-        src_base++;
-        dest_base++;
+        // src_base++;
+        // dest_base++;
         ///////////////////////////////////////////////////
         }
         

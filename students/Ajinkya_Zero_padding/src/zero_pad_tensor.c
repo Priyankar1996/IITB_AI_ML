@@ -458,6 +458,312 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         }
         }
         break;     
+    case 8:
+        // Code for 8 dimensional tensor
+        for (uint32_t q = 0; q < (src->descriptor.dimensions[7] ); q++)
+        {
+            for (uint32_t p = 0; p < (src->descriptor.dimensions[6] ); p++)
+        {
+            for (uint32_t n = 0; n < (src->descriptor.dimensions[5] ); n++)
+        {
+            for (uint32_t m = 0; m < (src->descriptor.dimensions[4] ); m++)
+        {
+            for (uint32_t l = 0; l < (src->descriptor.dimensions[3] ); l++)
+        {
+            for (uint32_t k = 0; k < (src->descriptor.dimensions[2] ); k++)
+        {
+            for (uint32_t j = 0; j < (src->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = 0; i < (src->descriptor.dimensions[0] ); i++ )
+        {
+            // readDataBlock(src->mem_pool_identifier,,);
+            // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
+            uint32_t ind[8] = {i,j,k,l,m,n,p,q};
+            uint32_t desti[8] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor};
+            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
+            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+
+        /////////////////////////////////////////////
+            //read one word at a time from src tensor
+        req.request_type = READ;
+        req.request_tag  = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = src_base + address1;
+        //printf("req arguments[1] is %d",req.arguments[1]);
+
+        //generate read request for src
+        memPoolAccess(&mp1, &req, &resp);
+        if(resp.status != OK)
+        {
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+
+        //store into a temporary local buffer.
+        temp_buffer = resp.read_data[0];
+        //printf("Temporary buffer value : %d",temp_buffer);
+
+        //write one word at a time int dest tensor.
+        req.request_type = WRITE;
+        req.request_tag = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = dest_base + address2;
+        req.write_data[0] = temp_buffer;
+
+        //generate write req for dest.
+        memPoolAccess(&mp2, &req, &resp);
+        if(resp.status !=  OK)
+        {
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+
+        // src_base++;
+        // dest_base++;
+        ///////////////////////////////////////////////////
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        break;
+    case 9:
+        // Code for 9 dimensional tensor
+        for (uint32_t r = 0; r < (src->descriptor.dimensions[8] ); r++)
+        {
+            for (uint32_t q = 0; q < (src->descriptor.dimensions[7] ); q++)
+        {
+            for (uint32_t p = 0; p < (src->descriptor.dimensions[6] ); p++)
+        {
+            for (uint32_t n = 0; n < (src->descriptor.dimensions[5] ); n++)
+        {
+            for (uint32_t m = 0; m < (src->descriptor.dimensions[4] ); m++)
+        {
+            for (uint32_t l = 0; l < (src->descriptor.dimensions[3] ); l++)
+        {
+            for (uint32_t k = 0; k < (src->descriptor.dimensions[2] ); k++)
+        {
+            for (uint32_t j = 0; j < (src->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = 0; i < (src->descriptor.dimensions[0] ); i++ )
+        {
+            // readDataBlock(src->mem_pool_identifier,,);
+            // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
+            uint32_t ind[9] = {i,j,k,l,m,n,p,q,r};
+            uint32_t desti[9] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor,r+scale_factor};
+            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
+            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+
+        /////////////////////////////////////////////
+            //read one word at a time from src tensor
+        req.request_type = READ;
+        req.request_tag  = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = src_base + address1;
+        //printf("req arguments[1] is %d",req.arguments[1]);
+
+        //generate read request for src
+        memPoolAccess(&mp1, &req, &resp);
+        if(resp.status != OK)
+        {
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+
+        //store into a temporary local buffer.
+        temp_buffer = resp.read_data[0];
+        //printf("Temporary buffer value : %d",temp_buffer);
+
+        //write one word at a time int dest tensor.
+        req.request_type = WRITE;
+        req.request_tag = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = dest_base + address2;
+        req.write_data[0] = temp_buffer;
+
+        //generate write req for dest.
+        memPoolAccess(&mp2, &req, &resp);
+        if(resp.status !=  OK)
+        {
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+
+        // src_base++;
+        // dest_base++;
+        ///////////////////////////////////////////////////
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        break;
+    case 10:
+        // Code for 10 dimensional tensor
+        for (uint32_t s = 0; s < (src->descriptor.dimensions[9] ); s++)
+        {
+            for (uint32_t r = 0; r < (src->descriptor.dimensions[8] ); r++)
+        {
+            for (uint32_t q = 0; q < (src->descriptor.dimensions[7] ); q++)
+        {
+            for (uint32_t p = 0; p < (src->descriptor.dimensions[6] ); p++)
+        {
+            for (uint32_t n = 0; n < (src->descriptor.dimensions[5] ); n++)
+        {
+            for (uint32_t m = 0; m < (src->descriptor.dimensions[4] ); m++)
+        {
+            for (uint32_t l = 0; l < (src->descriptor.dimensions[3] ); l++)
+        {
+            for (uint32_t k = 0; k < (src->descriptor.dimensions[2] ); k++)
+        {
+            for (uint32_t j = 0; j < (src->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = 0; i < (src->descriptor.dimensions[0] ); i++ )
+        {
+            // readDataBlock(src->mem_pool_identifier,,);
+            // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
+            uint32_t ind[10] = {i,j,k,l,m,n,p,q,r,s};
+            uint32_t desti[10] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor,r+scale_factor,s+scale_factor};
+            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
+            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+
+        /////////////////////////////////////////////
+            //read one word at a time from src tensor
+        req.request_type = READ;
+        req.request_tag  = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = src_base + address1;
+        //printf("req arguments[1] is %d",req.arguments[1]);
+
+        //generate read request for src
+        memPoolAccess(&mp1, &req, &resp);
+        if(resp.status != OK)
+        {
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+
+        //store into a temporary local buffer.
+        temp_buffer = resp.read_data[0];
+        //printf("Temporary buffer value : %d",temp_buffer);
+
+        //write one word at a time int dest tensor.
+        req.request_type = WRITE;
+        req.request_tag = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = dest_base + address2;
+        req.write_data[0] = temp_buffer;
+
+        //generate write req for dest.
+        memPoolAccess(&mp2, &req, &resp);
+        if(resp.status !=  OK)
+        {
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+
+        // src_base++;
+        // dest_base++;
+        ///////////////////////////////////////////////////
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        break;
+        case 11:
+        // Code for 11 dimensional tensor
+        for (uint32_t t = 0; t < (src->descriptor.dimensions[10]] ); t++)
+        {
+            for (uint32_t s = 0; s < (src->descriptor.dimensions[9] ); s++)
+        {
+            for (uint32_t r = 0; r < (src->descriptor.dimensions[8] ); r++)
+        {
+            for (uint32_t q = 0; q < (src->descriptor.dimensions[7] ); q++)
+        {
+            for (uint32_t p = 0; p < (src->descriptor.dimensions[6] ); p++)
+        {
+            for (uint32_t n = 0; n < (src->descriptor.dimensions[5] ); n++)
+        {
+            for (uint32_t m = 0; m < (src->descriptor.dimensions[4] ); m++)
+        {
+            for (uint32_t l = 0; l < (src->descriptor.dimensions[3] ); l++)
+        {
+            for (uint32_t k = 0; k < (src->descriptor.dimensions[2] ); k++)
+        {
+            for (uint32_t j = 0; j < (src->descriptor.dimensions[1]); j++)
+        {
+            for (uint32_t i = 0; i < (src->descriptor.dimensions[0] ); i++ )
+        {
+            // readDataBlock(src->mem_pool_identifier,,);
+            // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
+            uint32_t ind[11] = {i,j,k,l,m,n,p,q,r,s,t};
+            uint32_t desti[11] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor,r+scale_factor,s+scale_factor,t+scale_factor};
+            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
+            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+
+        /////////////////////////////////////////////
+            //read one word at a time from src tensor
+        req.request_type = READ;
+        req.request_tag  = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = src_base + address1;
+        //printf("req arguments[1] is %d",req.arguments[1]);
+
+        //generate read request for src
+        memPoolAccess(&mp1, &req, &resp);
+        if(resp.status != OK)
+        {
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+
+        //store into a temporary local buffer.
+        temp_buffer = resp.read_data[0];
+        //printf("Temporary buffer value : %d",temp_buffer);
+
+        //write one word at a time int dest tensor.
+        req.request_type = WRITE;
+        req.request_tag = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = dest_base + address2;
+        req.write_data[0] = temp_buffer;
+
+        //generate write req for dest.
+        memPoolAccess(&mp2, &req, &resp);
+        if(resp.status !=  OK)
+        {
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+        }
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+
+        // src_base++;
+        // dest_base++;
+        ///////////////////////////////////////////////////
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        break;
     default:
         printf("Check the Tensor for errors");
         break;

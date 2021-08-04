@@ -11,6 +11,7 @@ typedef enum __TensorDataType {
 
 typedef struct __TensorDescriptor {
 
+	// one data type is enough?
 	TensorDataType data_type;
 
 

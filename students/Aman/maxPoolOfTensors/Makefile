@@ -1,15 +1,17 @@
 CC=gcc
 CFLAGS = -Wall
+SRC=src
+INCLUDE=include
 
 all: compile run
 
 compile: maxPoolOfTensors.o Test_maxpool.o
 	cd bin; $(CC) $(CFLAGS) -o Testbench maxPoolOfTensors.o Test_maxpool.o
 
-maxPoolOfTensors.o: src/maxPoolOfTensors.c include/maxPoolOfTensors.h
-	cd bin;	$(CC) $(CFLAGS) -c ../src/maxPoolOfTensors.c
+maxPoolOfTensors.o: $(SRC)/maxPoolOfTensors.c $(INCLUDE)/maxPoolOfTensors.h
+	cd bin;	$(CC) $(CFLAGS) -c ../$(SRC)/maxPoolOfTensors.c
 
-Test_maxpool.o: util/Test_maxpool.c include/maxPoolOfTensors.h
+Test_maxpool.o: util/Test_maxpool.c $(INCLUDE)/maxPoolOfTensors.h
 	cd bin;	$(CC) $(CFLAGS) -c ../util/Test_maxpool.c
 
 run:

@@ -182,7 +182,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				for (uint16_t var = 0; var < var_max; var++)
 				{
 					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
-					memPoolAccess(src->mem_pool_identifier,req,resp);
+					memPoolAccess((MemPool*)(src->mem_pool_identifier),req,resp);
 					if (resp->status == NOT_OK)
 					{
 						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
@@ -201,7 +201,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				// Read from dst
 				req->request_type = READ;
 				req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
-				memPoolAccess(dst->mem_pool_identifier,req,resp);
+				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 				if (resp->status == NOT_OK)
 				{
 					fprintf(stderr,"Mempool read error. Called from maxpool1D()");
@@ -217,7 +217,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				req->request_type = WRITE;
 				req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 				req->write_data[0] = temp_buffer;
-				memPoolAccess(dst->mem_pool_identifier,req,resp);
+				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 				if (resp->status == NOT_OK)
 				{
 					fprintf(stderr,"Mempool write error. Called from maxpool1D()");
@@ -315,8 +315,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	// Tensor temp_Tensor = createTensor(...);
 	Tensor temp_Tensor;
 	temp_Tensor.descriptor = src->descriptor;
-	temp_Tensor.mem_pool_identifier = src->mem_pool_identifier;
-	temp_Tensor.mem_pool_buffer_pointer = 2*(1 + size*dsize/(MEMPOOL_PAGE_SIZE*8));
+	createTensor(&temp_Tensor,(MemPool*)src->mem_pool_identifier);
 
 
 	// Generalised maxPool (num_dims_to_pool > 1)

@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <assert.h>
-#include "../../../Mempool/mempool.h"
-#include "../../../Mempool/tensor.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include "mempool.h"
+#include "tensor.h"
 
 enum mode {floor,ceil};
 

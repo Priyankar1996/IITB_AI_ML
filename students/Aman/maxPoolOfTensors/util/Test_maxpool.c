@@ -2,8 +2,6 @@
 #include <string.h>
 #include <time.h>
 #include "../include/maxPoolOfTensors.h"
-#include "../../../Mempool/mempool.c"
-#include "../../../Mempool/tensor.c"
 
 MemPool pool;
 
@@ -83,11 +81,13 @@ int main(int argc, char**argv){
 
 	//Take row-major-form as input
 	fscanf(file,"%hhd",&T.descriptor.row_major_form);
+	
 	fprintf(octaveInFile,"%hhd\n",T.descriptor.row_major_form);
 
 	//Take input tensor dimensions){ num_diminsions followed by size of each dimension
 	fscanf(file,"%d",&T.descriptor.number_of_dimensions);
 	fprintf(octaveInFile,"%d\n",T.descriptor.number_of_dimensions);
+	
 	for (int i = 0;i < T.descriptor.number_of_dimensions;i++){
 		fscanf(file,"%d",&T.descriptor.dimensions[i]);
 		fprintf(octaveInFile,"%d\n",T.descriptor.dimensions[i]);
@@ -109,8 +109,8 @@ int main(int argc, char**argv){
 	initMemPool(&pool,1,3 + 3*size*dsize/(MEMPOOL_PAGE_SIZE*8));
 	// printf("Memory Size In Pages = %d\n",3 + 3*size*dsize/(MEMPOOL_PAGE_SIZE*8));
 	
-	T.mem_pool_identifier = &pool;
-	T.mem_pool_buffer_pointer = 0;
+	createTensor(&T,&pool);
+
 	req.request_type = WRITE;
 	req.arguments[2] = 1;
 	req.arguments[0] = 1;
@@ -123,7 +123,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%hhu\n",temp[i&7]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);
 		}
 	}
 	else if (T.descriptor.data_type == u16){
@@ -135,7 +135,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%hu\n",temp[i&3]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);		
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);		
 		}
 	}
 	else if (T.descriptor.data_type == u32){
@@ -147,7 +147,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%u\n",temp[i&1]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);	
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);	
 		}
 	}
 	else if (T.descriptor.data_type == u64){
@@ -159,7 +159,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%lu\n",temp[0]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);	
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);	
 		}
 	}
 	else if (T.descriptor.data_type == i8){
@@ -171,7 +171,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%hhd\n",temp[i&7]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);
 		}
 	}
 	else if (T.descriptor.data_type == i16){
@@ -183,7 +183,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%hd\n",temp[i&3]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);		
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);		
 		}
 	}
 	else if (T.descriptor.data_type == i32){
@@ -195,7 +195,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%d\n",temp[i&1]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);	
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);	
 		}
 	}
 	else if (T.descriptor.data_type == i64){
@@ -208,7 +208,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%ld\n",temp[0]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);
 		}
 	}
 	else if (T.descriptor.data_type == float8){
@@ -220,7 +220,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%d\n",temp[i&7]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);
 		}
 	}
 	else if (T.descriptor.data_type == float16){
@@ -232,7 +232,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%d\n",temp[i&3]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);
 		}
 	}
 	else if (T.descriptor.data_type == float32){
@@ -244,7 +244,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%f\n",temp[i&1]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);
 		}
 	}
 	else if (T.descriptor.data_type == float64){
@@ -256,7 +256,7 @@ int main(int argc, char**argv){
 			fprintf(octaveInFile,"%lf\n",temp[0]);
 			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
 			req.write_data[0] = *((uint64_t*)temp);
-			memPoolAccess(T.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)T.mem_pool_identifier,&req,&resp);
 		}
 	}	
 	else{
@@ -264,8 +264,8 @@ int main(int argc, char**argv){
 	}
 	fclose(octaveInFile);
 	
-	B.mem_pool_identifier = &pool;
-	B.mem_pool_buffer_pointer = 1 + size*dsize/(MEMPOOL_PAGE_SIZE*8);
+	B.descriptor = T.descriptor;
+	createTensor(&B,&pool);
 
 	maxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);
 
@@ -284,7 +284,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %hhu\n",i+1, temp[i&7]);
 		}
@@ -294,7 +294,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %hu\n",i+1, temp[i&3]);
 		}
@@ -304,7 +304,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %u\n",i+1, temp[i&1]);
 		}
@@ -314,7 +314,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %lu\n",i+1, temp[0]);
 		}
@@ -324,7 +324,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %hhd\n",i+1, temp[i&7]);
 		}
@@ -334,7 +334,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %hd\n",i+1, temp[i&3]);
 		}
@@ -344,7 +344,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %d\n",i+1, temp[i&1]);
 		}
@@ -354,7 +354,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %ld\n",i+1, temp[0]);
 		}
@@ -364,7 +364,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %hhu\n",i+1, temp[i&7]);
 		}
@@ -374,7 +374,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %hu\n",i+1, temp[i&3]);
 		}
@@ -384,7 +384,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %f\n",i+1, temp[i&1]);
 		}
@@ -394,7 +394,7 @@ int main(int argc, char**argv){
 		for (int i = 0; i < size; i++)
 		{
 			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
-			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			memPoolAccess((MemPool*)B.mem_pool_identifier,&req,&resp);
 			*((uint64_t*)temp) = resp.read_data[0];
 			fprintf(outFile,"%d %f\n",i+1, temp[0]);
 		}

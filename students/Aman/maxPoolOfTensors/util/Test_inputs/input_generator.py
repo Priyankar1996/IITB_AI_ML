@@ -18,7 +18,7 @@ num_dims = random.randint(1,6)
 print(num_dims)
 dims = []
 for i in range(num_dims):
-    dims.append(random.randint(4,random.randint(4,60/num_dims)))
+    dims.append(random.randint(4,60/num_dims))
     print(dims[i])
 
 print(random.randint(1,min(dims)))

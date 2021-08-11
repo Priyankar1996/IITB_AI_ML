@@ -103,7 +103,7 @@ int main(int argc, char**argv){
 		fprintf(octaveInFile,"%d\n",dims_to_pool[i]);	
 	}
 
-	int size = getSizeOfTensor(&T);
+	uint64_t size = getSizeOfTensor(&T);
 	int dsize = sizeofTensorDataInBytes(T.descriptor.data_type);
 
 	initMemPool(&pool,1,3 + 3*size*dsize/(MEMPOOL_PAGE_SIZE*8));
@@ -111,260 +111,306 @@ int main(int argc, char**argv){
 	
 	T.mem_pool_identifier = &pool;
 	T.mem_pool_buffer_pointer = 0;
-
+	req.request_type = WRITE;
+	req.arguments[2] = 1;
+	req.arguments[0] = 1;
 	if (T.descriptor.data_type == u8){
-		uint8_t temp[size];
+		uint8_t temp[8];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hhu\n",temp[i]);
+			if (rand_data)	temp[i&7] = rand();	//Random data
+			else temp[i&7] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%hhu\n",temp[i&7]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == u16){
-		uint16_t temp[size];
+		uint16_t temp[4];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hu\n",temp[i]);
+			if (rand_data)	temp[i&3] = rand();	//Random data
+			else temp[i&3] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%hu\n",temp[i&3]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);		
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == u32){
-		uint32_t temp[size];
+		uint32_t temp[2];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%u\n",temp[i]);
+			if (rand_data)	temp[i&1] = rand();	//Random data
+			else temp[i&1] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%u\n",temp[i&1]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);	
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == u64){
-		uint64_t temp[size];
+		uint64_t temp[1];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%lu\n",temp[i]);
+			if (rand_data)	temp[0] = rand();	//Random data
+			else temp[0] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%lu\n",temp[0]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);	
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == i8){
-		int8_t temp[size];
+		int8_t temp[8];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hhd\n",temp[i]);
+			if (rand_data)	temp[i&7] = rand();	//Random data
+			else temp[i&7] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%hhd\n",temp[i&7]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == i16){
-		int16_t temp[size];
+		int16_t temp[4];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hd\n",temp[i]);
+			if (rand_data)	temp[i&3] = rand();	//Random data
+			else temp[i&3] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%hd\n",temp[i&3]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);		
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == i32){
-		int32_t temp[size];
+		int32_t temp[2];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%d\n",temp[i]);
+			if (rand_data)	temp[i&1] = rand();	//Random data
+			else temp[i&1] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%d\n",temp[i&1]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);	
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == i64){
-		int64_t temp[size];
+		int64_t temp[1];
+
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%ld\n",temp[i]);
+			if (rand_data)	temp[0] = rand();	//Random data
+			else temp[0] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%ld\n",temp[0]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
-	}	
+	}
 	else if (T.descriptor.data_type == float8){
-		uint8_t temp[size];
+		uint8_t temp[8];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hhu\n",temp[i]);
+			if (rand_data)	temp[i&7] = rand();	//Random data
+			else temp[i&7] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%d\n",temp[i&7]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == float16){
-		uint16_t temp[size];
+		uint16_t temp[4];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hu\n",temp[i]);
+			if (rand_data)	temp[i&3] = rand();	//Random data
+			else temp[i&3] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%d\n",temp[i&3]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == float32){
-		float temp[size];
+		float temp[2];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%f\n",temp[i]);
+			if (rand_data)	temp[i&1] = rand();	//Random data
+			else temp[i&1] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%f\n",temp[i&1]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}
 	else if (T.descriptor.data_type == float64){
-		double temp[size];
+		double temp[1];
 		for (int i = 0; i < size; i++)
 		{
-			if (rand_data)	temp[i] = rand();	//Random data
-			else temp[i] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%f\n",temp[i]);
+			if (rand_data)	temp[0] = rand();	//Random data
+			else temp[0] = i+1;					//Sequential data
+			fprintf(octaveInFile,"%lf\n",temp[0]);
+			req.arguments[1] = T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
+			req.write_data[0] = *((uint64_t*)temp);
+			memPoolAccess(T.mem_pool_identifier,&req,&resp);
 		}
-		writeTensor(&T,&req,&resp,size,&temp);
 	}	
 	else{
-		fprintf(stderr,"Error. Datypes mismatch.");
+		fprintf(stderr,"Error. Datatypes mismatch.");
 	}
-
-	// for (int i = 0; i < size; i++)
-	// {
-	// 	fprintf(outFile,"%d %ld\n",i+1, T.mem_pool_identifier->mem_pool_buffer[T.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i]);
-	// }
-	// readTensor(&T,&req,&resp,size,temp);
-	// for (int i = 0; i < size; i++)
-	// {
-	// 	fprintf(outFile,"%d %ld\n",i+1, temp[i]);
-	// }
+	fclose(octaveInFile);
 	
 	B.mem_pool_identifier = &pool;
 	B.mem_pool_buffer_pointer = 1 + size*dsize/(MEMPOOL_PAGE_SIZE*8);
-	
+
 	maxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);
+
 	// Arguments ){ input , output , pool_size , stride , num_dims , dims_to_pool , mode  
 
 	fprintf(outFile,"Size of output is ");
 	for (int i =0; i<B.descriptor.number_of_dimensions;i++) fprintf(outFile,"%d ",B.descriptor.dimensions[i]);
 	fprintf(outFile,"\n");
 	size = getSizeOfTensor(&B);
-	
+
+	req.request_type = READ;
+	req.arguments[2] = 1;
+	req.arguments[0] = 1;
 	if (T.descriptor.data_type == u8){
-		uint8_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		uint8_t temp[8];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %hhu\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %hhu\n",i+1, temp[i&7]);
 		}
 	}	
 	else if (T.descriptor.data_type == u16){
-		uint16_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		uint16_t temp[4];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %hu\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %hu\n",i+1, temp[i&3]);
 		}
 	}	
 	else if (T.descriptor.data_type == u32){
-		uint32_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		uint32_t temp[2];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %u\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %u\n",i+1, temp[i&1]);
 		}
 	}	
 	else if (T.descriptor.data_type == u64){
-		uint64_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		uint64_t temp[1];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %lu\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %lu\n",i+1, temp[0]);
 		}
 	}	
 	else if (T.descriptor.data_type == i8){
-		int8_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		int8_t temp[8];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %hhd\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %hhd\n",i+1, temp[i&7]);
 		}
 	}	
 	else if (T.descriptor.data_type == i16){
-		int16_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		int16_t temp[4];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %hd\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %hd\n",i+1, temp[i&3]);
 		}
 	}	
 	else if (T.descriptor.data_type == i32){
-		int32_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		int32_t temp[2];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %d\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %d\n",i+1, temp[i&1]);
 		}
 	}	
 	else if (T.descriptor.data_type == i64){
-		int64_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		int64_t temp[1];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %ld\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %ld\n",i+1, temp[0]);
 		}
 	}	
 	else if (T.descriptor.data_type == float8){
-		uint8_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		uint8_t temp[8];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %hhu\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/8;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %hhu\n",i+1, temp[i&7]);
 		}
 	}	
 	else if (T.descriptor.data_type == float16){
-		uint16_t temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		uint16_t temp[4];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %hu\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/4;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %hu\n",i+1, temp[i&3]);
 		}
 	}	
 	else if (T.descriptor.data_type == float32){
-		float temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		float temp[2];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %f\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i/2;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %f\n",i+1, temp[i&1]);
 		}
 	}	
 	else if (T.descriptor.data_type == float64){
-		double temp[size];
-		readTensor(&B,&req,&resp,size,temp);
+		double temp[1];
 		for (int i = 0; i < size; i++)
 		{
-			fprintf(outFile,"%d %f\n",i+1, temp[i]);
+			req.arguments[1] = B.mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + i;
+			memPoolAccess(B.mem_pool_identifier,&req,&resp);
+			*((uint64_t*)temp) = resp.read_data[0];
+			fprintf(outFile,"%d %f\n",i+1, temp[0]);
 		}
 	}	
 	else{
 		fprintf(stderr,"Error. Datypes mismatch.");
 	}
 
+	fclose(file);
+	fclose(outFile);
 	int system(const char *command);
-	fclose(octaveInFile);
 	char arr[100] = "octave ../util/octaveFile <";
 	strcat(arr,oct);
 	strcat(arr," >OctaveOutFile.txt\n");
 	system(arr);
-	fclose(file);
-	fclose(outFile);
+
 	printf("If no message is printed after this one, there is no error!!\n");
 	system("cmp COutFile.txt OctaveOutFile.txt");
 	return 0;

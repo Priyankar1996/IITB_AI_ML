@@ -1,0 +1,1 @@
+maxPoolOfTensors.h is the header file containing the declarations for functions used by ../src/maxPoolOfTensors.c.

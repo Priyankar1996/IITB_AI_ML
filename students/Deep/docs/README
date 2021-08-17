@@ -1,6 +1,6 @@
 
 Documentation will be updated.
-I have tried to implement genRandomTensor which generates random numbers of u8, i8, float32, float64 data types and will be extended for other data types. To test there is also a preetyprint function which displays tensor values. Later this can be extended to generate random numbers in some distribution. 
+I have tried to implement genRandomTensor which generates random numbers of all data types. To test there is also a preetyprint function which displays tensor values. Later this can be extended to generate random numbers in some distribution. 
 
 INTERFACE:
 void genRandomTensor(uint32_t seed, RngType t, Tensor* result);

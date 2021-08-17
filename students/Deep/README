@@ -1,14 +1,27 @@
 
-I have tried to implement genRandomTensor which generates random numbers of u8, i8, float32, float64 data types and will be extended for other data types. To test there is also a preetyprint function which displays tensor values (2D slices sequentially). Later this can be extended to generate random numbers in some distribution. 
+I have tried to implement genRandomTensor which generates random numbers of all data types except float8, float16. To test there is also a preetyprint function which displays tensor values (2D slices sequentially). Later these functions can be extended to generate random numbers in some distribution like gaussian, beta, uniform.
 
 INTERFACE:
 void genRandomTensor(uint32_t seed, RngType t, Tensor* result);
+
+seed can be used to regenerate results
+
+result is returned tensor. one needs to allocate memory for it beforehand
 
 Argument RngType can be one of following
 	mersenne_Twister
 	wichmann_Hill,
 	philox,
-	combRecursive
+	combRecursive,
+	threefry
 This is not explored completely yet and depends on use case. Currently I have borrowed online implementation of mersenne_Twister and default as rand() of C
 
 
+
+"""
+As per tensorflow library,
+Both the tf.random.Generator class and the stateless functions support the Philox algorithm on all devices.
+On XLA-driven devices (such as TPU, and also CPU/GPU when XLA is enabled) the ThreeFry algorithm (written as "threefry" or tf.random.Algorithm.THREEFRY) is also supported. This algorithm is fast on TPU but slow on CPU/GPU compared to Philox.
+
+"""
+Refer interesting paper "Parallel Random Numbers: As Easy as 1, 2, 3"

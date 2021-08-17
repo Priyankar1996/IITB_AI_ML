@@ -1,7 +1,11 @@
+//AUTHOR: 	DEEP SATRA
+//          DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
+
 #define __genRandomTensor_h___
 
 #include "mempool.h"
 #include "tensor.h"
+#include "createTensor.h"
 
 typedef enum {
 	mersenne_Twister, // Used in python

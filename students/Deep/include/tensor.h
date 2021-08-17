@@ -81,7 +81,7 @@ uint32_t areCoordinateVectorsEqual(int ndim, uint32_t* a, uint32_t* b);
 
 
 // start
-void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mempool, Tensor* result);
+void my_createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mempool, Tensor* result);
 
 
 #endif

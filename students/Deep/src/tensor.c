@@ -34,6 +34,14 @@ uint32_t sizeofTensorDataInBytes(TensorDataType t)
 	return(ret_val);
 }
 
+uint32_t numberOfElementsInTensor(Tensor *t)
+{
+	int i;
+	uint32_t num_elems = 1;
+	for(i=0;i<t->descriptor.number_of_dimensions;i++)
+		num_elems *= t->descriptor.dimensions[i];
+	return num_elems;
+}
 
 void copyCoordinateVector (int ndim, uint32_t* vec, uint32_t* init_val)
 {

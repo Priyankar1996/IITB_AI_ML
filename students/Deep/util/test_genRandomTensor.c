@@ -4,13 +4,14 @@
 #include "../src/genRandomTensor.c"
 #include "../src/mempool.c"
 #include "../src/tensor.c"
+#include "../src/createTensor.c"
 
 MemPool 	pool;
 
 
 #define NPAGES     8
 
-void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mpool, Tensor* result){
+void my_createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mpool, Tensor* result){
 	TensorDescriptor t ;
 	t.data_type = dt ;
 	t.row_major_form = 0 ; //will keep true by default?
@@ -19,6 +20,13 @@ void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mp
 	for(j=0; j<ndim; j++) t.dimensions[j] = dims[j]; 
 
 	result->descriptor = t ;
+	uint64_t initial_val = 17 ;
+
+	createTensor(result, mpool) ;
+	initializeTensor(result, &initial_val);
+	return ;
+	
+	/*
 	result->mem_pool_identifier = mpool ;
 	MemPoolRequest 	req;
 	MemPoolResponse resp;
@@ -71,7 +79,7 @@ void createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mp
 		}
 		result->mem_pool_buffer_pointer = resp.allocated_base_address ;
 	}
-
+	*/
 }
 
 void preetyprint(Tensor *result){
@@ -200,6 +208,48 @@ void preetyprint(Tensor *result){
 
 					}	
 					break ;
+				case u16: 
+					for(k=0; k<curr_reads;k++){
+						uint64_t read_word = resp.read_data[k];
+						uint8_t iter ;
+						for(iter = 0; iter < 4; iter++){
+							uint16_t ti = (read_word>>16*(iter)) &0xffff ;
+							if (track == total_num + 1) break;
+							(track % dim0)?  printf("%5d  ", ti) : printf("%5d\n", ti);
+							if (!(track % dimp)) printf("\n");
+							track ++ ;
+						}
+
+					}	
+					break ;
+				case u32: 
+					for(k=0; k<curr_reads;k++){
+						uint64_t read_word = resp.read_data[k];
+						uint8_t iter ;
+						for(iter = 0; iter < 2; iter++){
+							uint32_t ti = (read_word>>32*(iter)) & 0xffffffff ;
+							if (track == total_num + 1) break;
+							(track % dim0)?  printf("%10"PRIu32"  ", ti) : printf("%10"PRIu32"\n", ti);
+							if (!(track % dimp)) printf("\n");
+							track ++ ;
+						}
+
+					}	
+					break ;
+				case u64: 
+					for(k=0; k<curr_reads;k++){
+						uint64_t read_word = resp.read_data[k];
+						uint8_t iter ;
+						for(iter = 0; iter < 1; iter++){
+							uint64_t ti = (read_word>>64*(iter));
+							if (track == total_num + 1) break;
+							(track % dim0)?  printf("%20"PRIu64"  ", ti) : printf("%20"PRIu64"\n", ti);
+							if (!(track % dimp)) printf("\n");
+							track ++ ;
+						}
+
+					}	
+					break ;
 				case i8:
 					for(k=0; k<curr_reads;k++){
 						uint64_t read_word = resp.read_data[k];
@@ -208,6 +258,48 @@ void preetyprint(Tensor *result){
 							int8_t ti = (read_word>>8*(iter)) &0xff ;
 							if (track == total_num + 1) break;
 							(track % dim0)?  printf("%4d  ", ti) : printf("%3d\n", ti);
+							if (!(track % dimp)) printf("\n");
+							track ++ ;
+						}
+
+					}	
+					break;
+				case i16:
+					for(k=0; k<curr_reads;k++){
+						uint64_t read_word = resp.read_data[k];
+						uint8_t iter ;
+						for(iter = 0; iter < 4; iter++){
+							int16_t ti = (read_word>>16*(iter)) &0xffff ;
+							if (track == total_num + 1) break;
+							(track % dim0)?  printf("%6d  ", ti) : printf("%6d\n", ti);
+							if (!(track % dimp)) printf("\n");
+							track ++ ;
+						}
+
+					}	
+					break;
+				case i32:
+					for(k=0; k<curr_reads;k++){
+						uint64_t read_word = resp.read_data[k];
+						uint8_t iter ;
+						for(iter = 0; iter < 2; iter++){
+							int32_t ti = (read_word>>32*(iter)) &0xffffffff ;
+							if (track == total_num + 1) break;
+							(track % dim0)?  printf("%11"PRId32"  ", ti) : printf("%11"PRId32"\n", ti);
+							if (!(track % dimp)) printf("\n");
+							track ++ ;
+						}
+
+					}	
+					break;
+				case i64:
+					for(k=0; k<curr_reads;k++){
+						uint64_t read_word = resp.read_data[k];
+						uint8_t iter ;
+						for(iter = 0; iter < 1; iter++){
+							int64_t ti = (read_word>>64*(iter)) ;
+							if (track == total_num + 1) break;
+							(track % dim0)?  printf("%20"PRId64"  ", ti) : printf("%20"PRId64"\n", ti);
 							if (!(track % dimp)) printf("\n");
 							track ++ ;
 						}
@@ -249,17 +341,18 @@ int main(int argc, char const *argv[])
 
 	uint32_t ndim = 2 ;
 	uint32_t dims[] = {4,2};  
-	TensorDataType dt = float64 ;
+	TensorDataType dt = i8 ;
 	Tensor *result ;
 
-    createTensor( ndim, dims, dt, &pool, result);
-	printf("--------Initial Tensor-------\n\n");
+    my_createTensor( ndim, dims, dt, &pool, result);
+	//printf("--------Initial Tensor-------\n\n");
 	preetyprint(result)	;
 	printf("-----------------------\n\n");
 	printf("--------Random Tensor-------\n\n");
 	RngType r = mersenne_Twister ;
-    genRandomTensor(17, r, result) ;
+    genRandomTensor(177, r, result) ;
 	preetyprint(result)	;
+	destroyTensor(result);
 
 	return 0;
 }

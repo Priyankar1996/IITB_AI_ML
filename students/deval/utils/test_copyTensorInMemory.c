@@ -1,112 +1,84 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdint.h>
+#include <math.h>
 #include "mempool.h"
 #include "tensor.h"
-#include <math.h>
+#include "copyTensorInMemory.h"
 
-Tensor T1;
-Tensor T2;
-MemPool mp_src;
-MemPool mp_dest;
-MemPoolRequest req1;
-MemPoolResponse resp1;
+#define npages 20
 
-//This will be replaced by create tensor function.
-void createTensorInMemory (uint32_t ndim, uint32_t *dims, TensorDataType dt, uint32_t mempool, Tensor *result)
+MemPool mp1,mp2;
+Tensor src,dest;
+int _err_ = 0;
+
+void fillTensorDescriptor(Tensor t)
+// Takes details from the user about the tensor to be created.
 {
-    int r;
-    float s=1;
+    int i,j;
+    Tensor dummy;
 
-    //fill the dimensions
-    result->descriptor.number_of_dimensions = ndim;
-    printf("Number of dim : %d\n",result->descriptor.number_of_dimensions);
-    for(r=0;r<ndim;r++)
+    printf("Enter the data-type of the tensor:\n");
+    printf("0. uint_8\t1. uint16_t\t2. uint32_t\t3. uint64_t\n");
+    printf("4. int8_t\t5. int16_t\t6. int32_t\t7. int64_t\n");
+    printf("8. float8\t8. float16\t9. float\t10. double\n");
+    scanf("%u",&dummy.descriptor.data_type);
+    printf("Enter:\t0.Column-Major form \t1.Row-Major form\n");
+    scanf("%u",&dummy.descriptor.row_major_form);
+    if(dummy.descriptor.row_major_form > 1 || dummy.descriptor.row_major_form<0)
     {
-        result->descriptor.dimensions[r] = *dims;
-        printf("Dim %d is %d\t",r,result->descriptor.dimensions[r]);
-        s = s * (*dims);
-        dims = dims + 1;
+        printf("ERROR!SELECT PROPER VALUES.\n");
+        exit(0);
     }
-    result->descriptor.data_type = dt;
-    result->mem_pool_identifier = mempool;
-    printf("size of created tensor src %f blocks\n",s);
-
-    //allocate and fill pages
-    uint32_t npages,rem;
-    uint32_t consta = 512.0;
-    uint32_t k;
-    npages = ceil(s/512);
-    printf("Number of pages required : %d\n",npages);
-    rem = (uint32_t) s % consta;
-
-    req1.request_type = ALLOCATE;
-    req1.request_tag = 1;
-    req1.arguments[0] = npages;
-
-    memPoolAccess(&mp_src, &req1, &resp1);
-    if(resp1.status !=  OK)
+    printf("Enter number of dimensions:");
+    scanf("%u",&dummy.descriptor.number_of_dimensions);
+    if(dummy.descriptor.number_of_dimensions > 64)
     {
-        fprintf(stderr,"Error: could not allocate memory.\n");
+        printf("ERROR! MAX DIMENSION PERMISSIBLE IS 64.");
+        exit(0);
     }
-
-    result->mem_pool_buffer_pointer = resp1.allocated_base_address;
-
-    for(k=0; k < (npages-1)*MEMPOOL_PAGE_SIZE + rem; k++)
+    printf("Fill the dimensional array:");
+    for (i=0;i<dummy.descriptor.number_of_dimensions;i++)
     {
-        req1.request_type = WRITE;
-        req1.request_tag  = req1.request_tag + 1;
-        req1.arguments[0] = 1;
-        req1.arguments[1] = resp1.allocated_base_address;
-        req1.write_data[k] = k+1;
-
-        memPoolAccess(&mp_src, &req1, &resp1);
-        if(resp1.status !=  OK)
-        {
-            fprintf(stderr,"Error: could not write into memory.\n");
-        }
-        resp1.allocated_base_address = resp1.allocated_base_address + 1;
+         scanf("%u",&dummy.descriptor.dimensions[i]);
     }
-
-    fprintf(stderr,"\nInfo: wrote into pages.\n");
+    t.descriptor.data_type = dummy.descriptor.data_type;
+    t.descriptor.row_major_form = dummy.descriptor.row_major_form;
+    t.descriptor.number_of_dimensions = dummy.descriptor.number_of_dimensions;
+    for (j=0;j<dummy.descriptor.number_of_dimensions;j++)
+    {
+        t.descriptor.dimensions[j]=dummy.descriptor.dimensions[j];
+    }
 }
 
 int main()
 {
-    //Helper variable
-    int l = 0;
-    int mp_src_idx = 10;
-    int mp_dest_idx = 5;
+    uint64_t i=0,pages = 0;
+    //initialize two mempools
+    initMemPool(&mp1,1,npages);
+    initMemPool(&mp2,2,npages);
 
-    //Number of dim
-    uint32_t ndim = 6;
+    printf("SOURCE TENSOR\n");
+    fillTensorDescriptor(src);
+    printf("DESTINATION TENSOR\n");
+    fillTensorDescriptor(dest);
 
-    //Shape across dimensions
-    uint32_t dims[6] = {1,2,3,4,5,6};
+    //copy to different mempool
+    _err_ = createTensor(&src,&mp1) || createTensor(&dest,&mp2) || _err_;
+    //copy to same mempool
+    //_err_ = createTensor(&src,&mp1) || createTensor(&dest,&mp1) || _err_;
 
-    //Init mem pool with index 10 and number of pages 10.
-    initMemPool(&mp_src, 10, 10);
-    //Init mem pool with index 5 and number of pages 10.
-    initMemPool(&mp_dest, 5, 10);
-    T2.mem_pool_identifier = 5;
-    //T2.mem_pool_buffer_pointer = 10;
+    _err_ = copyTensorInMemory(&src,&dest);
 
-    //Helper function to init tensor in a mempool
-    //initTensor();
+    printf("Source mempool buffer pointer : %d\n",src.mem_pool_buffer_pointer);
+    printf("Destination mempool buffer pointer : %d\n",dest.mem_pool_buffer_pointer);
 
-    //This function will be replaced by createTensor by Priyankar.
-    createTensorInMemory(ndim, dims, u16, mp_src.mem_pool_index, &T1);
-    printf("----------SOURCE TENSOR CREATED----------\n");
+    if(_err_)
+    {
+        fprintf(stderr,"Error: EXITING.\n");
+        return(1);
+    }
+    fprintf(stderr,"Info: DONE.\n");
 
-    //copy
-    copyTensorInMemory(&T1, &T2, &mp_src, &mp_dest);
-
-    //print checks
-    printf("Destination tensor buffer pointer:%d\t",T2.mem_pool_buffer_pointer);
-    printf("Source tensor buffer pointer:%d\n",T1.mem_pool_buffer_pointer);
-
-    printf("Destination tensor mem pool index:%d\t",T2.mem_pool_identifier);
-    printf("Source tensor mem pool index:%d\n",T1.mem_pool_identifier);
-
-    return(1);
+    return(0);
 }

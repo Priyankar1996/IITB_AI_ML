@@ -41,12 +41,12 @@ int initializeTensor (Tensor* t, void* initial_value)
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
 	uint32_t data_size = sizeofTensorDataInBytes(t->descriptor.data_type); 
-    uint32_t i,num_elems = 1,flag = 0;
+    uint32_t i,num_elems = 1,flag = 0,num_elems_left=0;
     
 	TensorDataType dataType = t->descriptor.data_type;
 
     num_elems = numberOfElementsInTensor(t);
-
+    num_elems_left = num_elems;
 	mp_req.request_type = WRITE;
 	//mp_req.request_tag = mp->write_pointer+2*1024; 
 
@@ -73,46 +73,56 @@ int initializeTensor (Tensor* t, void* initial_value)
 
 		for (i = 0; i < elementsToWrite*8/data_size; i++)
 		{
-			switch(dataType){
-			case u8: ; 
-				uint8_t val8 = *((uint8_t*) initial_value);
-				*(((uint8_t*)array) + i) = val8;
-				break;
+            if(num_elems_left>0)
+            {
+			    switch(dataType){
+			        case u8: ; 
+				            uint8_t val8 = *((uint8_t*) initial_value);
+				            *(((uint8_t*)array) + i) = val8;
+                            num_elems_left--;
+				            break;
 
-			case u16: ;
-				uint16_t val16 = *((uint16_t*) initial_value);
-				*(((uint16_t*)array) + i) = val16;
-				break;
+			        case u16: ;
+				            uint16_t val16 = *((uint16_t*) initial_value);
+				            *(((uint16_t*)array) + i) = val16;
+                            num_elems_left--;
+				            break;
 
-			case u32: ;
-				uint32_t val32 = *((uint32_t*) initial_value);
-				*(((uint32_t*)array) + i) = val32;
-				break;
+			        case u32: ;
+				            uint32_t val32 = *((uint32_t*) initial_value);
+				            *(((uint32_t*)array) + i) = val32;
+                            num_elems_left--;
+				            break;
 
-			case u64: ; 
-				uint64_t val64 = *((uint64_t*) initial_value);
-				*(((uint64_t*)array) + i) = val64;
-				break;
+			        case u64: ; 
+				            uint64_t val64 = *((uint64_t*) initial_value);
+				            *(((uint64_t*)array) + i) = val64;
+                            num_elems_left--;
+				            break;
 				
-			case i8: ;
-				int8_t val8i = *((int8_t*) initial_value);
-				*(((int8_t*)array) + i) = val8i;
-				break;
+			        case i8: ;
+				            int8_t val8i = *((int8_t*) initial_value);
+				            *(((int8_t*)array) + i) = val8i;
+                            num_elems_left--;
+				            break;
 
-			case i16: ;
-				int16_t val16i = *((int16_t*) initial_value);
-				*(((int16_t*)array) + i) = val16i;
-				break;
+			        case i16: ;
+				            int16_t val16i = *((int16_t*) initial_value);
+				            *(((int16_t*)array) + i) = val16i;
+                            num_elems_left--;
+				            break;
 
-			case i32: ; 
-				int32_t val32i = *((int32_t*) initial_value) ;
-				*(((int32_t*)array) + i) = val32i;
-				break;
+			        case i32: ; 
+				            int32_t val32i = *((int32_t*) initial_value) ;
+				            *(((int32_t*)array) + i) = val32i;
+                            num_elems_left--;
+				            break;
 
-			case i64: ;
-				int64_t val64i = *((int64_t*) initial_value);
-				*(((int64_t*)array) + i) = val64i;
-				break;
+			        case i64: ;
+				            int64_t val64i = *((int64_t*) initial_value);
+				            *(((int64_t*)array) + i) = val64i;
+                            num_elems_left--;
+				            break;
 
 			// case float8: ;
 				// to be added 
@@ -122,18 +132,21 @@ int initializeTensor (Tensor* t, void* initial_value)
 				// to be added 
 				// break;
 
-			case float32: ;
-				float val32f = *((float*) initial_value);
-				*(((float*)array) + i) = val32f;
-				break;
+			        case float32: ;
+				                float val32f = *((float*) initial_value);
+				                *(((float*)array) + i) = val32f;
+                                num_elems_left--;
+				                break;
 
-			case float64: ;
-				double val64f = *((double*) initial_value);
-				*(((double*)array) + i) = val64f;
-				break;
+			        case float64: ;
+				                double val64f = *((double*) initial_value);
+				                *(((double*)array) + i) = val64f;
+                                num_elems_left--;
+				                break;
 				
-			}		
-		}
+			    }		
+		    }
+        }
 		memPoolAccess(mp, &mp_req, &mp_resp); 
 		if(mp_resp.status == OK) 
             flag = flag || 0;
@@ -141,9 +154,9 @@ int initializeTensor (Tensor* t, void* initial_value)
 			flag = flag || 1;
 	}
     if(flag == 0)
-        printf("SUCCESS: Tensors Initialised.");
+        printf("SUCCESS: Tensors Initialised.\n");
     else    
-        printf("ERROR: Couldn't be initialised.");
+        printf("ERROR: Couldn't be initialised.\n");
     return flag;	
 }
 

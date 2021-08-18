@@ -9,7 +9,7 @@
            of the top cells.
 
         3. If padding is set to a value, we remove that many number of intermediate rings
-           from around the grid.(Is it always 1 in this case?)
+           from around the grid.(Padding < Stride)
 
         3. Finally the kernel is moved across the intermediate grid in step sizes of 1 and
            will always be 1. The stride in this case determines the span of the original cells

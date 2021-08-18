@@ -1,3 +1,5 @@
+int copyTensorInMemory(Tensor* src, Tensor* dest)
+
 Description:
 	The function copies src tensor from mp_src to dest tensor in mp_dest.
 1)The function assumes that a tensor src is allocated and initialized in some mem pool.

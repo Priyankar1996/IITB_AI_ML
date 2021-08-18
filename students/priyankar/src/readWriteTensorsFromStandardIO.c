@@ -169,97 +169,100 @@ int writeTensorToFile(char *filename, Tensor *t)
 
             for(j=0;j<elements_to_read;j++)
             {
-                switch (t->descriptor.data_type)
-                {
-                    case u8:{
-                                //count++;
-                                uint8_t (*bytesu8)[8] = (void *) &mp_resp.read_data[j];
-                                for (k = 0; k < 8; k++)
-                                {
-                                    count++;
-                                    fprintf(file, "%hhu%s",(*bytesu8)[k],(count%3!=0 ? ",":"\n"));
+                 uint64_t v= mp_resp.read_data[j];
+                    switch (t->descriptor.data_type)
+                    {
+                        case u8:{
+                                    //count++;
+                                    uint8_t (*bytesu8)[8] = (void *) &mp_resp.read_data[j];
+                                    for (k = 0; k < 8; k++)
+                                    {
+                                        count++;
+                                        if(count<=num_elems)
+                                        fprintf(file, "%hhu%s",(*bytesu8)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
                     
-                    case u16:{
-                                uint16_t (*bytesu16)[4] = (void *) &mp_resp.read_data[j];
-                                for (k = 0; k < 4; k++)
-                                {
-                                    count++;
-                                    fprintf(file, "%hhu%s",(*bytesu16)[k],(count%3!=0 ? ",":"\n"));
+                        case u16:{
+                                    uint16_t (*bytesu16)[4] = (void *) &mp_resp.read_data[j];
+                                    for (k = 0; k < 4; k++)
+                                    {
+                                        count++;
+                                        fprintf(file, "%hhu%s",(*bytesu16)[k],(count%3!=0 ? ",":"\n"));
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                    case u32:{
-                                uint32_t (*bytesu32)[2] = (void*) &mp_resp.read_data[j];
-                                for (k = 0; k < sizeof(*bytesu32)/sizeof(uint32_t); k++)
-                                {
-                                    count++;
-                                    fprintf(file, "%hhu%s",(*bytesu32)[k],(count%3!=0 ? ",":"\n"));
+                        case u32:{
+                                    uint32_t (*bytesu32)[2] = (void*) &mp_resp.read_data[j];
+                                    for (k = 0; k < sizeof(*bytesu32)/sizeof(uint32_t); k++)
+                                    {
+                                        count++;
+                                        fprintf(file, "%hhu%s",(*bytesu32)[k],(count%3!=0 ? ",":"\n"));
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                    case u64:   count++; 
-                                fprintf(file, "%u%s",mp_resp.read_data[j],(count%3!=0 ? ",":"\n"));
-                                break;
+                        case u64:   count++; 
+                                    fprintf(file, "%u%s",mp_resp.read_data[j],(count%3!=0 ? ",":"\n"));
+                                    break;
 
-                    case i8:{
-                                int8_t (*bytes8)[8] = (void*) &mp_resp.read_data[j];
-                                for (k = 0; k < 8; k++)
-                                {
-                                    count++;
-                                    fprintf(file, "%hhi%s",(*bytes8)[k],(count%3!=0 ? ",":"\n"));
+                        case i8:{
+                                    int8_t (*bytes8)[8] = (void*) &mp_resp.read_data[j];
+                                    for (k = 0; k < 8; k++)
+                                    {
+                                        count++;
+                                        fprintf(file, "%hhi%s",(*bytes8)[k],(count%3!=0 ? ",":"\n"));
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                    case i16:{
-                                int16_t (*bytes16)[4] = (void*) &mp_resp.read_data[j];
-                                for (k = 0; k < 4; k++)
-                                {
-                                    count++;
-                                    fprintf(file, "%hhi%s",(*bytes16)[k],(count%3!=0 ? ",":"\n"));
+                        case i16:{
+                                    int16_t (*bytes16)[4] = (void*) &mp_resp.read_data[j];
+                                    for (k = 0; k < 4; k++)
+                                    {
+                                        count++;
+                                        fprintf(file, "%hhi%s",(*bytes16)[k],(count%3!=0 ? ",":"\n"));
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
 
-                    case i32:{
-                                int32_t (*bytes32)[2] = (void*) &mp_resp.read_data[j];
-                                for (k = 0; k < 2; k++)
-                                {
-                                    count++;
-                                    fprintf(file, "%hhi%s",(*bytes32)[k],(count%3!=0 ? ",":"\n"));
-                                }
-                                break;
-                            }
-                    case i64: fprintf(file, "%d%s",mp_resp.read_data[j],(count%3!=0 ? ",":"\n"));
-                                break;
-
-                    //case float8:
-                    //case float16:
-                    case float32:{
-                                    float (*bytes32)[2] = (void*) &mp_resp.read_data[j];
+                        case i32:{
+                                    int32_t (*bytes32)[2] = (void*) &mp_resp.read_data[j];
                                     for (k = 0; k < 2; k++)
                                     {
                                         count++;
-                                        fprintf(file, "%f%s",(*bytes32)[k],(count%3!=0 ? ",":"\n"));
+                                        fprintf(file, "%hhi%s",(*bytes32)[k],(count%3!=0 ? ",":"\n"));
                                     }
+                                    break;
+                                }
+                        case i64: fprintf(file, "%d%s",mp_resp.read_data[j],(count%3!=0 ? ",":"\n"));
+                                    break;
+
+                    //case float8:
+                    //case float16:
+                        case float32:{
+                                        float (*bytes32)[2] = (void*) &mp_resp.read_data[j];
+                                        for (k = 0; k < 2; k++)
+                                        {
+                                            count++;
+                                            fprintf(file, "%f%s",(*bytes32)[k],(count%3!=0 ? ",":"\n"));
+                                        }
                                     /*memcpy(&fvalue, &mp_resp.read_data[j],sizeof(float));
                                     fprintf(file, "%f%s",fvalue,(count%3!=0 ? ",":"\n"));*/
-                                    break;
-                                }
+                                        break;
+                                    }
 
-                    case float64:{
-                                    count++;
-                                    double *dvalue = (void*) &mp_resp.read_data[j];
-                                    fprintf(file, "%f%s",(*dvalue),(count%3!=0 ? ",":"\n"));
-                                    break;
-                                }
+                        case float64:{
+                                        count++;
+                                        double *dvalue = (void*) &mp_resp.read_data[j];
+                                        fprintf(file, "%f%s",(*dvalue),(count%3!=0 ? ",":"\n"));
+                                        break;
+                                    }
                                     /*memcpy(&dvalue, &mp_resp.read_data[j],sizeof(double));
                                     fprintf(file, "%d%s",dvalue,(count%3!=0 ? ",":"\n"));
                                     break;*/
+                    }
                 }
-            }
+            
         }
     }
     if (flag == 0)

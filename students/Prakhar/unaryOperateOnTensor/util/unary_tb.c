@@ -24,15 +24,15 @@ int main(){
     initMemPool(&pool_a,1,NPAGES);
 	initMemPool(&pool_b,1,NPAGES);
 	//define tensor
-	const TensorDataType dataType = float64;
+	const TensorDataType dataType = u64;
 	const int8_t row_major_form = 1;
 	const uint32_t ndim  = 2;
 	
 	uint32_t dims[ndim];
 	dims[0] = 10;
-	dims[1] = 1;
+	dims[1] = 10;
 
-	const Operation operation = EXP;
+	const Operation operation = SIGMOID;
 
 	a.descriptor.data_type = dataType;
 	a.descriptor.row_major_form = row_major_form;
@@ -101,6 +101,7 @@ int main(){
 				case SQUARE: expected_result *= expected_result; break;
 				case ABSOLUTE: expected_result = abs(expected_result); break;
 				case EXP: expected_result = exp(expected_result); break;
+				case SIGMOID: expected_result = 1/(1+exp(-1*expected_result)); break; 
 			}
 
 			switch(dataType){

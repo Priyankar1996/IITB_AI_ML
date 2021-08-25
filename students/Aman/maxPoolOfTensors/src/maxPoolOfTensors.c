@@ -140,10 +140,10 @@ void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, vo
 // Input tensor src, output dst
 void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tensor *dst, int mode)
 {
-	MemPoolRequest req_1, *req;
-	MemPoolResponse resp_1, *resp;
-	req = &req_1;
-	resp = &resp_1;
+	MemPoolRequest req1, *req;
+	MemPoolResponse resp1, *resp;
+	req = &req1;
+	resp = &resp1;
 	// Compute essential constants
 	uint8_t dt = src->descriptor.data_type;
 	uint8_t dsize = sizeofTensorDataInBytes(dt);
@@ -188,11 +188,9 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
 						exit(-1);
 					}
-					// printf("%lu %lu \n",src->mem_pool_identifier->mem_pool_buffer[0] & 0xF, src->mem_pool_identifier->mem_pool_buffer[0] / 0xFFFFFFFF);
 					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
 					bitmask = getBitMask(dsize,0);
 					temp_old[var] = temp_old[var]&bitmask;
-					// printf("Old %ld\n",temp_old[var]);
 				}
 
 				// Perform max operation
@@ -211,7 +209,6 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 				// Compute write data
 				bitmask = ~getBitMask(dsize,i*num_1D_steps*cs + k + j*cs - (8/dsize)*((i*num_1D_steps*cs + k + j*cs)*dsize/8));
 				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0)) << (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
-				// printf("From m1D: %ld %ld\n", temp_new , temp_buffer);
 				
 				// Write back to dst
 				req->request_type = WRITE;
@@ -223,7 +220,6 @@ void maxpool1D(Tensor *src, uint32_t size, uint8_t x, int l, int s, int cs, Tens
 					fprintf(stderr,"Mempool write error. Called from maxpool1D()");
 					exit(-1);
 				}
-				// printf("%d %ld\n",i*num_1D_steps*cs + k+j*cs,dst->mem_pool_identifier->mem_pool_buffer[dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)]);
 			}			
 		}
 	}

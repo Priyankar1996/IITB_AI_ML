@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <assert.h>
-#include "../../../Mempool/mempool.h"
-#include "../../../Mempool/tensor.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include "mempool.h"
+#include "tensor.h"
 
 enum mode {floor,ceil};
 
@@ -25,4 +27,4 @@ void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, vo
 
 // Computes the 1-D maxPool of tensor src, based on the parameters size,x,l,s,cs,mode
 // and stores the resultant tensor as dst
-void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Tensor *dst, int mode, MemPoolRequest *req, MemPoolResponse *resp);
+void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Tensor *dst, int mode);

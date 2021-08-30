@@ -63,7 +63,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 		// SECOND STAGE of Pipeline : Compute  
 		/////////////////////////////////////
 		switch(op){ 
-			case RELU : // a = RELU(a)
+			case RELU : // b = RELU(a)
 			// for uint types --> i/p = o/p so do nothing 
 			// for int types --> check MSB for sign 
 			// for float types --> check MSB for sign 
@@ -133,7 +133,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 				}
 				break;
 
-			case SIGMOID : // b = exp(a) // support only for float32 and float64 as of now 
+			case SIGMOID : // b = sigmoid(a) // support only for float32 and float64 as of now 
 				for(int j=0; j<num_in_cache; j+=1) {
 					switch(a_dt){
 						case u8: ;
@@ -207,7 +207,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 				}
 				break;
 
-			case SQUARE : // a = (a)^2 
+			case SQUARE : // b = (a)^2 
 				for(int j=0; j<num_in_cache; j++) {
 					switch(a_dt){
 						case u8: ; 
@@ -284,7 +284,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 				}
 				break;
 
-			case EXP : // a = exp(a) // support only for float32 and float64 as of now 
+			case EXP : // b = exp(a) // support only for float32 and float64 as of now 
 				for(int j=0; j<num_in_cache; j+=1) {
 					switch(a_dt){
 						case u8: ;
@@ -358,7 +358,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 				}
 				break;
 
-			case SINE : // a = sin(a) // support only for float32 and float64 as of now 
+			case SINE : // b = sin(a) // support only for float32 and float64 as of now 
 				for(int j=0; j<num_in_cache; j+=1) {
 					switch(a_dt){
 						case u8: ;
@@ -432,7 +432,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 				}
 				break;
 
-			case ABSOLUTE : // a = |a|
+			case ABSOLUTE : // b = |a|
 			// for uint types --> i/p = o/p so doesn't make sense
 			// for int types --> check MSB for sign 
 			// for float types --> check MSB for sign

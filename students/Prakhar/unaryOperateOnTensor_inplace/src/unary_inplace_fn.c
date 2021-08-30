@@ -131,6 +131,80 @@ void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
 					}
 				}
 				break;
+			
+			case SIGMOID : // a = sigmoid(a) // support only for float32 and float64 as of now 
+				for(int j=0; j<num_in_cache; j+=1) {
+					switch(a_dt){
+						case u8: ;
+							uint8_t x_e8ui;
+							x_e8ui = *(((uint8_t*)array) + j);
+							*(((uint8_t*)array) + j) = (uint8_t) 1/(1+exp(-1*x_e8ui));
+							break;
+
+						case u16: ;
+							uint16_t x_e16ui;
+							x_e16ui = *(((uint16_t*)array) + j);
+							*(((uint16_t*)array) + j) = (uint16_t) 1/(1+exp(-1*x_e16ui));
+							break;
+
+						case u32: ;
+							uint32_t x_e32ui;
+							x_e32ui = *(((uint32_t*)array) + j);
+							*(((uint32_t*)array) + j) = (uint32_t) 1/(1+exp(-1*x_e32ui));
+							break;
+
+						case u64: ;
+							uint64_t x_e64ui;
+							x_e64ui = *(((uint64_t*)array) + j);
+							*(((uint64_t*)array) + j) = (uint64_t) 1/(1+exp(-1*x_e64ui));
+							break;
+
+						case i8: ;
+							int8_t x_e8i;
+							x_e8i = *(((int8_t*)array) + j);
+							*(((int8_t*)array) + j) = (int8_t) 1/(1+exp(-1*x_e8i));
+							break;
+
+						case i16: ;
+							int16_t x_e16i;
+							x_e16i = *(((int16_t*)array) + j);
+							*(((int16_t*)array) + j) = (int16_t) 1/(1+exp(-1*x_e16i));
+							break;
+
+						case i32: ;
+							int32_t x_e32i;
+							x_e32i = *(((int32_t*)array) + j);
+							*(((int32_t*)array) + j) = (int32_t) 1/(1+exp(-1*x_e32i));
+							break;
+
+						case i64: ;
+							int64_t x_e64i;
+							x_e64i = *(((int64_t*)array) + j);
+							*(((int64_t*)array) + j) = (int64_t) 1/(1+exp(-1*x_e64i));
+							break;
+
+						case float8: ;
+							// to be added 
+							break;
+
+						case float16: ;
+							// to be added 
+							break;
+
+						case float32: ;
+							float x_e32;
+							x_e32 = *(((float*)array) + j);
+							*(((float*)array) + j) = (float) 1/(1+exp(-1*x_e32));
+							break;
+
+						case float64: ;
+							double x_e64;
+							x_e64 = *(((double*)array) + j);
+							*(((double*)array) + j) = (double) 1/(1+exp(-1*x_e64));
+							break;
+					}
+				}
+				break;
 
 			case SQUARE : // a = (a)^2 
 				for(int j=0; j<num_in_cache; j++) {

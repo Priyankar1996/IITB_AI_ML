@@ -1,4 +1,4 @@
-#include "../include/maxPoolOfTensors.h"
+#include "../include_2/maxPoolOfTensors.h"
 
 // Compute size of tensor
 uint32_t getSizeOfTensor(Tensor *T)
@@ -108,11 +108,14 @@ void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, vo
 	return;
 }
 
-void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Tensor *dst, int mode, MemPoolRequest *req, MemPoolResponse *resp)
 // Pools one dimension at a time, parameters size , x , l ,s ,cs , mode
 // Input tensor src, output dst
-// Takes a MemPoolRequest and MemPoolResponse as inputs as well
+void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Tensor *dst, int mode)
 {
+	MemPoolRequest req1, *req;
+	MemPoolResponse resp1, *resp;
+	req = &req1;
+	resp = &resp1;
 	// Compute essential constants
 	uint8_t dt = src->descriptor.data_type;
 	uint8_t dsize = sizeofTensorDataInBytes(dt);
@@ -149,7 +152,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 				for (uint16_t var = 0; var < var_max; var++)
 				{
 					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
-					memPoolAccess(src->mem_pool_identifier,req,resp);
+					memPoolAccess((MemPool*)(src->mem_pool_identifier),req,resp);
 					if (resp->status == NOT_OK)
 					{
 						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
@@ -167,7 +170,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 					req->request_type = WRITE;
 					req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 					req->write_data[0] = temp_new;
-					memPoolAccess(dst->mem_pool_identifier,req,resp);
+					memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 					if (resp->status == NOT_OK)
 					{
 						fprintf(stderr,"Mempool write error. Called from maxpool1D()");
@@ -181,7 +184,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 		req->request_type = WRITE;
 		req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + ((i-1)*num_1D_steps*cs + (k-1)+(j-1)*cs)*dsize/8;
 		req->write_data[0] = temp_new;
-		memPoolAccess(dst->mem_pool_identifier,req,resp);
+		memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 		if (resp->status == NOT_OK)
 		{
 			fprintf(stderr,"Mempool write error. Called from maxpool1D()");
@@ -199,11 +202,6 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	assert(dims_to_pool[num_dims_to_pool-1]<=src->descriptor.number_of_dimensions);
 	assert(l>0);
 	assert(stride>0);
-
-	// New mempool request and response
-	// Will work on improving this
-	MemPoolRequest req;
-	MemPoolResponse resp;
 	
 	// Define and initialize variables
 	uint8_t row_major = src->descriptor.row_major_form;
@@ -250,7 +248,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 			// If dimension equals the dimension to be pooled
 			{	
 				// Perform maxPool
-				maxpool1D(src, size, x, l, stride, cs, dst, mode, &req, &resp);
+				maxpool1D(src, size, x, l, stride, cs, dst, mode);
 
 				// Update parameters
 				int32_t factor = (x<l) ? mode : ((mode == floor) ? 1+((x-l)/stride) : 1+((x-1)/stride));
@@ -281,10 +279,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	// Tensor temp_Tensor = createTensor(...);
 	Tensor temp_Tensor;
 	temp_Tensor.descriptor = src->descriptor;
-	temp_Tensor.mem_pool_identifier = src->mem_pool_identifier;
-	temp_Tensor.mem_pool_buffer_pointer = 2*(1 + size*dsize/(MEMPOOL_PAGE_SIZE*8));
-
-	// createTensor(&temp_Tensor);
+	createTensor(&temp_Tensor,(MemPool*)src->mem_pool_identifier);
 
 
 	// Generalised maxPool (num_dims_to_pool > 1)
@@ -299,19 +294,19 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 			// First dimension : From src to temp_Tensor
 			if (i == iStart)
 			{
-				maxpool1D(src, size, x, l, stride, cs, &temp_Tensor, mode, &req, &resp);
+				maxpool1D(src, size, x, l, stride, cs, &temp_Tensor, mode);
 			}
 
 			// Last dimension : From temp_Tensor to dst
 			else if	(i == iEnd)
 			{
-				maxpool1D(&temp_Tensor, size, x, l, stride, cs, dst, mode, &req, &resp);
+				maxpool1D(&temp_Tensor, size, x, l, stride, cs, dst, mode);
 			}
 
 			// Intermediate dimensions : From temp_Tensor to temp_Tensor
 			else 
 			{
-				maxpool1D(&temp_Tensor, size, x, l, stride, cs, &temp_Tensor, mode, &req, &resp);
+				maxpool1D(&temp_Tensor, size, x, l, stride, cs, &temp_Tensor, mode);
 			}
 			
 			// Update parameters
@@ -328,5 +323,6 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 			cs *= x;
 		}
 	}
+	destroyTensor(&temp_Tensor);
 	return;
 }

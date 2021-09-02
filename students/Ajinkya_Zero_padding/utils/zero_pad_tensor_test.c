@@ -8,12 +8,13 @@
 #include "zero_padding.h"
 
 MemPool pool1,pool2;
-Tensor a[5],a_diff_pool[5];
+// Tensor a[5],a_diff_pool[5];
+Tensor a,a_diff_pool;
 int _err_ = 0;
 
 #define MAX_PAGES 20
 
-void fillTensorDescriptor(Tensor t[])
+void fillTensorDescriptor(Tensor *t)
 // Takes details from the user about the tensor to be created.
 {
     int i,j;Tensor dummy;
@@ -54,7 +55,61 @@ void fillTensorDescriptor(Tensor t[])
     }
 }
 
+float sizeofsrc(Tensor *src)
+{
+    uint64_t i = 0;
+    float size_src = 1.0;
+    uint32_t ndim_src = src->descriptor.number_of_dimensions;
+    uint32_t *dims_src;
+    //dims_src = src->descriptor.dimensions;
+    for(i=0;i<ndim_src;i++)
+    {
+        //printf("%d\n",*dims_src);
+        size_src = size_src * (src->descriptor.dimensions[i]);
+        //dims_src = dims_src + 1;
+    }
+    printf("Number of data blocks in src : %f\n",size_src);
+    return size_src;
+}
 
+void print_Tensor(Tensor *t){
+    MemPoolRequest req;
+    req.request_tag = 0;
+    MemPoolResponse resp;
+    //number of blocks.
+    float size_of_src;
+    size_of_src = sizeofsrc(t);
+
+    uint32_t npages,rem;
+    uint32_t consta = 512.0;
+    npages = ceil(size_of_src/512);
+
+    //blocks required for last page.
+    rem = (uint32_t) size_of_src % consta;
+    //generate read req for one word at a time from src.
+    //store it into temp_buffer.
+    //generate write req for dest tensor.
+    uint64_t src_base = t->mem_pool_buffer_pointer;
+    uint64_t temp_buffer;
+    uint32_t k;
+    for(k=0; k < (npages-1)*MEMPOOL_PAGE_SIZE + rem; k++)
+    {
+        //read one word at a time from src tensor
+        req.request_type = READ;
+        req.request_tag  = req.request_tag + 1;
+        req.arguments[0] = 1;
+        req.arguments[1] = src_base;
+
+        //generate read request for src
+        memPoolAccess((MemPool*)t->mem_pool_identifier, &req, &resp);
+
+        //store into a temporary local buffer.
+        
+        printf("Temporary buffer value : %d",resp.read_data[0]);
+        src_base++;
+    }
+
+}
 
 
 
@@ -64,27 +119,38 @@ int main(int argc,char* argv[])
     initMemPool(&pool1,1,MAX_PAGES);
     initMemPool(&pool2,2,MAX_PAGES);
 
-    fillTensorDescriptor(a);
-    fillTensorDescriptor(a_diff_pool);
+    fillTensorDescriptor(&a);
+    // fillTensorDescriptor(&a_diff_pool);
     uint32_t scale_factor,constant;
-    ptintf("Enter the scale factor:");
+    printf("Enter the scale factor:");
     scanf("%u",&scale_factor);
-    ptintf("Enter the constant to initialize the tensor:");
-    scanf("%u",&constant);
-    while (i<5)
+    a_diff_pool.descriptor.data_type = a.descriptor.data_type;
+    a_diff_pool.descriptor.row_major_form = a.descriptor.row_major_form;
+    a_diff_pool.descriptor.number_of_dimensions = a.descriptor.number_of_dimensions;
+    for (i=0;i<a.descriptor.number_of_dimensions;i++)
     {
-        _err_ = createTensor(a+i,&pool1) || 
-                createTensor(a_diff_pool+i,&pool2) ||
-                initializeTensor(a_diff_pool,constant) ||
+        a_diff_pool.descriptor.dimensions[i] = a.descriptor.dimensions[i];
+    }
+    
+    printf("Enter the constant to initialize the tensor:");
+    scanf("%u",&constant);
+    // while (i<5)
+    // {
+        _err_ = createTensor(&a,&pool1) || 
+                createTensor(&a_diff_pool,&pool2) ||
+                initializeTensor(&a_diff_pool,&constant) ||
                 _err_;
-        
-        _err_ = zeropad(a,scale_factor,constant,a_diff_pool) || _err_;
-
-        
-        if(_err_)
-          break;
-	    else
-          i++;
-    } 
+        printf("%d",_err_);
+        printf("\n Completed!!");  
+        zeropad(&a,scale_factor,constant,&a_diff_pool);
+        printf("\n ZeroPad Completed!!");
+        print_Tensor(&a);
+        print_Tensor(&a_diff_pool);
+        printf("\n Print Completed!!");        
+        // if(_err_)
+        //   break;
+	    // else
+        //   i++;
+    // } 
     
 }

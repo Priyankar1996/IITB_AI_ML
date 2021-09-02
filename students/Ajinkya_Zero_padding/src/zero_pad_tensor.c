@@ -126,9 +126,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -145,13 +145,15 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
         ///////////////////////////////////////////////////
+
+        
         }
         }
         
@@ -188,9 +190,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -207,9 +209,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -250,9 +252,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -269,9 +271,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -315,9 +317,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -334,9 +336,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -383,9 +385,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -402,9 +404,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -453,9 +455,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -472,9 +474,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -526,9 +528,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -545,9 +547,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -602,9 +604,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -621,9 +623,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -681,9 +683,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -700,9 +702,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -763,9 +765,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -782,9 +784,9 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;

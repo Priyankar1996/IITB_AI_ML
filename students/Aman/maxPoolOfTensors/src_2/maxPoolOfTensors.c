@@ -148,10 +148,10 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 				// Read the line from src
 				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
 				req->request_type = READ;
-				uint16_t var_max = ((l < x - j*s) ? l : x - j*s);
-				for (uint16_t var = 0; var < var_max; var++)
+				uint32_t var_max = ((l < x - j*s) ? l : x - j*s);
+				for (uint32_t var = 0; var < var_max; var++)
 				{
-					req->arguments[1] = src->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*x*cs+k+(j*s+var)*cs)*dsize/8;
+					req->arguments[1] = src->mem_pool_buffer_pointer+ (i*x*cs+k+(j*s+var)*cs)*dsize/8;
 					memPoolAccess((MemPool*)(src->mem_pool_identifier),req,resp);
 					if (resp->status == NOT_OK)
 					{
@@ -168,7 +168,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 					
 					// Write back to dst
 					req->request_type = WRITE;
-					req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (i*num_1D_steps*cs + k+j*cs)*dsize/8;
+					req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
 					req->write_data[0] = temp_new;
 					memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 					if (resp->status == NOT_OK)
@@ -182,7 +182,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 	}
 	if ((((i-1)*num_1D_steps*cs + (k-1)+(j-1)*cs)&((8/dsize)-1))!=(8/dsize-1)){
 		req->request_type = WRITE;
-		req->arguments[1] = dst->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + ((i-1)*num_1D_steps*cs + (k-1)+(j-1)*cs)*dsize/8;
+		req->arguments[1] = dst->mem_pool_buffer_pointer+ ((i-1)*num_1D_steps*cs + (k-1)+(j-1)*cs)*dsize/8;
 		req->write_data[0] = temp_new;
 		memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 		if (resp->status == NOT_OK)

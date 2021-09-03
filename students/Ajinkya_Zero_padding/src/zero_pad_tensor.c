@@ -1,12 +1,15 @@
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "mempool.h"
 #include "tensor.h"
-#include "createTensor.h"
+// #include "createTensor.h"
 #include "zero_padding.h"
 
-int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest){
-    initializeTensor(dest,constant);
-    MemPool *mp_src = (Mempool*)(src->mem_pool_identifier);
-    MemPool *mp_dest = (Mempool*)(dest->mem_pool_identifier);
+void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest){
+    // initializeTensor(dest,&constant);
+    MemPool *mp_src = (MemPool*)(src->mem_pool_identifier);
+    MemPool *mp_dest = (MemPool*)(dest->mem_pool_identifier);
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
     // uint32_t i,j,num_elems = 1,flag = 0;
@@ -43,8 +46,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // readDataBlock(src->mem_pool_identifier,,);
             // writeDataBlock(src->mem_pool_buffer_pointer,,);
             uint32_t desti[1] = {i+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),&i) * sizeof(src->descriptor.data_type);
+            printf("address 1 is %u",address1);
+            // uint32_t address1 = sizeof(src->descriptor.data_type) * i; 
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
+            printf("address 2 is %u",address2);
+            // uint32_t address2 = sizeof(dest->descriptor.data_type) * desti[1];             
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -55,12 +62,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)(src->mem_pool_identifier), &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -74,12 +81,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -95,10 +102,17 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         {
             // readDataBlock(src->mem_pool_identifier,,);
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
+            printf("\n i is %d and j is %d",i,j);
             uint32_t ind[2] = {i,j};
             uint32_t desti[2] = {i+scale_factor,j + scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,ind);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,ind);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            printf("\n address1 is %u",address1);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
+            printf("\n address2 is %u",address2);
+
+            
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -109,12 +123,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -128,16 +142,18 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
         ///////////////////////////////////////////////////
+
+        
         }
         }
         
@@ -152,10 +168,15 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         {
             // readDataBlock(src->mem_pool_identifier,,);
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
+            printf("\n i is %d and j is %d and k is %d",i,j,k);
             uint32_t ind[3] = {i,j,k};
             uint32_t desti[3] = {i+scale_factor,j+scale_factor,k+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            printf("\n address1 is %u",address1);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
+            printf("\n address2 is %u",address2);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -166,12 +187,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -185,12 +206,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -214,8 +235,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[4] = {i,j,k,l};
             uint32_t desti[4] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -226,12 +249,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -245,12 +268,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -277,8 +300,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[5] = {i,j,k,l,m};
             uint32_t desti[5] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -289,12 +314,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -308,12 +333,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -343,8 +368,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[6] = {i,j,k,l,m,n};
             uint32_t desti[6] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -355,12 +382,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -374,12 +401,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -411,8 +438,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[7] = {i,j,k,l,m,n,p};
             uint32_t desti[7] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -423,12 +452,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -442,12 +471,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -482,8 +511,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[8] = {i,j,k,l,m,n,p,q};
             uint32_t desti[8] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -494,12 +525,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -513,12 +544,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -556,8 +587,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[9] = {i,j,k,l,m,n,p,q,r};
             uint32_t desti[9] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor,r+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -568,12 +601,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -587,12 +620,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -633,8 +666,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[10] = {i,j,k,l,m,n,p,q,r,s};
             uint32_t desti[10] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor,r+scale_factor,s+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -645,12 +680,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -664,12 +699,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;
@@ -713,8 +748,10 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
             uint32_t ind[11] = {i,j,k,l,m,n,p,q,r,s,t};
             uint32_t desti[11] = {i+scale_factor,j+scale_factor,k+scale_factor,l+scale_factor,m+scale_factor,n+scale_factor,p+scale_factor,q+scale_factor,r+scale_factor,s+scale_factor,t+scale_factor};
-            uint32_t *address1 = getTensorEntryIndexOffset(src,i);
-            uint32_t *address2 = getTensorEntryIndexOffset(src,desti);
+            // uint32_t *address1 = getTensorEntryIndexOffset(&src,i);
+            // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
+            uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
 
         /////////////////////////////////////////////
             //read one word at a time from src tensor
@@ -725,12 +762,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         //printf("mp_req arguments[1] is %d",mp_req.arguments[1]);
 
         //generate read request for src
-        memPoolAccess(src->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)src->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status != OK)
         {
-            fprintf(stderr,"Error: could not read word %d from source tensor.\n", k);
+            fprintf(stderr,"Error: could not read word %d from source tensor.\n", src_base + address1);
         }
-        fprintf(stderr,"\nInfo: read from block %d.\n", k);
+        fprintf(stderr,"\nInfo: read from block %d.\n", src_base + address1);
 
         //store into a temporary local buffer.
         temp_buffer = mp_resp.read_data[0];
@@ -744,12 +781,12 @@ int zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest)
         mp_req.write_data[0] = temp_buffer;
 
         //generate write mp_req for dest.
-        memPoolAccess(dest->mem_pool_identifier, &mp_req, &mp_resp);
+        memPoolAccess((MemPool*)dest->mem_pool_identifier, &mp_req, &mp_resp);
         if(mp_resp.status !=  OK)
         {
-            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", k);
+            fprintf(stderr,"Error: could not write word %d into destination tensor.\n", dest_base + address2);
         }
-        fprintf(stderr,"\nInfo: wrote into block %d.\n", k);
+        fprintf(stderr,"\nInfo: wrote into block %d.\n", dest_base + address2);
 
         // src_base++;
         // dest_base++;

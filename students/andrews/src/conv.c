@@ -130,17 +130,22 @@ int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
     uint32_t in_C = td_in.dimensions[2];
     uint32_t ker_H = td_ker.dimensions[0];
     uint32_t ker_W = td_ker.dimensions[1];
-    uint32_t out_H = (td_in.dimensions[0] + padding[0] + padding[1] 
-                    - td_ker.dimensions[0])/stride[0] + 1;
-    uint32_t out_W = (td_in.dimensions[1] + padding[2] + padding[3] 
-                    - td_ker.dimensions[1])/stride[1] + 1;
-    uint32_t out_C = 1; //td_ker.dimensions[td_ker.number_of_dimensions - 1];
-    out_img->descriptor.row_major_form = is_row_major;
-    out_img->descriptor.number_of_dimensions = 3;
-    out_img->descriptor.data_type = td_in.data_type;
-    out_img->descriptor.dimensions[0] = out_H;
-    out_img->descriptor.dimensions[1] = out_W;
-    out_img->descriptor.dimensions[2] = out_C;
+    
+    uint32_t out_H = 2;
+    uint32_t out_W = 2;
+    uint32_t out_C = 1;
+
+    // uint32_t out_H = (td_in.dimensions[0] + padding[0] + padding[1] 
+    //                 - td_ker.dimensions[0])/stride[0] + 1;
+    // uint32_t out_W = (td_in.dimensions[1] + padding[2] + padding[3] 
+    //                 - td_ker.dimensions[1])/stride[1] + 1;
+    // uint32_t out_C = 1; //td_ker.dimensions[td_ker.number_of_dimensions - 1];
+    // out_img->descriptor.row_major_form = is_row_major;
+    // out_img->descriptor.number_of_dimensions = 3;
+    // out_img->descriptor.data_type = td_in.data_type;
+    // out_img->descriptor.dimensions[0] = out_H;
+    // out_img->descriptor.dimensions[1] = out_W;
+    // out_img->descriptor.dimensions[2] = out_C;
     td_out = out_img->descriptor;
     
     int num_dim_ker = td_ker.number_of_dimensions;
@@ -200,7 +205,7 @@ int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
                         for(int kj = 0; kj < ker_W; kj++){
                             reqKer.request_type = READ;
                             reqKer.request_tag = 1; //TODO check
-                            reqKer.arguments[0] = ceil(in_C * data_size / 8.0) + 1;
+                            reqKer.arguments[0] = CEILING(in_C * data_size, 8) + 1;
                                 //read 1 extra word in case data we need is not word aligned
                             ker_word_offset = (ki * ker_W + kj) * in_C * data_size / 8;
                             reqKer.arguments[1] = kernel->mem_pool_buffer_pointer 
@@ -217,7 +222,7 @@ int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
                             ii = oi*stride[0], ij = oj*stride[1];
                             reqImg.request_type = READ;
                             reqImg.request_tag = 1; //TODO check
-                            reqImg.arguments[0] = ceil(in_C * data_size / 8.0) + 1;
+                            reqImg.arguments[0] = CEILING(in_C * data_size, 8) + 1;
                             img_word_offset = (ii * in_W + ij) * in_C * data_size / 8;
                             reqImg.arguments[1] = kernel->mem_pool_buffer_pointer 
                                 + img_word_offset;

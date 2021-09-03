@@ -25,7 +25,8 @@ typedef enum {
 
 // ASSUMPTIONS:
 //      1. The memory space for tensor in a mempool is contiguously allocated
-//      2. Appropriate datatypes are used as per the input data. 
+//      2. Appropriate datatypes are used as per the input data.
+// 		3. The input tensor and output tensor datatypes are same by default 
 // SUMMARY:
 //      unaryOperateOnTensor performs unary operation on the given src Tensor
 //		and writes the result to dest Tensor

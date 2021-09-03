@@ -14,7 +14,8 @@ typedef enum {
 	EXP,
 	RELU,
 	SQUARE,
-    ABSOLUTE
+    ABSOLUTE,
+	SIGMOID
 } Operation;
 
 // Datatypes supported include: u8, u16, u32, u64, i8, i16, i32, i64, float32, float64.
@@ -23,6 +24,7 @@ typedef enum {
 // ASSUMPTIONS:
 //      1. The memory space for tensor in a mempool is contiguously allocated
 //      2. Appropriate datatypes are used as per the input data. 
+// 		3. The input tensor and output tensor datatypes are same by default 
 // SUMMARY:
 //      unaryOperateOnTensor performs unary operation on the given Tensor t
 //		and writes the result back to same Tensor t. 

@@ -35,7 +35,7 @@ typedef struct __Tensor{
 
 	// buffer identifier.
 	uintptr_t mem_pool_identifier;
-	uint32_t mem_pool_buffer_pointer;
+	uint32_t  mem_pool_buffer_pointer;
 
 } Tensor;
 

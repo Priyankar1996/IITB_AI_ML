@@ -1,4 +1,4 @@
-#include "../include/maxPoolOfTensors.h"
+#include "../include/avgPoolOfTensors.h"
 
 // Compute size of tensor
 uint32_t getSizeOfTensor(Tensor *T)
@@ -41,94 +41,89 @@ uint64_t getBitMask(uint8_t dsize , uint8_t position)
 // Core operation of maxPool
 // Computes the max of num_max quantities in matrix starting at indice start based on the datatype
 // Returns the data in at location temp
-void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, void * temp)
+void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, void * temp, int pos)
 {	
 	assert(num_max > 0);
-
+	double sum = 0;
 	switch (dt)
 	// Select comparator based on datatype
 		{
 		case i8:
-		*((int8_t*)temp ) = *((int8_t*)(matrix) +(start)*8);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((int8_t*)(matrix) +(start+i)*8)> *((int8_t*)temp )) *((int8_t*)temp ) = *((int8_t*)(matrix) +(start+i)*8);
+			sum += (double)(*((int8_t*)(matrix) +(start+i)*8));
 		}
 		break;
 		case float8:
 		case u8:
-		*((uint8_t*)temp ) = *((uint8_t*)(matrix) +(start)*8);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((uint8_t*)(matrix) +(start+i)*8)> *((uint8_t*)temp )) *((uint8_t*)temp ) = *((uint8_t*)(matrix) +(start+i)*8);
+			sum += (double)(*((uint8_t*)(matrix) +(start+i)*8));
 		}
+		*((uint8_t*)temp+pos ) = (uint8_t)((0.0 +sum)/num_max);
 		break;
 		case i16:
-		*((int16_t*)temp ) = *((int16_t*)(matrix) +(start)*4);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((int16_t*)(matrix) +(start+i)*4)> *((int16_t*)temp )) *((int16_t*)temp ) = *((int16_t*)(matrix) +(start+i)*4);
+			sum += (double)(*((int16_t*)(matrix) +(start+i)*4));
 		}
+		*((int16_t*)temp+pos ) = (int16_t)((0.0 +sum)/num_max);
 		break;
 		case float16:
 		case u16:
-		*((uint16_t*)temp ) = *((uint16_t*)(matrix) +(start)*4);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((uint16_t*)(matrix) +(start+i)*4)> *((uint16_t*)temp )) *((uint16_t*)temp ) = *((uint16_t*)(matrix) +(start+i)*4);
+			sum += (double)(*((uint16_t*)(matrix) +(start+i)*4));
 		}
+		*((uint16_t*)temp+pos ) = (uint16_t)((0.0 +sum)/num_max);
+
 		break;
 		case i32:
-		*((int32_t*)temp ) = *((int32_t*)(matrix) +(start)*2);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((int32_t*)(matrix) +(start+i)*2)> *((int32_t*)temp )) *((int32_t*)temp ) = *((int32_t*)(matrix) +(start+i)*2);
+			sum += (double)(*((int32_t*)(matrix) +(start+i)*2));
 		}
+		*((int32_t*)temp+pos ) = (int32_t)((0.0 +sum)/num_max);
+
 		break;
 		case float32:
-		*((float*)temp ) = *((float*)(matrix) +(start)*2);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((float*)(matrix) +(start+i)*2)> *((float*)temp )) *((float*)temp ) = *((float*)(matrix) +(start+i)*2);
+			sum += (double)(*((float*)(matrix) +(start+i)*2));
 		}
+		*((float*)temp+pos ) = (float)((0.0 +sum)/num_max);
+
 		break;
 		case u32:
-		*((uint32_t*)temp ) = *((uint32_t*)(matrix) +(start)*2);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((uint32_t*)(matrix) +(start+i)*2)> *((uint32_t*)temp )) *((uint32_t*)temp ) = *((uint32_t*)(matrix) +(start+i)*2);
+			sum += (double)(*((uint32_t*)(matrix) +(start+i)*2));
 		}
+		*((uint32_t*)temp+pos ) = (uint32_t)((0.0 +sum)/num_max);;
+
 		break;
 		case i64:
-		*((int64_t*)temp) = *((int64_t*)(matrix) + start);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((int64_t*)(matrix) +(start+i)*1)> *((int64_t*)temp)) *((int64_t*)temp) = *((int64_t*)(matrix) +(start+i)*1);
+			sum += (double)(*((int64_t*)(matrix) +(start+i)));
 		}
+		*((int64_t*)temp+pos) = (int64_t)((0.0 +sum)/num_max);;
+
 		break;
 		case float64:
-		*((double*)temp) = *((double*)(matrix) + start);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((double*)(matrix) +(start+i)*1)> *((double*)temp)) *((double*)temp) = *((double*)(matrix) +(start+i)*1);
+			sum += (double)(*((double*)(matrix) +(start+i)));
 		}
+		*((double*)temp+pos) = (double)((0.0 +sum)/num_max);
+
 		break;
 		case u64:
-		*((uint64_t*)temp) = *((uint64_t*)(matrix) + start);
-		for (int i = 1;i< num_max;i++)
+		for (int i = 0;i< num_max;i++)
 		{
-			// Update if larger
-			if (*((uint64_t*)(matrix) +(start+i)*1)> *((uint64_t*)temp)) *((uint64_t*)temp) = *((uint64_t*)(matrix) +(start+i)*1);
+			sum += (double)(*((uint64_t*)(matrix) +(start+i)));
 		}
+		*((uint64_t*)temp+pos) = (uint64_t)((0.0 +sum)/num_max);
 		break;
 		default:
 			break;
@@ -160,9 +155,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 
 	// Define temporary memory variables
 	// Future goal: Improve size by packing data in temp_old
-	uint64_t temp_new , temp_old[l], temp_buffer, bitmask;
-	void *temp_var1;
-	temp_var1 = temp_old;
+	uint64_t temp_new , temp_old[l];
 
 	// Stride = 1; number of elements to fetch = 1
 	req->arguments[0] = 1;
@@ -171,9 +164,9 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 	uint32_t i=0,j=0,k=0;
 	for (i = 0;i<num_units;i++)
 	{	
-		for (k = 0;k < cs;k++)
+		for (j = 0; j < num_1D_steps; j++)
 		{
-			for (j = 0; j < num_1D_steps; j++)
+			for (k = 0;k < cs;k++)
 			{	
 				// Read the line from src
 				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
@@ -188,39 +181,37 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
 						exit(-1);
 					}
-					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
-					bitmask = getBitMask(dsize,0);
-					temp_old[var] = temp_old[var]&bitmask;
+					temp_old[var] = (resp->read_data[0] >> (8*dsize*((i*x*cs+k+(j*s+var)*cs)&((8/dsize)-1))));
 				}
 
 				// Perform max operation
-				maxWithSpacing(var_max, 0,temp_var1, dt,&temp_new);
+				maxWithSpacing(var_max, 0,temp_old, dt,&temp_new,(i*num_1D_steps*cs + k + j*cs) & ((8/dsize)-1));
 				
-				// Read from dst
-				req->request_type = READ;
-				req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
-				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
-				if (resp->status == NOT_OK)
-				{
-					fprintf(stderr,"Mempool read error. Called from maxpool1D()");
-					exit(-1);
-				}
-				
-				// Compute write data
-				bitmask = ~getBitMask(dsize,i*num_1D_steps*cs + k + j*cs - (8/dsize)*((i*num_1D_steps*cs + k + j*cs)*dsize/8));
-				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0)) << (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
-				
-				// Write back to dst
-				req->request_type = WRITE;
-				req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
-				req->write_data[0] = temp_buffer;
-				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
-				if (resp->status == NOT_OK)
-				{
-					fprintf(stderr,"Mempool write error. Called from maxpool1D()");
-					exit(-1);
+				if (((i*num_1D_steps*cs + k+j*cs)&((8/dsize)-1))==(8/dsize-1)){
+					
+					// Write back to dst
+					req->request_type = WRITE;
+					req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
+					req->write_data[0] = temp_new;
+					memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
+					if (resp->status == NOT_OK)
+					{
+						fprintf(stderr,"Mempool write error. Called from maxpool1D()");
+						exit(-1);
+					}
 				}
 			}			
+		}
+	}
+	if ((((i-1)*num_1D_steps*cs + (k-1)+(j-1)*cs)&((8/dsize)-1))!=(8/dsize-1)){
+		req->request_type = WRITE;
+		req->arguments[1] = dst->mem_pool_buffer_pointer+ ((i-1)*num_1D_steps*cs + (k-1)+(j-1)*cs)*dsize/8;
+		req->write_data[0] = temp_new;
+		memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
+		if (resp->status == NOT_OK)
+		{
+			fprintf(stderr,"Mempool write error. Called from maxpool1D()");
+			exit(-1);
 		}
 	}
 }

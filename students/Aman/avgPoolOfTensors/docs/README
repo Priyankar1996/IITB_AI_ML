@@ -1,0 +1,29 @@
+The function maxPoolOfTensors() is used to perform pooling on the input tensor src, and stores the result in dst.
+
+Usage:
+void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode);
+
+Arguments:
+	src                -> Input tensor
+	dst                -> Output tensor
+	l                  -> Length of pooling (pool size)
+	stride             -> Stride of pooling
+	num_dims_to_pool   -> Number of dimensions to be pooled (a positive integer)
+	dims_to_pool       -> Array containing actual dimensions to be pooled
+	mode               -> Mode of operation (floor/ceiling)(0/1)
+
+Testbench Usage:
+	->	Ensure that GNU octave is installed on the device.
+	->	If using a device with Windows as the operating system, replace "cmp" on line 81 of Test_maxpool.c with "comp".
+	->	Run "make compile" to compile.
+	
+	->	Run "make run" to run the script.
+		Alternatively, use "make all" to both compile and run.
+	->	Enter the filename (must be present in utils/Test_inputs/) in the prompt.
+	->	Otherwise, can also do "cd bin; ./testbench input_file" to run with input_file as the path of input file. This step can be done after compilation.
+	
+	->	If the output is "If no message is printed after this one, there is no error!!", then the code works.
+		Else, there is a bug in the Code/Testbench(including octave code).
+		
+Clean working area:
+	-> Run "make clean" to clean the directories (all extra .txt, .o files and executables)

@@ -1,0 +1,42 @@
+Notation:
+	For a n-D tensor T, section d_1_low:d_1_high, d_2_low:d_2_high ... d_n_low:d_n_high is written here as
+		T[d_1_low,d_2_low,...,d_n_low : d_1_high,d_2_high_d_n_high].
+	An individual element is represented as
+		T[d_1_pos,d_2_pos,...,d_n_pos].
+		
+
+Working Principle:
+	Consider input n-D tensor src[0,...,0 : src_d_1,src_d_2, ... src_d_n]
+	Let pool_size be l
+	Let stride be s
+	Let dims_to_pool be i_1, i_2, ... i_k; k <= n
+	
+	Then the output tensor is dst[0,0, ... 0 : dst_d_1,dst_d_2, ... dst_d_n],
+		where dst_d_i = 
+			{
+			  src_d_i , if i not \in {i_1,...i_k}
+			  1 + (floor\ceiling)((src_d_i - l)/s) , o.w.
+			}
+			
+	Also,
+		dst[d_1_pos,d_2_pos, ... d_n_pos] = max(src[d_1_pos_low,d_2_pos_low, ... d_n_pos_low : d_1_pos_high,d_2_pos_high, ... d_n_pos_high]),
+		where d_i_pos_low = 
+			{
+			  d_1_pos*s , if i \in {i_1,...i_k}
+			  d_1_pos, o.w.
+			}
+		d_i_pos_high = 
+			{
+			  d_1_pos*s + l -1 , if i \in {i_1,...i_k}
+			  d_1_pos, o.w.
+			}
+			
+	Using the commutativity and associativity of max operation, we get
+		dst[d_1_pos,d_2_pos, ... d_n_pos] = max_d_i_k(max(...(max_d_i_1(src[d_1_pos_low,d_2_pos_low, ... d_n_pos_low : d_1_pos_high,d_2_pos_high, ... d_n_pos_high]))))
+
+	Thus, we can perform a generic k-dimension pooling by performing 1-dimensional maxPool individually across each of the dimensions.
+	
+
+Computing positions to pool:
+	From the kth dimension, we can unroll the (k+1)th - (nth dimension into a single vector for each unit. Also, we can unroll the 1st to (k-1)th dimension as another dimension. Thus, we get an equivalent of 3D array with first dimension representing higher dimensions, second representing dim_to_pool and the third representing lower dimensions.
+	So, input tensors start positions can be obtained by navigating across the first and third dimension with stride 1, and the second dimension with stride s.

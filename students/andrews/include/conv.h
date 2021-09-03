@@ -16,9 +16,14 @@
 /*
 	Uncomment the following 2 lines for local testing
 */
-#include "../tensor.c"
-#include "../mempool.c"
-#include <math.h>
+// #include "../../../C/primitives/include/alphabet.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include "mempool.h"
+#include "tensor.h"
+
+#define CEILING(x,y) (((x) + (y) - 1) / (y))
 
 /*
 	Union used to calculate convolution

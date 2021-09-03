@@ -1,0 +1,100 @@
+function dst = avgPool(src, tempsize, pool_size, stride, x, cs , outdims);
+%  fprintf(stderr,"%d %d %d\n",tempsize,x,cs);
+  dst = zeros([1,tempsize*outdims/x]);
+  num_blocks = tempsize/(x*cs);
+  for i = 1:num_blocks
+    (i-1)*x*cs+1:i*x*cs;
+    temp = reshape(src((i-1)*x*cs+1:i*x*cs),[cs,x]);
+    for j = 1:outdims
+      dst((i-1)*outdims*cs + (j-1)*cs + 1:(i-1)*outdims*cs+j*cs) = mean(temp(:,(j-1)*stride+1:min(x,(j-1)*stride+pool_size)),2);
+    end
+  end
+endfunction
+
+datatype = input("");
+row_major = input("");
+num_dims = input("");
+dims = zeros(1,num_dims);
+for i = 1:num_dims
+  if (row_major) dims(num_dims+1-i) = input("");
+  else dims(i) = input("");
+  endif
+end
+pool_size = input("");
+stride = input("");
+mode = input("");
+num_dims_to_pool = input("");
+dims_to_pool = zeros(1,num_dims_to_pool);
+for i = 1:num_dims_to_pool
+  if (row_major) dims_to_pool(num_dims_to_pool+1-i) = num_dims - input("");
+  else dims_to_pool(i) = input("")+1;
+  endif
+end
+
+if (num_dims == 1)
+  src = zeros([1,dims]);
+else
+  src = zeros(dims);
+endif
+input_size = prod(dims);
+for i = 1:input_size
+  src(i) = input("");
+end
+
+out_dims = zeros(1,num_dims);
+out_dims = dims;
+for i = 1:num_dims_to_pool
+  if (mode == 1)
+    out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - 1)/stride);
+  else
+    out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - pool_size)/stride);
+  endif
+end
+output_size = prod(out_dims);
+dst = zeros(size(src));
+tempsize = prod(size(src));
+cs = 1;
+j = 1;
+for i = 1:num_dims
+  if (i == dims_to_pool(j))
+    dst = avgPool(src, tempsize, pool_size, stride, dims(i), cs , out_dims(i));
+    tempsize = tempsize * out_dims(i)/dims(i);
+    if (j < num_dims_to_pool)
+      j = j + 1;
+    endif
+    src = dst;
+  endif
+  cs = cs * out_dims(i);
+end
+
+printf("Size of output is ");
+for i = 1:num_dims
+  if (row_major) printf("%d ",out_dims(num_dims+1-i));
+  else printf("%d ",out_dims(i));
+  endif
+end
+printf("\n");
+switch(datatype)
+  case {0,1,2,8,9}
+    for i = 1:output_size
+      printf("%d %u\n",i, dst(i));
+    end
+  case {3}
+    for i = 1:output_size
+      printf("%d %lu\n",i, dst(i));
+    end
+  case {4,5,6}
+    for i = 1:output_size
+      printf("%d %d\n",i, dst(i));
+    end
+  case {7}
+    for i = 1:output_size
+      printf("%d %ld\n",i, dst(i));
+    end
+  case {10,11}
+    for i = 1:output_size
+      printf("%d %f\n",i, dst(i));
+    end
+  otherwise
+    printf("Error! Invalid datatype.");
+endswitch

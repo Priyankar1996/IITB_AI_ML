@@ -1,5 +1,5 @@
 #include "createTensor.h"
-int createTensor(Tensor *t,MemPool *mp)
+int createTensorAtHead(Tensor *t,MemPool *mp)
 {
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
@@ -8,20 +8,59 @@ int createTensor(Tensor *t,MemPool *mp)
     //
     uint16_t i,n_pages;
     uint32_t dataSize = sizeofTensorDataInBytes(t->descriptor.data_type);
-    t->mem_pool_identifier = (uintptr_t)((void*)(mp));
-    t->mem_pool_buffer_pointer = mp->write_pointer*512;
-    
     uint32_t num_elems = numberOfElementsInTensor(t);
 
     n_pages = CEILING(num_elems*dataSize,8*MEMPOOL_PAGE_SIZE);
+
+    t->mem_pool_identifier = (uintptr_t)((void*)(mp));
     //    
     //Allocate that many pages in the mempool.
     //
-    mp_req.request_type = ALLOCATE;
-    mp_req.request_tag = t->mem_pool_buffer_pointer ;
+    mp_req.request_type = ALLOCATE_AT_HEAD;
+    mp_req.request_tag = mp->head_pointer ;
     mp_req.arguments[0] = n_pages;
 
     memPoolAccess(mp, &mp_req, &mp_resp);
+    //printf("Request:%u,%u,%u\n",mp_req.request_type,mp_req.request_tag,mp_req.arguments[0]);
+    //printf("Response:%u,%u,%u\n",mp_resp.status,mp_resp.request_tag,mp_resp.allocated_base_address);
+
+    if(mp_resp. status != OK)
+    {
+        fprintf(stderr,"ERROR: Couldn't allocate memory.\n");
+        return(1);
+    }
+    else
+    {
+        t->mem_pool_buffer_pointer = mp_resp.allocated_base_address;
+        printf("SUCCESS: Allocated %d page(s) at Head .Base address is %d\n",n_pages,mp_resp.allocated_base_address);
+        return(0);
+    }
+}
+
+int createTensorAtTail(Tensor *t, MemPool *mp)
+{
+    MemPoolRequest mp_req;
+    MemPoolResponse mp_resp;
+    //
+    // Calculate number of pages required to store the tensor.
+    //
+    uint16_t i,n_pages;
+    uint32_t dataSize = sizeofTensorDataInBytes(t->descriptor.data_type);
+    uint32_t num_elems = numberOfElementsInTensor(t);
+
+    n_pages = CEILING(num_elems*dataSize,8*MEMPOOL_PAGE_SIZE);
+
+    t->mem_pool_identifier = (uintptr_t)((void*)(mp));
+    //t->mem_pool_buffer_pointer = (mp->tail_pointer-n_pages)*MEMPOOL_PAGE_SIZE;
+
+    mp_req.request_type = ALLOCATE_AT_TAIL;
+    mp_req.request_tag = (mp->tail_pointer + (mp->mem_pool_size_in_pages - n_pages)* MEMPOOL_PAGE_SIZE )%(mp->mem_pool_size_in_pages * MEMPOOL_PAGE_SIZE);
+    mp_req.arguments[0] = n_pages;
+
+    memPoolAccess(mp, &mp_req, &mp_resp);
+
+    //printf("Request:%u,%u,%u\n",mp_req.request_type,mp_req.request_tag,mp_req.arguments[0]);
+    //printf("Response:%u,%u,%u\n",mp_resp.status,mp_resp.request_tag,mp_resp.allocated_base_address);
 
     if(mp_resp. status != OK)
     {
@@ -30,9 +69,11 @@ int createTensor(Tensor *t,MemPool *mp)
     }
     else
     {
-        printf("SUCCESS: Allocated %d page(s).Base address is %d\n",n_pages,mp_resp.allocated_base_address);
+        t->mem_pool_buffer_pointer = mp_resp.allocated_base_address;
+        printf("SUCCESS: Allocated %d page(s) at tail.Base address is %d\n",n_pages,mp_resp.allocated_base_address);
         return(0);
     }
+
 }
 
 int initializeTensor (Tensor* t, void* initial_value)

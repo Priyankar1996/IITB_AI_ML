@@ -10,7 +10,7 @@ MemPool pool1,pool2;
 Tensor a[5],a_diff_pool[5];
 int _err_ = 0;
 
-#define MAX_PAGES 20
+#define MAX_PAGES 10
 
 void fillTensorDescriptor(Tensor t[])
 // Takes details from the user about the tensor to be created.
@@ -179,30 +179,36 @@ int main(int argc,char* argv[])
     fillTensorDescriptor(a);
     //printTensorDescriptor(a[0]);
 
-    fillTensorDescriptor(a_diff_pool);
+    //fillTensorDescriptor(a_diff_pool);
     //printTensorDescriptor(a_diff_pool[0]);
 
     while (i<5)
     {
-        _err_ = createTensor(a+i,&pool1) || 
+        /*_err_ = createTensor(a+i,&pool1) || 
                 createTensor(a_diff_pool+i,&pool2) ||
                 initializeTensor(a+i,&i) ||
+                _err_;*/
+
+        _err_  = createTensorAtTail(a+i,&pool1) || 
+                //createTensorAtTail(a+i,&pool1) || 
                 _err_;
         
-        _err_ = copyTensor(a+i,a_diff_pool+i) || _err_;
+        //_err_ = copyTensor(a+i,a_diff_pool+i) || _err_;
 
-        _err_ = compareTensors(*(a+i),*(a_diff_pool+i)) || _err_;
-        if(_err_)
-          break;
-	    else
+        //_err_ = compareTensors(*(a+i),*(a_diff_pool+i)) || _err_;
+        //if(_err_)
+          //break;
+	    //else
           i++;
-    } 
+    }
+
     i=0;
+
     printf("Number of available pages in mempools:%d,%d.\n",pool1.number_of_free_pages,pool2.number_of_free_pages);
     while (i<5)
     {
         _err_ = destroyTensor(a+i) || 
-                destroyTensor(a_diff_pool+i) ||
+                //destroyTensor(a_diff_pool+i) ||
                 _err_;
         printf("Number of available pages in mempools:%d,%d.\n",pool1.number_of_free_pages,pool2.number_of_free_pages);
         i++;

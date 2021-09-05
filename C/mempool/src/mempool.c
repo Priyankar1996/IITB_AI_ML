@@ -41,10 +41,10 @@ void allocatePagesAtHead(MemPool* mp, MemPoolRequest* req, MemPoolResponse* resp
 	
 	{
 		// New address of allocation
-		resp->allocated_base_address = mp->head_pointer * MEMPOOL_PAGE_SIZE;
-		
+		resp->allocated_base_address = mp->head_pointer;
+
 		// Adding at head, so increment head_pointer
-		mp->head_pointer = (mp->head_pointer + n_pages_requested) %
+		mp->head_pointer = (mp->head_pointer + n_pages_requested * MEMPOOL_PAGE_SIZE) %
 					(mp->mem_pool_size_in_pages * MEMPOOL_PAGE_SIZE);
 
 		// Update number of free pages
@@ -56,7 +56,6 @@ void allocatePagesAtHead(MemPool* mp, MemPoolRequest* req, MemPoolResponse* resp
 		// Update req_head_pointer
 		uint32_t next_rwp  = (mp->req_head_pointer + 1) % mp->mem_pool_size_in_pages;
 		mp->req_head_pointer = next_rwp;
-
 		// return OK
 		status = OK;
 	}
@@ -82,19 +81,20 @@ void allocatePagesAtTail(MemPool* mp, MemPoolRequest* req, MemPoolResponse* resp
 		// Added (mp->mem_pool_size_in_pages * MEMPOOL_PAGE_SIZE) to ensure that
 		// the address lies in a meaningful range
 		uint32_t address = (mp->tail_pointer + (mp->mem_pool_size_in_pages * MEMPOOL_PAGE_SIZE)
-					- n_pages_requested) % (mp->mem_pool_size_in_pages * MEMPOOL_PAGE_SIZE);
+					- n_pages_requested * MEMPOOL_PAGE_SIZE) % (mp->mem_pool_size_in_pages * MEMPOOL_PAGE_SIZE);
 		resp->allocated_base_address  = address;
 		mp->tail_pointer = address;
 
 		// Update number of free pages
 		mp->number_of_free_pages -= n_pages_requested;
 
-		// Add request_tag to requester_buffer
-		mp->requester_buffer[mp->req_tail_pointer] = req->request_tag;
-	
 		// Update req_head_pointer
 		uint32_t next_rwp  = (mp->req_tail_pointer + mp->mem_pool_size_in_pages - 1) % mp->mem_pool_size_in_pages;
 		mp->req_tail_pointer = next_rwp;
+
+		// Add request_tag to requester_buffer
+		mp->requester_buffer[mp->req_tail_pointer] = req->request_tag;
+
 
 		// return OK
 		status = OK;

@@ -1,42 +1,14 @@
-function dst = maxPool(indices, src, dims_to_pool, length, stride,dims);
-  temp = src;
-  j = 1;
-  for i = 1:size(indices,2)
-    indice_low = indices(i);
-    indice_high = indices(i);
-    if (i == dims_to_pool(j))
-      indice_low = 1 + (indices(i)-1)*stride;
-      indice_high = min(dims(i),(indices(i)-1)*stride + length);
-      if (j < size(dims_to_pool,2))
-        j = j + 1;
-      end
-    endif
-    if (i < size(indices,2))
-      temp = temp(indice_low:indice_high,:);
-      if (indice_high - indice_low > 0)
-        temp = max(temp);
-      end
-    else
-      temp = temp(indice_low:indice_high);
-    end
-    if (i < size(indices,2) - 1)
-      temp = reshape(temp,dims(i+1:end));
+function dst = maxPool(src, tempsize, pool_size, stride, x, cs , outdims);
+%  fprintf(stderr,"%d %d %d\n",tempsize,x,cs);
+  dst = zeros([1,tempsize*outdims/x]);
+  num_blocks = tempsize/(x*cs);
+  for i = 1:num_blocks
+    (i-1)*x*cs+1:i*x*cs;
+    temp = reshape(src((i-1)*x*cs+1:i*x*cs),[cs,x]);
+    for j = 1:outdims
+      dst((i-1)*outdims*cs + (j-1)*cs + 1:(i-1)*outdims*cs+j*cs) = max(temp(:,(j-1)*stride+1:min(x,(j-1)*stride+pool_size)),[],2);
     end
   end
-  dst = max(temp);
-endfunction
-
-function indices = getIndices(i, out_dims);
-  temp_var = i-1;
-  temp_var2 = out_dims(1);
-  indices = zeros(size(out_dims,2));
-  indices(1) = rem(temp_var,temp_var2);
-  for j = 2:size(out_dims,2)
-    temp_var = (temp_var - indices(j-1)) / temp_var2;
-    temp_var2 = out_dims(j);
-    indices(j) = rem(temp_var,temp_var2);
-  end
-  indices = indices + 1;
 endfunction
 
 datatype = input("");
@@ -48,18 +20,22 @@ for i = 1:num_dims
   else dims(i) = input("");
   endif
 end
-length = input("");
+pool_size = input("");
 stride = input("");
 mode = input("");
 num_dims_to_pool = input("");
 dims_to_pool = zeros(1,num_dims_to_pool);
 for i = 1:num_dims_to_pool
   if (row_major) dims_to_pool(num_dims_to_pool+1-i) = num_dims - input("");
-  else dims_to_pool(i) = input("")+1;;
+  else dims_to_pool(i) = input("")+1;
   endif
 end
 
-src = zeros(dims);
+if (num_dims == 1)
+  src = zeros([1,dims]);
+else
+  src = zeros(dims);
+endif
 input_size = prod(dims);
 for i = 1:input_size
   src(i) = input("");
@@ -71,15 +47,24 @@ for i = 1:num_dims_to_pool
   if (mode == 1)
     out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - 1)/stride);
   else
-    out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - length)/stride);
+    out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - pool_size)/stride);
   endif
 end
 output_size = prod(out_dims);
-
-dst = zeros(dims);
-for i = 1:output_size
-  indices = getIndices(i,out_dims);
-  dst(i) = maxPool(indices,src,dims_to_pool,length,stride,dims);
+dst = zeros(size(src));
+tempsize = prod(size(src));
+cs = 1;
+j = 1;
+for i = 1:num_dims
+  if (i == dims_to_pool(j))
+    dst = maxPool(src, tempsize, pool_size, stride, dims(i), cs , out_dims(i));
+    tempsize = tempsize * out_dims(i)/dims(i);
+    if (j < num_dims_to_pool)
+      j = j + 1;
+    endif
+    src = dst;
+  endif
+  cs = cs * out_dims(i);
 end
 
 printf("Size of output is ");

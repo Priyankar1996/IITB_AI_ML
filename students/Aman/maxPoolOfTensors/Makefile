@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS = -Wall -g
 BIN=bin
-SRC=src_2
-INCLUDE=include_2
+SRC=src
+INCLUDE=include
 MEMPOOL=../../../C/mempool
 TENSOR=../../../C/primitives
 CREATETENSOR=../../priyankar

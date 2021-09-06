@@ -276,10 +276,10 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	*/
 
 	// To be later replaced with
-	// Tensor temp_Tensor = createTensor(...);
+	// Tensor temp_Tensor = createTensorAtHead(...);
 	Tensor temp_Tensor;
 	temp_Tensor.descriptor = src->descriptor;
-	createTensor(&temp_Tensor,(MemPool*)src->mem_pool_identifier);
+	createTensorAtHead(&temp_Tensor,(MemPool*)src->mem_pool_identifier);
 
 
 	// Generalised maxPool (num_dims_to_pool > 1)

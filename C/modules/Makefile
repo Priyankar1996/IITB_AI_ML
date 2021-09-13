@@ -1,6 +1,6 @@
 CC=gcc
 AR=ar
-CFLAGS = -Wall
+CFLAGS = -Wall -std=c99
 ARFLAGS = -cvq
 BIN=bin
 LIB=lib
@@ -9,7 +9,7 @@ INCLUDE=include
 MEMPOOL=../mempool
 TENSOR=../primitives
 PRIMITIVES = $(BIN)/mempool.o $(BIN)/tensor.o $(BIN)/createTensor.o
-OBJ =  _maxPoolOfTensors
+OBJ =  _maxPoolOfTensors _convolutionTranspose _readWriteTensorsFromStandardIO
 
 all: compile
 

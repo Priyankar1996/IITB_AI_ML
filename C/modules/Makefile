@@ -21,7 +21,8 @@ TESTFILE=util/Test.c
 all: compile
 
 compile: createDir $(PRIMITIVES) $(OBJ)
-	cd $(BIN); $(CC) $(CFLAGS) -o Testbench ../$(TESTFILE) $(OBJ) $(PRIMFILES)
+	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -I $(INCLUDE)
+	cd $(BIN); $(CC) $(CFLAGS) -o Test Testfile.o $(OBJ) $(PRIMFILES)
 
 createDir:
 	mkdir -p $(BIN);

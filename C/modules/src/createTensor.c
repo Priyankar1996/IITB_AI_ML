@@ -6,7 +6,7 @@ int createTensorAtHead(Tensor *t,MemPool *mp)
     //
     // Calculate number of pages required to store the tensor.
     //
-    uint16_t i,n_pages;
+    uint16_t n_pages;
     uint32_t dataSize = sizeofTensorDataInBytes(t->descriptor.data_type);
     uint32_t num_elems = numberOfElementsInTensor(t);
 
@@ -44,7 +44,7 @@ int createTensorAtTail(Tensor *t, MemPool *mp)
     //
     // Calculate number of pages required to store the tensor.
     //
-    uint16_t i,n_pages;
+    uint16_t n_pages;
     uint32_t dataSize = sizeofTensorDataInBytes(t->descriptor.data_type);
     uint32_t num_elems = numberOfElementsInTensor(t);
 
@@ -165,13 +165,13 @@ int initializeTensor (Tensor* t, void* initial_value)
                             num_elems_left--;
 				            break;
 
-			// case float8: ;
+			        case float8: ;
 				// to be added 
-				// break;
+				            break;
 
-			// case float16: ;
+			        case float16: ;
 				// to be added 
-				// break;
+				            break;
 
 			        case float32: ;
 				                float val32f = *((float*) initial_value);
@@ -208,7 +208,7 @@ int destroyTensor(Tensor *t)
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
     uint32_t data_size = sizeofTensorDataInBytes(t->descriptor.data_type); 
-    uint32_t i,num_elems = 1,n_pages;
+    uint32_t num_elems = 1,n_pages;
     
     num_elems = numberOfElementsInTensor(t);
         
@@ -242,7 +242,7 @@ int copyTensor(Tensor *src, Tensor *dest)
     MemPool *mp_dest = (MemPool*)(dest->mem_pool_identifier);
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
-    uint32_t i,j,num_elems=1,flag=0;
+    uint32_t j,num_elems=1,flag=0;
     
     uint32_t data_size = sizeofTensorDataInBytes(src->descriptor.data_type); 
     

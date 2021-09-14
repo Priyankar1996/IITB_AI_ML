@@ -7,7 +7,7 @@
 #include "createTensor.h"
 #include "maxPoolOfTensors.h"
 #include "conv.h"
-#include ".h"
+#include "readWriteTensorsFromStandardIO.h"
 
 int main(){
 

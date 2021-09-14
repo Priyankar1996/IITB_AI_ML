@@ -1,5 +1,11 @@
-#include "createTensor.h"
+#include <stdio.h>
+#include <assert.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include "readWriteTensorsFromStandardIO.h"
+#include "tensor.h"
+#include "mempool.h"
+#include "createTensor.h"
 
 int readTensorFromFile(char *filename, Tensor *t)
 {

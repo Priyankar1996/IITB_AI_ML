@@ -1,5 +1,12 @@
+#include <stdio.h>
+#include <assert.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include "tensor.h"
+#include "mempool.h"
+#include "createTensor.h"
 #include "convolutionTranspose.h"
-#include <inttypes.h>
+
 uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,
                                     TensorDescriptor *td_out, uint32_t *k_dims, 
                                     uint32_t *stride)

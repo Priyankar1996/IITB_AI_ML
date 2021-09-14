@@ -1,3 +1,10 @@
+#include <stdio.h>
+#include <assert.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include "tensor.h"
+#include "mempool.h"
+#include "createTensor.h"
 #include "conv.h"
 
 void convHelper(const uint64_t *ker_data, const uint64_t *img_data, 

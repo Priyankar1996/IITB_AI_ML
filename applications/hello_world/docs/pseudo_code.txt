@@ -1,9 +1,18 @@
 First pipeline application...
+
 	image of size 224x224x3 as input
+		data type = float (single precision).
+
 	kernels for the convolution/deconvolution 3x3
+		Note: the kernel is presented as a tensor.
+			data-type = float.
+
+NOTE: all data types are floats to begin with.
 
 MemPool  A;
-Tensor   T;
+Tensor   T; // float.
+
+Tensor   K1, K2, .... Kn; // kernels need to be created!
 
 setup tensor descriptor for T
 allocate Tensor T(0), T(1), T(2) ...  S(0), S(1) etc.
@@ -11,7 +20,7 @@ read tensor data from file into T(0)
 
 for I in 0 to L-1 loop
 
-	convolution on the tensor T(I) (in A) will produce S(I)
+	convolution on the tensor T(I) (in A with kernel K) will produce S(I)
 	point-wise-non-linearity (rectification) on S(I) (in A) will modify S(I)
 	pooling on the tensor S(I)  (in A) will produce T(I+1)
 
@@ -19,7 +28,7 @@ end loop
 
 for J in L to 2L-1 loop
 
-	deconvolution on tensor T(J) (in A) produce tensor W(J) // TBD //
+	deconvolution on tensor T(J) (in A with kernel K*) produce tensor W(J) // TBD //
 		(oversample, then convolve)
 	point-wise-non-linearity (sigmoid) on W(J) (in A) will modify W(J)
 	concatenate W(J), S(2L - J) produces T(J+1)	// TBD //
@@ -29,5 +38,3 @@ end loop
 // left with T(2L+1)
 send_to_output T(2L+1)
 
-	
-	

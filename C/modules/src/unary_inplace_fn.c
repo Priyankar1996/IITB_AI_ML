@@ -68,10 +68,10 @@ void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
 			// for float types --> check MSB for sign 
 				for(int j=0; j<num_in_cache; j+=1) {
 					switch(a_dt){ // unsigned datatypes don't make sense for ReLU 
-						// case u8: ;
-						// case u16: ;
-						// case u32: ;
-						// case u64: ; 
+						case u8: break;
+						case u16: break;
+						case u32: break;
+						case u64: break; 
 						// 	break;
 						case i8: ;
 							int8_t MSB8 = *(((int8_t*)array) + j);
@@ -437,10 +437,10 @@ void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
 			// for float types --> check MSB for sign
 				for(int j=0; j<num_in_cache; j+=1) {
 					switch(a_dt){
-						// case u8: ;
-						// case u16: ;
-						// case u32: ;
-						// case u64: ; 
+						case u8: break;
+						case u16: break;
+						case u32: break;
+						case u64: break; 
 						// 	break;
 						case i8: ;
 							int8_t MSB8a = *(((int8_t*)array) + j);

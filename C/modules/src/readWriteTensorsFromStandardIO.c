@@ -9,7 +9,7 @@ int readTensorFromFile(char *filename, Tensor *t)
     MemPool *mp = (MemPool *)(t->mem_pool_identifier);
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
-    uint32_t count = 0,i, num_elems=1, datasize, num_images;
+    uint32_t count = 0, num_elems=1, datasize;
     int iter = 0;
     datasize = sizeofTensorDataInBytes(t->descriptor.data_type);
     num_elems = numberOfElementsInTensor(t);
@@ -167,7 +167,7 @@ int writeTensorToFile(char *filename, Tensor *t)
 
             for(j=0;j<elements_to_read;j++)
             {
-                 uint64_t v= mp_resp.read_data[j];
+                 //uint64_t v= mp_resp.read_data[j];
                     switch (t->descriptor.data_type)
                     {
                         case u8:{
@@ -204,7 +204,7 @@ int writeTensorToFile(char *filename, Tensor *t)
                                 }
                         case u64:   count++; 
                                     if(count<=num_elems)
-                                    fprintf(file, "%u%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                    fprintf(file, "%lu%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
                                     break;
 
                         case i8:{
@@ -238,7 +238,7 @@ int writeTensorToFile(char *filename, Tensor *t)
                                     }
                                     break;
                                 }
-                        case i64: fprintf(file, "%d%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                        case i64: fprintf(file, "%ld%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
                                     break;
 
                         case float8: break;

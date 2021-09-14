@@ -47,10 +47,10 @@ int main()
     intermediate_depad.descriptor.dimensions[1] = 5;
     intermediate_depad.descriptor.dimensions[2] = 1;
 
-    _err_ = createTensor(&input,&pool1)  ||
-            createTensor(&kernel,&pool1) ||
-			createTensor(&intermediate_dilate,&pool1) ||
-            createTensor(&intermediate_depad,&pool1)  ||
+    _err_ = createTensorAtHead(&input,&pool1)  ||
+            createTensorAtHead(&kernel,&pool1) ||
+			createTensorAtHead(&intermediate_dilate,&pool1) ||
+            createTensorAtHead(&intermediate_depad,&pool1)  ||
             initializeTensor(&input,&val) ||
             initializeTensor(&kernel,&val) || _err_;
 

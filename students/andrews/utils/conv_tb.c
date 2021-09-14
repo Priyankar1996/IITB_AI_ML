@@ -33,7 +33,7 @@ int main(){
 
 	b.descriptor.data_type = dataType;
 	b.descriptor.row_major_form = row_major_form;
-	b.descriptor.number_of_dimensions = ndim;
+	b.descriptor.number_of_dimensions = ndim-1;
 	b.descriptor.dimensions[0] = 3;
 	b.descriptor.dimensions[1] = 3;
 	b.descriptor.dimensions[2] = 1;
@@ -62,7 +62,7 @@ int main(){
 		 {...}
 		 {13, ..., 16}}
 	*/
-	int init_val = 1;
+	uint8_t init_val = 1;
 	_err_ += initializeTensor(&a, &init_val);
 	init_val = 5;
 	_err_ += initializeTensor(&b, &init_val);

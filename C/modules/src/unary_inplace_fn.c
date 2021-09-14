@@ -1,6 +1,8 @@
-#include "unary_inplace_fn.h"
 #include <stdint.h>
 #include <stdio.h>
+#include "tensor.h"
+#include "mempool.h"
+#include "unary_inplace_fn.h"
 #include <math.h>
 
 // int main(){

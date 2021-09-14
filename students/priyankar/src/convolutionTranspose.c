@@ -4,7 +4,7 @@ uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,
                                     TensorDescriptor *td_out, uint32_t *k_dims, 
                                     uint32_t *stride)
 {
-    int i,p; int indices[3],output_indices[3],output_offset = 0;
+    int i,p; uint32_t indices[3],output_indices[3],output_offset = 0;
 
     for(p=td_in->number_of_dimensions-1;p>=0;p--) // Change 2 to 1 while handling 3-channels.
     {

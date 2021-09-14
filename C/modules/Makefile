@@ -1,7 +1,7 @@
 # Necessary variables and definitions. Do not change
 CC=gcc
 AR=ar
-CFLAGS = -Wall -std=c99
+CFLAGS = -Wall -std=c99 -lm
 ARFLAGS = -cq	# add v if need verbose output
 BIN=bin
 LIB=lib

@@ -1,0 +1,114 @@
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 138 page(s) at Head .Base address is 0
+SUCCESS: Allocated 138 page(s) at Head .Base address is 70656
+SUCCESS: Allocated 138 page(s) at Head .Base address is 141312
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 5 page(s) at Head .Base address is 0
+SUCCESS: Allocated 5 page(s) at Head .Base address is 2560
+SUCCESS: Allocated 5 page(s) at Head .Base address is 5120
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 5 page(s) at Head .Base address is 0
+SUCCESS: Allocated 5 page(s) at Head .Base address is 2560
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 9 page(s) at Head .Base address is 0
+SUCCESS: Allocated 9 page(s) at Head .Base address is 4608
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 3 page(s) at Head .Base address is 0
+SUCCESS: Allocated 3 page(s) at Head .Base address is 1536
+SUCCESS: Allocated 3 page(s) at Head .Base address is 3072
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Allocated 1 page(s) at Head .Base address is 1024
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 3 page(s) at Head .Base address is 0
+SUCCESS: Allocated 3 page(s) at Head .Base address is 1536
+SUCCESS: Allocated 3 page(s) at Head .Base address is 3072
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 8 page(s) at Head .Base address is 0
+SUCCESS: Allocated 8 page(s) at Head .Base address is 4096
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 18 page(s) at Head .Base address is 0
+SUCCESS: Allocated 18 page(s) at Head .Base address is 9216
+SUCCESS: Allocated 18 page(s) at Head .Base address is 18432
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 40 page(s) at Head .Base address is 0
+SUCCESS: Allocated 40 page(s) at Head .Base address is 20480
+SUCCESS: Allocated 40 page(s) at Head .Base address is 40960
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!
+SUCCESS: Allocated 1 page(s) at Head .Base address is 0
+SUCCESS: Allocated 1 page(s) at Head .Base address is 512
+SUCCESS: Tensor destroyed.
+SUCCESS: Tensor destroyed.
+If no message is printed after this one, there is no error!!

@@ -1,9 +1,6 @@
 #ifndef _unary_inplace_fn_h____
 #define _unary_inplace_fn_h____
 
-#include "mempool.h"//mempool.h
-#include "tensor.h"
-
 
 // Maximum allowed chunk size is 1024 
 #define CHUNK_SIZE      32 // in dwords --> (CHUNK_SIZE*8) bytes 

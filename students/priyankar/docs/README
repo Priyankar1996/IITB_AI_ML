@@ -1,7 +1,23 @@
 NAME
-    createTensor - creates a Tensor.
+    createTensor - Contains operations like createTensor(), initialiseTensor(),
+                    copyTensor() and destroyTensor().
+    readWriteTensorFromStandardIO - Helps to read csv files and store them in a
+                    Tensor. Also helps to write back any tensor data into the
+                    csv file as well.
+    convTranspose - Performs convolutional transpose on tensors.
 
 DESCRIPTION
     The createTensor() function takes in inputs from the user about the tensor's
     descriptor and allocates space for that in the memory-pool.
+
+    readWriteTensorFromStandardIO() helps in reading data from available datasets
+    in form of a csv file. It can write back the output data to a csv file as well.
+
+SOME IMPORTANT POINTS
+    1. Working with Image Tensors:
+        - Always create the tensor in the particular format to store images:
+            {height, width, channels}.
+
+        - The csv files stores data in a 2D-array of 
+            {height*width, 3}.
     

@@ -10,7 +10,7 @@ MemPool pool1;
 Tensor image_A;
 int _err_ = 0;
 
-#define MAX_PAGES 300
+#define MAX_PAGES 30
 
 void fillTensorDescriptor(Tensor t)
 // Takes details from the user about the tensor to be created.
@@ -54,18 +54,17 @@ void fillTensorDescriptor(Tensor t)
 int main(int argc, char *argv[])
 {
     initMemPool(&pool1,1,MAX_PAGES);
-    uint64_t dims[4] = {1,1,2960,3};
-    image_A.descriptor.data_type = 1;
+    uint64_t dims[3] = {3,3,3};
+    image_A.descriptor.data_type = float32;
     image_A.descriptor.row_major_form = 0;
-    image_A.descriptor.number_of_dimensions = 4;
+    image_A.descriptor.number_of_dimensions = 3;
     image_A.descriptor.dimensions[0]= dims[0];
     image_A.descriptor.dimensions[1]= dims[1];
     image_A.descriptor.dimensions[2]= dims[2];
-    image_A.descriptor.dimensions[3]= dims[3];
 
-    _err_ = createTensor(&image_A,&pool1) ||
-            readTensorFromFile("util/sample_csv/abc.csv", &image_A) ||
-            writeTensorToFile("util/sample_csv/image_anime_write.csv", &image_A) ||
+    _err_ = createTensorAtHead(&image_A,&pool1) ||
+            readTensorFromFile("util/sample_csv/def.csv", &image_A) ||
+            writeTensorToFile("util/sample_csv/def_write.csv", &image_A) ||
             _err_;
 
     _err_ = destroyTensor(&image_A) || _err_; 

@@ -185,7 +185,12 @@ int writeTensorToFile(char *filename, Tensor *t)
                                     {
                                         count++;
                                         if(count<=num_elems)
-                                        fprintf(file, "%hhu%s",(*bytesu8)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        {
+                                            if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                                fprintf(file, "%hhu%s",(*bytesu8)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                            else
+                                                fprintf(file, "%hhu%s",(*bytesu8)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        }
                                     }
                                     break;
                                 }
@@ -196,7 +201,12 @@ int writeTensorToFile(char *filename, Tensor *t)
                                     {
                                         count++;
                                         if(count<=num_elems)
-                                        fprintf(file, "%hhu%s",(*bytesu16)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        {
+                                            if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                                fprintf(file, "%hhu%s",(*bytesu16)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                            else
+                                                fprintf(file, "%hhu%s",(*bytesu16)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        }
                                     }
                                     break;
                                 }
@@ -206,13 +216,23 @@ int writeTensorToFile(char *filename, Tensor *t)
                                     {
                                         count++;
                                         if(count<=num_elems)
-                                        fprintf(file, "%hhu%s",(*bytesu32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        {
+                                            if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                                fprintf(file, "%hhu%s",(*bytesu32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                            else
+                                                fprintf(file, "%hhu%s",(*bytesu32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        }
                                     }
                                     break;
                                 }
                         case u64:   count++; 
                                     if(count<=num_elems)
-                                    fprintf(file, "%lu%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                    {
+                                        if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                            fprintf(file, "%lu%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                        else    
+                                            fprintf(file, "%lu%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                    }
                                     break;
 
                         case i8:{
@@ -221,7 +241,12 @@ int writeTensorToFile(char *filename, Tensor *t)
                                     {
                                         count++;
                                         if(count<=num_elems)
-                                        fprintf(file, "%hhi%s",(*bytes8)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        {
+                                            if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                                fprintf(file, "%hhi%s",(*bytes8)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                            else 
+                                                fprintf(file, "%hhi%s",(*bytes8)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        }
                                     }
                                     break;
                                 }
@@ -231,7 +256,12 @@ int writeTensorToFile(char *filename, Tensor *t)
                                     {
                                         count++;
                                         if(count<=num_elems)
-                                        fprintf(file, "%hhi%s",(*bytes16)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        {
+                                            if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                                fprintf(file, "%hhi%s",(*bytes16)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                            else 
+                                                fprintf(file, "%hhi%s",(*bytes16)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        }
                                     }
                                     break;
                                 }
@@ -242,12 +272,20 @@ int writeTensorToFile(char *filename, Tensor *t)
                                     {
                                         count++;
                                         if(count<=num_elems)
-                                        fprintf(file, "%hhi%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        {
+                                            if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                                fprintf(file, "%hhi%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                            else 
+                                                fprintf(file, "%hhi%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        }
                                     }
                                     break;
                                 }
-                        case i64: fprintf(file, "%ld%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
-                                    break;
+                        case i64: if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                    fprintf(file, "%ld%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                else 
+                                    fprintf(file, "%ld%s",mp_resp.read_data[j],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                break;
 
                         case float8: break;
                         case float16: break;
@@ -257,7 +295,12 @@ int writeTensorToFile(char *filename, Tensor *t)
                                         {
                                             count++;
                                             if(count<=num_elems)
-                                            fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                            {
+                                                if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                                else    
+                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                            }
                                         }
                                     /*memcpy(&fvalue, &mp_resp.read_data[j],sizeof(float));
                                     fprintf(file, "%f%s",fvalue,(count%3!=0 ? ",":"\n"));*/
@@ -267,7 +310,10 @@ int writeTensorToFile(char *filename, Tensor *t)
                         case float64:{
                                         count++;
                                         double *dvalue = (void*) &mp_resp.read_data[j];
-                                        fprintf(file, "%f%s",(*dvalue),(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                        if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
+                                            fprintf(file, "%f%s",(*dvalue),(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                        else 
+                                            fprintf(file, "%f%s",(*dvalue),(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
                                         //fprintf(file, "%f%s",(*dvalue),(count%3!=0 ? ",":"\n"));
                                         break;
                                     }

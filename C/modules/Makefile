@@ -14,14 +14,14 @@ PRIMFILES = $(patsubst $(BIN)/%.o,%.o,$(PRIMITIVES))
 OBJ = $(patsubst $(SRC)/%.c,_%,$(wildcard $(SRC)/*.c))
 
 # User defined function - Change according to the file to run.
-TESTFILE=util/Test.c
+TESTFILE=util/1.c
 
 
 
 all: compile
 
 compile: createDir $(PRIMITIVES) $(OBJ)
-	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -L$(LIB)/*
+	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -L$(LIB)
 	cd $(BIN); $(CC) -o Test Testfile.o $(OBJ) $(PRIMFILES) $(CFLAGS)
 
 createDir:

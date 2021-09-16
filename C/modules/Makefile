@@ -40,5 +40,5 @@ _%: $(SRC)/%.c $(PRIMITIVES)
 
 .PHONY : clean
 clean:
-	rm $(BIN) -r
-	rm $(LIB) -r
+	rm $(BIN) -rf
+	rm $(LIB) -rf

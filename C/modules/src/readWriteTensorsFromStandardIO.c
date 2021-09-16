@@ -3,13 +3,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "readWriteTensorsFromStandardIO.h"
-<<<<<<< HEAD
 #include <inttypes.h>
-=======
+
 #include "tensor.h"
 #include "mempool.h"
 #include "createTensor.h"
->>>>>>> 9b21310ae4f6644a76394d2f4c41a7fb81f5c3ac
+
 
 int readTensorFromFile(char *filename, Tensor *t)
 {

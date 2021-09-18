@@ -17,7 +17,7 @@ int main(){
     int pad[3] = {0,0,0};
     int str = 1;
     int stride[2] = {str,str};
-    int stride_deconv[2] = {str,str};
+    int stride_deconv[3] = {str,str};
     int dim_to_pool[2] = {1,2};
     int pad_deconv = 0;
     int _err_ = 0;
@@ -124,12 +124,33 @@ int main(){
         printf("\n");
     }
 
-    // for (int i = num_iters; i < 2*num_iters; i++){
-    //     dilateTensor(&T[i], &K, stride,  &S[i]);
-    //     dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
-    //     convTensors(&S[num_iters+i],&K,&T[i+1],stride_deconv,pad_deconv );
+    for (int i = num_iters; i < 2*num_iters; i++){
+        dilateTensor(&T[i], &K, stride,  &S[i]);
+        dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
+        convTensors(&S[num_iters+i],&K,&T[i+1],stride,pad );
     //     // unaryOperateOnTensor_inplace(S[i], 5);
-    // }
-        
+    }
+
+    for (int i = num_iters;i<2*num_iters;i++){
+        MemPoolRequest req;
+        MemPoolResponse resp;
+        req.request_type = READ;
+        req.arguments[2] = 1;
+        req.arguments[1] = T[i].mem_pool_buffer_pointer;
+        req.arguments[0] = getSizeOfTensor(&T[i]);
+        memPoolAccess((MemPool*)(T[i].mem_pool_identifier),&req,&resp);
+        for (int j = 0; j < req.arguments[0]; j++ ){
+            printf("T[%d] element %d = %lu \n",i,j,0xFF&(resp.read_data[j/2]>>(32*(j&1))));
+        }
+        printf("\n");
+        req.arguments[1] = S[i].mem_pool_buffer_pointer;
+        req.arguments[0] = getSizeOfTensor(&T[i]);
+        memPoolAccess((MemPool*)(S[i].mem_pool_identifier),&req,&resp);
+        for (int j = 0; j < req.arguments[0]; j++ ){
+            printf("S[%d] element %d = %lu \n",i,j,0xFF&(resp.read_data[j/2]>>(32*(j&1))));
+        }
+        printf("\n");
+    }
+
     return 0;
 }

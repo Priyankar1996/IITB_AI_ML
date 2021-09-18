@@ -46,9 +46,9 @@ uint64_t getBitMask(uint8_t dsize , uint8_t position)
 }
 
 // Core operation of maxPool
-// Computes the max of num_max quantities in matrix starting at indice start based on the datatype
+// Computes the max of num_max quantities in inp_address starting at indice start based on the datatype
 // Returns the data in at location temp
-void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, void * temp)
+void maxOperation(int num_max, void* inp_address,  TensorDataType dt, void * temp)
 {	
 	assert(num_max > 0);
 
@@ -56,85 +56,85 @@ void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, vo
 	// Select comparator based on datatype
 		{
 		case i8:
-		*((int8_t*)temp ) = *((int8_t*)(matrix) +(start)*8);
+		*((int8_t*)temp ) = *((int8_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int8_t*)(matrix) +(start+i)*8)> *((int8_t*)temp )) *((int8_t*)temp ) = *((int8_t*)(matrix) +(start+i)*8);
+			if (*((int8_t*)(inp_address) +i*8)> *((int8_t*)temp )) *((int8_t*)temp ) = *((int8_t*)(inp_address) +i*8);
 		}
 		break;
 		case float8:
 		case u8:
-		*((uint8_t*)temp ) = *((uint8_t*)(matrix) +(start)*8);
+		*((uint8_t*)temp ) = *((uint8_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint8_t*)(matrix) +(start+i)*8)> *((uint8_t*)temp )) *((uint8_t*)temp ) = *((uint8_t*)(matrix) +(start+i)*8);
+			if (*((uint8_t*)(inp_address) +i*8)> *((uint8_t*)temp )) *((uint8_t*)temp ) = *((uint8_t*)(inp_address) +i*8);
 		}
 		break;
 		case i16:
-		*((int16_t*)temp ) = *((int16_t*)(matrix) +(start)*4);
+		*((int16_t*)temp ) = *((int16_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int16_t*)(matrix) +(start+i)*4)> *((int16_t*)temp )) *((int16_t*)temp ) = *((int16_t*)(matrix) +(start+i)*4);
+			if (*((int16_t*)(inp_address) +i*4)> *((int16_t*)temp )) *((int16_t*)temp ) = *((int16_t*)(inp_address) +i*4);
 		}
 		break;
 		case float16:
 		case u16:
-		*((uint16_t*)temp ) = *((uint16_t*)(matrix) +(start)*4);
+		*((uint16_t*)temp ) = *((uint16_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint16_t*)(matrix) +(start+i)*4)> *((uint16_t*)temp )) *((uint16_t*)temp ) = *((uint16_t*)(matrix) +(start+i)*4);
+			if (*((uint16_t*)(inp_address) +i*4)> *((uint16_t*)temp )) *((uint16_t*)temp ) = *((uint16_t*)(inp_address) +i*4);
 		}
 		break;
 		case i32:
-		*((int32_t*)temp ) = *((int32_t*)(matrix) +(start)*2);
+		*((int32_t*)temp ) = *((int32_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int32_t*)(matrix) +(start+i)*2)> *((int32_t*)temp )) *((int32_t*)temp ) = *((int32_t*)(matrix) +(start+i)*2);
+			if (*((int32_t*)(inp_address) +i*2)> *((int32_t*)temp )) *((int32_t*)temp ) = *((int32_t*)(inp_address) +i*2);
 		}
 		break;
 		case float32:
-		*((float*)temp ) = *((float*)(matrix) +(start)*2);
+		*((float*)temp ) = *((float*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((float*)(matrix) +(start+i)*2)> *((float*)temp )) *((float*)temp ) = *((float*)(matrix) +(start+i)*2);
+			if (*((float*)(inp_address) +i*2)> *((float*)temp )) *((float*)temp ) = *((float*)(inp_address) +i*2);
 		}
 		break;
 		case u32:
-		*((uint32_t*)temp ) = *((uint32_t*)(matrix) +(start)*2);
+		*((uint32_t*)temp ) = *((uint32_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint32_t*)(matrix) +(start+i)*2)> *((uint32_t*)temp )) *((uint32_t*)temp ) = *((uint32_t*)(matrix) +(start+i)*2);
+			if (*((uint32_t*)(inp_address) +i*2)> *((uint32_t*)temp )) *((uint32_t*)temp ) = *((uint32_t*)(inp_address) +i*2);
 		}
 		break;
 		case i64:
-		*((int64_t*)temp) = *((int64_t*)(matrix) + start);
+		*((int64_t*)temp) = *((int64_t*)(inp_address) );
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int64_t*)(matrix) +(start+i)*1)> *((int64_t*)temp)) *((int64_t*)temp) = *((int64_t*)(matrix) +(start+i)*1);
+			if (*((int64_t*)(inp_address) +i*1)> *((int64_t*)temp)) *((int64_t*)temp) = *((int64_t*)(inp_address) +i*1);
 		}
 		break;
 		case float64:
-		*((double*)temp) = *((double*)(matrix) + start);
+		*((double*)temp) = *((double*)(inp_address) );
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((double*)(matrix) +(start+i)*1)> *((double*)temp)) *((double*)temp) = *((double*)(matrix) +(start+i)*1);
+			if (*((double*)(inp_address) +i*1)> *((double*)temp)) *((double*)temp) = *((double*)(inp_address) +i*1);
 		}
 		break;
 		case u64:
-		*((uint64_t*)temp) = *((uint64_t*)(matrix) + start);
+		*((uint64_t*)temp) = *((uint64_t*)(inp_address) );
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint64_t*)(matrix) +(start+i)*1)> *((uint64_t*)temp)) *((uint64_t*)temp) = *((uint64_t*)(matrix) +(start+i)*1);
+			if (*((uint64_t*)(inp_address) +i*1)> *((uint64_t*)temp)) *((uint64_t*)temp) = *((uint64_t*)(inp_address) +i*1);
 		}
 		break;
 		default:
@@ -201,7 +201,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 				}
 
 				// Perform max operation
-				maxWithSpacing(var_max, 0,temp_var1, dt,&temp_new);
+				maxOperation(var_max, temp_var1, dt,&temp_new);
 				
 				// Read from dst
 				req->request_type = READ;

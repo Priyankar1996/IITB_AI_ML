@@ -19,12 +19,12 @@ int main(){
     int stride[2] = {str,str};
     int stride_deconv[2] = {str,str};
     int dim_to_pool[2] = {1,2};
-    int pad_deconv = 0;
+    int pad_deconv[4] = {0,0,0,0};
     int _err_ = 0;
     float kernel_init = 1.0;
 
     initMemPool(&pool,1,MAX_MEMPOOL_SIZE_IN_PAGES);
-    for (int i = 0; i < 2*num_iters; i++)
+    for (int i = 0; i < 2*num_iters+1; i++)
     {
         T[i].descriptor.data_type = float32;
         T[i].descriptor.number_of_dimensions = num_dim;

@@ -41,7 +41,7 @@ int main(){
         S[i].descriptor.row_major_form = 1;
         S[i].descriptor.dimensions[0] = 1;
         S[i].descriptor.dimensions[1] = 3;
-        S[i].descriptor.dimensions[2] = 1;  
+        S[i].descriptor.dimensions[2] = 3;  
     }
 
     for (int i = 0; i < 2*num_iters;i++){
@@ -51,6 +51,7 @@ int main(){
         createTensorAtHead(&S[num_iters+i],&pool);
     }
     createTensorAtHead(&T[2*num_iters+1],&pool);
+
     // Write data 1 to 9 in T[0]
     for (int i = 0; i < (getSizeOfTensor(&T[0])+1)/2; i++){
         MemPoolRequest req;
@@ -59,7 +60,7 @@ int main(){
         req.arguments[1] = T[0].mem_pool_buffer_pointer + i;
         req.arguments[0] = 1;
         req.arguments[2] = 1;
-        req.write_data[0] = ((uint64_t)(2*i+1)<<32) + 2*i;
+        req.write_data[0] = ((uint64_t)(2*i+2)<<32) + 2*i+1;
         memPoolAccess((MemPool*)(T[0].mem_pool_identifier),&req,&resp);
     }
 
@@ -75,7 +76,6 @@ int main(){
 
 
     for (int i = 0; i < num_iters; i++){
-        // There should be another loop for tensor.dimension[2] as all the operations are on 2D.
         convTensors(&T[i], &K, &S[i] ,stride,pad );
         // maxPoolOfTensors(&S[i], &T[i+1], str, str, 1,dim_to_pool, 0); 
         // unaryOperateOnTensor_inplace(&T[i+1], 2);
@@ -102,15 +102,12 @@ int main(){
         printf("\n");
     }
 
-    for (int i = num_iters; i < 2*num_iters; i++){
-         // There should be another loop for tensor.dimension[2] as all the operations are on 2D.
-        dilateTensor(&T[i], &K, stride,  &S[i]);
-        dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
-        convTensors(&S[num_iters+i],&K,&T[i+1],stride_deconv,pad_deconv );
-        // unaryOperateOnTensor_inplace(S[i], 5);
-    }
-    if (_err_)
-        fprintf(stderr,"Something's wrong. Please check.");
-    
+    // for (int i = num_iters; i < 2*num_iters; i++){
+    //     dilateTensor(&T[i], &K, stride,  &S[i]);
+    //     dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
+    //     convTensors(&S[num_iters+i],&K,&T[i+1],stride_deconv,pad_deconv );
+    //     // unaryOperateOnTensor_inplace(S[i], 5);
+    // }
+        
     return 0;
 }

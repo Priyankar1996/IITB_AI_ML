@@ -50,7 +50,7 @@ int main(){
         if (i>=num_iters)
         createTensorAtHead(&S[num_iters+i],&pool);
     }
-    createTensorAtHead(&T[2*num_iters+1],&pool);
+    createTensorAtHead(&T[2*num_iters],&pool);
 
     // Write data 1 to 9 in T[0]
     for (int i = 0; i < (getSizeOfTensor(&T[0])+1)/2; i++){
@@ -77,8 +77,8 @@ int main(){
 
     for (int i = 0; i < num_iters; i++){
         convTensors(&T[i], &K, &S[i] ,stride,pad );
-        // maxPoolOfTensors(&S[i], &T[i+1], str, str, 1,dim_to_pool, 0); 
-        // unaryOperateOnTensor_inplace(&T[i+1], 2);
+        maxPoolOfTensors(&S[i], &T[i+1], str, str, 1,dim_to_pool, 0); 
+        unaryOperateOnTensor_inplace(&T[i+1], 2);
     }
 
     for (int i = 0;i<num_iters;i++){

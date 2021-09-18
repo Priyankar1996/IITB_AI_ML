@@ -24,14 +24,14 @@ int main(){
     float kernel_init = 1.0;
 
     initMemPool(&pool,1,MAX_MEMPOOL_SIZE_IN_PAGES);
-    for (int i = 0; i < 2*num_iters; i++)
+    for (int i = 0; i < 2*num_iters+1; i++)
     {
         T[i].descriptor.data_type = float32;
         T[i].descriptor.number_of_dimensions = num_dim;
         T[i].descriptor.row_major_form = 1;
-        T[i].descriptor.dimensions[0] = 3;
+        T[i].descriptor.dimensions[0] = 1;
         T[i].descriptor.dimensions[1] = 3;
-        T[i].descriptor.dimensions[2] = 1;    
+        T[i].descriptor.dimensions[2] = 3;    
     }
 
     for (int i=0; i < 3*num_iters; i++)
@@ -39,7 +39,7 @@ int main(){
         S[i].descriptor.data_type = float32;
         S[i].descriptor.number_of_dimensions = num_dim;
         S[i].descriptor.row_major_form = 1;
-        S[i].descriptor.dimensions[0] = 3;
+        S[i].descriptor.dimensions[0] = 1;
         S[i].descriptor.dimensions[1] = 3;
         S[i].descriptor.dimensions[2] = 1;  
     }
@@ -76,9 +76,9 @@ int main(){
 
     for (int i = 0; i < num_iters; i++){
         // There should be another loop for tensor.dimension[2] as all the operations are on 2D.
-        _err_ = convTensors(&T[i], &K, &S[i] ,stride,pad ) || _err_;
+        convTensors(&T[i], &K, &S[i] ,stride,pad );
         // maxPoolOfTensors(&S[i], &T[i+1], str, str, 1,dim_to_pool, 0); 
-        // unaryOperateOnTensor_inplace(&S[i], 2);
+        // unaryOperateOnTensor_inplace(&T[i+1], 2);
     }
 
     for (int i = 0;i<num_iters;i++){
@@ -104,9 +104,9 @@ int main(){
 
     for (int i = num_iters; i < 2*num_iters; i++){
          // There should be another loop for tensor.dimension[2] as all the operations are on 2D.
-        _err_ = dilateTensor(&T[i], &K, stride,  &S[i]) ||
-                dePadTensor(&S[i],pad_deconv,&S[num_iters+i]) ||
-                convTensors(&S[num_iters+i],&K,&T[i+1],stride_deconv,pad_deconv ) || _err_;
+        dilateTensor(&T[i], &K, stride,  &S[i]);
+        dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
+        convTensors(&S[num_iters+i],&K,&T[i+1],stride_deconv,pad_deconv );
         // unaryOperateOnTensor_inplace(S[i], 5);
     }
     if (_err_)

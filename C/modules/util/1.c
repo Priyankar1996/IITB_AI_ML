@@ -71,14 +71,36 @@ int main(){
     K.descriptor.dimensions[1] = 1;
     K.descriptor.dimensions[2] = 1;
 
-    _err_ = createTensorAtHead(&K,&pool) || 
-            initializeTensor(&K,&kernel_init) || _err_;
+    _err_ = createTensorAtHead(&K,&pool) || _err_;
 
+    for (int i = 0; i < (getSizeOfTensor(&K)+1)/2; i++){
+        MemPoolRequest req;
+        MemPoolResponse resp;
+        req.request_type = WRITE;
+        req.arguments[1] = K.mem_pool_buffer_pointer + i;
+        req.arguments[0] = 1;
+        req.arguments[2] = 1;
+        req.write_data[0] = 1;
+        memPoolAccess((MemPool*)(K.mem_pool_identifier),&req,&resp);
+    }
+
+    {   MemPoolRequest req;
+        MemPoolResponse resp;
+        req.request_type = READ;
+        req.arguments[2] = 1;
+        req.arguments[1] = K.mem_pool_buffer_pointer;
+        req.arguments[0] = getSizeOfTensor(&K);
+        memPoolAccess((MemPool*)(K.mem_pool_identifier),&req,&resp);
+        for (int j = 0; j < req.arguments[0]; j++ ){
+            printf("K element %d = %lu \n",j,0xFF&(resp.read_data[j/2]>>(32*(j&1))));
+        }
+        printf("\n");
+    }
 
     for (int i = 0; i < num_iters; i++){
         convTensors(&T[i], &K, &S[i] ,stride,pad );
-        maxPoolOfTensors(&S[i], &T[i+1], str, str, 1,dim_to_pool, 0); 
-        unaryOperateOnTensor_inplace(&T[i+1], 2);
+        // maxPoolOfTensors(&S[i], &T[i+1], str, str, 1,dim_to_pool, 0); 
+        // unaryOperateOnTensor_inplace(&T[i+1], 2);
     }
 
     for (int i = 0;i<num_iters;i++){

@@ -18,7 +18,7 @@ uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,
         indices[p] = ((offset % td_in->dimensions[p])? (offset % td_in->dimensions[p]):td_in->dimensions[p])-1;
         offset = CEILING(offset,td_in->dimensions[p]);
     }
-    indices[td_in->number_of_dimensions-1] = td_in->dimensions[td_in->number_of_dimensions-1]-1;
+    //indices[td_in->number_of_dimensions-1] = td_in->dimensions[td_in->number_of_dimensions-1]-1;
     
     /*for(i=0;i< td_in->number_of_dimensions;i++)
         printf("%d ",indices[i]);
@@ -28,7 +28,7 @@ uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,
     {
         output_indices[i] = (indices[i] * stride[i]) + k_dims[i] -1; // - padding
     }
-    output_indices[td_out->number_of_dimensions-1] = td_out->dimensions[td_out->number_of_dimensions-1]-1;
+    output_indices[td_out->number_of_dimensions-1] = indices[td_out->number_of_dimensions-1]-1;
     
     /*for(i=0;i< td_out->number_of_dimensions;i++)
         printf("%d ",output_indices[i]);

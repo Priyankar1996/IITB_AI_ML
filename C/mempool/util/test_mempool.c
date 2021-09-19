@@ -18,7 +18,7 @@ int allocateAndFillPages(uint32_t* rtags, uint32_t* base_addresses)
 	for(I = 1; I <= NPAGES; I++)
 	{
 
-		req.request_type = ALLOCATE;
+		req.request_type = (I&1) ? ALLOCATE_AT_HEAD : ALLOCATE_AT_TAIL;
 		req.request_tag  = I;
 		req.arguments[0]  = 1;  // 1 page at a time.
 	
@@ -75,7 +75,7 @@ int readAndDeallocatePages(uint32_t* rtags, uint32_t* base_addresses)
 		req.request_type = READ;
 		req.request_tag  = I + NPAGES;
 		req.arguments[0] = MEMPOOL_PAGE_SIZE; // 512 words.
-		req.arguments[1] = base_addresses[I-1];
+		req.arguments[1] = base_addresses[NPAGES-I];
 
 		memPoolAccess(&pool, &req, &resp);
 		if(resp.status !=  OK)
@@ -88,7 +88,7 @@ int readAndDeallocatePages(uint32_t* rtags, uint32_t* base_addresses)
 		uint32_t J;
 		for(J = 0; J < MEMPOOL_PAGE_SIZE; J++)
 		{
-			if(resp.read_data[J] != I*J)
+			if(resp.read_data[J] != (NPAGES-I+1)*J)
 			{
 				fprintf(stderr,"Error: read error page %d index %d\n", I, J);
 				error_flag = 1;
@@ -97,9 +97,9 @@ int readAndDeallocatePages(uint32_t* rtags, uint32_t* base_addresses)
 
 		// Now deallocate
 		req.request_type = DEALLOCATE;
-		req.request_tag  = rtags[I-1];
+		req.request_tag  = rtags[NPAGES-I];
 		req.arguments[0] = 1;		// 1 page to be deallocated.
-		req.arguments[1] = base_addresses[I-1];
+		req.arguments[1] = base_addresses[NPAGES-I];
 
 		memPoolAccess(&pool, &req, &resp);
 		if(resp.status !=  OK)

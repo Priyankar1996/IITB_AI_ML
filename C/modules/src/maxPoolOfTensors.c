@@ -182,6 +182,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 		{
 			for (j = 0; j < num_1D_steps; j++)
 			{	
+				uint64_t address = i*num_1D_steps*cs+k+j*cs;
 				// Read the line from src
 				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
 				req->request_type = READ;
@@ -195,7 +196,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
 						exit(-1);
 					}
-					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
+					temp_old[var] = (resp->read_data[0] >> (8*dsize*((i*x*cs+k+(j*s+var)*cs)%(8/dsize))));
 					bitmask = getBitMask(dsize,0);
 					temp_old[var] = temp_old[var]&bitmask;
 				}
@@ -205,7 +206,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 				
 				// Read from dst
 				req->request_type = READ;
-				req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
+				req->arguments[1] = dst->mem_pool_buffer_pointer+ address*dsize/8;
 				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 				if (resp->status == NOT_OK)
 				{
@@ -214,12 +215,12 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 				}
 				
 				// Compute write data
-				bitmask = ~getBitMask(dsize,i*num_1D_steps*cs + k + j*cs - (8/dsize)*((i*num_1D_steps*cs + k + j*cs)*dsize/8));
-				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0)) << (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
+				bitmask = ~getBitMask(dsize,address%(8/dsize));
+				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0)) << (8*dsize*((address%(8/dsize)))));
 				
 				// Write back to dst
 				req->request_type = WRITE;
-				req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
+				req->arguments[1] = dst->mem_pool_buffer_pointer+ (address)*dsize/8;
 				req->write_data[0] = temp_buffer;
 				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 				if (resp->status == NOT_OK)

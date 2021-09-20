@@ -102,14 +102,19 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
         {
             // readDataBlock(src->mem_pool_identifier,,);
             // writeDataBlock(src->mem_pool_buffer_pointer + size_to_leave(src->descriptor.dimensions[0]),,);
+            // printf("\n Scale factor is %d",scale_factor);
             printf("\n i is %d and j is %d",i,j);
             uint32_t ind[2] = {i,j};
+            // printf("\n ind of %d is %d and ind of %d is %d",i,ind[0],j,ind[1]);
             uint32_t desti[2] = {i+scale_factor,j + scale_factor};
+            // printf("\n dest of %d is %d and dest of %d is %d",i,desti[0],j,desti[1]);
             // uint32_t *address1 = getTensorEntryIndexOffset(&src,ind);
             uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
+            // printf("\n index offset of ind is %u",getTensorEntryIndexOffset(&(src->descriptor),ind));
             printf("\n address1 is %u",address1);
             // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
             uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
+            // printf("\n index offset of dest is %u",getTensorEntryIndexOffset(&(dest->descriptor),desti));
             printf("\n address2 is %u",address2);
 
             

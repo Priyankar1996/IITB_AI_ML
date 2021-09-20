@@ -356,7 +356,7 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                                                             }
                                                             else
                                                             {
-                                                                fprintf(stderr,"SUCCESS: Wrote dilated tensor.");
+                                                                fprintf(stderr,"SUCCESS: Wrote dilated tensor.\n");
                                                                 output_words_left-= elements_to_write;
                                                                 for(i=0;i<1024*8/datasize;i++)
                                                                     *((float*)mp_req2.write_data + i) = 0;

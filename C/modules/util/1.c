@@ -14,14 +14,14 @@ int main(){
     Tensor K;
     Tensor S[3*num_iters]; // This number will change because concat tensors hasn't been incorporated yet.
 
-    int pad[3] = {0,0,0};
+    int pad[4] = {0,0,0,0};
     int str = 1;
-    int stride[2] = {str,str};
+    int stride[3] = {str,str};
     int stride_deconv[3] = {str,str};
     int dim_to_pool[2] = {1,2};
     int pad_deconv = 0;
     int _err_ = 0;
-    float kernel_init = 1.0;
+    float kernel_init = 21.0;
 
     initMemPool(&pool,1,MAX_MEMPOOL_SIZE_IN_PAGES);
     for (int i = 0; i < 2*num_iters+1; i++)
@@ -29,7 +29,7 @@ int main(){
         T[i].descriptor.data_type = float32;
         T[i].descriptor.number_of_dimensions = num_dim;
         T[i].descriptor.row_major_form = 1;
-        T[i].descriptor.dimensions[0] = 1;
+        T[i].descriptor.dimensions[0] = 3;
         T[i].descriptor.dimensions[1] = 3;
         T[i].descriptor.dimensions[2] = 3;    
     }
@@ -39,7 +39,7 @@ int main(){
         S[i].descriptor.data_type = float32;
         S[i].descriptor.number_of_dimensions = num_dim;
         S[i].descriptor.row_major_form = 1;
-        S[i].descriptor.dimensions[0] = 1;
+        S[i].descriptor.dimensions[0] = 3;
         S[i].descriptor.dimensions[1] = 3;
         S[i].descriptor.dimensions[2] = 3;  
     }
@@ -60,9 +60,15 @@ int main(){
         req.arguments[1] = T[0].mem_pool_buffer_pointer + i;
         req.arguments[0] = 1;
         req.arguments[2] = 1;
-        req.write_data[0] = ((uint64_t)(2*i+2)<<32) + 2*i+1;
+        float a,b;void *array;
+        array = req.write_data;
+        a = 2*i+1;b = 2*i+2;
+        *(float*)array = a;
+        *((float*)array + 1) = b;
         memPoolAccess((MemPool*)(T[0].mem_pool_identifier),&req,&resp);
     }
+    
+    //_err_ = writeTensorToFile("output.csv",&T[0]) || _err_;
 
     K.descriptor.data_type = float32;
     K.descriptor.number_of_dimensions = num_dim;
@@ -73,7 +79,7 @@ int main(){
 
     _err_ = createTensorAtHead(&K,&pool) || _err_;
 
-    for (int i = 0; i < (getSizeOfTensor(&K)+1)/2; i++){
+    /*for (int i = 0; i < (getSizeOfTensor(&K)+1)/2; i++){
         MemPoolRequest req;
         MemPoolResponse resp;
         req.request_type = WRITE;
@@ -82,7 +88,9 @@ int main(){
         req.arguments[2] = 1;
         req.write_data[0] = 1;
         memPoolAccess((MemPool*)(K.mem_pool_identifier),&req,&resp);
-    }
+    }*/
+    _err_ = initializeTensor(&K,&kernel_init) || _err_;
+    _err_ = writeTensorToFile("output.csv",&T[0]) || _err_;
 
     {   MemPoolRequest req;
         MemPoolResponse resp;
@@ -92,7 +100,8 @@ int main(){
         req.arguments[0] = getSizeOfTensor(&K);
         memPoolAccess((MemPool*)(K.mem_pool_identifier),&req,&resp);
         for (int j = 0; j < req.arguments[0]; j++ ){
-            printf("K element %d = %lu \n",j,0xFF&(resp.read_data[j/2]>>(32*(j&1))));
+            float (*bytes32)[2] = (void*) &resp.read_data[j];
+            printf("K element %d = %f,%f \n",j,(*bytes32)[0],(*bytes32)[1]);
         }
         printf("\n");
     }
@@ -101,9 +110,11 @@ int main(){
         convTensors(&T[i], &K, &S[i] ,stride,pad );
         // maxPoolOfTensors(&S[i], &T[i+1], str, str, 1,dim_to_pool, 0); 
         // unaryOperateOnTensor_inplace(&T[i+1], 2);
+        
     }
 
-    for (int i = 0;i<num_iters;i++){
+
+    /*for (int i = 0;i<num_iters;i++){
         MemPoolRequest req;
         MemPoolResponse resp;
         req.request_type = READ;
@@ -122,7 +133,7 @@ int main(){
             printf("S[%d] element %d = %lu \n",i,j,0xFF&(resp.read_data[j/2]>>(32*(j&1))));
         }
         printf("\n");
-    }
+    }*/
 
     for (int i = num_iters; i < 2*num_iters; i++){
         dilateTensor(&T[i], &K, stride,  &S[i]);
@@ -131,7 +142,7 @@ int main(){
     //     // unaryOperateOnTensor_inplace(S[i], 5);
     }
 
-    for (int i = num_iters;i<2*num_iters;i++){
+    /*for (int i = num_iters;i<2*num_iters;i++){
         MemPoolRequest req;
         MemPoolResponse resp;
         req.request_type = READ;
@@ -150,7 +161,7 @@ int main(){
             printf("S[%d] element %d = %lu \n",i,j,0xFF&(resp.read_data[j/2]>>(32*(j&1))));
         }
         printf("\n");
-    }
+    }*/
 
     return 0;
 }

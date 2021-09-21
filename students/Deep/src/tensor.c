@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "../include/tensor.h"
+#include <assert.h>
 
 uint32_t sizeofTensorDataInBytes(TensorDataType t)
 {
@@ -14,7 +15,7 @@ uint32_t sizeofTensorDataInBytes(TensorDataType t)
 			ret_val = 1;
 			break;
 		case u16:
-		case i16: 
+		case i16:
 		case float16:
 			ret_val = 2;
 			break;
@@ -25,7 +26,7 @@ uint32_t sizeofTensorDataInBytes(TensorDataType t)
 			break;
 		case u64:
 		case i64:
-		case float64 :
+		case float64:
 			ret_val = 8;
 			break;
 		default:
@@ -103,7 +104,7 @@ uint32_t areCoordinateVectorsEqual(int ndim, uint32_t* a, uint32_t* b)
 //
 uint32_t getTensorEntryIndexOffset(TensorDescriptor* td, uint32_t* indices)
 {
-	uint32_t ret_value = 0;
+	uint32_t ret_value = 0,I;
 	//
 	// in row major form, the tensor id's are listed
 	// as [0,0], [0,1], [0,2] --> [0,D2-1] -> [1,0] ...
@@ -117,16 +118,14 @@ uint32_t getTensorEntryIndexOffset(TensorDescriptor* td, uint32_t* indices)
 	int DSTART, DEND, DINCREMENT;
 	DSTART = (td->row_major_form ? (td->number_of_dimensions - 1) : 0);
 	DEND   = (td->row_major_form ? 0 : (td->number_of_dimensions - 1));
-	DINCREMENT = (td->row_major_form ? 1 : -1);
+	DINCREMENT = (td->row_major_form ? -1 : 1);
 
-	int I ;
 	uint32_t SCALE_FACTOR = 1;
-	for(I = DSTART; I != DEND; I = I - DINCREMENT)
+	for(I = DSTART; I != DEND + DINCREMENT; I = I + DINCREMENT)
 	{
 		ret_value  +=  SCALE_FACTOR*indices[I];
-		SCALE_FACTOR = SCALE_FACTOR * td->dimensions[I];
+		SCALE_FACTOR*= (td->dimensions[I]);
 	}
-
 	return(ret_value);
 }
 
@@ -212,8 +211,7 @@ void copyTensorEntry(TensorDescriptor* td,
 			*(((uint64_t*)dest_byte_array) + dest_index) = *(((uint64_t*)src_byte_array) + src_index);
 			break;
 		default:
-			fprintf(stderr, "This was a default\n");
-			break ;
+			assert(0);
 	}
 }
 

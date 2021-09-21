@@ -11,8 +11,10 @@
 #define MAX_MEMPOOL_SIZE_IN_PAGES	1024	 // pages
 
 typedef enum {
-	ALLOCATE,
-	DEALLOCATE,
+	ALLOCATE_AT_HEAD,
+	ALLOCATE_AT_TAIL,
+	DEALLOCATE, // use request tag to determine whether
+			// deallocation is from head or tail.
 	READ,
 	WRITE
 	
@@ -40,7 +42,7 @@ typedef struct __MemPoolRequest {
 	// arguments
 	//     request_type = allocate
 	//          argument[0] = number of pages requested.
-	//     request type = deallocate
+	//     request type = deallocate_from_head/deallocate_from_tail.
 	//          argument[0] = number of pages to be deallocated
 	//	    Note: request_tag is matched against front of
 	//	          requester queue.
@@ -74,16 +76,22 @@ typedef struct __MemPool {
 
 	// write and read pointers maintain 
 	// the free page queue.
-	uint32_t      write_pointer;
-	uint32_t      read_pointer;
+
+
+	// free page index at "head" side.
+	uint32_t      head_pointer;
+
+	// free page index at "tail" side.
+	uint32_t      tail_pointer;
+
 	uint32_t      number_of_free_pages;
 	uint64_t      *mem_pool_buffer;
 
 	// we will also maintain requester 
 	// queue to ensure FIFO discipline in
 	// the alloc/dealloc sequence.
-	uint32_t      req_write_pointer;
-	uint32_t      req_read_pointer;
+	uint32_t      req_head_pointer;
+	uint32_t      req_tail_pointer;
 	uint32_t      *requester_buffer;
 
 

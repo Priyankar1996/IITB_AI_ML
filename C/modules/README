@@ -1,0 +1,5 @@
+Instructions for compiling tests for different modules
+
+maxPoolOfTensors:
+	Run command "./maxPoolOfTensors.sh"
+	This will generate a random test input combination and execute the function.

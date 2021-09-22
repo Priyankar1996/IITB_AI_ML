@@ -1,5 +1,8 @@
-// Core function
+// AUTHOR : Aman Dhammani
+// Dept. Of Eelctrical Engineering, IITB
 
+#ifndef __maxPoolOfTensors_h__
+#define __maxPoolOfTensors_h__
 
 // ASSUMPTIONS:
 //      1. All assumptions encapsulated in those of maxPoolOfTensors()
@@ -82,3 +85,5 @@ void maxOperation(int num_max, void* inp_address,  TensorDataType dt, void * tem
 // RETURN VALUES:
 //      NULL
 void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Tensor *dst, int mode);
+
+#endif

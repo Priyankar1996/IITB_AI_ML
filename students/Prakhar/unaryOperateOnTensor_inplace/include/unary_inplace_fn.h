@@ -1,13 +1,12 @@
 #ifndef _unary_inplace_fn_h____
 #define _unary_inplace_fn_h____
 
-#include "../../../../C/mempool/include/mempool.h"//mempool.h
-#include "../../../../C/primitives/include/tensor.h"
-#include "../../../../C/primitives/src/tensor.c"
-#include "../../../../C/mempool/src/mempool.c"
+#include "mempool.h"//mempool.h
+#include "tensor.h"
+
 
 // Maximum allowed chunk size is 1024 
-#define CHUNK_SIZE      32 // in dwords --> (CHUNK_SIZE*8) bytes 
+#define CHUNK_SIZE 32 // in dwords (CHUNK_SIZE*8) bytes 
 
 typedef enum {
 	SINE, 

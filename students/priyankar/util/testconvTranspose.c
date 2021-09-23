@@ -17,35 +17,35 @@ int main()
     int _err_ = 0;
     initMemPool(&pool1,1,MAX_PAGES);
     uint32_t stride[2]={2,2}, padding[4] = {0,0,0,0};
-    uint8_t val = 3,val1 = 0;
+    uint8_t val = 33,val1 = 0;
 
     input.descriptor.data_type = 0;
     input.descriptor.row_major_form = 1;
     input.descriptor.number_of_dimensions = 3;
     input.descriptor.dimensions[0] = 3;
     input.descriptor.dimensions[1] = 3;
-    input.descriptor.dimensions[2] = 1;
+    input.descriptor.dimensions[2] = 3;
 
     kernel.descriptor.data_type = 0;
     kernel.descriptor.row_major_form = 1;
     kernel.descriptor.number_of_dimensions = 2;
     kernel.descriptor.dimensions[0] = 2;
     kernel.descriptor.dimensions[1] = 2;
-    kernel.descriptor.dimensions[2] = 1;
+    kernel.descriptor.dimensions[2] = 3;
 
 	intermediate_dilate.descriptor.data_type = 0;
     intermediate_dilate.descriptor.row_major_form = 1;
     intermediate_dilate.descriptor.number_of_dimensions = 3;
     intermediate_dilate.descriptor.dimensions[0] = 7;
     intermediate_dilate.descriptor.dimensions[1] = 7;
-    intermediate_dilate.descriptor.dimensions[2] = 1;
+    intermediate_dilate.descriptor.dimensions[2] = 3;
 
     intermediate_depad.descriptor.data_type = 0;
     intermediate_depad.descriptor.row_major_form = 1;
     intermediate_depad.descriptor.number_of_dimensions = 3;
     intermediate_depad.descriptor.dimensions[0] = 5;
     intermediate_depad.descriptor.dimensions[1] = 5;
-    intermediate_depad.descriptor.dimensions[2] = 1;
+    intermediate_depad.descriptor.dimensions[2] = 3;
 
     _err_ = createTensorAtHead(&input,&pool1)  ||
             createTensorAtHead(&kernel,&pool1) ||

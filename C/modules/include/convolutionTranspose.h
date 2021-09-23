@@ -1,3 +1,6 @@
+//AUTHORS: PRIYANKAR SARKAR, NAYAN BARHATE, DEVAL PATEL.
+//         DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
+
 #ifndef __convolutionTranspose_h___
 #define __convolutionTranspose_h___
 

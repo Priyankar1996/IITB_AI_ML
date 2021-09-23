@@ -3,3 +3,22 @@ Instructions for compiling tests for different modules
 maxPoolOfTensors:
 	Run command "./maxPoolOfTensors.sh"
 	This will generate a random test input combination and execute the function.
+
+createTensor:
+	Run command "./setup_createTensor.sh" followed by ./bin/testcreateTensor
+	This will generate an executable file(testcreateTensor) which is executed using
+	the second command.
+
+readWriteTensorsFromStandardIO:
+	Run command "./setup_readWrite.sh" followed by ./bin/testStdIO
+	This will generate an executable file(testcreateTensor) which is executed using
+	the second command.
+	Output results will be stored in a csv file, to verify correct functionality of
+	the operation.
+
+convolutionTranspose:
+	Run command "./setup_convTranspose.sh" followed by ./bin/convTranpose
+	This will generate an executable file(testcreateTensor) which is executed using
+	the second command.
+	Output results will be stored in a csv file, to verify correct functionality of
+	the operation.

@@ -1,3 +1,6 @@
+//AUTHORS: PRIYANKAR SARKAR.
+//         DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
+
 #ifndef _readWriteTensorsFromStandardIO_h____
 #define _readWriteTensorsFromStandardIO_h____
 

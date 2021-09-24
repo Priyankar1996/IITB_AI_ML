@@ -1,7 +1,6 @@
 #ifndef __tensor_h___
 #define __tensor_h___
 
-#include "mempool.h"
 #define MAX_DIMENSIONS 64
 
 typedef enum __TensorDataType {
@@ -12,6 +11,7 @@ typedef enum __TensorDataType {
 
 typedef struct __TensorDescriptor {
 
+	// one data type is enough?
 	TensorDataType data_type;
 
 
@@ -34,11 +34,12 @@ typedef struct __Tensor{
 	TensorDescriptor descriptor;
 
 	// buffer identifier.
-	MemPool *mem_pool_identifier;
-	uint32_t mem_pool_buffer_pointer;
+	uintptr_t mem_pool_identifier;
+	uint32_t  mem_pool_buffer_pointer;
 
 } Tensor;
 
+uint32_t numberOfElementsInTensor(Tensor *t);
 
 //
 // Given a tensor descriptor, get the index of the 
@@ -79,9 +80,6 @@ void copyCoordinateVector (int ndim, uint32_t* vec, uint32_t* init_val);
 void incrementCoordinateVector (int ndim, uint32_t* dims, uint32_t* vec, uint8_t row_major_form);
 uint32_t areCoordinateVectorsEqual(int ndim, uint32_t* a, uint32_t* b);
 
-
-// start
-//void my_createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mempool, Tensor* result);
 
 
 #endif

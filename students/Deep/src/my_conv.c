@@ -1,3 +1,6 @@
+//AUTHOR: 	DEEP SATRA
+//          DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
+
 #include "../include/conv.h"
 
 

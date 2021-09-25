@@ -197,7 +197,7 @@ void genRandomTensor(uint32_t seed, RngType t, Tensor* result)
 				tr_req.arguments[2] = 1 ;
 
 				MemPoolResponse tr_resp;
-				memPoolAccess(result->mem_pool_identifier, &tr_req, &tr_resp);
+				memPoolAccess((MemPool *)result->mem_pool_identifier, &tr_req, &tr_resp);
 				if(tr_resp.status !=  OK)
 				{
 					fprintf(stderr,"Error: could not write into memory.\n");

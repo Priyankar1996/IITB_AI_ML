@@ -1,19 +1,20 @@
 #ifndef _unary_inplace_fn_h____
 #define _unary_inplace_fn_h____
-
-#include "mempool.h"//mempool.h
-#include "tensor.h"
-
+#include <stdint.h>
+#include "../../../../C/mempool/include/mempool.h"//mempool.h
+#include "../../../../C/primitives/include/tensor.h"
+#include "../../../../C/primitives/src/tensor.c"
+#include "../../../../C/mempool/src/mempool.c"
 
 // Maximum allowed chunk size is 1024 
-#define CHUNK_SIZE 32 // in dwords (CHUNK_SIZE*8) bytes 
+#define CHUNK_SIZE      32 // in dwords --> (CHUNK_SIZE*8) bytes 
 
 typedef enum {
 	SINE, 
 	EXP,
 	RELU,
 	SQUARE,
-    ABSOLUTE,
+        ABSOLUTE,
 	SIGMOID
 } Operation;
 
@@ -32,5 +33,14 @@ typedef enum {
 // RETURN VALUES:
 //      NULL
 void unaryOperateOnTensor_inplace(Tensor* t, Operation op);
-
+uint8_t operate_uint8(uint8_t val, Operation op);
+uint16_t operate_uint16(uint16_t val, Operation op);
+uint32_t operate_uint32(uint32_t val, Operation op);
+uint64_t operate_uint64(uint64_t val, Operation op);
+int8_t operate_int8(int8_t val, Operation op);
+int16_t operate_int16(int16_t val, Operation op);
+int32_t operate_int32(int32_t val, Operation op);
+int64_t operate_int64(int64_t val, Operation op);
+float operate_f32(float val, Operation op);
+double operate_f64(double val, Operation op);
 #endif

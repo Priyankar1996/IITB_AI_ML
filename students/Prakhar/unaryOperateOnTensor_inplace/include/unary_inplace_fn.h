@@ -24,12 +24,12 @@ typedef enum {
 // ASSUMPTIONS:
 //      1. The memory space for tensor in a mempool is contiguously allocated
 //      2. Appropriate datatypes are used as per the input data. 
-// 		3. The input tensor and output tensor datatypes are same by default 
+//  	3. The input tensor and output tensor datatypes are same by default 
 // SUMMARY:
 //      unaryOperateOnTensor performs unary operation on the given Tensor t
-//		and writes the result back to same Tensor t. 
+//	and writes the result back to same Tensor t. 
 // SIDE-EFFECTS:
-//      NULL
+//      1. Using unsuitable datatype may lead to wrong results (for eg: unsigned type isn't capable for sigmoid, so in that case function returns back the element itself)
 // RETURN VALUES:
 //      NULL
 void unaryOperateOnTensor_inplace(Tensor* t, Operation op);

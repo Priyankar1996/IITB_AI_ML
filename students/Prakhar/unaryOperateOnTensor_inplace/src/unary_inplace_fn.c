@@ -3,6 +3,146 @@
 #include <stdio.h>
 #include <math.h>
 
+uint8_t operate_uint8(uint8_t val, Operation op){
+	switch(op){
+		case SINE: return ((uint8_t) sin(val));
+		case EXP : return ((uint8_t) exp(val));
+		case RELU: return val;
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return val;
+		case SIGMOID: return val; 
+		default: ;
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+uint16_t operate_uint16(uint16_t val, Operation op){
+	switch(op){
+		case SINE: return ((uint16_t) sin(val));
+		case EXP : return ((uint16_t) exp(val));
+		case RELU: return val;
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return val;
+		case SIGMOID: return val; 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+uint32_t operate_uint32(uint32_t val, Operation op){
+	switch(op){
+		case SINE: return ((uint32_t) sin(val));
+		case EXP : return ((uint32_t) exp(val));
+		case RELU: return val;
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return val;
+		case SIGMOID: return val; 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+uint64_t operate_uint64(uint64_t val, Operation op){
+	switch(op){
+		case SINE: return ((uint64_t) sin(val));
+		case EXP : return ((uint64_t) exp(val));
+		case RELU: return val;
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return val;
+		case SIGMOID: return val; 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+int8_t operate_int8(int8_t val, Operation op){
+	switch(op){
+		case SINE: return ((int8_t) sin(val));
+		case EXP : return ((int8_t) exp(val));
+		case RELU: return ((val<0)?0:val);
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return ((val<0)?(-1*val):val);
+		case SIGMOID: return ((int8_t) (1/(1+exp(-1*val)))); 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+int16_t operate_int16(int16_t val, Operation op){
+	switch(op){
+		case SINE: return ((int16_t) sin(val));
+		case EXP : return ((int16_t) exp(val));
+		case RELU: return ((val<0)?0:val);
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return ((val<0)?(-1*val):val);
+		case SIGMOID: return ((int16_t) (1/(1+exp(-1*val)))); 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+int32_t operate_int32(int32_t val, Operation op){
+	switch(op){
+		case SINE: return ((int32_t) sin(val));
+		case EXP : return ((int32_t) exp(val));
+		case RELU: return ((val<0)?0:val);
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return ((val<0)?(-1*val):val);
+		case SIGMOID: return ((int32_t) (1/(1+exp(-1*val)))); 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+int64_t operate_int64(int64_t val, Operation op){
+	switch(op){
+		case SINE: return ((int64_t) sin(val));
+		case EXP : return ((int64_t) exp(val));
+		case RELU: return ((val<0)?0:val);
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return ((val<0)?(-1*val):val);
+		case SIGMOID: return ((int64_t) (1/(1+exp(-1*val)))); 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0;
+	}
+}
+
+float operate_f32(float val, Operation op){
+	switch(op){
+		case SINE: return ((float) sin(val));
+		case EXP : return ((float) exp(val));
+		case RELU: return ((val<0)?0:val);
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return ((val<0)?(-1*val):val);
+		case SIGMOID: return ((float) (1/(1+exp(-1*val)))); 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0.0;
+	}
+}
+
+double operate_f64(double val, Operation op){
+	switch(op){
+		case SINE: return ((double) sin(val));
+		case EXP : return ((double) exp(val));
+		case RELU: return ((val<0)?0:val);
+		case SQUARE: return (val*val);
+		case ABSOLUTE: return ((val<0)?(-1*val):val);
+		case SIGMOID: return ((double) (1/(1+exp(-1*val)))); 
+		default: 
+			fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown Operation.\n");
+			return 0.0;
+	}
+}
+
 // int main(){
 // 	
 // }
@@ -38,6 +178,7 @@ void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
 		}	
 		printf("num_in_chunk = %d \n",num_in_cache);
 		printf("num_dwords_stored = %d \n",num_dwords_stored);
+
 		/////////////////////////////////////////////////
 		// FIRST STAGE of Pipeline : Fetching from Memory 
 		/////////////////////////////////////////////////
@@ -61,453 +202,60 @@ void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
 		/////////////////////////////////////
 		// SECOND STAGE of Pipeline : Compute  
 		/////////////////////////////////////
-		switch(op){ 
-			case RELU : // a = RELU(a)
-			// for uint types --> i/p = o/p so do nothing 
-			// for int types --> check MSB for sign 
-			// for float types --> check MSB for sign 
-				for(int j=0; j<num_in_cache; j+=1) {
-					switch(a_dt){ // unsigned datatypes don't make sense for ReLU 
-						// case u8: ;
-						// case u16: ;
-						// case u32: ;
-						// case u64: ; 
-						// 	break;
-						case i8: ;
-							int8_t MSB8 = *(((int8_t*)array) + j);
-							MSB8 = ((MSB8>>7)&1);
-							if(MSB8 == 1){
-								*(((int8_t*)array) + j) = 0;
-							} 
-							break;
-						case float8: ; // to be added
-							break;
-						case i16: ;
-							int16_t MSB16 = *(((int16_t*)array) + j);
-							MSB16 = ((MSB16>>15)&1);
-							if(MSB16 == 1){
-								*(((int16_t*)array) + j) = 0;
-							}
-							break;
-						case float16: ; // to be added
-							break;
-						case i32: ; 
-							int32_t MSB32 = *(((int32_t*)array) + j);
-							MSB32 = ((MSB32>>31)&1);
-							if(MSB32 == 1){
-								*(((int32_t*)array) + j) = 0;
-							}
-							else{
-								*(((int32_t*)array) + j) = *(((int32_t*)array) + j);
-							}
-							break;
-						case float32: ;
-							float fval32 = *(((float*)array) + j);
-							// ("fval was this: %.10f \n",fval32);
-							if(fval32<0){
-								*(((float*)array) + j) = 0;
-								// printf("Hey \n");
-							}
-							else{
-								*(((float*)array) + j) = fval32;
-							}
-							break;
-						case i64: ; 
-							int64_t MSB64 = *(((int64_t*)array) + j);
-							MSB64 = ((MSB64>>63)&1);
-							if(MSB64 == 1){
-								*(((int64_t*)array) + j) = 0;
-							}
-							break;
-						case float64: ;
-							double fval64 = *(((double*)array) + j);
-							if(fval64<0){
-								*(((double*)array) + j) = 0;
-							}
-							else{
-								*(((double*)array) + j) = fval64;
-							}
-							break;
-					}
-				}
-				break;
-			
-			case SIGMOID : // a = sigmoid(a) // support only for float32 and float64 as of now 
-				for(int j=0; j<num_in_cache; j+=1) {
-					switch(a_dt){
-						case u8: ;
-							uint8_t x_e8ui;
-							x_e8ui = *(((uint8_t*)array) + j);
-							*(((uint8_t*)array) + j) = (uint8_t) 1/(1+exp(-1*x_e8ui));
-							break;
-
-						case u16: ;
-							uint16_t x_e16ui;
-							x_e16ui = *(((uint16_t*)array) + j);
-							*(((uint16_t*)array) + j) = (uint16_t) 1/(1+exp(-1*x_e16ui));
-							break;
-
-						case u32: ;
-							uint32_t x_e32ui;
-							x_e32ui = *(((uint32_t*)array) + j);
-							*(((uint32_t*)array) + j) = (uint32_t) 1/(1+exp(-1*x_e32ui));
-							break;
-
-						case u64: ;
-							uint64_t x_e64ui;
-							x_e64ui = *(((uint64_t*)array) + j);
-							*(((uint64_t*)array) + j) = (uint64_t) 1/(1+exp(-1*x_e64ui));
-							break;
-
-						case i8: ;
-							int8_t x_e8i;
-							x_e8i = *(((int8_t*)array) + j);
-							*(((int8_t*)array) + j) = (int8_t) 1/(1+exp(-1*x_e8i));
-							break;
-
-						case i16: ;
-							int16_t x_e16i;
-							x_e16i = *(((int16_t*)array) + j);
-							*(((int16_t*)array) + j) = (int16_t) 1/(1+exp(-1*x_e16i));
-							break;
-
-						case i32: ;
-							int32_t x_e32i;
-							x_e32i = *(((int32_t*)array) + j);
-							*(((int32_t*)array) + j) = (int32_t) 1/(1+exp(-1*x_e32i));
-							break;
-
-						case i64: ;
-							int64_t x_e64i;
-							x_e64i = *(((int64_t*)array) + j);
-							*(((int64_t*)array) + j) = (int64_t) 1/(1+exp(-1*x_e64i));
-							break;
-
-						case float8: ;
-							// to be added 
-							break;
-
-						case float16: ;
-							// to be added 
-							break;
-
-						case float32: ;
-							float x_e32;
-							x_e32 = *(((float*)array) + j);
-							*(((float*)array) + j) = (float) 1/(1+exp(-1*x_e32));
-							break;
-
-						case float64: ;
-							double x_e64;
-							x_e64 = *(((double*)array) + j);
-							*(((double*)array) + j) = (double) 1/(1+exp(-1*x_e64));
-							break;
-					}
-				}
-				break;
-
-			case SQUARE : // a = (a)^2 
-				for(int j=0; j<num_in_cache; j++) {
-					switch(a_dt){
-						case u8: ; 
-							uint8_t val8 = *(((uint8_t*)array) + j);
-							val8 *= val8;
-							*(((uint8_t*)array) + j) = val8;
-							break;
-
-						case u16: ;
-							uint16_t val16 = *(((uint16_t*)array) + j);
-							val16 *= val16;
-							*(((uint16_t*)array) + j) = val16;
-							break;
-
-						case u32: ;
-							uint32_t val32 = *(((uint32_t*)array) + j);
-							val32 *= val32;
-							*(((uint32_t*)array) + j) = val32;
-							break;
-
-						case u64: ; 
-							uint64_t val64 = *(((uint64_t*)array) + j);
-							val64 *= val64;
-							*(((uint64_t*)array) + j) = val64;
-							break;
-
-						case i8: ;
-							int8_t val8i = *(((int8_t*)array) + j);
-							val8i *= val8i;
-							*(((int8_t*)array) + j) = val8i;
-							break;
-
-						case i16: ;
-							int16_t val16i = *(((int16_t*)array) + j);
-							val16i *= val16i;
-							*(((int16_t*)array) + j) = val16i;
-							break;
-
-						case i32: ; 
-							int32_t val32i = *(((int32_t*)array) + j);
-							val32i *= val32i;
-							*(((int32_t*)array) + j) = val32i;
-							break;
-
-						case i64: ;
-							int64_t val64i = *(((int64_t*)array) + j);
-							val64i *= val64i;
-							*(((int64_t*)array) + j) = val64i;
-							break;
-
-						case float8: ;
-							// to be added 
-							break;
-
-						case float16: ;
-							// to be added 
-							break;
-
-						case float32: ;
-							float val32f = *(((float*)array) + j);
-							printf("Value in fn given %.10f \n",val32f);
-							val32f *= val32f;
-							*(((float*)array) + j) = val32f;
-							
-							break;
-
-						case float64: ;
-							double val64f = *(((double*)array) + j);
-							val64f *= val64f;
-							*(((double*)array) + j) = val64f;
-							break;
-
-					}
-				}
-				break;
-
-			case EXP : // a = exp(a) // support only for float32 and float64 as of now 
-				for(int j=0; j<num_in_cache; j+=1) {
-					switch(a_dt){
-						case u8: ;
-							uint8_t x_e8ui;
-							x_e8ui = *(((uint8_t*)array) + j);
-							*(((uint8_t*)array) + j) = (uint8_t) exp(x_e8ui);
-							break;
-
-						case u16: ;
-							uint16_t x_e16ui;
-							x_e16ui = *(((uint16_t*)array) + j);
-							*(((uint16_t*)array) + j) = (uint16_t) exp(x_e16ui);
-							break;
-
-						case u32: ;
-							uint32_t x_e32ui;
-							x_e32ui = *(((uint32_t*)array) + j);
-							*(((uint32_t*)array) + j) = (uint32_t) exp(x_e32ui);
-							break;
-
-						case u64: ;
-							uint64_t x_e64ui;
-							x_e64ui = *(((uint64_t*)array) + j);
-							*(((uint64_t*)array) + j) = (uint64_t) exp(x_e64ui);
-							break;
-
-						case i8: ;
-							int8_t x_e8i;
-							x_e8i = *(((int8_t*)array) + j);
-							*(((int8_t*)array) + j) = (int8_t) exp(x_e8i);
-							break;
-
-						case i16: ;
-							int16_t x_e16i;
-							x_e16i = *(((int16_t*)array) + j);
-							*(((int16_t*)array) + j) = (int16_t) exp(x_e16i);
-							break;
-
-						case i32: ;
-							int32_t x_e32i;
-							x_e32i = *(((int32_t*)array) + j);
-							*(((int32_t*)array) + j) = (int32_t) exp(x_e32i);
-							break;
-
-						case i64: ;
-							int64_t x_e64i;
-							x_e64i = *(((int64_t*)array) + j);
-							*(((int64_t*)array) + j) = (int64_t) exp(x_e64i);
-							break;
-
-						case float8: ;
-							// to be added 
-							break;
-
-						case float16: ;
-							// to be added 
-							break;
-
-						case float32: ;
-							float x_e32;
-							x_e32 = *(((float*)array) + j);
-							*(((float*)array) + j) = (float) exp(x_e32);
-							break;
-
-						case float64: ;
-							double x_e64;
-							x_e64 = *(((double*)array) + j);
-							*(((double*)array) + j) = (double) exp(x_e64);
-							break;
-					}
-				}
-				break;
-
-			case SINE : // a = sin(a) // support only for float32 and float64 as of now 
-				for(int j=0; j<num_in_cache; j+=1) {
-					switch(a_dt){
-						case u8: ;
-							uint8_t x_s8ui;
-							x_s8ui = *(((uint8_t*)array) + j);
-							*(((uint8_t*)array) + j) = (uint8_t) sin(x_s8ui);
-							break;
-
-						case u16: ;
-							uint16_t x_s16ui;
-							x_s16ui = *(((uint16_t*)array) + j);
-							*(((uint16_t*)array) + j) = (uint16_t) sin(x_s16ui);
-							break;
-
-						case u32: ;
-							uint32_t x_s32ui;
-							x_s32ui = *(((uint32_t*)array) + j);
-							*(((uint32_t*)array) + j) = (uint32_t) sin(x_s32ui);
-							break;
-
-						case u64: ;
-							uint64_t x_s64ui;
-							x_s64ui = *(((uint64_t*)array) + j);
-							*(((uint64_t*)array) + j) = (uint64_t) sin(x_s64ui);
-							break;
-
-						case i8: ;
-							int8_t x_s8i;
-							x_s8i = *(((int8_t*)array) + j);
-							*(((int8_t*)array) + j) = (int8_t) sin(x_s8i);
-							break;
-
-						case i16: ;
-							int16_t x_s16i;
-							x_s16i = *(((int16_t*)array) + j);
-							*(((int16_t*)array) + j) = (int16_t) sin(x_s16i);
-							break;
-
-						case i32: ;
-							int32_t x_s32i;
-							x_s32i = *(((int32_t*)array) + j);
-							*(((int32_t*)array) + j) = (int32_t) sin(x_s32i);
-							break;
-
-						case i64: ;
-							int64_t x_s64i;
-							x_s64i = *(((int64_t*)array) + j);
-							*(((int64_t*)array) + j) = (int64_t) sin(x_s64i);
-							break;
-
-						case float8: ;
-							// to be added 
-							break;
-
-						case float16: ;
-							// to be added 
-							break;
-
-						case float32: ;
-							float x_s32;
-							x_s32 = *(((float*)array) + j);
-							*(((float*)array) + j) = (float) sin(x_s32);
-							break;
-
-						case float64: ;
-							double x_s64;
-							x_s64 = *(((double*)array) + j);
-							*(((double*)array) + j) = (double) sin(x_s64);
-							break;
-					}
-				}
-				break;
-
-			case ABSOLUTE : // a = |a|
-			// for uint types --> i/p = o/p so doesn't make sense
-			// for int types --> check MSB for sign 
-			// for float types --> check MSB for sign
-				for(int j=0; j<num_in_cache; j+=1) {
-					switch(a_dt){
-						// case u8: ;
-						// case u16: ;
-						// case u32: ;
-						// case u64: ; 
-						// 	break;
-						case i8: ;
-							int8_t MSB8a = *(((int8_t*)array) + j);
-							MSB8a = ((MSB8a>>7)&1);
-							if(MSB8a == 1){
-								*(((int8_t*)array) + j) *= -1;
-							}
-							break;
-						case i16: ;
-							int16_t MSB16a = *(((int16_t*)array) + j);
-							MSB16a = ((MSB16a>>15)&1);
-							if(MSB16a == 1){
-								*(((int16_t*)array) + j) *= -1;
-							}
-							break;
-						case i32: ; 
-							int32_t MSB32a = *(((int32_t*)array) + j);
-							MSB32a = ((MSB32a>>31)&1);
-							if(MSB32a == 1){
-								*(((int32_t*)array) + j) *= -1;
-							}
-							break;
-						case i64: ;
-							int64_t MSB64a = *(((int64_t*)array) + j);
-							MSB64a = ((MSB64a>>63)&1);
-							if(MSB64a == 1){
-								*(((int64_t*)array) + j) *= -1;
-							}
-							break;
-						case float8: ;
-							// to be added 
-							break;
-						case float16: ;
-							// to be added 
-							break;
-						case float32: ; 
-							float valf32 = *(((float*)array) + j);
-							if(valf32<0){
-								*(((float*)array) + j) = -1*valf32;
-							}
-							else{
-								*(((float*)array) + j) = valf32;
-							}
-							break;
-
-						case float64: ;
-							double valf64 = *(((double*)array) + j);
-							if(valf64<0){
-								*(((double*)array) + j) = -1*valf64;
-							}
-							else{
-								*(((double*)array) + j) = valf64;
-							}
-							break;
-					}
-				}
-				break;
-
-			default  :
-				fprintf(stderr,"Error: unaryOperatorOnTensor: unknown Operation.\n"); // wanted to add which operation was accessed [more info during debug]
-				return;
+		for(int j=0; j<num_in_cache; j++) {
+			switch(a_dt){ 
+				case u8  : ;
+					uint8_t x_8ui = *(((uint8_t*)array) + j);
+					*(((uint8_t*)array) + j) = operate_uint8(x_8ui,op);
+					break;
+				case u16 : ;
+					uint16_t x_16ui = *(((uint16_t*)array) + j);
+					*(((uint16_t*)array) + j) = operate_uint16(x_16ui,op);
+					break;
+				case u32 : ;
+					uint32_t x_32ui = *(((uint32_t*)array) + j);
+					*(((uint32_t*)array) + j) = operate_uint32(x_32ui,op);
+					break;
+				case u64 : ;
+					uint64_t x_64ui = *(((uint64_t*)array) + j);
+					*(((uint64_t*)array) + j) = operate_uint64(x_64ui,op);
+					break;
+				case i8	 : ;
+					int8_t x_8i = *(((int8_t*)array) + j);
+					*(((int8_t*)array) + j) = operate_int8(x_8i,op);
+					break;
+				case i16 : ;
+					int16_t x_16i = *(((int16_t*)array) + j);
+					*(((int16_t*)array) + j) = operate_int16(x_16i,op);
+					break;
+				case i32 : ; 
+					int32_t x_32i = *(((int32_t*)array) + j);
+					*(((int32_t*)array) + j) = operate_int32(x_32i,op);
+					break;
+				case i64 : ; 
+					int64_t x_64i = *(((int64_t*)array) + j);
+					*(((int64_t*)array) + j) = operate_int64(x_64i,op);
+					break;
+				case float8 : ; // to be added
+					break;
+				case float16 : ; // to be added
+					break;
+				case float32: ;
+					float x_32f = *(((float*)array) + j);
+					*(((float*)array) + j) = operate_f32(x_32f,op);
+					break;
+				case float64: ;
+					double x_64f = *(((double*)array) + j);
+					*(((double*)array) + j) = operate_f64(x_64f,op);
+					break;
+				default: ;
+					fprintf(stderr,"Error: unaryOperatorOnTensor_inplace: unknown DataType\n");
+					return;
+			}
 		}
-
 		/////////////////////////////////////////
 		// THIRD STAGE of Pipeline : Writing Back 
 		/////////////////////////////////////////
-
 		req_a.request_type = WRITE;
 		//req_a.write_data = store_here; 
 		for(int i=0; i<num_dwords_stored ;i=i+1){

@@ -28,7 +28,7 @@ int main(){
 	dims[0] = 10;
 	dims[1] = 1;
 
-	const Operation operation = EXP;
+	const Operation operation = SIGMOID;
 
 	a.descriptor.data_type = dataType;
 	a.descriptor.row_major_form = row_major_form;
@@ -42,7 +42,7 @@ int main(){
 	}
 	// printf("num_elems = %d", num_elems);
 	//create tensor
-    _err_ = createTensor(&a,&pool) + _err_;
+    _err_ = createTensorAtHead(&a,&pool) + _err_;
 
     if(_err_!=0)
 		fprintf(stderr,"create Tensor FAILURE.\n");
@@ -93,6 +93,7 @@ int main(){
 				case SQUARE: expected_result *= expected_result; break;
 				case ABSOLUTE: expected_result = abs(expected_result); break;
 				case EXP: expected_result = exp(expected_result); break;
+				case SIGMOID: expected_result = (1/(1+exp(-1*expected_result))); break;
 			}
 
 			switch(dataType){
@@ -255,74 +256,74 @@ int fillTensorValues (Tensor* t,uint32_t num_elems, double offset ){
 		double data;
 		data =  i + offset + iter * MAX_SIZE_OF_REQUEST_IN_WORDS; //or read from FILE
 			switch(dataType){
-			case u8: ; 
-				uint8_t val8 = (uint8_t) data;
-				*(((uint8_t*)array) + i) = val8;
-				printf("Value filled %u \n",*(((uint8_t*)array) + i));
-				break;
+				case u8: ; 
+					uint8_t val8 = (uint8_t) data;
+					*(((uint8_t*)array) + i) = val8;
+					printf("Value filled %u \n",*(((uint8_t*)array) + i));
+					break;
 
-			case u16: ;
-				uint16_t val16 = (uint16_t) data;
-				*(((uint16_t*)array) + i) = val16;
-				printf("Value filled %u \n",*(((uint16_t*)array) + i));
-				break;
+				case u16: ;
+					uint16_t val16 = (uint16_t) data;
+					*(((uint16_t*)array) + i) = val16;
+					printf("Value filled %u \n",*(((uint16_t*)array) + i));
+					break;
 
-			case u32: ;
-				uint32_t val32 = (uint32_t) data;
-				*(((uint32_t*)array) + i) = val32;
-				printf("Value filled %u \n",*(((uint32_t*)array) + i));
-				break;
+				case u32: ;
+					uint32_t val32 = (uint32_t) data;
+					*(((uint32_t*)array) + i) = val32;
+					printf("Value filled %u \n",*(((uint32_t*)array) + i));
+					break;
 
-			case u64: ; 
-				uint64_t val64 = (uint64_t) data;
-				*(((uint64_t*)array) + i) = val64;
-				printf("Value filled %u \n",*(((uint64_t*)array) + i));
-				break;
-				
-			case i8: ;
-				int8_t val8i = (int8_t) data;
-				*(((int8_t*)array) + i) = val8i;
-				printf("Value filled %d \n",*(((int8_t*)array) + i));
-				break;
+				case u64: ; 
+					uint64_t val64 = (uint64_t) data;
+					*(((uint64_t*)array) + i) = val64;
+					printf("Value filled %u \n",*(((uint64_t*)array) + i));
+					break;
+					
+				case i8: ;
+					int8_t val8i = (int8_t) data;
+					*(((int8_t*)array) + i) = val8i;
+					printf("Value filled %d \n",*(((int8_t*)array) + i));
+					break;
 
-			case i16: ;
-				int16_t val16i = (int16_t) data;
-				*(((int16_t*)array) + i) = val16i;
-				printf("Value filled %d \n",*(((int16_t*)array) + i));
-				break;
+				case i16: ;
+					int16_t val16i = (int16_t) data;
+					*(((int16_t*)array) + i) = val16i;
+					printf("Value filled %d \n",*(((int16_t*)array) + i));
+					break;
 
-			case i32: ; 
-				int32_t val32i = (int32_t) data ;
-				*(((int32_t*)array) + i) = val32i;
-				printf("Value filled %d \n",*(((int32_t*)array) + i));
-				break;
+				case i32: ; 
+					int32_t val32i = (int32_t) data ;
+					*(((int32_t*)array) + i) = val32i;
+					printf("Value filled %d \n",*(((int32_t*)array) + i));
+					break;
 
-			case i64: ;
-				int64_t val64i = (int64_t) data;
-				*(((int64_t*)array) + i) = val64i;
-				printf("Value filled %d \n",*(((int64_t*)array) + i));
-				break;
+				case i64: ;
+					int64_t val64i = (int64_t) data;
+					*(((int64_t*)array) + i) = val64i;
+					printf("Value filled %d \n",*(((int64_t*)array) + i));
+					break;
 
-			// case float8: ;
-				// to be added 
-				// break;
+				// case float8: ;
+					// to be added 
+					// break;
 
-			// case float16: ;
-				// to be added 
-				// break;
+				// case float16: ;
+					// to be added 
+					// break;
 
-			case float32: ;
-				float val32f = (float) data;
-				*(((float*)array) + i) = val32f;
+				case float32: ;
+					float val32f = (float) data;
+					*(((float*)array) + i) = val32f;
 
-				printf("Value filled %.10f \n",*(((float*)array) + i));
-				break;
+					printf("Value filled %.10f \n",*(((float*)array) + i));
+					break;
 
-			case float64: ;
-				double val64f = (double) data;
-				*(((double*)array) + i) = val64f;
-				printf("Value filled %.10f \n",*(((double*)array) + i));
-				break;
+				case float64: ;
+					double val64f = (double) data;
+					*(((double*)array) + i) = val64f;
+					printf("Value filled %.10f \n",*(((double*)array) + i));
+					break;
 			}		
 		}
 

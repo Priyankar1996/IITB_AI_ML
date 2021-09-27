@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
-#include "../src/unary_fn.c" 
+#include "unary_fn.h" 
 // tensor.h
-#include "../../../priyankar/src/createTensor.c"  // made some edits to createTensor.c 
+#include "createTensor.h"  // made some edits to createTensor.c 
 #define NPAGES 8
 #define MIN(a,b) (((a)<(b))?(a):(b))
 int fillTensorValues (Tensor* t,uint32_t num_elems, double offset );

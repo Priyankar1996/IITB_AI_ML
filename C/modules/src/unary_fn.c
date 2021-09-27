@@ -1,8 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
-#include "unary_inplace_fn.h"
+#include "unary_fn.h"
 #include <math.h>
-
 
 uint8_t operate_uint8(uint8_t val, Operation op){
 	switch(op){
@@ -148,8 +147,9 @@ double operate_f64(double val, Operation op){
 // 	
 // }
 // contiguous storage in memory pool for all the data types - assumed
-void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
-	// in-place unary operator: performs a = f(a) where f is specified by op
+void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
+	// unary operator: performs b = f(a) where f is specified by op
+	// src --> a  || dest --> b
 	// supported op --> sine, exp, ReLU, square, absolute
 
 	TensorDescriptor td_a = a->descriptor;
@@ -179,7 +179,6 @@ void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
 		}	
 		printf("num_in_chunk = %d \n",num_in_cache);
 		printf("num_dwords_stored = %d \n",num_dwords_stored);
-
 		/////////////////////////////////////////////////
 		// FIRST STAGE of Pipeline : Fetching from Memory 
 		/////////////////////////////////////////////////
@@ -257,12 +256,13 @@ void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
 		/////////////////////////////////////////
 		// THIRD STAGE of Pipeline : Writing Back 
 		/////////////////////////////////////////
+
 		req_a.request_type = WRITE;
 		//req_a.write_data = store_here; 
 		for(int i=0; i<num_dwords_stored ;i=i+1){
 			req_a.write_data[i] = store_here[i];
 		}
-		memPoolAccess((MemPool *)(a->mem_pool_identifier),&req_a,&mpr);
+		memPoolAccess((MemPool *)(b->mem_pool_identifier),&req_a,&mpr);
 	}
 	return; 
 }

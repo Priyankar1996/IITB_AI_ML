@@ -180,7 +180,7 @@ int initializeTensor (Tensor* t, void* initial_value)
 				                break;
 
 			        case float64: ;
-				                double val64f = *((double*) initial_value);
+				                double val64f = *((double*)initial_value);
 				                *(((double*)array) + i) = val64f;
                                 num_elems_left--;
 				                break;

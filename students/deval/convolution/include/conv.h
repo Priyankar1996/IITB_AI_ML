@@ -29,7 +29,6 @@ AUTHORS : DEVAL PATEL, ANDREWS
 #define CEILING(x,y) (((x) + (y) - 1) / (y))
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
-
 /*
 	NAME:
 		convHelper

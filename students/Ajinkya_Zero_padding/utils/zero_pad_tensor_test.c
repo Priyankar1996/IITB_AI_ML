@@ -1,3 +1,6 @@
+// AUTHOR :- AJINKYA RAGHUWANSHI,
+//          DEPARTMENT OF ELECTRICAL ENGINEERING, IITB
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -23,7 +26,7 @@ void fillTensorDescriptor(Tensor *t)
     printf("0. uint_8\t1. uint16_t\t2. uint32_t\t3. uint64_t\n");
     printf("4. int8_t\t5. int16_t\t6. int32_t\t7. int64_t\n");
     printf("8. float8\t8. float16\t9. float\t10. double\n");
-    scanf("%u",&dummy.descriptor.data_type);
+    scanf("%d",&dummy.descriptor.data_type);
     printf("Enter:\t0.Column-Major form \t1.Row-Major form\n");
     scanf("%u",&dummy.descriptor.row_major_form);
     if(dummy.descriptor.row_major_form > 1 || dummy.descriptor.row_major_form<0)
@@ -120,6 +123,7 @@ int main(int argc,char* argv[])
     initMemPool(&pool2,2,MAX_PAGES);
 
     fillTensorDescriptor(&a);
+    // a.descriptor.data_type = 
     // fillTensorDescriptor(&a_diff_pool);
     uint32_t scale_factor,constant;
     printf("Enter the scale factor:");

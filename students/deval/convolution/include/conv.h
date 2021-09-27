@@ -1,3 +1,4 @@
+AUTHORS : DEVAL PATEL, ANDREWS
 #ifndef __conv_h___
 #define __conv_h___
 /*
@@ -28,29 +29,6 @@
 #define CEILING(x,y) (((x) + (y) - 1) / (y))
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
-/*
-	Union used to calculate convolution
-	results
-	Need separate variables as operations
-	are carried out differently for each
-	data type
-*/
-union ConvResult{
-	uint8_t res_u8;
-	uint16_t res_u16;
-	uint32_t res_u32;
-	uint64_t res_u64;
-
-	int8_t res_i8;
-	int16_t res_i16;
-	int32_t res_i32;
-	int64_t res_i64;
-
-	// float8 res_f8;
-	// float16 res_f16;
-	float res_f32;
-	double res_f64;
-};
 
 /*
 	NAME:
@@ -61,17 +39,15 @@ union ConvResult{
 	INPUTS:
 		1. ker_data points to kernel values
 		2. img_data points to image values
-		3. dtype is data type
-		4. ker_start_ds_offset points to how much data to skip
-			at the start of ker_data
-		5. img_start_ds_offset points to how much data to skip
-			at the start of img_data
-		6. num_ele_to_operate points to #elements involved in <,>
-		7. res points to result object
+		3. kernel descriptor
+		4. image descriptor
+		5. convolve start index
+		6. base address of convolution result
+		7. loop value
 	ASSUMPTIONS:
 		NA
 	OPERATION:
-		Returns <*ker_data, *img_data> in *res
+		perform dot product of the image matrix patch with kernel.
 	SIDE-EFFECTS:
 		NA
 	RETURN VALUES:

@@ -140,8 +140,8 @@ int main(int argc,char* argv[])
     scanf("%u",&constant);
     // while (i<5)
     // {
-        _err_ = createTensor(&a,&pool1) || 
-                createTensor(&a_diff_pool,&pool2) ||
+        _err_ = createTensorAtHead(&a,&pool1) || 
+                createTensorAtHead(&a_diff_pool,&pool2) ||
                 initializeTensor(&a_diff_pool,&constant) ||
                 _err_;
         printf("%d",_err_);

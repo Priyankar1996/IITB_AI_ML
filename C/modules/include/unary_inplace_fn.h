@@ -34,4 +34,15 @@ typedef enum {
 //      NULL
 void unaryOperateOnTensor_inplace(Tensor* t, Operation op);
 
+// Helper Functions
+uint8_t operate_uint8(uint8_t val, Operation op);
+uint16_t operate_uint16(uint16_t val, Operation op);
+uint32_t operate_uint32(uint32_t val, Operation op);
+uint64_t operate_uint64(uint64_t val, Operation op);
+int8_t operate_int8(int8_t val, Operation op);
+int16_t operate_int16(int16_t val, Operation op);
+int32_t operate_int32(int32_t val, Operation op);
+int64_t operate_int64(int64_t val, Operation op);
+float operate_f32(float val, Operation op);
+double operate_f64(double val, Operation op);
 #endif

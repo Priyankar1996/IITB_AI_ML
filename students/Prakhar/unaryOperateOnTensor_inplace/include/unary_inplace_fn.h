@@ -14,7 +14,7 @@ typedef enum {
 	EXP,
 	RELU,
 	SQUARE,
-        ABSOLUTE,
+    ABSOLUTE,
 	SIGMOID
 } Operation;
 

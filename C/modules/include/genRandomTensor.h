@@ -1,7 +1,11 @@
+//AUTHOR: 	DEEP SATRA
+//          DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
+
 #define __genRandomTensor_h___
 
 #include "mempool.h"
 #include "tensor.h"
+#include "mtwist.h"
 
 typedef enum {
 	mersenne_Twister, // Used in python
@@ -22,4 +26,6 @@ typedef enum {
 //    Pass the pointer to this function.
 //    The function fills the data and returns.
 //
+//    Currently only inbuilt rand of C and mersenne_Twister is supported.
+//    
 void genRandomTensor(uint32_t seed, RngType t, Tensor* result);

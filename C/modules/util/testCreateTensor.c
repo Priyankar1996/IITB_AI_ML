@@ -202,7 +202,7 @@ int main(int argc,char* argv[])
 	    //else
           i++;
     }
-    _err_ = writeTensorToFile("output.csv",&a[2]) || _err_;
+    _err_ = writeTensorToFile("output.csv",a[2]) || _err_;
     i=0;
 
     printf("Number of available pages in mempools:%d,%d.\n",pool1.number_of_free_pages,pool2.number_of_free_pages);

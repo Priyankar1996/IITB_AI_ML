@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir -p bin
 gcc -o obj/mempool.o -c -g -I ../mempool/include ../mempool/src/mempool.c 
 gcc -o obj/tensor.o -c -g -I ../mempool/include -I ../primitives/include ../primitives/src/tensor.c
 gcc -o obj/createTensor.o -c -g -I src/ -I include/ src/createTensor.c -lm -I ../mempool/include/ -I ../primitives/include/

@@ -5,69 +5,6 @@
 // It creates it from the src tensor by reading and then writing the 
 // destination tensor according to scale factor provded. 
 
-// Create tensor functon: Creates a new tensor for zero padding
-
-
-// ASSUMPTIONS:
-//      1. t has the tensor's description available in it.
-//      2. mp is the pointer to mempool to be used by createTensor.
-// SUMMARY:
-//      createTensoratHead allocates spaces for the tensor from the specified
-//      mempool at head.
-// SIDE-EFFECTS:
-//      Mempool is modified to indicate that it has allocated this data
-//      to the tensor.
-//      Tensor *t is modified with the memory location to where
-//      it is allocated.
-//      Values in the memory pool are not modified.
-// ARGUEMENTS:
-//      t :- t is the tensor to be created.
-//     mp :- mp is the mempool in which the tensor will be created
-// RETURN VALUES:
-//      0 on Success, 1 on Failure.
-int createTensor(Tensor *t,MemPool *mp);
-
-
-
-// ASSUMPTIONS:
-//      1. td has the tensor descriptor already available in it.
-//      2. indices is the location of the element to be found in the tensor
-//         are already avilable.
-// SUMMARY:
-//      Given a tensor descriptor, get the index of the
-//      byte/half-word/word/double-word
-//      element in the single-dimensional array in which
-//      the tensor data is stored
-// SIDE-EFFECTS:
-//      NA
-// ARGUEMENTS:
-//      td :- gives the tensor descriptor available of the tensor.
-//      indices :- location of the element to be found in the tensor.
-// RETURN VALUES:
-//      The calculated location of the index relative to the first element
-//      based in the ROW/COLUMN major format, in the format of 32 bit integer.
-uint32_t getTensorEntryIndexOffset(TensorDescriptor *td, uint32_t *indices);
-
-
-
-
-// ASSUMPTIONS:
-//      1. mp is the pointer to mempool to be used by createTensor.    
-// SUMMARY:
-//      Initializes the mempool with the index and number of pages
-// SIDE-EFFECTS:
-//      Mempool is modified to indicate that it has allocated this data
-//      to the tensor.
-//      Values in the mempool are modified
-// ARGUEMENTS:
-//      mp :- It is the mempool pointer
-//      mem_pool_index :- assigns the mempool its index according to the user
-//      mem_pool_size_in_pages :- Number of pages for the mempool declaration are provided 
-//                                here
-// RETURN VALUES:
-//      NA
-void initMemPool(MemPool* mp, uint32_t mem_pool_index, uint32_t mem_pool_size_in_pages);
- 
 
 
 // ASSUMPTIONS:

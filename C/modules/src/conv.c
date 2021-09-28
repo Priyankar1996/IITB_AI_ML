@@ -316,6 +316,6 @@ int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
             		break;
         	}
 	}
-printf("THE END\n");
+//printf("THE END\n");
 return 0;
 }

@@ -6,8 +6,43 @@
 #include <stdlib.h>
 #include "mempool.h"
 #include "tensor.h"
+#include <inttypes.h>
+#include <string.h>
 
 #define CEILING(x,y) (((x) + (y) - 1) / (y))
+#define MIN(a,b) (((a)<(b))?(a):(b))
+/*
+	NAME:
+		convHelper
+	BRIEF:
+		Take 2 arrays of same size as input,
+		calculate dot product
+	INPUTS:
+		1. ker_data points to kernel values
+		2. img_data points to image values
+		3. kernel descriptor
+		4. image descriptor
+		5. convolve start index
+		6. base address of convolution result
+		7. loop value
+	ASSUMPTIONS:
+		NA
+	OPERATION:
+		perform dot product of the image matrix patch with kernel.
+	SIDE-EFFECTS:
+		NA
+	RETURN VALUES:
+		NA
+	FUTURE WORK:
+		NA
+*/
+void convHelper(const int64_t *ker_data, const int64_t *img_data,
+                TensorDescriptor *td_ker,
+                TensorDescriptor *td_in,
+		int *img_data_start_index,
+		void *result_array_base,
+		int l);
+
 
 
 /*
@@ -38,6 +73,6 @@
 		2. Higher dimensional kernel?
 		3. Speed Up/ check other options provided by PyTorch
 */
-int convTensors(Tensor *inImg, Tensor *kernel, Tensor *outImg, MemPool *mp,
+int convTensors(Tensor *inImg, Tensor *kernel, Tensor *outImg,
 					const int stride[], const int padding[]);
 #endif

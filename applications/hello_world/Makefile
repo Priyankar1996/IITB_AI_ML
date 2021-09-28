@@ -5,16 +5,16 @@ CFLAGS = -Wall -std=c99 -lm
 ARFLAGS = -cq	# add v if need verbose output
 BIN=bin
 LIB=lib
-SRC=src
-INCLUDE=include/
-MEMPOOL=../mempool
-TENSOR=../primitives
+SRC=../../C/modules/src
+INCLUDE=../../C/modules/include
+MEMPOOL=../../C/mempool
+TENSOR=../../C/primitives
 PRIMITIVES = $(BIN)/mempool.o $(BIN)/tensor.o
 PRIMFILES = $(patsubst $(BIN)/%.o,%.o,$(PRIMITIVES))
 OBJ = $(patsubst $(SRC)/%.c,_%,$(wildcard $(SRC)/*.c))
 
 # User defined function - Change according to the file to run.
-TESTFILE=util/1.c
+TESTFILE=src/1.c
 
 
 

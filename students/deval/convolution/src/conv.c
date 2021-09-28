@@ -1,5 +1,6 @@
 #include "../include/conv.h"
 
+//computes convolution of one window
 void convHelper(const int64_t *ker_data, const int64_t *img_data,
                 TensorDescriptor *td_ker,
                 TensorDescriptor *td_in,

@@ -25,3 +25,6 @@ On XLA-driven devices (such as TPU, and also CPU/GPU when XLA is enabled) the Th
 
 """
 Refer interesting paper "Parallel Random Numbers: As Easy as 1, 2, 3"
+
+
+I have implemented conv function to to convolotion of 3d kernel and input. Currently it works for int64 and float64. It assumes kernel size is small enough (less than 1024 words).

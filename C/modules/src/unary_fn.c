@@ -266,3 +266,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 	}
 	return; 
 }
+
+void unaryOperateOnTensor_inplace(Tensor* a, Operation op) {
+	unaryOperateOnTensor(a,a, op);
+}

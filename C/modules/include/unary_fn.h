@@ -33,6 +33,7 @@ typedef enum {
 // RETURN VALUES:
 //      NULL
 void unaryOperateOnTensor(Tensor* src,Tensor* dest, Operation op);
+void unaryOperateOnTensor_inplace(Tensor* t, Operation op);
 // Helper Functions
 uint8_t operate_uint8(uint8_t val, Operation op);
 uint16_t operate_uint16(uint16_t val, Operation op);

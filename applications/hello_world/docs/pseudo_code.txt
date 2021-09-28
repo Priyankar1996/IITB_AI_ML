@@ -12,7 +12,7 @@ NOTE: all data types are floats to begin with.
 MemPool  A;
 Tensor   T; // float.
 
-Tensor   K1, K2, .... Kn; // kernels need to be created!
+Tensor   K(1), K(2), .... K(n); // kernels need to be created!
 
 setup tensor descriptor for T
 allocate Tensor T(0), T(1), T(2) ...  S(0), S(1) etc.

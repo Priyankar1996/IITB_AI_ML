@@ -8,10 +8,11 @@
 #include "tensor.h"
 #include "zero_padding.h"
 
+
 void read_write_data(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest,uint32_t *ind,uint32_t *desti);
-uint32_t i[64] = { };
-uint32_t ind[64] = { };
-uint32_t desti[64] = { };
+uint32_t i[MAX_DIMENSION] = { };
+uint32_t ind[MAX_DIMENSION] = { };
+uint32_t desti[MAX_DIMENSION] = { };
 
 // Function for creating the indices
 void funcn(Tensor *src, Tensor *dest,int n,int scale_factor, int constant){

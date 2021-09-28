@@ -1,207 +1,321 @@
-//AUTHOR: 	DEEP SATRA
-//          DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
+#include "../include/conv.h"
 
-#include "conv.h"
-#include "tensor.h"
-#include "mempool.h"
-#include "createTensor.h"
-
-int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, MemPool *mpool, 
-			const int stride[3], const int padding[6]){
-	
-	fprintf(stderr,"INSIDE CONV\n");
-	
-	MemPoolRequest reqKer, reqImg, reqOut;
-	MemPoolResponse respKer, respImg, respOut;
-
-	TensorDescriptor td_in, td_ker, td_out;
-	td_in = in_img->descriptor;
-	td_ker = kernel->descriptor;
-
-	/*
-		 Verify Input Constraints
-	*/
-	if (td_in.row_major_form != td_ker.row_major_form){
-		fprintf(stderr,"ERROR: INPUTS ROW/COL MAJOR MISMATCH\n");
-		return -1;
+//computes convolution of one window
+void convHelper(const int64_t *ker_data, const int64_t *img_data,
+                TensorDescriptor *td_ker,
+                TensorDescriptor *td_in,
+		int *img_data_start_index,
+		void *result_array_base,
+		int l){
+    switch (td_in->data_type)
+    {
+	case u8:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((uint8_t*)result_array_base) + l) += *(((uint8_t*)img_data) + img_data_array_idx) * *(((uint8_t*)ker_data) + ker_data_array_idx);
+				}
+			}
+		}
 	}
-	if(td_in.data_type != td_ker.data_type){
-		fprintf(stderr,"ERROR: INPUTS DATATYPE MISMATCH\n");
-		return -1;
+            break;
+	case u16:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((uint16_t*)result_array_base) + l) += *(((uint16_t*)img_data) + img_data_array_idx) * *(((uint16_t*)ker_data) + ker_data_array_idx);
+				}
+			}
+		}
 	}
-	
-	uint8_t is_row_major = td_in.row_major_form; 
-	uint32_t in_H = td_in.dimensions[0];
-	uint32_t in_W = td_in.dimensions[1];
-	uint32_t in_C = td_in.dimensions[2];
-	uint32_t ker_H = td_ker.dimensions[0];
-	uint32_t ker_W = td_ker.dimensions[1];
-	uint32_t ker_C = td_ker.dimensions[2];
-
-	// Initialise output sizes
-	uint32_t out_H = (in_H + padding[0] + padding[1] - ker_H)/stride[0] + 1;
-	uint32_t out_W = (in_W + padding[2] + padding[3] - ker_W)/stride[1] + 1;
-	uint32_t out_C = (in_C + padding[4] + padding[5] - ker_C)/stride[2] + 1; //td_ker.dimensions[td_ker.number_of_dimensions - 1];
-	
-	out_img->descriptor.row_major_form = is_row_major;
-	out_img->descriptor.number_of_dimensions = 3;
-	out_img->descriptor.data_type = td_in.data_type;
-	out_img->descriptor.dimensions[0] = out_H;
-	out_img->descriptor.dimensions[1] = out_W;
-	out_img->descriptor.dimensions[2] = out_C;
-	td_out = out_img->descriptor;
-	
-	int num_dim_ker = td_ker.number_of_dimensions;
-	// Number of multiplications to get one value
-	int num_ele_per_filt = ker_W*ker_H*ker_C;
-	// Number of output values
-	int num_ele_out = out_W*out_H*out_C;
-
-	uint32_t data_size = sizeofTensorDataInBytes(td_in.data_type);
-
-	// Number of words to read to get kernel data
-	uint32_t num_words_ker = CEILING(num_ele_per_filt*data_size,8) ;
-	
-	// Currently only i64 and float64
-	reqKer.request_type = READ ;
-	reqKer.arguments[0] = num_words_ker;
-	reqKer.arguments[1] = kernel->mem_pool_buffer_pointer;
-	reqKer.arguments[2] = 1; // stride = 1 as pointwise
-
-	memPoolAccess((MemPool *)kernel->mem_pool_identifier,&reqKer,&respKer);
-	if(respKer.status == NOT_OK){
-		fprintf(stderr,"ERROR: Read Kernel Tensor Failed in Conv\n");
-		return -1;
+            break;
+	case u32:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((uint32_t*)result_array_base) + l) += *(((uint32_t*)img_data) + img_data_array_idx) * *(((uint32_t*)ker_data) + ker_data_array_idx);
+				}
+			}
+		}
 	}
-
-	int flag = createTensorAtHead(out_img, mpool);
-	//uint8_t init_val = 0;
-	//flag = flag + initializeTensor(&out_img, &init_val);
-	if(flag != 0){
-		fprintf(stderr,"ERROR: Initialising output Tensor Failed in Conv\n");
-		return -1;
-	}
-
-	// Number of pages to write 
-	uint8_t loops = CEILING(num_ele_out, MAX_SIZE_OF_REQUEST_IN_WORDS);
-	uint8_t I=0; // Keeps track of page number 
-	uint32_t done=0; // Keeps track of element to write
-	for(I=0;I<loops;I++){
-		// Words to write in current page
-		uint32_t curr_writes = (I == loops - 1)? num_ele_out % MAX_SIZE_OF_REQUEST_IN_WORDS : MAX_SIZE_OF_REQUEST_IN_WORDS ;		
-		uint32_t J = 0 ; // Keeps track of word to be written in current page
-		switch(td_in.data_type){
-			case i64:
-				for(J=0; J<curr_writes; J++){
-					uint8_t oc = done / (out_H*out_W); // C coord of output
-					uint8_t oh = (done-oc*out_W*out_H)/(out_W), ow = done - oc*out_H*out_W - oh*out_W; // H, W coord of output
-					int32_t iws = ow*stride[1] - padding[2], iwe = iws + ker_W -1; 
-					int32_t ihs = oh*stride[0] - padding[0], ihe = ihs + ker_H -1; 
-					int32_t ics = oc*stride[2] - padding[4], ice = ics + ker_C -1; 
-
-					iws = (iws<0)?0:iws ; iwe = (iwe>=in_W)? in_W-1 : iwe ; 
-					ihs = (ihs<0)?0:ihs ; ihe = (ihe>=in_H)? in_H-1 : ihe ;
-					ics = (ics<0)?0:ics ; ice = (ice>=in_C)? in_C-1 : ice ;
-
-					//printf("iws:%d iwe:%d ihs:%d ihe:%d ics:%d ice:%d\n",iws,iwe,ihs,ihe,ics,ice);
-					uint64_t ans = 0, id = 0;
-					uint32_t tc;
-					for (tc=ics;tc<=ice;tc++){
-						uint32_t th ;
-						for (th=ihs;th<=ihe;th++){
-							uint32_t tw ;
-							for(tw=iws;tw<=iwe;tw++){
-								uint32_t indices[] = {th,tw,tc};
-								uint32_t loc = getTensorEntryIndexOffset(&td_in, indices) ;
-								reqImg.request_type = READ ;
-								reqImg.arguments[0] = 1 ; //Read 1 by 1
-								reqImg.arguments[1] = in_img->mem_pool_buffer_pointer + loc ;
-								reqImg.arguments[2] = 1;
-								memPoolAccess((MemPool *)in_img->mem_pool_identifier, &reqImg, &respImg);
-								if(respImg.status !=  OK)
-								{
-									fprintf(stderr,"Error: could not read Img from memory.\n");
-									break;
-								}
-								//printf("Multiplying %d with {%d,%d,%d}\n",id,tw,th,tc);
-								ans += respKer.read_data[id]*respImg.read_data[0];	
-								id++;								
-							}
-						}
-					}
+            break;
+        case u64:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((uint64_t*)result_array_base) + l) += *(((uint64_t*)img_data) + img_data_array_idx) * *(((uint64_t*)ker_data) + ker_data_array_idx);
 					
-					reqOut.write_data[J + I*MAX_SIZE_OF_REQUEST_IN_WORDS] = ans;
-					done++;
 				}
-
-				break;
-			case float64:
-				for(J=0; J<curr_writes; J++){
-					uint8_t oc = done / (out_H*out_W);
-					uint8_t oh = (done-oc*out_W*out_H)/(out_H), ow = done - oc*out_H*out_W - oh*out_H; 
-					int32_t iws = ow*stride[1] - padding[2], iwe = iws + ker_W -1; 
-					int32_t ihs = oh*stride[0] - padding[0], ihe = ihs + ker_H -1; 
-					int32_t ics = oc*stride[2] - padding[4], ice = ics + ker_C -1; 
-
-					iws = (iws<0)?0:iws ; iwe = (iwe>=in_W)? in_W-1 : iwe ; 
-					ihs = (ihs<0)?0:ihs ; ihe = (ihe>=in_H)? in_H-1 : ihe ;
-					ics = (ics<0)?0:ics ; ice = (ice>=in_C)? in_C-1 : ice ;
-
-					//printf("iws:%d iwe:%d ihs:%d ihe:%d ics:%d ice:%d\n",iws,iwe,ihs,ihe,ics,ice);
-					union udouble {
-						double d ;
-						uint64_t u;
-					} ans, rk, ri ;
-					ans.d=0;
-					uint64_t id = 0;
-					uint32_t tc;
-					for (tc=ics;tc<=ice;tc++){
-						uint32_t th ;
-						for (th=ihs;th<=ihe;th++){
-							uint32_t tw ;
-							for(tw=iws;tw<=iwe;tw++){
-								uint32_t indices[] = {th,tw,tc};
-								uint32_t loc = getTensorEntryIndexOffset(&td_in, indices) ;
-								reqImg.request_type = READ ;
-								reqImg.arguments[0] = 1 ; //Read 1 by 1
-								reqImg.arguments[1] = in_img->mem_pool_buffer_pointer + loc ;
-								reqImg.arguments[2] = 1;
-								memPoolAccess((MemPool *)in_img->mem_pool_identifier, &reqImg, &respImg);
-								if(respImg.status !=  OK)
-								{
-									fprintf(stderr,"Error: could not read Img from memory.\n");
-									break;
-								}
-								//printf("Multiplying %d with {%d,%d,%d}\n",id,tw,th,tc);
-								rk.u = respKer.read_data[id] ;
-								ri.u = respImg.read_data[0] ;
-								//printf("ker: %f img: %f\n",rk.d, ri.d );
-								ans.d += rk.d * ri.d ;	
-								id++;								
-							}
-						}
-					}
-					//printf("ans: %lf\n",ans.d);
-					reqOut.write_data[J + I*MAX_SIZE_OF_REQUEST_IN_WORDS] = ans.u;
-					done++;
-				}
-
-				break;
-			default:
-				printf("Conv not ready yet for other data types\n");
-				return -1 ;
-		}
-		reqOut.request_type = WRITE ;
-		reqOut.request_tag = I + 1 ;
-		reqOut.arguments[0] = curr_writes ;
-		reqOut.arguments[1] = out_img->mem_pool_buffer_pointer + I*MAX_SIZE_OF_REQUEST_IN_WORDS;
-		reqOut.arguments[2] = 1 ;
-		memPoolAccess((MemPool *)out_img->mem_pool_identifier, &reqOut, &respOut);
-		if(respOut.status !=  OK)
-		{
-			fprintf(stderr,"Error: could not write Convolved tensor into memory.\n");
-			return -1;
+			}
 		}
 	}
-	return 0; 	
+            break;
+	case i8:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((int8_t*)result_array_base) + l) += *(((int8_t*)img_data) + img_data_array_idx) * *(((int8_t*)ker_data) + ker_data_array_idx);
+					
+				}
+			}
+		}
+	}
+            break;
+	case i16:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((int16_t*)result_array_base) + l) += *(((int16_t*)img_data) + img_data_array_idx) * *(((int16_t*)ker_data) + ker_data_array_idx);
+					
+				}
+			}
+		}
+	}
+            break;
+	case i32:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((int32_t*)result_array_base) + l) += *(((int32_t*)img_data) + img_data_array_idx) * *(((int32_t*)ker_data) + ker_data_array_idx);
+					
+				}
+			}
+		}
+	}
+            break;
+	case i64:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((int64_t*)result_array_base) + l) += *(((int64_t*)img_data) + img_data_array_idx) * *(((int64_t*)ker_data) + ker_data_array_idx);
+					
+				}
+			}
+		}
+	}
+            break;
+	case float32:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((float*)result_array_base) + l) += *(((float*)img_data) + img_data_array_idx) * *(((float*)ker_data) + ker_data_array_idx);
+					
+				}
+			}
+		}
+	}
+            break;
+	case float64:
+	{
+        	for(int i = 0; i < td_ker->dimensions[0]; i++){
+			for(int j = 0; j < td_ker->dimensions[1]; j++){
+				for(int k = 0; k < td_ker->dimensions[2]; k++){
+					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+					int ker_indices[3] = {i,j,k};
+					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+					*(((double*)result_array_base) + l) += *(((double*)img_data) + img_data_array_idx) * *(((double*)ker_data) + ker_data_array_idx);
+				
+				}
+			}
+		}
+	}
+            break;
+        default:
+            fprintf(stderr,"ERROR: CONV HELPER INPUTS DATATYPE NOT FOUND\n");
+            break;
+    }
+}
+
+int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
+            const int stride[2], const int padding[4]){
+
+	//fprintf(stderr,"INSIDE CONV\n");
+
+    	MemPoolRequest reqKer, reqImg;
+    	MemPoolResponse respKer, respImg;
+
+    	TensorDescriptor td_in, td_ker, td_out;
+
+		td_in = in_img->descriptor;
+    	td_ker = kernel->descriptor;
+
+    	uint8_t is_row_major = td_in.row_major_form;
+    	uint32_t out_H = (td_in.dimensions[0] + padding[0] + padding[1] - td_ker.dimensions[0])/stride[0] + 1;
+    	uint32_t out_W = (td_in.dimensions[1] + padding[2] + padding[3] - td_ker.dimensions[1])/stride[1] + 1;
+    	uint32_t out_C = (td_in.dimensions[2] - td_ker.dimensions[2]) + 1;
+
+    	out_img->descriptor.row_major_form = is_row_major;
+    	out_img->descriptor.number_of_dimensions = 3;
+    	out_img->descriptor.data_type = td_in.data_type;
+    	out_img->descriptor.dimensions[0] = out_H;
+    	out_img->descriptor.dimensions[1] = out_W;
+    	out_img->descriptor.dimensions[2] = out_C;
+
+		td_out = out_img->descriptor;
+
+    	uint32_t data_size = sizeofTensorDataInBytes(td_ker.data_type);
+    	int num_elems = numberOfElementsInTensor(kernel);
+    	//int num_elems_left = num_elems;
+  
+	//Read kernel data.
+
+    	uint64_t ker_data[1024];
+    	int iter = -1;
+    	int flag;
+    	int words_left = CEILING(num_elems * data_size,8);
+    	//max request is 1024
+    	for( ; words_left > 0; words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
+    	{
+		iter++;
+		//last request can be less than 1024
+        	int elements_to_read = MIN(words_left,MAX_SIZE_OF_REQUEST_IN_WORDS);
+		//printf("elements to read %d\n",elements_to_read);
+        	reqKer.request_type = READ;
+        	reqKer.arguments[0] = elements_to_read;
+        	reqKer.arguments[1] = kernel->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter;
+			reqKer.arguments[2] = 1;//stride
+
+        	memPoolAccess((MemPool*)kernel->mem_pool_identifier,&reqKer,&respKer);
+        	if(respKer.status !=OK)
+        	{
+            		printf("ERROR : Failed to read the image tensor.");
+            		flag = 1;
+            		break;
+        	}
+
+		for(int idx = (iter)*1024; idx < (iter)*1024 + elements_to_read; idx++)
+		{
+			ker_data[idx] = respKer.read_data[idx-(iter)*1024];
+			//printf("%"PRIu64"\n",ker_data[idx]);
+		}
+    	}
+
+	//Read image data.
+
+	uint64_t img_data[65536];
+	iter = -1;
+	int img_num_elems = numberOfElementsInTensor(in_img);
+	int img_words_left = CEILING(img_num_elems * data_size,8);
+	for( ; img_words_left > 0; img_words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
+    	{
+			iter++;
+			//last request can be less than 1024
+        	int elements_to_read = MIN(img_words_left,MAX_SIZE_OF_REQUEST_IN_WORDS);
+        	reqImg.request_type = READ;
+        	reqImg.arguments[0] = elements_to_read;
+        	reqImg.arguments[1] = in_img->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter;
+			reqImg.arguments[2] = 1;//stride
+
+        	memPoolAccess((MemPool*)in_img->mem_pool_identifier,&reqImg,&respImg);
+        	if(respImg.status !=OK)
+        	{
+            		printf("ERROR: Failed to read the source tensor.");
+            		flag = 1;
+            		break;
+        	}
+
+		for(int idx = (iter)*1024; idx < (iter)*1024 + elements_to_read; idx++)
+		{
+			img_data[idx] = respImg.read_data[idx-(iter)*1024];
+			//printf("index %d\n",idx);
+			//printf("%"PRIu64"\n",img_data[idx]);
+		}
+    	}
+
+	//Perform convolution.
+	
+	uint64_t res[out_H*out_W*out_C];
+	memset(res,0,out_H*out_W*out_C*sizeof(uint64_t));
+	void *result_array_base = res;
+	int l = 0;
+
+	for(int p = 0; p < out_H; p++)
+	{
+		for(int q = 0; q < out_W; q++)
+		{
+			for(int r =0; r < out_C; r++)
+			{
+				int img_data_start_index[] = {p*stride[0],q*stride[1],r};
+				convHelper(ker_data,img_data,&td_ker,&td_in,img_data_start_index,result_array_base,l);
+				l++;
+			}
+		}
+	}
+
+
+	//write back the result to tensor.
+
+	iter = -1;
+	int out_img_num_elems = numberOfElementsInTensor(out_img);
+	int out_img_words_left = CEILING(out_img_num_elems * data_size,8);
+	for( ; out_img_words_left > 0; out_img_words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
+    	{
+		iter++;
+		//last request can be less than 1024
+        	int elements_to_write = MIN(out_img_words_left,MAX_SIZE_OF_REQUEST_IN_WORDS);
+        	reqImg.request_type = WRITE;
+        	reqImg.arguments[0] = elements_to_write;
+        	reqImg.arguments[1] = out_img->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter;
+		reqImg.arguments[2] = 1;//stride
+		for(int i = 0; i < elements_to_write; i++)
+		{
+			reqImg.write_data[i] = res[i + iter*1024];
+		}
+
+        	memPoolAccess((MemPool*)out_img->mem_pool_identifier,&reqImg,&respImg);
+        	if(respImg.status !=OK)
+        	{
+            		printf("ERROR: Failed to write the output tensor.");
+            		flag = 1;
+            		break;
+        	}
+	}
+printf("THE END\n");
+return 0;
 }

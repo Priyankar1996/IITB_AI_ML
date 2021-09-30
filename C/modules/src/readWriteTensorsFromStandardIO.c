@@ -203,7 +203,9 @@ int writeTensorToFile(char *filename, Tensor *t)
 
             for(j=0;j<elements_to_read;j++)
             {
-                 //uint64_t v= mp_resp.read_data[j];
+                 uint64_t v= mp_resp.read_data[j];
+                 //printf("READ VALUE:0X%"PRIx64"\t",v);
+                 //printf("READ VALUE:%lu\n",v);
                     switch (t->descriptor.data_type)
                     {
                         case u8:{
@@ -318,7 +320,9 @@ int writeTensorToFile(char *filename, Tensor *t)
                         case float8: break;
                         case float16: break;
                         case float32:{
-                                        float (*bytes32)[2] = (void*) &mp_resp.read_data[j];
+                                        float (*bytes32)[2] = ((void*)&mp_resp.read_data[j]);
+                                        
+                                        //printf("%f %f\n",(*bytes32)[0],(*bytes32)[1]);
                                         for (k = 0; k < 2; k++)
                                         {
                                             count++;

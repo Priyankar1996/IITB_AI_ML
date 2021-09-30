@@ -20,19 +20,19 @@ uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,
     }
     //indices[td_in->number_of_dimensions-1] = td_in->dimensions[td_in->number_of_dimensions-1]-1;
     
-    /*for(i=0;i< td_in->number_of_dimensions;i++)
-        printf("%d ",indices[i]);
-    printf("\t");*/
+    //for(i=0;i< td_in->number_of_dimensions;i++)
+    //    printf("%d ",indices[i]);
+    //printf("\t");
     
     for(i = 0;i < td_out->number_of_dimensions-1;i++)
     {
         output_indices[i] = (indices[i] * stride[i]) + k_dims[i] -1; // - padding
     }
-    output_indices[td_out->number_of_dimensions-1] = indices[td_out->number_of_dimensions-1]-1;
+    output_indices[td_out->number_of_dimensions-1] = indices[td_out->number_of_dimensions-1];
     
-    /*for(i=0;i< td_out->number_of_dimensions;i++)
-        printf("%d ",output_indices[i]);
-    printf("\n");*/
+    //for(i=0;i< td_out->number_of_dimensions;i++)
+    //    printf("%d ",output_indices[i]);
+    //printf("\n");
     
     output_offset = getTensorEntryIndexOffset(td_out,output_indices);
     return output_offset;

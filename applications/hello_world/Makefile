@@ -11,7 +11,16 @@ MEMPOOL=../../C/mempool
 TENSOR=../../C/primitives
 PRIMITIVES = $(BIN)/mempool.o $(BIN)/tensor.o
 PRIMFILES = $(patsubst $(BIN)/%.o,%.o,$(PRIMITIVES))
-OBJ = $(patsubst $(SRC)/%.c,_%,$(wildcard $(SRC)/*.c))
+
+# Uncomment to include all files present in module/src
+# OBJ = $(patsubst $(SRC)/%.c,_%,$(wildcard $(SRC)/*.c))
+
+OBJ = 	_maxPoolOfTensors \
+		_createTensor \
+		_conv \
+		_convolutionTranspose \
+		_unary_fn \
+		_readWriteTensorsFromStandardIO
 
 # User defined function - Change according to the file to run.
 TESTFILE=src/1.c

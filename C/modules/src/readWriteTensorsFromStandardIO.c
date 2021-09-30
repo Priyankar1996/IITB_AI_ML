@@ -329,9 +329,9 @@ int writeTensorToFile(char *filename, Tensor *t)
                                             if(count<=num_elems)
                                             {
                                                 if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
-                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                                    fprintf(file, "%f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
                                                 else    
-                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                                    fprintf(file, "%f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
                                             }
                                         }
                                     /*memcpy(&fvalue, &mp_resp.read_data[j],sizeof(float));

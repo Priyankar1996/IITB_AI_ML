@@ -22,7 +22,7 @@ int main(){
     int dim_to_pool[2] = {1,2};
     int pad_deconv = 0;
     int _err_ = 0;
-    float kernel_init = 2.0;
+    float kernel_init = 0.1;
 
     initMemPool(&pool,1,MAX_MEMPOOL_SIZE_IN_PAGES);
     for (int i = 0; i < 2*num_iters+1; i++)

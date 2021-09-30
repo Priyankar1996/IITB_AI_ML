@@ -56,7 +56,7 @@ int main()
             initializeTensor(&kernel,&val1) || _err_;
 
     _err_ = dilateTensor(&input,&kernel,stride,&intermediate_dilate) || 
-            dePadTensor(&intermediate_dilate,1,&intermediate_depad) ||
-			writeTensorToFile("util/transConv.csv", &intermediate_dilate) ||
+            dePadTensor(&intermediate_dilate,0,&intermediate_depad) ||
+			writeTensorToFile("util/transConv.csv", &intermediate_depad) ||
             _err_;
 }

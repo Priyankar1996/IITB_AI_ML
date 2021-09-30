@@ -770,11 +770,7 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                     case float8:{break;}
                     case float16:{break;}
                     case float32:{
-                                    uint8_t g=0; float bytesu8[2];
-                                    for(k=0;k<2;k++)
-                                        bytesu8[k] = 0;
-                                    do bytesu8[g++]= v & 0xFFFFFFFF; while (v>>=32);
-                                    g=0;
+                                    float (*bytes32)[2] = ((void*)&v);
 
                                     for(k=0;k<8/datasize;k++)
                                     {
@@ -807,14 +803,14 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                                                             output_words_left-= elements_to_write;
                                                             for(i=0;i<1024*8/datasize;i++)
                                                                 *((float*)mp_req2.write_data + i) = 0;
-                                                            *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
+                                                            *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = *(bytes32)[k];
                                                         }
                                                     }
                                                     else
                                                     {
                                                         // Store the incoming value into the array and then write it in the mempool.
                                                         //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
+                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = *(bytes32)[k];
                                                         mp_req2.request_type = WRITE;
                                                         mp_req2.arguments[0] = elements_to_write;
                                                         mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
@@ -840,7 +836,7 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                                                 else
                                                 {
                                                     //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                    *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
+                                                    *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = *(bytes32)[k];
                                                 }
                                             }
                                         }

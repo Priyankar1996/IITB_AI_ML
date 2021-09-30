@@ -1,6 +1,5 @@
-//AUTHORS: PRIYANKAR SARKAR.
-//         DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
-
+//AUTHOR: PRIYANKAR SARKAR
+//        DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
 #ifndef _readWriteTensorsFromStandardIO_h____
 #define _readWriteTensorsFromStandardIO_h____
 
@@ -25,7 +24,7 @@
 //      Values in the memory pool are not modified.
 // RETURN VALUES:
 //      0 on Success, 1 on Failure.
-int readTensorFromFile(char *filename, Tensor *t);
+int readTensorFromFile(char *filename, Tensor *t, MemPool *mp);
 
 // ASSUMPTIONS:
 //      1. t has the tensor's description available in it.

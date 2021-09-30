@@ -8,7 +8,7 @@
 #include "convolutionTranspose.h"
 
 uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,
-                                    TensorDescriptor *td_out, uint32_t *k_dims, 
+                                    TensorDescriptor *td_out, TensorDescriptor *td_k, 
                                     uint32_t *stride)
 {
     int i,p; uint32_t indices[3],output_indices[3],output_offset = 0;
@@ -26,7 +26,8 @@ uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,
     
     for(i = 0;i < td_out->number_of_dimensions-1;i++)
     {
-        output_indices[i] = (indices[i] * stride[i]) + k_dims[i] -1; // - padding
+        //printf("I:%d,S:%d,K:%d\t",indices[i],stride[i],td_k->dimensions[i]);
+        output_indices[i] = indices[i] * stride[i] + td_k->dimensions[i] -1; // - padding
     }
     output_indices[td_out->number_of_dimensions-1] = indices[td_out->number_of_dimensions-1];
     
@@ -124,7 +125,7 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                                 for(k=0;k<8/datasize;k++)
                                 {
                                     count++;
-                                    output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel.number_of_dimensions,stride);
+                                    output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
                                     if(count<=num_elems_output)
                                     {
                                         int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
@@ -193,7 +194,7 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                                 for(k=0;k<8/datasize;k++)
                                 {
                                     count++;
-                                    output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel.number_of_dimensions,stride);
+                                    output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
                                     if(count<=num_elems_output)
                                     {
                                         int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
@@ -261,7 +262,7 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                                         for(k=0;k<8/datasize;k++)
                                         {
                                             count++;
-                                            output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel.number_of_dimensions,stride);
+                                            output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
                                             if(count<=num_elems_output)
                                             {
                                                 int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
@@ -328,15 +329,17 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                             case float16:{break;}
                             case float32:{
                                             uint16_t g=0;float bytes[2];
-                                            for(k=0;k<2;k++)
-                                                bytes[i] = 0.0;
-                                            do bytes[g++]= v & 0xFFFFFFFF; while (v>>=32);
-                                            g=0;
+
+                                            float (*bytes32)[2] = ((void*)&v);
+                                            //for(k=0;k<2;k++)
+                                            //    bytes[i] = 0.0;
+                                            //do bytes[g++]= v & 0xFFFFFFFF; while (v>>=32);
+                                            //g=0;
 
                                             for(k=0;k<8/datasize;k++)
                                             {
                                                 count++;
-                                                output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel.number_of_dimensions,stride);
+                                                output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
                                                 if(count<=num_elems_output)
                                                 {
                                                     int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
@@ -360,13 +363,13 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                                                                 output_words_left-= elements_to_write;
                                                                 for(i=0;i<1024*8/datasize;i++)
                                                                     *((float*)mp_req2.write_data + i) = 0;
-                                                                *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytes[k];
+                                                                *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
                                                             }
                                                         }
                                                         else
                                                         {
                                                             // Store the incoming value into the array and then write it in the mempool.
-                                                            *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytes[k];
+                                                            *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
                                                             mp_req2.request_type = WRITE;
                                                             mp_req2.arguments[0] = elements_to_write;
                                                             mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
@@ -389,14 +392,14 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                                                     }
                 
                                                     else
-                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytes[k];
+                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
                                                 }
                                             }
                                             break;
                                         }
                             case float64:{
                                             count++;
-                                            output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel.number_of_dimensions,stride);
+                                            output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
                                             if(count<=num_elems_output)
                                             {
                                                 int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);

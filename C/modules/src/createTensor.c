@@ -1,6 +1,7 @@
 #include "createTensor.h"
 int createTensorAtHead(Tensor *t,MemPool *mp)
 {
+    printf("CREATING TENSOR:\n");
     MemPoolRequest mp_req;
     MemPoolResponse mp_resp;
     //
@@ -74,6 +75,48 @@ int createTensorAtTail(Tensor *t, MemPool *mp)
         return(0);
     }
 
+}
+
+int requiredPages(Tensor* t)
+{
+    uint32_t dataSize = sizeofTensorDataInBytes(t->descriptor.data_type);
+    int n_pages,i,num_elems = 1;
+    for(i=0;i<t->descriptor.number_of_dimensions;i++)
+    {
+        num_elems *= t->descriptor.dimensions[i];
+    }
+
+    n_pages = CEILING(CEILING(MAX_DIMENSIONS*4 + num_elems*dataSize,8),MEMPOOL_PAGE_SIZE);
+    return n_pages;
+}
+
+int createTensor(Tensor *t,MemPool mp[],int NUMBER_OF_POOLS,uint8_t direction)
+{
+    int _err_ = 0;
+    int pool_npages[NUMBER_OF_POOLS];
+    int tensor_npages = requiredPages(t);
+    printf("Tensor pages:%d\n",tensor_npages);
+    
+    for(int i = 0; i < NUMBER_OF_POOLS ; i++)
+    {   
+        pool_npages[i] = mp[i].number_of_free_pages;
+        printf("%d\t",pool_npages[i]);
+    }
+    printf("\n");
+    
+    int current_pool = 0 ;
+
+    for(int i = 0; i < NUMBER_OF_POOLS ; i++)
+    {
+        if(tensor_npages <= pool_npages[i])
+        {    
+            current_pool = i;
+            break;
+        }
+    }
+    printf("Allocated MemPool's ID: %d\n",mp[current_pool].mem_pool_index);
+    _err_ = (direction  ? createTensorAtHead(t,&mp[current_pool]) : createTensorAtTail(t,&mp[current_pool]))|| _err_ ;
+    return _err_;
 }
 
 int initializeTensor (Tensor* t, void* initial_value)

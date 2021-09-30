@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include "tensor.h"
 #include "mempool.h"
 #include "createTensor.h"
@@ -49,31 +50,32 @@ int checkPadding(uint32_t offset, TensorDescriptor *td_in,
         indices[p] = ((offset % td_in->dimensions[p])? (offset % td_in->dimensions[p]):td_in->dimensions[p])-1;
         offset = CEILING(offset,td_in->dimensions[p]);
     }
-    indices[td_in->number_of_dimensions-1] = td_in->dimensions[td_in->number_of_dimensions-1]-1;
+    //indices[td_in->number_of_dimensions-1] = td_in->dimensions[td_in->number_of_dimensions-1]-1;
     
-    /*for(i=0;i< td_in->number_of_dimensions;i++)
-        printf("%d\t",indices[i]);
-    printf("\t\t");*/
+    //for(i=0;i< td_in->number_of_dimensions;i++)
+    //    printf("%d ",indices[i]);
+    //printf("\t\t");
     
     for(i = 0;i < td_out->number_of_dimensions-1;i++)
     {
         output_indices[i] = indices[i] - padding;
     }
-    output_indices[td_out->number_of_dimensions-1] = td_out->dimensions[td_out->number_of_dimensions-1]-1;
+    output_indices[td_out->number_of_dimensions-1] = indices[td_out->number_of_dimensions-1];
     
-    /*for(i=0;i< td_out->number_of_dimensions;i++)
-        printf("%d\t",output_indices[i]);*/
-    
+    //for(i=0;i< td_out->number_of_dimensions;i++)
+    //    printf("%d ",output_indices[i]);
+    //printf("\t");
     
     for(i=0;i< td_out->number_of_dimensions-1;i++)
     {
-        if (output_indices[i] < 0 || (output_indices[i] == (td_in->dimensions[i] - padding - 1) && padding !=0))
+        if(output_indices[i] < 0)
+        //if ((output_indices[i] < 0) || ((output_indices[i] == (td_in->dimensions[i] - padding - 1) && padding !=0)))
             flag = 1;
     }
 
     output_offset = flag ? -1 : 1;
-    //printf("\t\t%d",output_offset);
-    //printf("\t");
+    //printf("\t%d",output_offset);
+    //printf("\t\t\n");
     return output_offset;
 }
 
@@ -328,8 +330,6 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                             case float8:{break;}
                             case float16:{break;}
                             case float32:{
-                                            uint16_t g=0;float bytes[2];
-
                                             float (*bytes32)[2] = ((void*)&v);
                                             //for(k=0;k<2;k++)
                                             //    bytes[i] = 0.0;
@@ -771,7 +771,7 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                     case float16:{break;}
                     case float32:{
                                     float (*bytes32)[2] = ((void*)&v);
-
+                                    //printf("Bytes:%f,%f\n",(*bytes32)[0],(*bytes32)[1]);
                                     for(k=0;k<8/datasize;k++)
                                     {
                                         count++;
@@ -779,9 +779,10 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                                         if(check_depad >0)
                                         {
                                             ++output_offset;
-                                            if(output_offset<num_elems_output)
-                                            {
-                                                //printf("%d,%u\n",output_offset,bytesu8[k]);
+                                            printf("Bytes1:%f,%f\n",(*bytes32)[0],(*bytes32)[1]);
+                                            //if(output_offset<=num_elems_output)
+                                            //{
+                                                printf("Offset:%d,%f,%f\n",output_offset,(*bytes32)[k],(*bytes32)[1-k]);
                                                 int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
                                                 if(output_offset/iter_write >= elements_to_write*8/datasize || (output_offset == num_elems_output-1))
                                                 {
@@ -803,14 +804,14 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                                                             output_words_left-= elements_to_write;
                                                             for(i=0;i<1024*8/datasize;i++)
                                                                 *((float*)mp_req2.write_data + i) = 0;
-                                                            *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = *(bytes32)[k];
+                                                            *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
                                                         }
                                                     }
                                                     else
                                                     {
                                                         // Store the incoming value into the array and then write it in the mempool.
-                                                        //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = *(bytes32)[k];
+                                                        //printf("WROTE and stored in mempool\t%d\t%f\n",output_offset,*(bytes32)[k]);
+                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
                                                         mp_req2.request_type = WRITE;
                                                         mp_req2.arguments[0] = elements_to_write;
                                                         mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
@@ -835,10 +836,10 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                                                 }
                                                 else
                                                 {
-                                                    //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                    *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = *(bytes32)[k];
+                                                    //printf("WROTE\t%d\t%d\t%f\t%f\n",k,output_offset,(*bytes32)[k],(*bytes32)[1-k]);
+                                                    *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
                                                 }
-                                            }
+                                            //}
                                         }
                                         else
                                         {

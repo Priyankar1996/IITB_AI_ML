@@ -51,6 +51,8 @@ int createTensorAtHead(Tensor *t,MemPool *mp);
 //      0 on Success, 1 on Failure.
 int createTensorAtTail(Tensor *t,MemPool *mp);
 
+int createTensor(Tensor *t,MemPool mp[],int NUMBER_OF_POOLS,uint8_t direction);
+
 // ASSUMPTIONS:
 //      1. t has the tensor's description available in it.
 // SUMMARY:

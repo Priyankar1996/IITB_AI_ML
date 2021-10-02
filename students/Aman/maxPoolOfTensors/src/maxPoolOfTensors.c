@@ -1,4 +1,11 @@
-#include "../include/maxPoolOfTensors.h"
+#include <stdio.h>
+#include <assert.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include "mempool.h"
+#include "tensor.h"
+#include "maxPoolOfTensors.h"
+#include "createTensor.h"
 
 // Compute size of tensor
 uint32_t getSizeOfTensor(Tensor *T)
@@ -8,6 +15,29 @@ uint32_t getSizeOfTensor(Tensor *T)
 		size *= T->descriptor.dimensions[i];
 	}
 	return size;
+}
+
+void updateOutputDescriptorMaxPoolOfTensors(Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode){
+	dst->descriptor.row_major_form = src->descriptor.row_major_form;
+	dst->descriptor.data_type = src->descriptor.data_type;
+	dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
+	int8_t i = 0,j;
+
+	for (j = 0; j <  src->descriptor.number_of_dimensions; j++)
+	// Loop through all dimensions
+	{
+		uint32_t x = src->descriptor.dimensions[j];
+		if ((j == dims_to_pool[i]) && (i < num_dims_to_pool))
+		{		
+			int32_t factor = (x<l) ? mode : ((mode == 0) ? 1+((x-l)/stride) : 1+((x-1)/stride));
+			dst->descriptor.dimensions[j] = factor;
+			i ++;
+		}
+		else
+		{
+			dst->descriptor.dimensions[j] = x;
+		}
+	}
 }
 
 // Compute bitmask givne the datatype and its position in the word
@@ -39,9 +69,9 @@ uint64_t getBitMask(uint8_t dsize , uint8_t position)
 }
 
 // Core operation of maxPool
-// Computes the max of num_max quantities in matrix starting at indice start based on the datatype
+// Computes the max of num_max quantities in inp_address starting at indice start based on the datatype
 // Returns the data in at location temp
-void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, void * temp)
+void maxOperation(int num_max, void* inp_address,  TensorDataType dt, void * temp)
 {	
 	assert(num_max > 0);
 
@@ -49,85 +79,85 @@ void maxWithSpacing(int num_max, int start, void* matrix,  TensorDataType dt, vo
 	// Select comparator based on datatype
 		{
 		case i8:
-		*((int8_t*)temp ) = *((int8_t*)(matrix) +(start)*8);
+		*((int8_t*)temp ) = *((int8_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int8_t*)(matrix) +(start+i)*8)> *((int8_t*)temp )) *((int8_t*)temp ) = *((int8_t*)(matrix) +(start+i)*8);
+			if (*((int8_t*)(inp_address) +i*8)> *((int8_t*)temp )) *((int8_t*)temp ) = *((int8_t*)(inp_address) +i*8);
 		}
 		break;
 		case float8:
 		case u8:
-		*((uint8_t*)temp ) = *((uint8_t*)(matrix) +(start)*8);
+		*((uint8_t*)temp ) = *((uint8_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint8_t*)(matrix) +(start+i)*8)> *((uint8_t*)temp )) *((uint8_t*)temp ) = *((uint8_t*)(matrix) +(start+i)*8);
+			if (*((uint8_t*)(inp_address) +i*8)> *((uint8_t*)temp )) *((uint8_t*)temp ) = *((uint8_t*)(inp_address) +i*8);
 		}
 		break;
 		case i16:
-		*((int16_t*)temp ) = *((int16_t*)(matrix) +(start)*4);
+		*((int16_t*)temp ) = *((int16_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int16_t*)(matrix) +(start+i)*4)> *((int16_t*)temp )) *((int16_t*)temp ) = *((int16_t*)(matrix) +(start+i)*4);
+			if (*((int16_t*)(inp_address) +i*4)> *((int16_t*)temp )) *((int16_t*)temp ) = *((int16_t*)(inp_address) +i*4);
 		}
 		break;
 		case float16:
 		case u16:
-		*((uint16_t*)temp ) = *((uint16_t*)(matrix) +(start)*4);
+		*((uint16_t*)temp ) = *((uint16_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint16_t*)(matrix) +(start+i)*4)> *((uint16_t*)temp )) *((uint16_t*)temp ) = *((uint16_t*)(matrix) +(start+i)*4);
+			if (*((uint16_t*)(inp_address) +i*4)> *((uint16_t*)temp )) *((uint16_t*)temp ) = *((uint16_t*)(inp_address) +i*4);
 		}
 		break;
 		case i32:
-		*((int32_t*)temp ) = *((int32_t*)(matrix) +(start)*2);
+		*((int32_t*)temp ) = *((int32_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int32_t*)(matrix) +(start+i)*2)> *((int32_t*)temp )) *((int32_t*)temp ) = *((int32_t*)(matrix) +(start+i)*2);
+			if (*((int32_t*)(inp_address) +i*2)> *((int32_t*)temp )) *((int32_t*)temp ) = *((int32_t*)(inp_address) +i*2);
 		}
 		break;
 		case float32:
-		*((float*)temp ) = *((float*)(matrix) +(start)*2);
+		*((float*)temp ) = *((float*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((float*)(matrix) +(start+i)*2)> *((float*)temp )) *((float*)temp ) = *((float*)(matrix) +(start+i)*2);
+			if (*((float*)(inp_address) +i*2)> *((float*)temp )) *((float*)temp ) = *((float*)(inp_address) +i*2);
 		}
 		break;
 		case u32:
-		*((uint32_t*)temp ) = *((uint32_t*)(matrix) +(start)*2);
+		*((uint32_t*)temp ) = *((uint32_t*)(inp_address));
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint32_t*)(matrix) +(start+i)*2)> *((uint32_t*)temp )) *((uint32_t*)temp ) = *((uint32_t*)(matrix) +(start+i)*2);
+			if (*((uint32_t*)(inp_address) +i*2)> *((uint32_t*)temp )) *((uint32_t*)temp ) = *((uint32_t*)(inp_address) +i*2);
 		}
 		break;
 		case i64:
-		*((int64_t*)temp) = *((int64_t*)(matrix) + start);
+		*((int64_t*)temp) = *((int64_t*)(inp_address) );
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((int64_t*)(matrix) +(start+i)*1)> *((int64_t*)temp)) *((int64_t*)temp) = *((int64_t*)(matrix) +(start+i)*1);
+			if (*((int64_t*)(inp_address) +i*1)> *((int64_t*)temp)) *((int64_t*)temp) = *((int64_t*)(inp_address) +i*1);
 		}
 		break;
 		case float64:
-		*((double*)temp) = *((double*)(matrix) + start);
+		*((double*)temp) = *((double*)(inp_address) );
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((double*)(matrix) +(start+i)*1)> *((double*)temp)) *((double*)temp) = *((double*)(matrix) +(start+i)*1);
+			if (*((double*)(inp_address) +i*1)> *((double*)temp)) *((double*)temp) = *((double*)(inp_address) +i*1);
 		}
 		break;
 		case u64:
-		*((uint64_t*)temp) = *((uint64_t*)(matrix) + start);
+		*((uint64_t*)temp) = *((uint64_t*)(inp_address) );
 		for (int i = 1;i< num_max;i++)
 		{
 			// Update if larger
-			if (*((uint64_t*)(matrix) +(start+i)*1)> *((uint64_t*)temp)) *((uint64_t*)temp) = *((uint64_t*)(matrix) +(start+i)*1);
+			if (*((uint64_t*)(inp_address) +i*1)> *((uint64_t*)temp)) *((uint64_t*)temp) = *((uint64_t*)(inp_address) +i*1);
 		}
 		break;
 		default:
@@ -151,7 +181,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 	// Number of pooling units = size of tensor upto dim_to_pool (dim_to_pool not included)
 	int num_units = size/(x*cs);
 	// num_1D_steps = floor/ceil (1 + ((x-l)/s)), i.e. the size of output along dim_to_pool 
-	int num_1D_steps = ((mode == floor) ? 1 + (x-l)/s : 1 + (x-1)/s);
+	int num_1D_steps = ((mode == 0) ? 1 + (x-l)/s : 1 + (x-1)/s);
 	if (l>x)
 	{
 		fprintf(stderr,"Warning: Length exceeds dimension.\n");
@@ -175,6 +205,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 		{
 			for (j = 0; j < num_1D_steps; j++)
 			{	
+				uint64_t address = i*num_1D_steps*cs+k+j*cs;
 				// Read the line from src
 				// Optimization opportunity: Use fetched values from previous pool (if overlapping values)
 				req->request_type = READ;
@@ -188,17 +219,17 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 						fprintf(stderr,"Mempool read error. Called from maxpool1D()");
 						exit(-1);
 					}
-					temp_old[var] = (resp->read_data[0] >> (8*dsize*(((i*x*cs+k+(j*s+var)*cs)-(8/dsize)*((i*x*cs+k+(j*s+var)*cs)*dsize/8)))));
+					temp_old[var] = (resp->read_data[0] >> (8*dsize*((i*x*cs+k+(j*s+var)*cs)%(8/dsize))));
 					bitmask = getBitMask(dsize,0);
 					temp_old[var] = temp_old[var]&bitmask;
 				}
 
 				// Perform max operation
-				maxWithSpacing(var_max, 0,temp_var1, dt,&temp_new);
+				maxOperation(var_max, temp_var1, dt,&temp_new);
 				
 				// Read from dst
 				req->request_type = READ;
-				req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
+				req->arguments[1] = dst->mem_pool_buffer_pointer+ address*dsize/8;
 				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 				if (resp->status == NOT_OK)
 				{
@@ -207,12 +238,12 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 				}
 				
 				// Compute write data
-				bitmask = ~getBitMask(dsize,i*num_1D_steps*cs + k + j*cs - (8/dsize)*((i*num_1D_steps*cs + k + j*cs)*dsize/8));
-				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0)) << (8*dsize*(((i*num_1D_steps*cs+k+j*cs)-(8/dsize)*((i*num_1D_steps*cs+k+j*cs)*dsize/8)))));
+				bitmask = ~getBitMask(dsize,address%(8/dsize));
+				temp_buffer = (resp->read_data[0] & bitmask) + ((temp_new & getBitMask(dsize,0)) << (8*dsize*((address%(8/dsize)))));
 				
 				// Write back to dst
 				req->request_type = WRITE;
-				req->arguments[1] = dst->mem_pool_buffer_pointer+ (i*num_1D_steps*cs + k+j*cs)*dsize/8;
+				req->arguments[1] = dst->mem_pool_buffer_pointer+ (address)*dsize/8;
 				req->write_data[0] = temp_buffer;
 				memPoolAccess((MemPool*)(dst->mem_pool_identifier),req,resp);
 				if (resp->status == NOT_OK)
@@ -241,10 +272,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	uint32_t x;
 	int64_t cs = 1;
 
-	//Update destination descriptor	
-	dst->descriptor.row_major_form = row_major;
-	dst->descriptor.data_type = src->descriptor.data_type;
-	dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
+	updateOutputDescriptorMaxPoolOfTensors(src, dst, l, stride, num_dims_to_pool, dims_to_pool, mode);
 	
 	// Decide direction of movement based on row-major/column-major form
 	int8_t i,j,iStart,iEnd,iInc,jStart,jEnd,jInc;
@@ -282,15 +310,13 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 				maxpool1D(src, size, x, l, stride, cs, dst, mode);
 
 				// Update parameters
-				int32_t factor = (x<l) ? mode : ((mode == floor) ? 1+((x-l)/stride) : 1+((x-1)/stride));
+				int32_t factor = (x<l) ? mode : ((mode == 0) ? 1+((x-l)/stride) : 1+((x-1)/stride));
 				size = size*factor/x;
-				dst->descriptor.dimensions[j] = factor;
 				cs *= factor;
 			}
 			else
 			{
 				// Update parameters
-				dst->descriptor.dimensions[j] = x;
 				cs *= x;
 			}
 		}
@@ -341,7 +367,7 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 			}
 			
 			// Update parameters
-			int32_t factor = (x<l) ? mode : ((mode == floor) ? 1+((x-l)/stride) : 1+((x-1)/stride));
+			int32_t factor = (x<l) ? mode : ((mode == 0) ? 1+((x-l)/stride) : 1+((x-1)/stride));
 			size = size*factor/x;
 			dst->descriptor.dimensions[j] = factor;
 			cs *= factor;

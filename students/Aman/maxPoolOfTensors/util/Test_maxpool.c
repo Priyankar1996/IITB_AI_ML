@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "../include/maxPoolOfTensors.h"
+#include <stdint.h>
+#include "mempool.h"
+#include "tensor.h"
+#include "createTensor.h"
 
 MemPool pool;
 

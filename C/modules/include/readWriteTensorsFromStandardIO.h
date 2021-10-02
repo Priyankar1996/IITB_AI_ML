@@ -18,6 +18,10 @@
 // SUMMARY:
 //      Reads data from the csv file and writes them into the 
 //      memory-pool.
+//      The first four lines contains information about the tensor
+//      in the fashion:
+//      Line 1: Datatype; Line 2: Row-major form; 
+//      Line 3: Ndims;    Line 4: Dimensions.
 // SIDE-EFFECTS:
 //      Mempool is modified to indicate that it has allocated 
 //      this data to the tensor.

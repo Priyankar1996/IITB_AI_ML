@@ -42,8 +42,8 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
             {
                 if(linenumber == 1)
                 {
-                    t->descriptor.datatype = (uint32_t)strtoul(tok,&eptr,10);
-                    printf("Datatype :%d\n",t->descriptor.datatype);
+                    t->descriptor.data_type = (uint32_t)strtoul(tok,&eptr,10);
+                    printf("Datatype :%d\n",t->descriptor.data_type);
                 }
                 else if(linenumber == 2)
                 {

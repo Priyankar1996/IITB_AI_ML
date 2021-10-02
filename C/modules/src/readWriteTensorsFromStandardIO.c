@@ -18,8 +18,6 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
     MemPoolResponse mp_resp;
     uint32_t count = 0, num_elems=1, datasize, linenumber = 0;
     int iter = 0,elementsToWrite, element = 0, words_left = 0;
-    t->descriptor.data_type = float32;
-    t->descriptor.row_major_form = 0;
     uint32_t dims_array[MAX_DIMENSIONS];
     uint32_t flag = 0;
 
@@ -44,10 +42,20 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
             {
                 if(linenumber == 1)
                 {
+                    t->descriptor.datatype = (uint32_t)strtoul(tok,&eptr,10);
+                    printf("Datatype :%d\n",t->descriptor.datatype);
+                }
+                else if(linenumber == 2)
+                {
+                    t->descriptor.row_major_form = (uint32_t)strtoul(tok,&eptr,10);
+                    printf("Is row major form:%d\n",t->descriptor.row_major_form);
+                }
+                else if(linenumber == 3)
+                {
                     t->descriptor.number_of_dimensions = (uint32_t)strtoul(tok,&eptr,10);
                     printf("Number of Dimensions:%d\n",t->descriptor.number_of_dimensions);
                 }
-                else if(linenumber == 2)
+                else if(linenumber == 4)
                 {
                     uint32_t x = (uint32_t)strtoul(tok,&eptr,10);
                     t->descriptor.dimensions[element++] = x;
@@ -61,7 +69,7 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
                         num_elems = numberOfElementsInTensor(t);
                         words_left = CEILING(num_elems*datasize,8);
                         printf("Datasize: %d\nNumber of elements: %d\n",datasize,num_elems);
-                        flag = flag || createTensorAtHead(t,mp);
+                        flag = flag || createTensor(t,mp,1,1);
                     }
                 }
                 else
@@ -131,22 +139,23 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
                         default:
                         break;
                     }
-                }
-                if (count == (elementsToWrite*8/datasize) || count == num_elems) 
-                {
-                    mp_req.arguments[0] = elementsToWrite; 
-		            mp_req.arguments[1] = t->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter++;
-		            mp_req.arguments[2] = 1;
-                    printf("INFO: Words to write:%d\n",elementsToWrite);
-                    memPoolAccess(mp,&mp_req,&mp_resp);
+                
+                    if (count == (elementsToWrite*8/datasize) || count == num_elems) 
+                    {
+                        mp_req.arguments[0] = elementsToWrite; 
+		                mp_req.arguments[1] = t->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter++;
+		                mp_req.arguments[2] = 1;
+                        printf("INFO: Words to write:%d\n",elementsToWrite);
+                        memPoolAccess(mp,&mp_req,&mp_resp);
 
-                    words_left -= elementsToWrite;
-                    count = 0;
+                        words_left -= elementsToWrite;
+                        count = 0;
 
-                    if(mp_resp.status == OK)
-                        flag = flag || 0;
-                    else
-                        flag = flag || 1; 
+                        if(mp_resp.status == OK)
+                            flag = flag || 0;
+                        else
+                            flag = flag || 1; 
+                    }
                 }
             }
         }
@@ -203,9 +212,7 @@ int writeTensorToFile(char *filename, Tensor *t)
 
             for(j=0;j<elements_to_read;j++)
             {
-                 uint64_t v= mp_resp.read_data[j];
-                 //printf("READ VALUE:0X%"PRIx64"\t",v);
-                 //printf("READ VALUE:%lu\n",v);
+                 //uint64_t v= mp_resp.read_data[j];
                     switch (t->descriptor.data_type)
                     {
                         case u8:{
@@ -320,18 +327,16 @@ int writeTensorToFile(char *filename, Tensor *t)
                         case float8: break;
                         case float16: break;
                         case float32:{
-                                        float (*bytes32)[2] = ((void*)&mp_resp.read_data[j]);
-                                        
-                                        //printf("%f %f\n",(*bytes32)[0],(*bytes32)[1]);
+                                        float (*bytes32)[2] = (void*) &mp_resp.read_data[j];
                                         for (k = 0; k < 2; k++)
                                         {
                                             count++;
                                             if(count<=num_elems)
                                             {
                                                 if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
-                                                    fprintf(file, "%f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
                                                 else    
-                                                    fprintf(file, "%f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
                                             }
                                         }
                                     /*memcpy(&fvalue, &mp_resp.read_data[j],sizeof(float));

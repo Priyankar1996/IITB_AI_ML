@@ -13,6 +13,34 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define CEILING(x,y) (((x) + (y) - 1) / (y))
 
+// ASSUMPTIONS:
+//      1. src has the input tensor's description available in it.
+//      2. kernel has the kernel tensor's decription available in it.
+//      3. stride is a convolutional paramter.
+//      4. output is the tensor whose descriptor's is to be filled.
+// SUMMARY:
+//      updateOutputSDescriptorDilateTensors computes the shape of the
+//      output dilated tensor.   
+// SIDE-EFFECTS:
+//      TensorDescriptor of the output tensors are modified.
+// RETURN VALUES:
+//      0 on Success, 1 on Failure.
+void updateOutputSDescriptorDilateTensors(Tensor *src, Tensor *kernel, 
+                                          uint32_t *stride, Tensor *output);
+
+// ASSUMPTIONS:
+//      1. src has the input tensor's description available in it.
+//      2. padding is a convolutional parameter.
+//      4. output is the tensor whose descriptor's is to be filled.
+// SUMMARY:
+//      updateOutputSDescriptorDepadTensors computes the shape of the
+//      output depadded tensor.   
+// SIDE-EFFECTS:
+//      TensorDescriptor of the output tensors are modified.
+// RETURN VALUES:
+//      0 on Success, 1 on Failure.
+void updateOutputSDescriptorDepadTensors(Tensor *src,  
+                                         uint32_t padding, Tensor *output);
 
 // ASSUMPTIONS:
 //      1. input has the input tensor's description available in it.

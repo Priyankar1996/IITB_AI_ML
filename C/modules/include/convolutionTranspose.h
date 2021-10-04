@@ -24,7 +24,7 @@
 // SIDE-EFFECTS:
 //      TensorDescriptor of the output tensors are modified.
 // RETURN VALUES:
-//      0 on Success, 1 on Failure.
+
 void updateOutputSDescriptorDilateTensors(Tensor *src, Tensor *kernel, 
                                           uint32_t *stride, Tensor *output);
 
@@ -38,7 +38,7 @@ void updateOutputSDescriptorDilateTensors(Tensor *src, Tensor *kernel,
 // SIDE-EFFECTS:
 //      TensorDescriptor of the output tensors are modified.
 // RETURN VALUES:
-//      0 on Success, 1 on Failure.
+
 void updateOutputSDescriptorDepadTensors(Tensor *src,  
                                          uint32_t padding, Tensor *output);
 

@@ -2,16 +2,15 @@
 #include <string.h>
 #include <time.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include "mempool.h"
 #include "tensor.h"
+#include "createTensor.h"
 
 MemPool pool;
 
 int main(int argc, char**argv){
 
 	srand(time(0));
-	char* octavePath = "../util/maxPool";
 
 	FILE *file, *outFile, *octaveInFile;
 	if ((file = fopen(argv[1],"r")) == NULL){
@@ -268,7 +267,7 @@ int main(int argc, char**argv){
 	}
 	fclose(octaveInFile);
 	
-	B.descriptor = T.descriptor;
+	updateOutputDescriptorMaxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);
 	createTensorAtHead(&B,&pool);
 
 	maxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);
@@ -413,9 +412,7 @@ int main(int argc, char**argv){
 	fclose(file);
 	fclose(outFile);
 	int system(const char *command);
-	char arr[100] = "octave ";
-	strcat(arr,octavePath);
-	strcat(arr," <");
+	char arr[100] = "octave ../util/octaveFile <";
 	strcat(arr,oct);
 	strcat(arr," >OctaveOutFile.txt\n");
 	system(arr);

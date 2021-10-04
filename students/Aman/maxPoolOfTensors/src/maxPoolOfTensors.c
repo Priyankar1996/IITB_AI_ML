@@ -272,8 +272,6 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	uint32_t x;
 	int64_t cs = 1;
 
-	updateOutputDescriptorMaxPoolOfTensors(src, dst, l, stride, num_dims_to_pool, dims_to_pool, mode);
-	
 	// Decide direction of movement based on row-major/column-major form
 	int8_t i,j,iStart,iEnd,iInc,jStart,jEnd,jInc;
 	if (row_major == 1)

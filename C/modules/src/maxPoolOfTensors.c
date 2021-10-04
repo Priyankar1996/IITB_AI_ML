@@ -17,6 +17,29 @@ uint32_t getSizeOfTensor(Tensor *T)
 	return size;
 }
 
+void updateOutputDescriptorMaxPoolOfTensors(Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode){
+	dst->descriptor.row_major_form = src->descriptor.row_major_form;
+	dst->descriptor.data_type = src->descriptor.data_type;
+	dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
+	int8_t i = 0,j;
+
+	for (j = 0; j <  src->descriptor.number_of_dimensions; j++)
+	// Loop through all dimensions
+	{
+		uint32_t x = src->descriptor.dimensions[j];
+		if ((j == dims_to_pool[i]) && (i < num_dims_to_pool))
+		{		
+			int32_t factor = (x<l) ? mode : ((mode == 0) ? 1+((x-l)/stride) : 1+((x-1)/stride));
+			dst->descriptor.dimensions[j] = factor;
+			i ++;
+		}
+		else
+		{
+			dst->descriptor.dimensions[j] = x;
+		}
+	}
+}
+
 // Compute bitmask givne the datatype and its position in the word
 uint64_t getBitMask(uint8_t dsize , uint8_t position)
 {
@@ -249,11 +272,6 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	uint32_t x;
 	int64_t cs = 1;
 
-	//Update destination descriptor	
-	dst->descriptor.row_major_form = row_major;
-	dst->descriptor.data_type = src->descriptor.data_type;
-	dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
-	
 	// Decide direction of movement based on row-major/column-major form
 	int8_t i,j,iStart,iEnd,iInc,jStart,jEnd,jInc;
 	if (row_major == 1)
@@ -292,13 +310,11 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 				// Update parameters
 				int32_t factor = (x<l) ? mode : ((mode == 0) ? 1+((x-l)/stride) : 1+((x-1)/stride));
 				size = size*factor/x;
-				dst->descriptor.dimensions[j] = factor;
 				cs *= factor;
 			}
 			else
 			{
 				// Update parameters
-				dst->descriptor.dimensions[j] = x;
 				cs *= x;
 			}
 		}

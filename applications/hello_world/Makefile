@@ -1,20 +1,30 @@
+# Compile script to run applications
+# AUTHOR : Aman Dhammani
+# Department of Electrical Engineering, IITB
+
 # Necessary variables and definitions. Do not change
 CC=gcc
 AR=ar
 CFLAGS = -Wall -std=c99 -lm
 ARFLAGS = -cq	# add v if need verbose output
+
+# Directory paths for various functions/primitives
 BIN=bin
 LIB=lib
 SRC=../../C/modules/src
 INCLUDE=../../C/modules/include
 MEMPOOL=../../C/mempool
 TENSOR=../../C/primitives
+
+# List of primitives - mempool and tensor
 PRIMITIVES = $(BIN)/mempool.o $(BIN)/tensor.o
 PRIMFILES = $(patsubst $(BIN)/%.o,%.o,$(PRIMITIVES))
 
-# Uncomment to include all files present in module/src
+# # Uncomment to include all files present in $(SRC) 
+# # Also comment the next definition of OBJ, if uncommenting this
 # OBJ = $(patsubst $(SRC)/%.c,_%,$(wildcard $(SRC)/*.c))
 
+# Can list objects required as _<object_src_file_name>
 OBJ = 	_maxPoolOfTensors \
 		_createTensor \
 		_conv \
@@ -23,8 +33,7 @@ OBJ = 	_maxPoolOfTensors \
 		_readWriteTensorsFromStandardIO
 
 # User defined function - Change according to the file to run.
-TESTFILE=src/1.c
-
+TESTFILE=src/hello_world.c
 
 
 all: compile

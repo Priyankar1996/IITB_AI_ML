@@ -267,7 +267,7 @@ int main(int argc, char**argv){
 	}
 	fclose(octaveInFile);
 	
-	B.descriptor = T.descriptor;
+	updateOutputDescriptorMaxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);
 	createTensorAtHead(&B,&pool);
 
 	maxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);

@@ -5,7 +5,10 @@
 #define __maxPoolOfTensors_h__
 
 // ASSUMPTIONS:
-//      1. All assumptions encapsulated in those of maxPoolOfTensors()
+//      1. Tensor src dst are created with appropriate size
+//      2. l , stride > 0
+//      3. size of dims_to_pool = um_dims_to_pool and is sorted in ascending order
+//      4. mode lies in {0,1}
 // SUMMARY:
 //      Performs num_dims_to_pool-D maxPooling along dimensions specified by dims_to_pool
 // 		with length = l and stride = stride
@@ -38,6 +41,23 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 //      The number of elements in the tensor
 uint32_t getSizeOfTensor(Tensor *T);
 
+// ASSUMPTIONS:
+//      1. All assumptions encapsulated in those of maxPoolOfTensors()
+// SUMMARY:
+//      Updates the descriptor of the output tensor
+// SIDE-EFFECTS:
+//      None
+// ARGUEMENTS:
+//      Tensor *src			: Pointer to source tensor
+//		Tensor *dst			: Output tensor pointer, can be same as input
+//		int l				: Length of pooling
+//		int stride			: Stride for pooling
+//		int num_dims_to_pool: Number of dimensions to pool
+//		int * dims_to_pool	: Array storing the actual dimensions to pool
+//		int mode			: Mode (0 = floor, 1 = ceiling)
+// RETURN VALUES:
+//      NULL
+void updateOutputSizeMaxPoolOfTensors(Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode);
 
 // ASSUMPTIONS:
 //      1. The system where compilation is done has a Little Endian architecture

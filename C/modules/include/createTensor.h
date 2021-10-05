@@ -53,6 +53,29 @@ int createTensorAtTail(Tensor *t,MemPool *mp);
 
 // ASSUMPTIONS:
 //      1. t has the tensor's description available in it.
+//      2. mp is the pointer to mempools to be used by createTensor.
+// SUMMARY:
+//      createTensor allocates spaces for the tensor from the specified
+//      from the available NUMBER_OF_POOLS based on the minimum size
+//      required to store the tensor.
+// SIDE-EFFECTS:
+//      Mempools are modified to indicate that it has allocated this data
+//      to the tensor.
+//      Tensor *t is modified with the memory location to where
+//      it is allocated.
+//      Values in the memory pool are not modified.
+// ARGUEMENTS:
+//      t :- t is the tensor to be created.
+//     mp :- mp is the pointer to mempools in which the tensor will be created.
+//     NUMBER_OF_POOLS :- Number of mempools initialised.
+//     direction :- Specifies the direction in which the tensor is to be created.
+//                  1 for HEAD, 0 for TAIL,
+// RETURN VALUES:
+//      0 on Success, 1 on Failure.
+int createTensor(Tensor *t,MemPool mp[],int NUMBER_OF_POOLS,uint8_t direction);
+
+// ASSUMPTIONS:
+//      1. t has the tensor's description available in it.
 // SUMMARY:
 //      destroyTensor deallocates the pages containing the tensor  
 //      from the specified mempool in a FIFO manner.

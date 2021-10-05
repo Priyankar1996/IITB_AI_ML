@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "../include/maxPoolOfTensors.h"
+#include <stdint.h>
+#include "mempool.h"
+#include "tensor.h"
+#include "createTensor.h"
 
 MemPool pool;
 
@@ -264,7 +267,7 @@ int main(int argc, char**argv){
 	}
 	fclose(octaveInFile);
 	
-	B.descriptor = T.descriptor;
+	updateOutputDescriptorMaxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);
 	createTensorAtHead(&B,&pool);
 
 	maxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);

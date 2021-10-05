@@ -6,8 +6,9 @@
 #include "tensor.h"
 #include "createTensor.h"
 
-MemPool pool1,pool2;
-Tensor a[5],a_diff_pool[5];
+#define NUMBER_OF_POOLS 5
+MemPool pool1[NUMBER_OF_POOLS];
+Tensor a[26];
 int _err_ = 0;
 
 #define MAX_PAGES 10
@@ -41,7 +42,7 @@ void fillTensorDescriptor(Tensor t[])
     {
          scanf("%u",&dummy.descriptor.dimensions[i]);
     }
-    for(i=0;i<5;i++)
+    for(i=0;i<15;i++)
     {
         t[i].descriptor.data_type = dummy.descriptor.data_type;
         t[i].descriptor.row_major_form = dummy.descriptor.row_major_form;
@@ -53,18 +54,7 @@ void fillTensorDescriptor(Tensor t[])
     }
 }
 
-int requiredPages(Tensor t)
-{
-    uint32_t dataSize = sizeofTensorDataInBytes(t.descriptor.data_type);
-    int n_pages,i,num_elems = 1;
-    for(i=0;i<t.descriptor.number_of_dimensions;i++)
-    {
-        num_elems *= t.descriptor.dimensions[i];
-    }
 
-    n_pages = CEILING(CEILING(MAX_DIMENSIONS*4 + num_elems*dataSize,8),MEMPOOL_PAGE_SIZE);
-    return n_pages;
-}
 /*void printTensorDescriptor(Tensor t)
 {
     uint8_t i;
@@ -172,9 +162,9 @@ int compareTensors(Tensor a,Tensor b)
 
 int main(int argc,char* argv[])
 {
-    uint64_t i=0,pages = 0;
-    initMemPool(&pool1,1,MAX_PAGES);
-    initMemPool(&pool2,2,MAX_PAGES);
+    uint64_t k=0,pages = 0;
+    for(int i=1;i<=NUMBER_OF_POOLS;i++)
+        initMemPool(&pool1[i-1],i,MAX_PAGES);
 
     fillTensorDescriptor(a);
     uint8_t val = 21;float val1 = 21.0;double val2 = 36.0;
@@ -183,16 +173,17 @@ int main(int argc,char* argv[])
     //fillTensorDescriptor(a_diff_pool);
     //printTensorDescriptor(a_diff_pool[0]);
 
-    while (i<5)
+    while (k<26)
     {
-        _err_ = createTensorAtHead(a+i,&pool1) || 
+        printf("I:%d\n",k);
+        _err_ = createTensor(a+k,pool1,NUMBER_OF_POOLS,1) || 
                 //createTensor(a_diff_pool+i,&pool2) ||
-                initializeTensor(a+i,&val1) ||
+                //initializeTensor(a+i,&val1) ||
                 _err_;
 
         //_err_  = createTensorAtTail(a+i,&pool1) || 
                 //createTensorAtTail(a+i,&pool1) || 
-                _err_;
+                //_err_;
         
         //_err_ = copyTensor(a+i,a_diff_pool+i) || _err_;
 
@@ -200,18 +191,18 @@ int main(int argc,char* argv[])
         //if(_err_)
           //break;
 	    //else
-          i++;
+          k++;
     }
-    _err_ = writeTensorToFile("output.csv",a[2]) || _err_;
-    i=0;
-
-    printf("Number of available pages in mempools:%d,%d.\n",pool1.number_of_free_pages,pool2.number_of_free_pages);
-    while (i<5)
+    //_err_ = writeTensorToFile("output.csv",a[2]) || _err_;
+    k=0;
+    int i=0;
+    //printf("Number of available pages in mempools:%d,%d.\n",pool1.number_of_free_pages,pool2.number_of_free_pages);
+    while (i<15)
     {
         _err_ = destroyTensor(a+i) || 
                 //destroyTensor(a_diff_pool+i) ||
                 _err_;
-        printf("Number of available pages in mempools:%d,%d.\n",pool1.number_of_free_pages,pool2.number_of_free_pages);
+        //printf("Number of available pages in mempools:%d,%d.\n",pool1.number_of_free_pages,pool2.number_of_free_pages);
         i++;
     }
 }

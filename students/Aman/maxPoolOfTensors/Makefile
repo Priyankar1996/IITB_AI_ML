@@ -13,7 +13,7 @@ PRIMITIVES = $(BIN)/mempool.o $(BIN)/tensor.o $(BIN)/createtensor.o
 PRIMFILES = $(patsubst $(BIN)/%.o,%.o,$(PRIMITIVES))
 OBJ = $(patsubst $(SRC)/%.c,_%,$(wildcard $(SRC)/*.c))
 
-CREATETENSOR=../../priyankar
+CREATETENSOR=../../../C/modules
 
 # User defined function - Change according to the file to run.
 TESTFILE=util/Test_maxpool.c
@@ -21,7 +21,7 @@ TESTFILE=util/Test_maxpool.c
 all: compile run
 
 compile: createDir $(PRIMITIVES) $(OBJ)
-	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -L$(LIB)
+	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -I $(CREATETENSOR)/include -L$(LIB)
 	cd $(BIN); $(CC) -o Test Testfile.o $(OBJ) $(PRIMFILES) $(CFLAGS)
 
 createDir:
@@ -38,7 +38,7 @@ $(BIN)/createtensor.o: $(CREATETENSOR)/src/createTensor.c $(CREATETENSOR)/includ
 	$(CC) $(CFLAGS) -o $@ -c $< -I $(MEMPOOL)/include -I $(TENSOR)/include -I $(CREATETENSOR)/include
 
 _%: $(SRC)/%.c $(PRIMITIVES)
-	$(CC) $(CFLAGS) -o $(BIN)/$@ -c $< -I $(MEMPOOL)/include -I $(TENSOR)/include -I $(INCLUDE) $(ENDFLAGS)
+	$(CC) $(CFLAGS) -o $(BIN)/$@ -c $< -I $(MEMPOOL)/include -I $(TENSOR)/include -I $(CREATETENSOR)/include -I $(INCLUDE) $(ENDFLAGS)
 	$(AR) $(ARFLAGS) $(LIB)/lib$*.a $(BIN)/$@ $(PRIMITIVES)
 
 run:

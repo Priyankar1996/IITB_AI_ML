@@ -15,6 +15,9 @@ int main(){
     MemPool pool;
     initMemPool(&pool,1,MAX_MEMPOOL_SIZE_IN_PAGES);
 
+    MemPool kernel_pool;
+    initMemPool(&kernel_pool,1,MAX_MEMPOOL_SIZE_IN_PAGES);
+
     // Number of iterations
     int num_iters = 1;
     int num_dim =3;
@@ -31,9 +34,9 @@ int main(){
     int dim_to_pool[2] = {1,2};
     int pad_deconv = 0;
     int _err_ = 0;
-    
+
     readTensorFromFile("inpT0.csv",&T[0],&pool);
-    readTensorFromFile("inpK0.csv",&K,&pool);
+    readTensorFromFile("inpK0.csv",&K,&kernel_pool);
 
     _err_ = writeTensorToFile("T0.csv",&T[0]) || _err_;
 

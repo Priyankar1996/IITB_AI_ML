@@ -3,17 +3,17 @@
 void updateOutputDescriptorConvTensors(Tensor *src, Tensor *kernel, 
                                        uint32_t *stride, uint32_t *padding, Tensor *output )
 {
-	TensorDescriptor td_src = src->descriptor;
-	TensorDescriptor td_kernel = kernel -> descriptor;
-	TensorDescriptor td_out = output -> descriptor;
+	TensorDescriptor* td_src = &(src->descriptor);
+	TensorDescriptor* td_kernel = &(kernel -> descriptor);
+	TensorDescriptor* td_out = &(output -> descriptor);
 
-	td_out.data_type = td_src.data_type;
-	td_out.row_major_form = td_src.row_major_form;
-	td_out.number_of_dimensions = td_src.number_of_dimensions;
+	td_out->data_type = td_src->data_type;
+	td_out->row_major_form = td_src->row_major_form;
+	td_out->number_of_dimensions = td_src->number_of_dimensions;
 	
-	td_out.dimensions[0] = (td_src.dimensions[0] + padding[0] + padding[1] - td_kernel.dimensions[1])/stride[0] + 1;
-	td_out.dimensions[1] = (td_src.dimensions[1] + padding[2] + padding[3] - td_kernel.dimensions[2])/stride[1] + 1;
-	td_out.dimensions[2] = td_kernel.dimensions[0]; 
+	td_out->dimensions[0] = (td_src->dimensions[0] + padding[0] + padding[1] - td_kernel->dimensions[1])/stride[0] + 1;
+	td_out->dimensions[1] = (td_src->dimensions[1] + padding[2] + padding[3] - td_kernel->dimensions[2])/stride[1] + 1;
+	td_out->dimensions[2] = td_kernel->dimensions[0]; 
 }
 
 //computes convolution of one window

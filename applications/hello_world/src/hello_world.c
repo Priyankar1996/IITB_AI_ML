@@ -68,6 +68,8 @@ int main(){
         createTensor(&S[i],&pool,1);
         dilateTensor(&T[i], &K, stride,  &S[i]);
 
+        destroyTensor(&T[i]); 
+
         char ch[10];
         sprintf(ch,"S%d.csv",i);
         writeTensorToFile(ch,&S[i]);
@@ -76,12 +78,17 @@ int main(){
         createTensor(&S[num_iters+i],&pool,1);
         dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
 
+        destroyTensor(&S[i]); 
+
         sprintf(ch,"S%d.csv",i+num_iters);
         writeTensorToFile(ch,&S[num_iters +i]);
         updateOutputDescriptorConvTensors(&S[num_iters+i],&K, stride, pad, &T[i+1] );
         createTensor(&T[i+1],&pool,1);
         new_convTensors(&S[num_iters+i],&K,&T[i+1],stride,pad );
         
+        destroyTensor(&S[num_iters + i]); 
+
+
         unaryOperateOnTensor_inplace(&T[i+1], 5);
         
         sprintf(ch,"T%d.csv",i+1);

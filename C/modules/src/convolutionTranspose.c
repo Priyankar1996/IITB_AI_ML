@@ -20,7 +20,7 @@ void updateOutputSDescriptorDilateTensors(Tensor *src, Tensor *kernel,
     td_output->row_major_form = td_src->row_major_form;
 
     for(int i=0;i<td_output->number_of_dimensions-1;i++)
-        td_output->dimensions[i] = (td_src->dimensions[i]-1)*stride[i] + td_kernel->dimensions[i+1] + 1;
+        td_output->dimensions[i] = (td_src->dimensions[i])*stride[i] + td_kernel->dimensions[i+1] - 1;
     td_output->dimensions[td_output->number_of_dimensions-1] = td_src->dimensions[td_src->number_of_dimensions-1];
 
 }
@@ -36,7 +36,7 @@ void updateOutputSDescriptorDepadTensors(Tensor *src, uint32_t padding, Tensor *
 
     for(int i=0;i<td_output->number_of_dimensions-1;i++)
     {
-        td_output->dimensions[i] = td_src->dimensions[i] - padding;
+        td_output->dimensions[i] = td_src->dimensions[i] - (2*padding);
     }
     td_output->dimensions[td_output->number_of_dimensions-1] = td_src->dimensions[td_src->number_of_dimensions-1];
 }

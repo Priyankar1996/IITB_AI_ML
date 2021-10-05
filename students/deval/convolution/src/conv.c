@@ -81,7 +81,7 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
     	uint8_t is_row_major = td_in.row_major_form;
     	uint32_t out_H = (td_in.dimensions[0] + padding[0] + padding[1] - td_ker.dimensions[0])/stride[0] + 1;
     	uint32_t out_W = (td_in.dimensions[1] + padding[2] + padding[3] - td_ker.dimensions[1])/stride[1] + 1;
-    	uint32_t out_C = 1;
+    	uint32_t out_C = td_ker.dimensions[3];
 
     	out_img->descriptor.row_major_form = is_row_major;
     	out_img->descriptor.data_type = td_in.data_type;

@@ -11,34 +11,34 @@
 void updateOutputSDescriptorDilateTensors(Tensor *src, Tensor *kernel, 
                                           uint32_t *stride, Tensor *output)
 {
-    TensorDescriptor td_src = src->descriptor;
-    TensorDescriptor td_kernel = kernel->descriptor;
-    TensorDescriptor td_output = output->descriptor;
+    TensorDescriptor* td_src = &(src->descriptor);
+    TensorDescriptor* td_kernel = &(kernel->descriptor);
+    TensorDescriptor* td_output = &(output->descriptor);
 
-    td_output.data_type = td_src.data_type;
-    td_output.number_of_dimensions = td_src.number_of_dimensions;
-    td_output.row_major_form = td_src.row_major_form;
+    td_output->data_type = td_src->data_type;
+    td_output->number_of_dimensions = td_src->number_of_dimensions;
+    td_output->row_major_form = td_src->row_major_form;
 
-    for(int i=0;i<td_output.number_of_dimensions-1;i++)
-        td_output.dimensions[i] = (td_src.dimensions[i]-1)*stride[i] + td_kernel.dimensions[i+1] + 1;
-    td_output.dimensions[td_output.number_of_dimensions-1] = td_src.dimensions[td_src.number_of_dimensions-1];
+    for(int i=0;i<td_output->number_of_dimensions-1;i++)
+        td_output->dimensions[i] = (td_src->dimensions[i]-1)*stride[i] + td_kernel->dimensions[i+1] + 1;
+    td_output->dimensions[td_output->number_of_dimensions-1] = td_src->dimensions[td_src->number_of_dimensions-1];
 
 }
 
 void updateOutputSDescriptorDepadTensors(Tensor *src, uint32_t padding, Tensor *output)
 {
-    TensorDescriptor td_src = src->descriptor;
-    TensorDescriptor td_output = output->descriptor;
+    TensorDescriptor* td_src = &(src->descriptor);
+    TensorDescriptor* td_output = &(output->descriptor);
 
-    td_output.data_type = td_src.data_type;
-    td_output.number_of_dimensions = td_src.number_of_dimensions;
-    td_output.row_major_form = td_src.row_major_form;
+    td_output->data_type = td_src->data_type;
+    td_output->number_of_dimensions = td_src->number_of_dimensions;
+    td_output->row_major_form = td_src->row_major_form;
 
-    for(int i=0;i<td_output.number_of_dimensions-1;i++)
+    for(int i=0;i<td_output->number_of_dimensions-1;i++)
     {
-        td_output.dimensions[i] = td_src.dimensions[i] - padding;
+        td_output->dimensions[i] = td_src->dimensions[i] - padding;
     }
-    td_output.dimensions[td_output.number_of_dimensions-1] = td_src.dimensions[td_src.number_of_dimensions-1];
+    td_output->dimensions[td_output->number_of_dimensions-1] = td_src->dimensions[td_src->number_of_dimensions-1];
 }
 
 uint32_t computeDilatedTensorOffset(uint32_t offset, TensorDescriptor *td_in,

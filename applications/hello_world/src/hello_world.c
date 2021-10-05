@@ -31,39 +31,36 @@ int main(){
     int dim_to_pool[2] = {1,2};
     int pad_deconv = 0;
     int _err_ = 0;
-    float kernel_init = 0.1;
 
-    for (int i=0; i < 2*num_iters+1; i++)
-    {
-        T[i].descriptor.data_type = float32;
-        T[i].descriptor.number_of_dimensions = num_dim;
-        T[i].descriptor.row_major_form = 1;
-        T[i].descriptor.dimensions[0] = 3;
-        T[i].descriptor.dimensions[1] = 3;
-        T[i].descriptor.dimensions[2] = 3;  
-    }
-    for (int i=0; i < 3*num_iters; i++)
-    {
-        S[i].descriptor.data_type = float32;
-        S[i].descriptor.number_of_dimensions = num_dim;
-        S[i].descriptor.row_major_form = 1;
-        S[i].descriptor.dimensions[0] = 3;
-        S[i].descriptor.dimensions[1] = 3;
-        S[i].descriptor.dimensions[2] = 3;  
-    }
+    // for (int i=0; i < 2*num_iters+1; i++)
+    // {
+    //     T[i].descriptor.data_type = float32;
+    //     T[i].descriptor.number_of_dimensions = num_dim;
+    //     T[i].descriptor.row_major_form = 1;
+    //     T[i].descriptor.dimensions[0] = 3;
+    //     T[i].descriptor.dimensions[1] = 3;
+    //     T[i].descriptor.dimensions[2] = 3;  
+    // }
+    // for (int i=0; i < 3*num_iters; i++)
+    // {
+    //     S[i].descriptor.data_type = float32;
+    //     S[i].descriptor.number_of_dimensions = num_dim;
+    //     S[i].descriptor.row_major_form = 1;
+    //     S[i].descriptor.dimensions[0] = 3;
+    //     S[i].descriptor.dimensions[1] = 3;
+    //     S[i].descriptor.dimensions[2] = 3;  
+    // }
 
-    for (int i = 0; i < 2*num_iters;i++){
-        createTensorAtHead(&T[i],&pool);
-        createTensorAtHead(&S[i],&pool);
-        if (i>=num_iters)
-        createTensorAtHead(&S[num_iters+i],&pool);
-    }
-    createTensor(&T[2*num_iters],&pool,1);
+    // for (int i = 0; i < 2*num_iters;i++){
+    //     createTensor(&T[i],&pool,1);
+    //     createTensor(&S[i],&pool,1);
+    //     if (i>=num_iters)
+    //     createTensor(&S[num_iters+i],&pool,1);
+    // }
+    // createTensor(&T[2*num_iters],&pool,1);
 
     readTensorFromFile("inpT0.csv",&T[0],&pool);
     readTensorFromFile("inpK0.csv",&K,&pool);
-    // _err_ = initializeTensor(&K,&kernel_init) || _err_;
-
 
     for (int i = 0; i < num_iters; i++){
         new_convTensors(&T[i], &K, &S[i] ,stride,pad );
@@ -73,9 +70,12 @@ int main(){
         unaryOperateOnTensor_inplace(&T[i+1], 2);   
     }
 
-
     for (int i = num_iters; i < 2*num_iters; i++){
+        updateOutputSDescriptorDilateTensors(&T[i], &K, stride, &S[i]);
+        createTensor(&S[i],&pool,1);
         dilateTensor(&T[i], &K, stride,  &S[i]);
+        updateOutputSDescriptorDepadTensors(&S[i], pad_deconv, &S[num_iters+i]);
+        createTensor(&S[num_iters+i],&pool,1);
         dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
         new_convTensors(&S[num_iters+i],&K,&T[i+1],stride,pad );
         unaryOperateOnTensor_inplace(&T[i+1], 5);

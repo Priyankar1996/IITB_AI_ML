@@ -10,3 +10,4 @@ gcc -o obj/testConv.o -c -g -std=c99 utils/conv_tb.c -I include/ -I ../../priyan
 
 gcc -o bin/testConvExec obj/mempool.o obj/tensor.o obj/createTensor.o obj/readWriteTensors.o obj/conv.o obj/testConv.o
 # Use the ar comand to put all the .o files (other than the test benches into your archive.
+$SHELL

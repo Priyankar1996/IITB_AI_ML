@@ -54,7 +54,7 @@
 	FUTURE WORK:
 		NA
 */
-void convHelper(const int64_t *ker_data, const int64_t *img_data,
+void convHelper(void *ker_data, void *img_data,
                 TensorDescriptor *td_ker,
                 TensorDescriptor *td_in,
 		int *img_data_start_index,

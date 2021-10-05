@@ -33,10 +33,10 @@ int main(){
 	b.descriptor.data_type = dataType;
 	b.descriptor.row_major_form = row_major_form;
 	b.descriptor.number_of_dimensions = 4;
-	b.descriptor.dimensions[0] = 3;
+	b.descriptor.dimensions[0] = 2;
 	b.descriptor.dimensions[1] = 3;
 	b.descriptor.dimensions[2] = 3;
-	b.descriptor.dimensions[3] = 2;
+	b.descriptor.dimensions[3] = 3;
 
     	r.descriptor.data_type = dataType;
 	r.descriptor.row_major_form = row_major_form;

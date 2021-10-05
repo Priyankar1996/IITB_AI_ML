@@ -31,34 +31,15 @@ int main(){
     int dim_to_pool[2] = {1,2};
     int pad_deconv = 0;
     int _err_ = 0;
-
-    for (int i=0; i < 2*num_iters+1; i++)
-    {
-        T[i].descriptor.data_type = float32;
-        T[i].descriptor.number_of_dimensions = num_dim;
-        T[i].descriptor.row_major_form = 1;
-        T[i].descriptor.dimensions[0] = 3;
-        T[i].descriptor.dimensions[1] = 3;
-        T[i].descriptor.dimensions[2] = 3;  
-    }
-    for (int i=0; i < 3*num_iters; i++)
-    {
-        S[i].descriptor.data_type = float32;
-        S[i].descriptor.number_of_dimensions = num_dim;
-        S[i].descriptor.row_major_form = 1;
-        S[i].descriptor.dimensions[0] = 3;
-        S[i].descriptor.dimensions[1] = 3;
-        S[i].descriptor.dimensions[2] = 3;  
-    }
-
+    
     readTensorFromFile("inpT0.csv",&T[0],&pool);
     readTensorFromFile("inpK0.csv",&K,&pool);
 
     _err_ = writeTensorToFile("T0.csv",&T[0]) || _err_;
 
     for (int i = 0; i < num_iters; i++){
-        // updateOutputDescriptorConvTensors(&T[i], &K, &S[i] ,stride,pad );
-        createTensor(&S[i],&pool,1);
+        updateOutputDescriptorConvTensors(&T[i], &K, stride, pad, &S[i] );
+        createTensor(&S[i],&pool,1,1);
         new_convTensors(&T[i], &K, &S[i] ,stride,pad );
         
         destroyTensor(&T[i]);
@@ -94,7 +75,7 @@ int main(){
 
         sprintf(ch,"S%d.csv",i+num_iters);
         writeTensorToFile(ch,&S[num_iters +i]);
-        // updateOutputDescriptorConvTensors(&S[num_iters+i],&K,&T[i+1],stride,pad );
+        updateOutputDescriptorConvTensors(&S[num_iters+i],&K, stride, pad, &T[i+1] );
         createTensor(&T[i+1],&pool,1);
         new_convTensors(&S[num_iters+i],&K,&T[i+1],stride,pad );
         

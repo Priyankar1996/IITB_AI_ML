@@ -13,7 +13,7 @@ PRIMITIVES = $(BIN)/mempool.o $(BIN)/tensor.o $(BIN)/createtensor.o
 PRIMFILES = $(patsubst $(BIN)/%.o,%.o,$(PRIMITIVES))
 OBJ = $(patsubst $(SRC)/%.c,_%,$(wildcard $(SRC)/*.c))
 
-CREATETENSOR=../../priyankar
+CREATETENSOR=../../../C/modules
 
 # User defined function - Change according to the file to run.
 TESTFILE=util/Test_maxpool.c

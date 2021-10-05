@@ -1,0 +1,114 @@
+	An Aa implementation of the memory pool
+	----------------------------------------
+
+		Madhav Desai
+
+
+1. Overview
+-----------
+
+	The memory pool is a storage manager, which allocates
+	memory in units of pages (512 double words, i.e. 4KB).   
+	The memory pool also has a maximum number of pages that it
+	can host.
+
+	The memory pool can have multiple interfaces.  Each
+	interface consists of a request pipe and a response
+	pipe.   The request pipe conveys a request to the
+	memory pool, which provides a response via the response
+	pipe.
+
+2. Data and allocation
+-----------------------
+
+	The smallest unit of data stored in the memory pool
+	is a double word (8 bytes/64-bits).  The smallest
+	unit of allocation is 4KB, and is called a page.   
+	The  number of pages available is a parameter.
+
+	The status of pages in the memory pool is maintained
+	by a circular buffer, with a head and tail pointer.
+	Initially head=tail=0.   Allocation can be at the
+	head or at the tail (described below).  The
+	de-allocation can be from the head/tail, and must
+	be consistent (described below).
+
+
+	
+
+3. Request types
+-----------------
+
+	The request types are a follows
+	   ALLOCATE_AT_HEAD (tag, number_of_pages_requested)
+		returns (status, tag, base_address)
+		status is 0 on success.
+	 	
+		The pool checks if enough pages are available.
+		If so, base_address=head, and head is incremented
+		(mod number of pages) by the required amount.
+		The requester tag is "remembered" in a status queue.
+				
+	   ALLOCATE_AT_TAIL (tag, number_of_pages_requested)
+		returns (status, tag, base_address)
+		status is 0 on success.
+	 	
+		The pool checks if enough pages are available.
+		If so, base_address=tail-(number_of_pages_requested-1), 
+		and tail is incremented (mod number of pages) by the required amount.
+		The requester tag is "remembered" in a status queue.
+		
+
+	   DEALLOCATE (tag, number_of_pages)
+		returns 
+			(status, tag)
+		tag is checked in the status queue.  If it was allocated at
+		the head, then the head is decremented.  If it was allocated
+		at the tail, then the tail is incremented. 
+	
+		If there is an inconsistency, a failure is reported.
+	
+	  READ (tag, number_of_dwords, start_address, stride)
+		
+		returns status=0, and read words from memory
+		locations [start_address, 
+				start_address+(1*stride), ... ,
+				start_address+((number_of_dwords-1)*stride)]
+		and returns them in the response 
+		
+		Note: no overflow checks!
+
+
+	  WRITE (tag, number_of_dwords, start_address, stride, write_data[])
+		returns status = 0
+		writes write_data[I] to address (I-1)*stride.
+
+
+4. Responses
+--------------
+
+	For ALLOCATE*
+	returns 
+		status  (0 if OK, non-zero else).
+		request_tag, 
+		allocated_base_address
+
+	For DEALLOCATE*
+	returns 
+		status  (0 if OK, non-zero else).
+	
+
+	For READ
+	returns
+		status
+	        request_tag
+		read_data[]	
+			requester's responsibility
+			to keep track of return
+			array size.
+
+	For WRITE
+	returns
+		status
+		request_tag
+		

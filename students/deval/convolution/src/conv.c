@@ -209,6 +209,6 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
         	}
 	}
 printf("%dx%dx%d conv %dx%dx%dx%d = %dx%dx%d\n",td_in.dimensions[0],td_in.dimensions[1],td_in.dimensions[2],td_ker.dimensions[0],td_ker.dimensions[1],td_ker.dimensions[2],td_ker.dimensions[3],td_out.dimensions[0],td_out.dimensions[1],td_out.dimensions[2]);
-//printf("THE END\n");
+printf("THE END\n");
 return 0;
 }

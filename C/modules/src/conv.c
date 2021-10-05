@@ -1,5 +1,21 @@
 #include "../include/conv.h"
 
+void updateOutputDescriptorConvTensors(Tensor *src, Tensor *kernel, 
+                                       uint32_t *stride, uint32_t *padding, Tensor *output )
+{
+	TensorDescriptor* td_src = &(src->descriptor);
+	TensorDescriptor* td_kernel = &(kernel -> descriptor);
+	TensorDescriptor* td_out = &(output -> descriptor);
+
+	td_out->data_type = td_src->data_type;
+	td_out->row_major_form = td_src->row_major_form;
+	td_out->number_of_dimensions = td_src->number_of_dimensions;
+	
+	td_out->dimensions[0] = (td_src->dimensions[0] + padding[0] + padding[1] - td_kernel->dimensions[1])/stride[0] + 1;
+	td_out->dimensions[1] = (td_src->dimensions[1] + padding[2] + padding[3] - td_kernel->dimensions[2])/stride[1] + 1;
+	td_out->dimensions[2] = td_kernel->dimensions[0]; 
+}
+
 //computes convolution of one window
 void convHelper(const int64_t *ker_data, const int64_t *img_data,
                 TensorDescriptor *td_ker,
@@ -7,172 +23,56 @@ void convHelper(const int64_t *ker_data, const int64_t *img_data,
 		int *img_data_start_index,
 		void *result_array_base,
 		int l){
-    switch (td_in->data_type)
-    {
-	case u8:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((uint8_t*)result_array_base) + l) += *(((uint8_t*)img_data) + img_data_array_idx) * *(((uint8_t*)ker_data) + ker_data_array_idx);
+
+        for(int i = 0; i < td_ker->dimensions[0]; i++){
+		for(int j = 0; j < td_ker->dimensions[1]; j++){
+			for(int k = 0; k < td_ker->dimensions[2]; k++){
+				int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
+				int ker_indices[3] = {i,j,k};
+				uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
+				uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
+				switch (td_in->data_type)
+    				{
+					case u8:
+						*(((uint8_t*)result_array_base) + l) += *(((uint8_t*)img_data) + img_data_array_idx) * *(((uint8_t*)ker_data) + ker_data_array_idx);
+						break;
+					case u16:
+						*(((uint16_t*)result_array_base) + l) += *(((uint16_t*)img_data) + img_data_array_idx) * *(((uint16_t*)ker_data) + ker_data_array_idx);
+						break;
+					case u32:
+						*(((uint32_t*)result_array_base) + l) += *(((uint32_t*)img_data) + img_data_array_idx) * *(((uint32_t*)ker_data) + ker_data_array_idx);
+						break;
+					case u64:
+						*(((uint64_t*)result_array_base) + l) += *(((uint64_t*)img_data) + img_data_array_idx) * *(((uint64_t*)ker_data) + ker_data_array_idx);
+						break;
+					case i8:
+						*(((int8_t*)result_array_base) + l) += *(((int8_t*)img_data) + img_data_array_idx) * *(((int8_t*)ker_data) + ker_data_array_idx);
+						break;
+					case i16:
+						*(((int16_t*)result_array_base) + l) += *(((int16_t*)img_data) + img_data_array_idx) * *(((int16_t*)ker_data) + ker_data_array_idx);
+						break;
+					case i32:
+						*(((int32_t*)result_array_base) + l) += *(((int32_t*)img_data) + img_data_array_idx) * *(((int32_t*)ker_data) + ker_data_array_idx);
+						break;
+					case i64:
+						*(((int64_t*)result_array_base) + l) += *(((int64_t*)img_data) + img_data_array_idx) * *(((int64_t*)ker_data) + ker_data_array_idx);
+						break;
+					case float32:
+						*(((float*)result_array_base) + l) += *(((float*)img_data) + img_data_array_idx) * *(((float*)ker_data) + ker_data_array_idx);
+						break;
+					case float64:
+						*(((double*)result_array_base) + l) += *(((double*)img_data) + img_data_array_idx) * *(((double*)ker_data) + ker_data_array_idx);
+						break;
+					default:
+            					fprintf(stderr,"ERROR: CONV HELPER INPUTS DATATYPE NOT FOUND\n");
+           					 break;
 				}
 			}
 		}
 	}
-            break;
-	case u16:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((uint16_t*)result_array_base) + l) += *(((uint16_t*)img_data) + img_data_array_idx) * *(((uint16_t*)ker_data) + ker_data_array_idx);
-				}
-			}
-		}
-	}
-            break;
-	case u32:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((uint32_t*)result_array_base) + l) += *(((uint32_t*)img_data) + img_data_array_idx) * *(((uint32_t*)ker_data) + ker_data_array_idx);
-				}
-			}
-		}
-	}
-            break;
-        case u64:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((uint64_t*)result_array_base) + l) += *(((uint64_t*)img_data) + img_data_array_idx) * *(((uint64_t*)ker_data) + ker_data_array_idx);
-					
-				}
-			}
-		}
-	}
-            break;
-	case i8:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((int8_t*)result_array_base) + l) += *(((int8_t*)img_data) + img_data_array_idx) * *(((int8_t*)ker_data) + ker_data_array_idx);
-					
-				}
-			}
-		}
-	}
-            break;
-	case i16:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((int16_t*)result_array_base) + l) += *(((int16_t*)img_data) + img_data_array_idx) * *(((int16_t*)ker_data) + ker_data_array_idx);
-					
-				}
-			}
-		}
-	}
-            break;
-	case i32:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((int32_t*)result_array_base) + l) += *(((int32_t*)img_data) + img_data_array_idx) * *(((int32_t*)ker_data) + ker_data_array_idx);
-					
-				}
-			}
-		}
-	}
-            break;
-	case i64:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((int64_t*)result_array_base) + l) += *(((int64_t*)img_data) + img_data_array_idx) * *(((int64_t*)ker_data) + ker_data_array_idx);
-					
-				}
-			}
-		}
-	}
-            break;
-	case float32:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((float*)result_array_base) + l) += *(((float*)img_data) + img_data_array_idx) * *(((float*)ker_data) + ker_data_array_idx);
-					
-				}
-			}
-		}
-	}
-            break;
-	case float64:
-	{
-        	for(int i = 0; i < td_ker->dimensions[0]; i++){
-			for(int j = 0; j < td_ker->dimensions[1]; j++){
-				for(int k = 0; k < td_ker->dimensions[2]; k++){
-					int img_indices[3] = {img_data_start_index[0]+i,img_data_start_index[1]+j,img_data_start_index[2]+k};
-					int ker_indices[3] = {i,j,k};
-					uint64_t img_data_array_idx = getTensorEntryIndexOffset(td_in,img_indices);
-					uint64_t ker_data_array_idx = getTensorEntryIndexOffset(td_ker,ker_indices);
-					*(((double*)result_array_base) + l) += *(((double*)img_data) + img_data_array_idx) * *(((double*)ker_data) + ker_data_array_idx);
-				
-				}
-			}
-		}
-	}
-            break;
-        default:
-            fprintf(stderr,"ERROR: CONV HELPER INPUTS DATATYPE NOT FOUND\n");
-            break;
-    }
 }
 
-int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
+int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
             const int stride[2], const int padding[4]){
 
 	//fprintf(stderr,"INSIDE CONV\n");
@@ -182,7 +82,7 @@ int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
 
     	TensorDescriptor td_in, td_ker, td_out;
 
-		td_in = in_img->descriptor;
+	td_in = in_img->descriptor;
     	td_ker = kernel->descriptor;
 
     	uint8_t is_row_major = td_in.row_major_form;
@@ -197,7 +97,7 @@ int convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img,
     	out_img->descriptor.dimensions[1] = out_W;
     	out_img->descriptor.dimensions[2] = out_C;
 
-		td_out = out_img->descriptor;
+	td_out = out_img->descriptor;
 
     	uint32_t data_size = sizeofTensorDataInBytes(td_ker.data_type);
     	int num_elems = numberOfElementsInTensor(kernel);

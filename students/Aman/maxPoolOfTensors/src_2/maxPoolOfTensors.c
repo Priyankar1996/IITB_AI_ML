@@ -10,6 +10,26 @@ uint32_t getSizeOfTensor(Tensor *T)
 	return size;
 }
 
+void updateOutputDescriptorMaxPoolOfTensors(Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode){
+	dst->descriptor.row_major_form = src->descriptor.row_major_form;
+	dst->descriptor.data_type = src->descriptor.data_type;
+	dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
+	int8_t j;
+
+	for (j = 0; j <  src->descriptor.number_of_dimensions; j++)
+	// Loop through all dimensions
+	{
+		uint32_t x = src->descriptor.dimensions[j];
+		dst->descriptor.dimensions[j] = x;
+	}
+	for (j = 0; j <  num_dims_to_pool; j++)
+	{	
+		uint32_t x = src->descriptor.dimensions[dims_to_pool[j]];
+		int32_t factor = (x<l) ? mode : ((mode == 0) ? 1+((x-l)/stride) : 1+((x-1)/stride));
+		dst->descriptor.dimensions[dims_to_pool[j]] = factor;
+	}
+}
+
 // Core operation of maxPool
 // Computes the max of num_max quantities in matrix starting at indice start based on the datatype
 // Returns the data in at location temp
@@ -193,6 +213,7 @@ void maxpool1D(Tensor *src, uint32_t size, uint32_t x, int l, int s, int cs, Ten
 	}
 }
 
+
 void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool, int * dims_to_pool, int mode)
 {
 	// Assure that the inputs lie in a meaningful range
@@ -207,14 +228,8 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	uint8_t row_major = src->descriptor.row_major_form;
 	uint64_t size = getSizeOfTensor(src);
 	uint32_t x;
-	uint8_t dsize = sizeofTensorDataInBytes(src->descriptor.data_type);
 	int64_t cs = 1;
 
-	//Update destination descriptor	
-	dst->descriptor.row_major_form = row_major;
-	dst->descriptor.data_type = src->descriptor.data_type;
-	dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
-	
 	// Decide direction of movement based on row-major/column-major form
 	int8_t i,j,iStart,iEnd,iInc,jStart,jEnd,jInc;
 	if (row_major == 1)
@@ -237,34 +252,6 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	}
 	i = iStart;
 
-	// maxPool1D : No need of intermediate tensors for 1D op
-	if (num_dims_to_pool == 1)
-	{
-		for (j = jStart; j != jEnd;j += jInc)
-		// Loop through all dimensions
-		{
-			x = src->descriptor.dimensions[j];
-			if (j == dims_to_pool[0])
-			// If dimension equals the dimension to be pooled
-			{	
-				// Perform maxPool
-				maxpool1D(src, size, x, l, stride, cs, dst, mode);
-
-				// Update parameters
-				int32_t factor = (x<l) ? mode : ((mode == floor) ? 1+((x-l)/stride) : 1+((x-1)/stride));
-				size = size*factor/x;
-				dst->descriptor.dimensions[j] = factor;
-				cs *= factor;
-			}
-			else
-			{
-				// Update parameters
-				dst->descriptor.dimensions[j] = x;
-				cs *= x;
-			}
-		}
-		return;
-	}
 
 	/* //Future optimization
 	//Do the most common case (2D pool with continuous dims and l = stride)
@@ -276,12 +263,10 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 	*/
 
 	// To be later replaced with
-	// Tensor temp_Tensor = createTensorAtHead(...);
+	// Tensor temp_Tensor = createTensor(...);
 	Tensor temp_Tensor;
-	temp_Tensor.descriptor = src->descriptor;
-	createTensorAtHead(&temp_Tensor,(MemPool*)src->mem_pool_identifier);
 
-
+	Tensor *in,*out;
 	// Generalised maxPool (num_dims_to_pool > 1)
 	for (j = jStart; j != jEnd;j += jInc)
 	// Loop through all dimensions
@@ -290,39 +275,47 @@ void maxPoolOfTensors (Tensor *src, Tensor *dst, int l, int stride, int num_dims
 		if ((j == dims_to_pool[i]) && (i != (iEnd+iInc)))
 		// Found a dimension to pool
 		{
+			in = src;
+			out = dst;
+
+			if ((i == iStart) && (i == iEnd))
+			{
+			}
 			
 			// First dimension : From src to temp_Tensor
-			if (i == iStart)
+			else if (i == iStart)
 			{
-				maxpool1D(src, size, x, l, stride, cs, &temp_Tensor, mode);
+				updateOutputDescriptorMaxPoolOfTensors(src, &temp_Tensor, l, stride, 1, &dims_to_pool[i], mode);
+				createTensorAtHead(&temp_Tensor,(MemPool*)src->mem_pool_identifier);
+				out = &temp_Tensor;
 			}
 
 			// Last dimension : From temp_Tensor to dst
 			else if	(i == iEnd)
 			{
-				maxpool1D(&temp_Tensor, size, x, l, stride, cs, dst, mode);
+				in = &temp_Tensor;
 			}
 
 			// Intermediate dimensions : From temp_Tensor to temp_Tensor
 			else 
 			{
-				maxpool1D(&temp_Tensor, size, x, l, stride, cs, &temp_Tensor, mode);
+				in = &temp_Tensor;
+				out = &temp_Tensor;
 			}
-			
+			maxpool1D(in, size, x, l, stride, cs, out, mode);			
 			// Update parameters
-			int32_t factor = (x<l) ? mode : ((mode == floor) ? 1+((x-l)/stride) : 1+((x-1)/stride));
+			int32_t factor = (x<l) ? mode : ((mode == 0) ? 1+((x-l)/stride) : 1+((x-1)/stride));
 			size = size*factor/x;
-			dst->descriptor.dimensions[j] = factor;
 			cs *= factor;
 			i += iInc;
 		}
 		else
 		{
 			// Update parameters
-			dst->descriptor.dimensions[j] = x;
 			cs *= x;
 		}
 	}
-	destroyTensor(&temp_Tensor);
+	if (in == &temp_Tensor)
+		destroyTensor(&temp_Tensor);
 	return;
 }

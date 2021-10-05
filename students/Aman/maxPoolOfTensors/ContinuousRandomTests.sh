@@ -3,7 +3,7 @@ make compile
 cd bin
 count=1
 
-while [ $count -lt 51 ]
+while [ $count -lt 2 ]
 do
     echo Test number $count
     python ../util/Test_inputs/input_generator.py >generatedinput$count.txt

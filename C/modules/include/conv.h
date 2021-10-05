@@ -43,7 +43,8 @@ void convHelper(const int64_t *ker_data, const int64_t *img_data,
 		void *result_array_base,
 		int l);
 
-
+void updateOutputDescriptorConvTensors(Tensor *src, Tensor *kernel, 
+                                       uint32_t *stride, uint32_t *padding, Tensor *output );
 
 /*
 	NAME:

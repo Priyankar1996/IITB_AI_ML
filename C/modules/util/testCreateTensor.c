@@ -5,8 +5,12 @@
 #include "mempool.h"
 #include "tensor.h"
 #include "createTensor.h"
-
 #define NUMBER_OF_POOLS 5
+
+// This is an exhaustive test where a certain number of
+// tensors are created into 5 pools until the pool is filled.
+// Once it is filled, the tensors are destroyed from the pool.
+
 MemPool pool1[NUMBER_OF_POOLS];
 Tensor a[26];
 int _err_ = 0;
@@ -21,7 +25,7 @@ void fillTensorDescriptor(Tensor t[])
     printf("Enter the data-type of the tensor:\n");
     printf("0. uint_8\t1. uint16_t\t2. uint32_t\t3. uint64_t\n");
     printf("4. int8_t\t5. int16_t\t6. int32_t\t7. int64_t\n");
-    printf("8. float8\t8. float16\t9. float\t10. double\n");
+    printf("8. float8\t9. float16\t10. float\t11. double\n");
     scanf("%u",&dummy.descriptor.data_type);
     printf("Enter:\t0.Column-Major form \t1.Row-Major form\n");
     scanf("%u",&dummy.descriptor.row_major_form);

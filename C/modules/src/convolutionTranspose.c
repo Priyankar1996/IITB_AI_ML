@@ -101,7 +101,7 @@ int checkPadding(uint32_t offset, TensorDescriptor *td_in,
     
     for(i=0;i< td_out->number_of_dimensions-1;i++)
     {
-        if(output_indices[i] < 0)
+        if(output_indices[i] < 0 || output_indices[i] >= td_out->dimensions[i])
         //if ((output_indices[i] < 0) || ((output_indices[i] == (td_in->dimensions[i] - padding - 1) && padding !=0)))
             flag = 1;
     }
@@ -150,211 +150,136 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                 switch (input->descriptor.data_type)
                 {
                     case u8: {
-                                //printf("READ VALUE:0X%"PRIx64"\n",mp_resp1.read_data[i]);
-                                uint8_t g=0,bytesu8[8];
-                                for(k=0;k<8;k++)
-                                    bytesu8[i] = 0;
-                                do bytesu8[g++]= v & 0xFF; while (v>>=8);
-                                g=0;
-
+                                 uint8_t (*bytes32)[8] = ((void*)&v);
                                 for(k=0;k<8/datasize;k++)
                                 {
                                     count++;
                                     output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
-                                    if(count<=num_elems_output)
+                                    if(count<=num_elems_input)
                                     {
                                         int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                        if(output_offset/iter_write >= elements_to_write*8/datasize || (count == num_elems_input))
+                                        uint32_t position, iter_value;
+                                        position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                        iter_value = CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                        if(iter_value == iter_write)
                                         {
-                                            if(output_offset/iter_write > elements_to_write*8/datasize)
+                                            *((uint8_t*)array + position) = (*bytes32)[k]; 
+                                            if(count == num_elems_input)
                                             {
-                                                // Write the array back to mempool, intialise it and then write the incoming value.
                                                 mp_req2.request_type = WRITE;
                                                 mp_req2.arguments[0] = elements_to_write;
                                                 mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
                                                 memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                if(mp_resp2.status != OK)
-                                                {
-                                                    fprintf(stderr,"WRITE FAILURE.");
-                                                    flag = flag || 1;
-                                                }
-                                                else
-                                                {
-                                                    fprintf(stderr,"SUCCESS: Wrote dilated tensor.");
-                                                    output_words_left-= elements_to_write;
-                                                    for(i=0;i<1024*8/datasize;i++)
-                                                        *((uint8_t*)mp_req2.write_data + i) = 0;
-                                                    *((uint8_t*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // Store the incoming value into the array and then write it in the mempool.
-                                                *((uint8_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                mp_req2.request_type = WRITE;
-                                                mp_req2.arguments[0] = elements_to_write;
-                                                mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                if (mp_resp2.status != OK)
-                                                {
-                                                    fprintf(stderr,"WRITE FAILURE.\n");
-                                                    flag = flag || 1;
-                                                }
-                                                else
-                                                {
-                                                    fprintf(stderr,"SUCCESS: Wrote dilated tensor.\n");
-                                                    output_words_left-= elements_to_write;
-                                                    for(i=0;i<1024;i++)
-                                                        *((uint64_t*)array + i) = 0;
-                                                }
-                                                if(count == num_elems_input)
-                                                    break;
+                                                output_words_left-=elements_to_write;
+                                                printf("WROTE AND DILATE COMPLETE\n");
                                             }
                                         }
-                
-                                        else
-                                            *((uint8_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
+                                        else if(iter_value > iter_write)
+                                        {
+                                                        //Write into mempool and then store.
+                                            printf("WROTE DILATED INTO MEMPOOL\n");
+                                            mp_req2.request_type = WRITE;
+                                            mp_req2.arguments[0] = elements_to_write;
+                                            mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                            memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                            output_words_left-=elements_to_write;
+                                            for(int ii=0;ii<1024*8/datasize;ii++)
+                                                *((uint8_t*)mp_req2.write_data + ii) = 0;
+                                            *((uint8_t*)array + position) = (*bytes32)[k];
+                                        }
+                                        //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
                                     }
                                 }
                                 break;
-                            } 
+                            }
+                                
                     case u16:{
-                                //printf("READ VALUE:0X%"PRIx64"\n",mp_resp1.read_data[i]);
-                                uint16_t g=0,bytesu16[4];
-                                for(k=0;k<4;k++)
-                                    bytesu16[i] = 0;
-                                do bytesu16[g++]= v & 0xFFFF; while (v>>=16);
-                                g=0;
-
+                                uint16_t (*bytes32)[4] = ((void*)&v);
                                 for(k=0;k<8/datasize;k++)
                                 {
                                     count++;
                                     output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
-                                    if(count<=num_elems_output)
+                                    if(count<=num_elems_input)
                                     {
                                         int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                        if(output_offset/iter_write >= elements_to_write*8/datasize || (count == num_elems_input))
+                                        uint32_t position, iter_value;
+                                        position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                        iter_value = CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                        if(iter_value == iter_write)
                                         {
-                                            if(output_offset/iter_write > elements_to_write*8/datasize)
+                                            *((uint16_t*)array + position) = (*bytes32)[k]; 
+                                            if(count == num_elems_input)
                                             {
-                                                // Write the array back to mempool, intialise it and then write the incoming value.
                                                 mp_req2.request_type = WRITE;
                                                 mp_req2.arguments[0] = elements_to_write;
                                                 mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
                                                 memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                if(mp_resp2.status != OK)
-                                                {
-                                                    fprintf(stderr,"WRITE FAILURE.");
-                                                    flag = flag || 1;
-                                                }
-                                                else
-                                                {
-                                                    fprintf(stderr,"SUCCESS: Wrote dilated tensor.");
-                                                    output_words_left-= elements_to_write;
-                                                    for(i=0;i<1024*8/datasize;i++)
-                                                        *((uint16_t*)mp_req2.write_data + i) = 0;
-                                                    *((uint16_t*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu16[k];
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // Store the incoming value into the array and then write it in the mempool.
-                                                *((uint16_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu16[k];
-                                                mp_req2.request_type = WRITE;
-                                                mp_req2.arguments[0] = elements_to_write;
-                                                mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                if (mp_resp2.status != OK)
-                                                {
-                                                    fprintf(stderr,"WRITE FAILURE.\n");
-                                                    flag = flag || 1;
-                                                }
-                                                else
-                                                {
-                                                    fprintf(stderr,"SUCCESS: Wrote dilated tensor.\n");
-                                                    output_words_left-= elements_to_write;
-                                                    for(i=0;i<1024;i++)
-                                                        *((uint64_t*)array + i) = 0;
-                                                }
-                                                if(count == num_elems_input)
-                                                    break;
+                                                output_words_left-=elements_to_write;
+                                                printf("WROTE AND DILATE COMPLETE\n");
                                             }
                                         }
-                
-                                        else
-                                            *((uint16_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu16[k];
+                                        else if(iter_value > iter_write)
+                                        {
+                                                        //Write into mempool and then store.
+                                            printf("WROTE DILATED INTO MEMPOOL\n");
+                                            mp_req2.request_type = WRITE;
+                                            mp_req2.arguments[0] = elements_to_write;
+                                            mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                            memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                            output_words_left-=elements_to_write;
+                                            for(int ii=0;ii<1024*8/datasize;ii++)
+                                                *((uint16_t*)mp_req2.write_data + ii) = 0;
+                                            *((uint16_t*)array + position) = (*bytes32)[k];
+                                        }
+                                        //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
                                     }
                                 }
                                 break;
-                            }     
-                            case u32:{
-                                        uint32_t g=0,bytesu32[2];
-                                        for(k=0;k<2;k++)
-                                            bytesu32[i] = 0;
-                                        do bytesu32[g++]= v & 0xFFFFFFFF; while (v>>=32);
-                                        g=0;
-
-                                        for(k=0;k<8/datasize;k++)
+                            }
+                            
+                    case u32:{
+                                uint32_t (*bytes32)[2] = ((void*)&v);
+                                for(k=0;k<8/datasize;k++)
+                                {
+                                    count++;
+                                    output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
+                                    if(count<=num_elems_input)
+                                    {
+                                        int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
+                                        uint32_t position, iter_value;
+                                        position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                        iter_value = CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                        if(iter_value == iter_write)
                                         {
-                                            count++;
-                                            output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
-                                            if(count<=num_elems_output)
+                                            *((uint32_t*)array + position) = (*bytes32)[k]; 
+                                            if(count == num_elems_input)
                                             {
-                                                int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                                if(output_offset/iter_write >= elements_to_write*8/datasize || (count == num_elems_input))
-                                                {
-                                                    if(output_offset/iter_write > elements_to_write*8/datasize)
-                                                    {
-                                                // Write the array back to mempool, intialise it and then write the incoming value.
-                                                        mp_req2.request_type = WRITE;
-                                                        mp_req2.arguments[0] = elements_to_write;
-                                                        mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                        memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                        if(mp_resp2.status != OK)
-                                                        {
-                                                            fprintf(stderr,"WRITE FAILURE.");
-                                                            flag = flag || 1;
-                                                        }
-                                                        else
-                                                        {
-                                                            fprintf(stderr,"SUCCESS: Wrote dilated tensor.");
-                                                            output_words_left-= elements_to_write;
-                                                            for(i=0;i<1024*8/datasize;i++)
-                                                                *((uint32_t*)mp_req2.write_data + i) = 0;
-                                                            *((uint32_t*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu32[k];
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        // Store the incoming value into the array and then write it in the mempool.
-                                                        *((uint32_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu32[k];
-                                                        mp_req2.request_type = WRITE;
-                                                        mp_req2.arguments[0] = elements_to_write;
-                                                        mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                        memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                        if (mp_resp2.status != OK)
-                                                        {
-                                                            fprintf(stderr,"WRITE FAILURE.\n");
-                                                            flag = flag || 1;
-                                                        }
-                                                        else
-                                                        {
-                                                            fprintf(stderr,"SUCCESS: Wrote dilated tensor.\n");
-                                                            output_words_left-= elements_to_write;
-                                                            for(i=0;i<1024;i++)
-                                                                *((uint64_t*)array + i) = 0;
-                                                        }
-                                                        if(count == num_elems_input)
-                                                            break;
-                                                    }
-                                                }
-                
-                                                else
-                                                    *((uint32_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu32[k];
+                                                mp_req2.request_type = WRITE;
+                                                mp_req2.arguments[0] = elements_to_write;
+                                                mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                                memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                                output_words_left-=elements_to_write;
+                                                //printf("WROTE AND DILATE COMPLETE\n");
                                             }
-                                        }                                
-                                        break;
+                                        }
+                                        else if(iter_value > iter_write)
+                                        {
+                                            //Write into mempool and then store.
+                                            printf("WROTE DILATED INTO MEMPOOL\n");
+                                            mp_req2.request_type = WRITE;
+                                            mp_req2.arguments[0] = elements_to_write;
+                                            mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                            memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                            output_words_left-=elements_to_write;
+                                            for(int ii=0;ii<1024*8/datasize;ii++)
+                                                *((uint32_t*)mp_req2.write_data + ii) = 0;
+                                            *((uint32_t*)array + position) = (*bytes32)[k];
+                                        }
+                                        //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
                                     }
+                                }
+                                break;
+                            }
                             case u64:{break;}
                             case i8:{break;}
                             case i16:{break;}
@@ -364,137 +289,98 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
                             case float16:{break;}
                             case float32:{
                                             float (*bytes32)[2] = ((void*)&v);
-                                            //for(k=0;k<2;k++)
-                                            //    bytes[i] = 0.0;
-                                            //do bytes[g++]= v & 0xFFFFFFFF; while (v>>=32);
-                                            //g=0;
-
                                             for(k=0;k<8/datasize;k++)
                                             {
                                                 count++;
                                                 output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
-                                                if(count<=num_elems_output)
+                                                if(count<=num_elems_input)
                                                 {
                                                     int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                                    if(output_offset/iter_write >= elements_to_write*8/datasize || (count == num_elems_input))
+                                                    uint32_t position, iter_value;
+                                                    position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                                    iter_value = CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                                    if(iter_value == iter_write)
                                                     {
-                                                        if(output_offset/iter_write > elements_to_write*8/datasize)
+                                                        *((float*)array + position) = (*bytes32)[k]; 
+                                                        if(count == num_elems_input)
                                                         {
-                                                            // Write the array back to mempool, intialise it and then write the incoming value.
                                                             mp_req2.request_type = WRITE;
                                                             mp_req2.arguments[0] = elements_to_write;
                                                             mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
                                                             memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                            if(mp_resp2.status != OK)
-                                                            {
-                                                                fprintf(stderr,"WRITE FAILURE.");
-                                                                flag = flag || 1;
-                                                            }
-                                                            else
-                                                            {
-                                                                fprintf(stderr,"SUCCESS: Wrote dilated tensor.\n");
-                                                                output_words_left-= elements_to_write;
-                                                                for(i=0;i<1024*8/datasize;i++)
-                                                                    *((float*)mp_req2.write_data + i) = 0;
-                                                                *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            // Store the incoming value into the array and then write it in the mempool.
-                                                            *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
-                                                            mp_req2.request_type = WRITE;
-                                                            mp_req2.arguments[0] = elements_to_write;
-                                                            mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                            memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                            if (mp_resp2.status != OK)
-                                                            {
-                                                                fprintf(stderr,"WRITE FAILURE.\n");
-                                                                flag = flag || 1;
-                                                            }
-                                                            else
-                                                            {
-                                                                fprintf(stderr,"SUCCESS: Wrote dilated tensor.\n");
-                                                                output_words_left-= elements_to_write;
-                                                                for(i=0;i<1024;i++)
-                                                                    *((uint64_t*)array + i) = 0;
-                                                            }
-                                                            if(count == num_elems_input)
-                                                                break;
+                                                            output_words_left-=elements_to_write;
+                                                            printf("WROTE AND DILATE COMPLETE\n");
                                                         }
                                                     }
-                
-                                                    else
-                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
-                                                }
-                                            }
-                                            break;
-                                        }
-                            case float64:{
-                                            count++;
-                                            output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
-                                            if(count<=num_elems_output)
-                                            {
-                                                int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                                if(output_offset/iter_write >= elements_to_write*8/datasize || (count == num_elems_input))
-                                                {
-                                                    if(output_offset/iter_write > elements_to_write*8/datasize)
+                                                    else if(iter_value > iter_write)
                                                     {
-                                                        // Write the array back to mempool, intialise it and then write the incoming value.
+                                                        //Write into mempool and then store.
+                                                        printf("WROTE DILATED INTO MEMPOOL\n");
                                                         mp_req2.request_type = WRITE;
                                                         mp_req2.arguments[0] = elements_to_write;
                                                         mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
                                                         memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                        if(mp_resp2.status != OK)
+                                                        output_words_left-=elements_to_write;
+                                                        for(int ii=0;ii<1024*8/datasize;ii++)
+                                                            *((float*)mp_req2.write_data + ii) = 0;
+                                                        *((float*)array + position) = (*bytes32)[k];
+                                                    }
+                                                    //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                                }
+                                            }
+
+                                            break;
+                                        }
+                            case float64:{
+                                            double (*bytes32)[1] = ((void*)&v);
+                                            for(k=0;k<8/datasize;k++)
+                                            {
+                                                count++;
+                                                output_offset = computeDilatedTensorOffset(count,&td_input,&td_output,&td_kernel,stride);
+                                                if(count<=num_elems_input)
+                                                {
+                                                    int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
+                                                    uint32_t position, iter_value;
+                                                    position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                                    iter_value = CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                                    if(iter_value == iter_write)
+                                                    {
+                                                        *((double*)array + position) = (*bytes32)[k]; 
+                                                        if(count == num_elems_input)
                                                         {
-                                                            fprintf(stderr,"WRITE FAILURE.");
-                                                            flag = flag || 1;
-                                                        }
-                                                        else
-                                                        {
-                                                            fprintf(stderr,"SUCCESS: Wrote dilated tensor.");
-                                                            output_words_left-= elements_to_write;
-                                                            for(i=0;i<1024*8/datasize;i++)
-                                                                *((double*)mp_req2.write_data + i) = 0;
-                                                                *((double*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = v;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            // Store the incoming value into the array and then write it in the mempool.
-                                                            *((double*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = v;
                                                             mp_req2.request_type = WRITE;
                                                             mp_req2.arguments[0] = elements_to_write;
                                                             mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
                                                             memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                            if (mp_resp2.status != OK)
-                                                            {
-                                                                fprintf(stderr,"WRITE FAILURE.\n");
-                                                                flag = flag || 1;
-                                                            }
-                                                            else
-                                                            {
-                                                                fprintf(stderr,"SUCCESS: Wrote dilated tensor.\n");
-                                                                output_words_left-= elements_to_write;
-                                                                for(i=0;i<1024;i++)
-                                                                    *((uint64_t*)array + i) = 0;
-                                                            }
-                                                            if(count == num_elems_input)
-                                                                break;
+                                                            output_words_left-=elements_to_write;
+                                                            printf("WROTE AND DILATE COMPLETE\n");
                                                         }
                                                     }
-                
-                                                    else
-                                                        *((double*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = v;
-                                            }    
-                                            break;
-                                        }
+                                                    else if(iter_value > iter_write)
+                                                    {
+                                                        //Write into mempool and then store.
+                                                        //printf("WROTE DILATED INTO MEMPOOL\n");
+                                                        mp_req2.request_type = WRITE;
+                                                        mp_req2.arguments[0] = elements_to_write;
+                                                        mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                                        memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                                        output_words_left-=elements_to_write;
+                                                        for(int ii=0;ii<1024*8/datasize;ii++)
+                                                            *((double*)mp_req2.write_data + ii) = 0;
+                                                        *((double*)array + position) = (*bytes32)[k];
+                                                    }
+                                                    //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                                }
+                                            }
+
+                                    break;
+                               }
+            }
                                             
-                }
-            }  
         }
         return flag;
     }
+}
 
 int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
 {
@@ -534,12 +420,7 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                 {
                     case u8: {
                                 //printf("READ VALUE:0X%"PRIx64"\n",mp_resp1.read_data[i]);
-                                uint8_t g=0,bytesu8[8];
-                                for(k=0;k<8;k++)
-                                    bytesu8[k] = 0;
-                                do bytesu8[g++]= v & 0xFF; while (v>>=8);
-                                g=0;
-
+                                uint8_t (*bytes8)[8] = ((void*)&v);
                                 for(k=0;k<8/datasize;k++)
                                 {
                                     count++;
@@ -547,243 +428,133 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                                     if(check_depad >0)
                                     {
                                         ++output_offset;
-                                        if(output_offset<num_elems_output)
+                                        int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
+                                        uint32_t position, iter_value;
+                                        position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                        iter_value = CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
+                                        if(iter_value == iter_write)
                                         {
-                                            //printf("%d,%u\n",output_offset,bytesu8[k]);
-                                            int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                            if(output_offset/iter_write >= elements_to_write*8/datasize || (output_offset == num_elems_output-1))
+                                            *((uint8_t*)array + position) = (*bytes8)[k]; 
+                                            if(count == num_elems_output)
                                             {
-                                                if(output_offset/iter_write > elements_to_write*8/datasize)
-                                                {
-                                                    // Write the array back to mempool, intialise it and then write the incoming value.
-                                                    mp_req2.request_type = WRITE;
-                                                    mp_req2.arguments[0] = elements_to_write;
-                                                    mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                    memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                    if(mp_resp2.status != OK)
-                                                    {
-                                                        fprintf(stderr,"WRITE FAILURE.");
-                                                        flag = flag || 1;
-                                                    }
-                                                    else
-                                                    {
-                                                        fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                        output_words_left-= elements_to_write;
-                                                        for(i=0;i<1024*8/datasize;i++)
-                                                            *((uint8_t*)mp_req2.write_data + i) = 0;
-                                                        *((uint8_t*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    // Store the incoming value into the array and then write it in the mempool.
-                                                    //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                    *((uint8_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                    mp_req2.request_type = WRITE;
-                                                    mp_req2.arguments[0] = elements_to_write;
-                                                    mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                    /*for(p=0;p<elements_to_write;p++)
-                                                        printf("WRITING VALUE:0X%"PRIx64"\n",mp_req2.write_data[p]);*/
-                                                    memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                    if (mp_resp2.status != OK)
-                                                    {
-                                                        fprintf(stderr,"WRITE FAILURE.\n");
-                                                        flag = flag || 1;
-                                                    }
-                                                    else
-                                                    {
-                                                        fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                        output_words_left-= elements_to_write;
-                                                        for(i=0;i<1024;i++)
-                                                            *((uint64_t*)array + i) = 0;
-                                                    }
-                                                    if(output_offset == num_elems_output)
-                                                        break;
-                                                }
+                                                mp_req2.request_type = WRITE;
+                                                mp_req2.arguments[0] = elements_to_write;
+                                                mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                                memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                                output_words_left-=elements_to_write;
+                                            }
                                         }
-                
-                                        else
+                                        else if(iter_value > iter_write)
                                         {
-                                            //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                            *((uint8_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
+                                            //Write into mempool and then store.
+                                            //printf("WROTE DILATED INTO MEMPOOL\n");
+                                            mp_req2.request_type = WRITE;
+                                            mp_req2.arguments[0] = elements_to_write;
+                                            mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                            memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                            output_words_left-=elements_to_write;
+                                            for(int ii=0;ii<1024*8/datasize;ii++)
+                                                *((uint8_t*)mp_req2.write_data + ii) = 0;
+                                            *((uint8_t*)array + position) = (*bytes8)[k];
                                         }
-                                    }
-                                    }
-                                    else
-                                    {
-                                        //printf("NEGATIVE\n");
+                                        //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
                                     }
                                 }
                                 break;
                             }
 
                     case u16:{
-                                uint8_t g=0;uint16_t bytesu8[4];
-                                for(k=0;k<4;k++)
-                                    bytesu8[k] = 0;
-                                do bytesu8[g++]= v & 0xFFFF; while (v>>=16);
-                                g=0;
-
-                                for(k=0;k<8/datasize;k++)
-                                {
-                                    count++;
-                                    check_depad = checkPadding(count,&td_input,&td_output,padding);
-                                    if(check_depad >0)
+                                    uint16_t (*bytes8)[4] = ((void*)&v);
+                                    for(k=0;k<8/datasize;k++)
                                     {
-                                        ++output_offset;
-                                        if(output_offset<num_elems_output)
+                                        count++;
+                                        check_depad = checkPadding(count,&td_input,&td_output,padding);
+                                        if(check_depad >0)
                                         {
-                                            //printf("%d,%u\n",output_offset,bytesu8[k]);
+                                            ++output_offset;
+                                            //printf("Output Offset:%d,Value:%f\n",output_offset,(*bytes8)[k]);
                                             int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                            if(output_offset/iter_write >= elements_to_write*8/datasize || (output_offset == num_elems_output-1))
+                                            uint32_t position, iter_value;
+                                            position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                            iter_value = output_offset ? CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)): 1;
+                                            if(iter_value == iter_write)
                                             {
-                                                if(output_offset/iter_write > elements_to_write*8/datasize)
+                                               
+                                                *((uint16_t*)array + position) = (*bytes8)[k]; 
+                                                if(output_offset == num_elems_output-1)
                                                 {
-                                                    // Write the array back to mempool, intialise it and then write the incoming value.
+                                                    //printf("WRITE SUCCESSFUL\n");
                                                     mp_req2.request_type = WRITE;
                                                     mp_req2.arguments[0] = elements_to_write;
                                                     mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
                                                     memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                    if(mp_resp2.status != OK)
-                                                    {
-                                                        fprintf(stderr,"WRITE FAILURE.");
-                                                        flag = flag || 1;
-                                                    }
-                                                    else
-                                                    {
-                                                        fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                        output_words_left-= elements_to_write;
-                                                        for(i=0;i<1024*8/datasize;i++)
-                                                            *((uint16_t*)mp_req2.write_data + i) = 0;
-                                                        *((uint16_t*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                    }
+                                                    output_words_left-=elements_to_write;
                                                 }
-                                                else
-                                                {
-                                                    // Store the incoming value into the array and then write it in the mempool.
-                                                    //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                    *((uint16_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                    mp_req2.request_type = WRITE;
-                                                    mp_req2.arguments[0] = elements_to_write;
-                                                    mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                    /*for(p=0;p<elements_to_write;p++)
-                                                        printf("WRITING VALUE:0X%"PRIx64"\n",mp_req2.write_data[p]);*/
-                                                    memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                    if (mp_resp2.status != OK)
-                                                    {
-                                                        fprintf(stderr,"WRITE FAILURE.\n");
-                                                        flag = flag || 1;
-                                                    }
-                                                    else
-                                                    {
-                                                        fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                        output_words_left-= elements_to_write;
-                                                        for(i=0;i<1024;i++)
-                                                            *((uint64_t*)array + i) = 0;
-                                                    }
-                                                    if(output_offset == num_elems_output)
-                                                        break;
-                                                }
-                                        }
-                
-                                        else
-                                        {
-                                            //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                            *((uint16_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
+                                            }
+                                            else if(iter_value > iter_write)
+                                            {
+                                                //Write into mempool and then store.
+                                                //printf("WROTE DILATED INTO MEMPOOL\n");
+                                                mp_req2.request_type = WRITE;
+                                                mp_req2.arguments[0] = elements_to_write;
+                                                mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                                memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                                output_words_left-=elements_to_write;
+                                                for(int ii=0;ii<1024*8/datasize;ii++)
+                                                    *((uint16_t*)mp_req2.write_data + ii) = 0;
+                                                *((uint16_t*)array + position) = (*bytes8)[k];
+                                            }
+                                            //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
                                         }
                                     }
-                                    }
-                                    else
-                                    {
-                                        //printf("NEGATIVE\n");
-                                    }
+                                    break;
                                 }
-                                break;
-                            }
-
                     case u32:{
-                                uint8_t g=0;uint32_t bytesu8[2];
-                                for(k=0;k<2;k++)
-                                    bytesu8[k] = 0;
-                                do bytesu8[g++]= v & 0xFFFFFFFF; while (v>>=32);
-                                g=0;
-
-                                for(k=0;k<8/datasize;k++)
-                                {
-                                    count++;
-                                    check_depad = checkPadding(count,&td_input,&td_output,padding);
-                                    if(check_depad >0)
+                                    uint32_t (*bytes8)[2] = ((void*)&v);
+                                    for(k=0;k<8/datasize;k++)
                                     {
-                                        ++output_offset;
-                                        if(output_offset<num_elems_output)
+                                        count++;
+                                        check_depad = checkPadding(count,&td_input,&td_output,padding);
+                                        if(check_depad >0)
                                         {
-                                            //printf("%d,%u\n",output_offset,bytesu8[k]);
+                                            ++output_offset;
+                                            //printf("Output Offset:%d,Value:%f\n",output_offset,(*bytes8)[k]);
                                             int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                            if(output_offset/iter_write >= elements_to_write*8/datasize || (output_offset == num_elems_output-1))
+                                            uint32_t position, iter_value;
+                                            position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                            iter_value = output_offset ? CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)): 1;
+                                            if(iter_value == iter_write)
                                             {
-                                                if(output_offset/iter_write > elements_to_write*8/datasize)
+                                                
+                                                *((uint32_t*)array + position) = (*bytes8)[k]; 
+                                                if(output_offset == num_elems_output-1)
                                                 {
-                                                    // Write the array back to mempool, intialise it and then write the incoming value.
+                                                    printf("SUCCESS: WRITE SUCCESSFUL\n");
                                                     mp_req2.request_type = WRITE;
                                                     mp_req2.arguments[0] = elements_to_write;
                                                     mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
                                                     memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                    if(mp_resp2.status != OK)
-                                                    {
-                                                        fprintf(stderr,"WRITE FAILURE.");
-                                                        flag = flag || 1;
-                                                    }
-                                                    else
-                                                    {
-                                                        fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                        output_words_left-= elements_to_write;
-                                                        for(i=0;i<1024*8/datasize;i++)
-                                                            *((uint32_t*)mp_req2.write_data + i) = 0;
-                                                        *((uint32_t*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    // Store the incoming value into the array and then write it in the mempool.
-                                                    //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                    *((uint32_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
-                                                    mp_req2.request_type = WRITE;
-                                                    mp_req2.arguments[0] = elements_to_write;
-                                                    mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                    /*for(p=0;p<elements_to_write;p++)
-                                                        printf("WRITING VALUE:0X%"PRIx64"\n",mp_req2.write_data[p]);*/
-                                                    memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                    if (mp_resp2.status != OK)
-                                                    {
-                                                        fprintf(stderr,"WRITE FAILURE.\n");
-                                                        flag = flag || 1;
-                                                    }
-                                                    else
-                                                    {
-                                                        fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                        output_words_left-= elements_to_write;
-                                                        for(i=0;i<1024;i++)
-                                                            *((uint64_t*)array + i) = 0;
-                                                    }
-                                                    if(output_offset == num_elems_output)
-                                                        break;
+                                                    output_words_left-=elements_to_write;
                                                 }
                                             }
-                
-                                            else
+                                            else if(iter_value > iter_write)
                                             {
-                                                //printf("WROTE\t%d\t%d\n",output_offset,bytesu8[k]);
-                                                *((uint32_t*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = bytesu8[k];
+                                                //Write into mempool and then store.
+                                                //printf("WROTE DILATED INTO MEMPOOL\n");
+                                                mp_req2.request_type = WRITE;
+                                                mp_req2.arguments[0] = elements_to_write;
+                                                mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                                memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                                output_words_left-=elements_to_write;
+                                                for(int ii=0;ii<1024*8/datasize;ii++)
+                                                    *((uint32_t*)mp_req2.write_data + ii) = 0;
+                                                *((uint32_t*)array + position) = (*bytes8)[k];
                                             }
+                                            //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
                                         }
                                     }
-                                    else
-                                    {
-                                        //printf("NEGATIVE\n");
-                                    }
-                                }
-                                break;
-                            }     
+                                    break;
+                                }     
                     case u64:{
                                 break;
                             }
@@ -803,8 +574,7 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                     case float8:{break;}
                     case float16:{break;}
                     case float32:{
-                                    float (*bytes32)[2] = ((void*)&v);
-                                    //printf("Bytes:%f,%f\n",(*bytes32)[0],(*bytes32)[1]);
+                                    float (*bytes8)[2] = ((void*)&v);
                                     for(k=0;k<8/datasize;k++)
                                     {
                                         count++;
@@ -812,75 +582,43 @@ int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)
                                         if(check_depad >0)
                                         {
                                             ++output_offset;
-                                            printf("Bytes1:%f,%f\n",(*bytes32)[0],(*bytes32)[1]);
-                                            //if(output_offset<=num_elems_output)
-                                            //{
-                                                printf("Offset:%d,%f,%f\n",output_offset,(*bytes32)[k],(*bytes32)[1-k]);
-                                                int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
-                                                if(output_offset/iter_write >= elements_to_write*8/datasize || (output_offset == num_elems_output-1))
+                                            //printf("Output Offset:%d,Value:%f\n",output_offset,(*bytes8)[k]);
+                                            int elements_to_write = MIN(MAX_SIZE_OF_REQUEST_IN_WORDS,output_words_left);
+                                            uint32_t position, iter_value;
+                                            position = output_offset % (MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize);
+                                            iter_value = output_offset ? CEILING(output_offset ,(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)): 1;
+                                            if(iter_value == iter_write)
+                                            {
+                                                
+                                                *((float*)array + position) = (*bytes8)[k]; 
+                                                if(output_offset == num_elems_output-1)
                                                 {
-                                                    if(output_offset/iter_write > elements_to_write*8/datasize)
-                                                    {
-                                                        // Write the array back to mempool, intialise it and then write the incoming value.
-                                                        mp_req2.request_type = WRITE;
-                                                        mp_req2.arguments[0] = elements_to_write;
-                                                        mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                        memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                        if(mp_resp2.status != OK)
-                                                        {
-                                                            fprintf(stderr,"WRITE FAILURE.");
-                                                            flag = flag || 1;
-                                                        }
-                                                        else
-                                                        {
-                                                            fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                            output_words_left-= elements_to_write;
-                                                            for(i=0;i<1024*8/datasize;i++)
-                                                                *((float*)mp_req2.write_data + i) = 0;
-                                                            *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        // Store the incoming value into the array and then write it in the mempool.
-                                                        //printf("WROTE and stored in mempool\t%d\t%f\n",output_offset,*(bytes32)[k]);
-                                                        *((float*)mp_req2.write_data + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
-                                                        mp_req2.request_type = WRITE;
-                                                        mp_req2.arguments[0] = elements_to_write;
-                                                        mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
-                                                        /*for(p=0;p<elements_to_write;p++)
-                                                            printf("WRITING VALUE:0X%"PRIx64"\n",mp_req2.write_data[p]);*/
-                                                        memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
-                                                        if (mp_resp2.status != OK)
-                                                        {
-                                                            fprintf(stderr,"WRITE FAILURE.\n");
-                                                            flag = flag || 1;
-                                                        }
-                                                        else
-                                                        {
-                                                            fprintf(stderr,"SUCCESS: Wrote depadded tensor.\n");
-                                                            output_words_left-= elements_to_write;
-                                                            for(i=0;i<1024;i++)
-                                                                *((uint64_t*)array + i) = 0;
-                                                        }
-                                                        if(output_offset == num_elems_output)
-                                                            break;
-                                                    }
+                                                    printf("SUCCESS: WRITE SUCCESSFUL\n");
+                                                    mp_req2.request_type = WRITE;
+                                                    mp_req2.arguments[0] = elements_to_write;
+                                                    mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                                    memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                                    output_words_left-=elements_to_write;
                                                 }
-                                                else
-                                                {
-                                                    //printf("WROTE\t%d\t%d\t%f\t%f\n",k,output_offset,(*bytes32)[k],(*bytes32)[1-k]);
-                                                    *((float*)array + output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize)) = (*bytes32)[k];
-                                                }
-                                            //}
-                                        }
-                                        else
-                                        {
-                                            //printf("NEGATIVE\n");
+                                            }
+                                            else if(iter_value > iter_write)
+                                            {
+                                                //Write into mempool and then store.
+                                                //printf("WROTE DILATED INTO MEMPOOL\n");
+                                                mp_req2.request_type = WRITE;
+                                                mp_req2.arguments[0] = elements_to_write;
+                                                mp_req2.arguments[1] = output->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*(iter_write++ - 1);
+                                                memPoolAccess((MemPool*)output->mem_pool_identifier,&mp_req2,&mp_resp2);
+                                                output_words_left-=elements_to_write;
+                                                for(int ii=0;ii<1024*8/datasize;ii++)
+                                                    *((float*)mp_req2.write_data + ii) = 0;
+                                                *((float*)array + position) = (*bytes8)[k];
+                                            }
+                                            //printf("Input_size:%d, Count:%d, Output Offset:%d, Iter_value:%d, Iter_Write:%d, Position:%d\n",num_elems_input,count,output_offset,iter_value,iter_write,output_offset%(MAX_SIZE_OF_REQUEST_IN_WORDS*8/datasize));
                                         }
                                     }
                                     break;
-                                }   
+                                }  
                     case float64:{
                                     break;
                                 }

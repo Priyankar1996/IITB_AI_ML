@@ -186,8 +186,10 @@ int writeTensorToFile(char *filename, Tensor *t)
     }
     else
     {
-        fprintf(file,"%d\n",t->descriptor.number_of_dimensions);
-        for(int j = 0; j < t->descriptor.number_of_dimensions; j++)
+        fprintf(file,"%d\n",t->descriptor.data_type);//Writes datatype
+        fprintf(file,"%d\n",t->descriptor.row_major_form);//Writes Row-Major Form
+        fprintf(file,"%d\n",t->descriptor.number_of_dimensions); // Writes the number of dimensions into file
+        for(int j = 0; j < t->descriptor.number_of_dimensions; j++) // Writes the dimensions
             fprintf(file,"%d%s",t->descriptor.dimensions[j],(j == t->descriptor.number_of_dimensions - 1)?"\n":",");
         int iter = -1,j;
         uint64_t count=0; size_t k;

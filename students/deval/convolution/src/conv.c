@@ -1,5 +1,21 @@
 #include "../include/conv.h"
 
+//fill output tensor descriptor
+void updateOutputDescriptorConvTensors(Tensor *src, Tensor *kernel, Tensor *output, uint32_t *stride, uint32_t *padding)
+{
+	TensorDescriptor* td_src = &(src->descriptor);
+	TensorDescriptor* td_kernel = &(kernel -> descriptor);
+	TensorDescriptor* td_out = &(output -> descriptor);
+
+	td_out->data_type = td_src->data_type;
+	td_out->row_major_form = td_src->row_major_form;
+	td_out->number_of_dimensions = td_src->number_of_dimensions;
+	
+	td_out->dimensions[0] = (td_src->dimensions[0] + padding[0] + padding[1] - td_kernel->dimensions[1])/stride[0] + 1;
+	td_out->dimensions[1] = (td_src->dimensions[1] + padding[2] + padding[3] - td_kernel->dimensions[2])/stride[1] + 1;
+	td_out->dimensions[2] = td_kernel->dimensions[0]; 
+}
+
 //computes convolution of one window
 void convHelper(void *ker_data, void *img_data,
                 TensorDescriptor *td_ker,
@@ -60,10 +76,13 @@ void convHelper(void *ker_data, void *img_data,
 	}
 }
 
+//Top level module for convolution.
+//Reads input tensors, call helper and write to output tensor.
 int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int stride[2], const int padding[4]){
 
-	fprintf(stderr,"INSIDE CONV\n");
+	//fprintf(stderr,"INSIDE CONV\n");
 
+	//Request-response pipes
     	MemPoolRequest reqKer, reqImg;
     	MemPoolResponse respKer, respImg;
 
@@ -72,41 +91,28 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
 	td_in = in_img->descriptor;
     	td_ker = kernel->descriptor;
 	
-	//if(td_ker.dimensions[2] != td_in.dimensions[2])
-	//{
-	//	printf("ERROR : IMAGE-KERNEL DIMENSIONS MISMATCH\n");
-	//	return 0;
-	//}
-
-    	uint8_t is_row_major = td_in.row_major_form;
-    	uint32_t out_H = (td_in.dimensions[0] + padding[0] + padding[1] - td_ker.dimensions[1])/stride[0] + 1;
-    	uint32_t out_W = (td_in.dimensions[1] + padding[2] + padding[3] - td_ker.dimensions[2])/stride[1] + 1;
-	uint32_t out_C;
-	if(td_ker.number_of_dimensions > 3)
-		out_C = td_ker.dimensions[0];
-	else
-		out_C = 1;
-
-    	out_img->descriptor.row_major_form = is_row_major;
-    	out_img->descriptor.data_type = td_in.data_type;
-    	out_img->descriptor.dimensions[0] = out_H;
-    	out_img->descriptor.dimensions[1] = out_W;
-    	out_img->descriptor.dimensions[2] = out_C;
+	//3rd dimension of input and kernel must be same for working with images.
+	if(td_ker.dimensions[3] != td_in.dimensions[2])
+	{
+		printf("ERROR : Image-Kernel dimensions mismatch\n");
+		return 1;
+	}
 
 	td_out = out_img->descriptor;
 
+	//calculate number of elements required for each tensors.
     	uint32_t data_size = sizeofTensorDataInBytes(td_ker.data_type);
-    	int num_elems = numberOfElementsInTensor(kernel);
-    	//int num_elems_left = num_elems;
+    	int num_elems_ker = numberOfElementsInTensor(kernel);
+    	int num_elems_img = numberOfElementsInTensor(in_img);
+	int num_elems_out = numberOfElementsInTensor(out_img);
   
 	//Read kernel data.
-	uint64_t ker_data[td_ker.dimensions[0]*td_ker.dimensions[1]*td_ker.dimensions[2]*td_ker.dimensions[3]];
-
-	//uint64_t ker_data_array_base;
-	//uint64_t *ker_data = &ker_data_array_base;
+	
+	//Create local memory for kernel data.(Limited by?)
+	uint64_t ker_data[(num_elems_ker*data_size/8) + 1];
     	int iter = -1;
     	int flag;
-    	int words_left = CEILING(num_elems * data_size,8);
+    	int words_left = CEILING(num_elems_ker * data_size,8);
     	//max request is 1024
     	for( ; words_left > 0; words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
     	{
@@ -136,13 +142,14 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
 	printf("Completed kernel read\n");
 
 	//Read image data.
-	uint64_t img_data[td_in.dimensions[0]*td_in.dimensions[1]*td_in.dimensions[2]];
+
+	//Create local memory for image data.(Limited by?)
+	uint64_t img_data[(num_elems_img*data_size/8) + 1];
 
 	//uint64_t img_data_array_base;
 	//uint64_t *img_data = &img_data_array_base;
 	iter = -1;
-	int img_num_elems = numberOfElementsInTensor(in_img);
-	int img_words_left = CEILING(img_num_elems * data_size,8);
+	int img_words_left = CEILING(num_elems_img * data_size,8);
 	for( ; img_words_left > 0; img_words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
     	{
 			iter++;
@@ -172,16 +179,19 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
 
 	//Perform convolution.
 	
-	uint64_t res[out_H*out_W*out_C];
-	memset(res,0,out_H*out_W*out_C*sizeof(uint64_t));
+	//Create local memory for output data.(Limited by?)
+	uint64_t res[(num_elems_out*data_size/8) + 1];
+	//Reset memory to zero.
+	memset(res,0,((num_elems_out*data_size/8)+1)*sizeof(uint64_t));
 	void *result_array_base = res;
 	int l = 0;
 
-	for(int p = 0; p < out_H; p++)
+	//Actual convolution is performed here
+	for(int p = 0; p < td_out.dimensions[0]; p++)
 	{
-		for(int q = 0; q < out_W; q++)
+		for(int q = 0; q < td_out.dimensions[1]; q++)
 		{
-			for(int r = 0; r < out_C; r++)
+			for(int r = 0; r < td_out.dimensions[2]; r++)
 			{
 				int img_data_start_index[] = {p*stride[0],q*stride[1],r};
 				convHelper(ker_data,img_data,&td_ker,&td_in,img_data_start_index,result_array_base,l);
@@ -193,10 +203,8 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
 	printf("Completed conv\n");
 
 	//write back the result to tensor.
-
 	iter = -1;
-	int out_img_num_elems = numberOfElementsInTensor(out_img);
-	int out_img_words_left = CEILING(out_img_num_elems * data_size,8);
+	int out_img_words_left = CEILING(num_elems_out * data_size,8);
 	for( ; out_img_words_left > 0; out_img_words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
     	{
 		iter++;
@@ -220,6 +228,5 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
         	}
 	}
 printf("%dx%dx%d conv %dx%dx%dx%d = %dx%dx%d\n",td_in.dimensions[0],td_in.dimensions[1],td_in.dimensions[2],td_ker.dimensions[0],td_ker.dimensions[1],td_ker.dimensions[2],td_ker.dimensions[3],td_out.dimensions[0],td_out.dimensions[1],td_out.dimensions[2]);
-printf("THE END\n");
 return 0;
 }

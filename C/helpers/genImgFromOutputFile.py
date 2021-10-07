@@ -21,4 +21,4 @@ def genImgFromOutputFile(csv_file_name):
   data = im.fromarray(reshaped_matrix)
   data.save('result.png')
 
-genInputFileFromImg("../../students/deval/convolution/bin/r.csv")
+genImgFromOutputFile("../../students/deval/convolution/bin/r.csv")

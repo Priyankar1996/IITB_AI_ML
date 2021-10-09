@@ -1,6 +1,8 @@
 NAME 
     unaryOperateOnTensor - performs unary operations on Tensor 
+    unaryOperateOnTensor_inplace - inplace version of unaryOperateOnTensor function
 
 DESCRIPTION
     The unaryOperateOnTensor(Tensor *src, Tensor* dest, Operation op) function takes in input from user as 2 tensors and the operation to be performed.
     It writes the output in the dest Tensor. 
+    If dest and src tensor are the same, it reduces to the inplace function. 

@@ -1,3 +1,5 @@
+//AUTHOR: PRAKHAR DIWAN
+//         DEPT. OF ELECTRICAL ENGINEERING, IIT-BOMBAY.
 #ifndef _unary_fn_h____
 #define _unary_fn_h____
 

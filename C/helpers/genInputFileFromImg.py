@@ -1,5 +1,4 @@
 import numpy as np
-import pylab as pl
 from PIL import Image as im
 import csv
 import sys

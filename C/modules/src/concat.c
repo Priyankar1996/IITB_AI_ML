@@ -32,7 +32,7 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 		fprintf(stderr,"ERROR: no dimension unequal\n");
 		return -1;
 	}
-	printf("dx = %d\n",dx);
+	// printf("dx = %d\n",dx);
 
 	uint32_t index_start[MAX_DIMENSIONS], index_end[MAX_DIMENSIONS];
 	uint32_t result_start[MAX_DIMENSIONS];// result_end[MAX_DIMENSIONS];
@@ -62,22 +62,16 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 		tot_iter *= td_a.dimensions[i];
 	}
 
-	//int Istart, Iend, deltaI,alt=1;
 	TensorDescriptor* td;
 	Tensor* t;
 	for(iter=0 ;iter < 2*tot_iter; iter++ ){          
-		// printf("requested %d\n",iter);
-		printf ("-----------------------------------------------\n");
-
 		//3. switch tensor
 		if(iter%2 ==0){
 			td = &td_a; 
 			t = a;
-			printf("A ");
 		}else{
 			td = &td_b;
 			t = b;
-			printf("B ");
 		}
 
 		//4. find start and end index
@@ -102,18 +96,6 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 			index_end[i] = index_start[i];
 		}
 
-		printf(" index ");
-		for (uint32_t i = 0; i < n_dims; i++)
-		{
-			printf("%4d,",index_start[i]);
-		}
-		printf(" : ");
-		for (uint32_t i = 0; i < n_dims; i++)
-		{
-			printf("%4d,",index_end[i]);
-		}
-		printf("\n");
-
 		//5. request elements required to copy
 		uint32_t n_elem=1;
 		n_elem=getTensorEntryIndexOffset(td,index_end)-getTensorEntryIndexOffset(td,index_start)+1;
@@ -129,9 +111,6 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 		for (; words_left > 0; words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
 		{   
 			iterMem++;
-			// if(iter>0){        
-			//     incrementCoordinateVector(n_dims,td_r.dimensions,result_start,td_r.row_major_form);
-			// }
 			req.request_type = READ;
 			req.request_tag = 1; // confirm dis
 			req.arguments[2] = 1; // stride = 1 as pointwise
@@ -165,22 +144,6 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 				incrementCoordinateVectorByOffset(n_dims,elements_toCopy,td->dimensions,mem_end,td->row_major_form);
 				req.arguments[1] = t->mem_pool_buffer_pointer+getTensorEntryIndexOffset(td,mem_start)*dataSize/8;
 			}
-			printf("    mem %d",iterMem);
-			for (uint32_t i = 0; i < n_dims; i++)
-			{
-				printf("%4d,",mem_start[i]);
-			}
-			printf(" : ");
-			for (uint32_t i = 0; i < n_dims; i++)
-			{
-				printf("%4d,",mem_end[i]);
-			}
-			printf(" -> ");
-			for (uint32_t i = 0; i < n_dims; i++)
-			{
-				printf("%4d,",result_start[i]);
-			}
-			printf("\n");
 
 			memPoolAccess((MemPool*)t->mem_pool_identifier,&req,&resp); 
 
@@ -204,8 +167,23 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 			req.arguments[0] += CEILING(copyDestOffset,8);
 			req.arguments[0] = MIN(req.arguments[0],MAX_SIZE_OF_REQUEST_IN_WORDS);
 
-			req.write_data[0]=((MemPool*)result->mem_pool_identifier)->mem_pool_buffer[offset*dataSize/8+result->mem_pool_buffer_pointer];
-			req.write_data[words_left-1]=((MemPool*)result->mem_pool_identifier)->mem_pool_buffer[offset*dataSize/8+result->mem_pool_buffer_pointer+words_left-1];
+
+            MemPoolRequest req1;
+            MemPoolResponse resp1;
+
+            req1.request_type= READ;
+            req1.arguments[0] = 1;
+            req1.arguments[1] = offset*dataSize/8+result->mem_pool_buffer_pointer;
+
+            memPoolAccess((MemPool*)result->mem_pool_identifier,&req1,&resp1); 
+            req.write_data[0]= resp1.read_data[0];
+
+            req1.request_type= READ;
+            req1.arguments[0] = 1;
+            req1.arguments[1] = offset*dataSize/8+result->mem_pool_buffer_pointer+words_left-1;
+
+            memPoolAccess((MemPool*)result->mem_pool_identifier,&req1,&resp1); 
+            req.write_data[words_left-1]= resp1.read_data[0];
 
 			copyTensorArray(td,array1,mem_start,mem_end,array2,copySrcOffset,copyDestOffset);
 
@@ -217,10 +195,6 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 
 			//7. incement result_start goto 3
 			incrementCoordinateVectorByOffset(n_dims,elements_toCopy,td_r.dimensions,result_start,td_r.row_major_form);
-
-
-			// printf("\nTensor Result\n");
-			// print2dTensor(result,&req,&resp);
 		}
 	}
 	return 0;

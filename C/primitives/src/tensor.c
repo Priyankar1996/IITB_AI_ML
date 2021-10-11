@@ -55,22 +55,26 @@ void incrementCoordinateVector (int ndim, uint32_t* dims, uint32_t* vec, uint8_t
 {
 	int Istart, Iend, deltaI;
 	Istart = (row_major_form ?  ndim - 1 : 0);
-	Iend   = (ndim - 1) - Istart;
 	deltaI = (row_major_form ? -1 : 1);
+	Iend   = (ndim - 1) - Istart+deltaI;
 
 	int I;
 	int CARRY = 0;
-	for(I = Istart; I != Iend; I += deltaI)
-	{
-		if((vec[I] + CARRY) == dims[I])
+	vec[Istart] += 1;
+	if(vec[Istart]==dims[Istart]){
+		for(I = Istart; I != Iend; I += deltaI)
 		{
-			vec[I] = 0;
-			CARRY = 1;
-		}
-		else
-		{
-			vec[I] += 1;
-			CARRY = 0;
+			if((vec[I] + CARRY) == dims[I])
+			{
+				vec[I] = 0;
+				CARRY = 1;
+			}
+			else
+			{
+				vec[I] += 1;
+				CARRY = 0;
+				break;
+			}
 		}
 	}
 }

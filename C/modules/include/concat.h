@@ -25,4 +25,8 @@ void incrementCoordinateVectorByOffset (int ndim, int offset, uint32_t* dims, ui
 // i.e src_offset = 4 and dest_offset = 7
 uint32_t copyTensorArray(TensorDescriptor* td, void* tensor_data_array,uint32_t* indices_low, uint32_t* indices_high,void* section_data_array,uint32_t src_offset,uint32_t dest_offset);
 
+int concatTensors (Tensor* a, Tensor*  b, Tensor* result);
+
+int concatTensorsAlongDim (Tensor* a, Tensor*  b, Tensor* result, uint32_t dim);
+
 #endif

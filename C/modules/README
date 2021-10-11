@@ -22,3 +22,13 @@ convolutionTranspose:
 	the second command.
 	Output results will be stored in a csv file, to verify correct functionality of
 	the operation.
+
+unaryOperateOnTensor:
+	Run command "./setup_unary_fn.sh" followed by ./bin/app
+	This will generate an executable file(app) which is executed using 
+	the second command.
+	app can be chosen from: (as per the desired test)
+		Test_unary_fn
+		Test_unary_inplace_fn
+		Test_unary_fn_Random
+		Test_unary_fn_inplace_Random

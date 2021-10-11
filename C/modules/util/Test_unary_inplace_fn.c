@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
-#include "unary_inplace_fn.h" 
+#include "unary_fn.h" 
 // tensor.h
-#include "createTensor.h"  // made some edits to createTensor.c 
+#include "createTensor.h"  
+// This testbench is for unary in-place providing constant input tensors (though can vary as per offset)
+// The constant values input tensor have are {offset,offset+1,offset+2,....offset+N}. N is the number of elements in the input tensor
 #define NPAGES 8
 #define MIN(a,b) (((a)<(b))?(a):(b))
 int fillTensorValues (Tensor* t,uint32_t num_elems, double offset );
-
 MemPool 	pool;
 MemPoolRequest 	req;
 MemPoolResponse resp;
@@ -141,7 +142,7 @@ int main(){
 						printf("fail at %d, iter = %d\n",i,iter);
 					}
 					else{
-						printf("pass at %d, iter = %d Expected Result = %u Output = %u  \n",i,iter, ex_resultu64,resultu64);
+						printf("pass at %d, iter = %d Expected Result = %lu Output = %lu  \n",i,iter, ex_resultu64,resultu64);
 					}
 					break;
 					
@@ -189,7 +190,7 @@ int main(){
 						printf("fail at %d, iter = %d\n",i,iter);
 					}
 					else{
-						printf("pass at %d, iter = %d Expected Result = %d Output = %d  \n",i,iter, ex_resulti64,resulti64);
+						printf("pass at %d, iter = %d Expected Result = %ld Output = %ld  \n",i,iter, ex_resulti64,resulti64);
 					}
 					break;
 
@@ -277,7 +278,7 @@ int fillTensorValues (Tensor* t,uint32_t num_elems, double offset ){
 				case u64: ; 
 					uint64_t val64 = (uint64_t) data;
 					*(((uint64_t*)array) + i) = val64;
-					printf("Value filled %u \n",*(((uint64_t*)array) + i));
+					printf("Value filled %lu \n",*(((uint64_t*)array) + i));
 					break;
 					
 				case i8: ;
@@ -301,7 +302,7 @@ int fillTensorValues (Tensor* t,uint32_t num_elems, double offset ){
 				case i64: ;
 					int64_t val64i = (int64_t) data;
 					*(((int64_t*)array) + i) = val64i;
-					printf("Value filled %d \n",*(((int64_t*)array) + i));
+					printf("Value filled %ld \n",*(((int64_t*)array) + i));
 					break;
 
 				// case float8: ;

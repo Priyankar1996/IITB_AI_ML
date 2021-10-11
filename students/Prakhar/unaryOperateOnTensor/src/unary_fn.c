@@ -258,6 +258,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 		/////////////////////////////////////////
 
 		req_a.request_type = WRITE;
+		req_a.arguments[1] = b->mem_pool_buffer_pointer+ k*CHUNK_SIZE;
 		//req_a.write_data = store_here; 
 		for(int i=0; i<num_dwords_stored ;i=i+1){
 			req_a.write_data[i] = store_here[i];

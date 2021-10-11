@@ -1,4 +1,4 @@
-//AUTHORS : DEVAL PATEL, ANDREWS
+//AUTHORS : DEVAL PATEL, ANDREWS GEORGE
 #ifndef __conv_h___
 #define __conv_h___
 /*
@@ -34,7 +34,7 @@
 		convHelper
 	BRIEF:
 		Take 2 arrays of same size as input,
-		calculate dot product
+		calculate element by element dot product
 	INPUTS:
 		1. ker_data points to kernel values
 		2. img_data points to image values
@@ -44,7 +44,7 @@
 		6. base address of convolution result
 		7. loop value
 	ASSUMPTIONS:
-		NA
+		Input, Kernel and output tensors are created in memory pool.
 	OPERATION:
 		perform dot product of the image matrix patch with kernel.
 	SIDE-EFFECTS:
@@ -63,6 +63,31 @@ void convHelper(void *ker_data, void *img_data,
 
 /*
 	NAME:
+		updateOutputDescriptorConvTensors
+	BRIEF:
+		Fill utput tensor's descriptor.
+	INPUTS:
+		1: Image tensor pointer.
+		2: Kernel tensor pointer.
+		3: Output tensor pointer.
+		4: Stride.
+		5: Padding.
+	ASSUMPTIONS:
+		Input, Kernel and output tensors are created in memory pool.
+	OPERATION:
+		Calculate and fill output dimensions for convolution operation.
+	SIDE-EFFECTS:
+		NA
+	RETURN VALUES:
+		NA
+	FUTURE WORK:
+		NA
+*/
+
+void updateOutputDescriptorConvTensors(Tensor *src, Tensor *kernel, Tensor *output, uint32_t *stride, uint32_t *padding);
+
+/*
+	NAME:
 		convTensors
 	BRIEF:
 		Take image and kernel as input, output the convolution
@@ -71,22 +96,20 @@ void convHelper(void *ker_data, void *img_data,
 		2. kernel points to convolution kernel
 		3. outImg points to destination image
 		4. stride is a convolution parameter
+		5. padding can be specified(optional)
 	ASSUMPTIONS:
-		1. Row Major: dataSize * C is smaller than 1024 words
-		2. Col Major:
-		3. kernel contains only 1 filter
-		4. #dim of inImg, kernel = 3
+		1. Row Major
+		2. Input, Kernel and output tensors are already created in memory pool
 	OPERATION:
 		Convolves inImg with kernel with stride=stride
 	SIDE-EFFECTS:
 		NA
 	RETURN VALUES:
-		0 on Success, -1 on Failure.
+		0 on Success, 1 on Failure.
 	FUTURE WORK:
 		1. allow for padding - currently padding to be 0
-		2. allow for any size of kernel/image
-		3. rework the code to optimize for sliding windows
-		4. check other options provided by PyTorch
+		2. rework the code to optimize for sliding windows
+		3. check other options provided by PyTorch
 */
 int new_convTensors(Tensor *inImg, Tensor *kernel, Tensor *outImg,
 					const int stride[], const int padding[]);

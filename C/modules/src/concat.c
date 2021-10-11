@@ -32,7 +32,7 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 		fprintf(stderr,"ERROR: no dimension unequal\n");
 		return -1;
 	}
-	printf("dx = %d\n",dx);
+	// printf("dx = %d\n",dx);
 
 	uint32_t index_start[MAX_DIMENSIONS], index_end[MAX_DIMENSIONS];
 	uint32_t result_start[MAX_DIMENSIONS];// result_end[MAX_DIMENSIONS];
@@ -62,22 +62,16 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 		tot_iter *= td_a.dimensions[i];
 	}
 
-	//int Istart, Iend, deltaI,alt=1;
 	TensorDescriptor* td;
 	Tensor* t;
 	for(iter=0 ;iter < 2*tot_iter; iter++ ){          
-		// printf("requested %d\n",iter);
-		printf ("-----------------------------------------------\n");
-
 		//3. switch tensor
 		if(iter%2 ==0){
 			td = &td_a; 
 			t = a;
-			printf("A ");
 		}else{
 			td = &td_b;
 			t = b;
-			printf("B ");
 		}
 
 		//4. find start and end index
@@ -102,18 +96,6 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 			index_end[i] = index_start[i];
 		}
 
-		printf(" index ");
-		for (uint32_t i = 0; i < n_dims; i++)
-		{
-			printf("%4d,",index_start[i]);
-		}
-		printf(" : ");
-		for (uint32_t i = 0; i < n_dims; i++)
-		{
-			printf("%4d,",index_end[i]);
-		}
-		printf("\n");
-
 		//5. request elements required to copy
 		uint32_t n_elem=1;
 		n_elem=getTensorEntryIndexOffset(td,index_end)-getTensorEntryIndexOffset(td,index_start)+1;
@@ -129,9 +111,6 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 		for (; words_left > 0; words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
 		{   
 			iterMem++;
-			// if(iter>0){        
-			//     incrementCoordinateVector(n_dims,td_r.dimensions,result_start,td_r.row_major_form);
-			// }
 			req.request_type = READ;
 			req.request_tag = 1; // confirm dis
 			req.arguments[2] = 1; // stride = 1 as pointwise
@@ -165,22 +144,6 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 				incrementCoordinateVectorByOffset(n_dims,elements_toCopy,td->dimensions,mem_end,td->row_major_form);
 				req.arguments[1] = t->mem_pool_buffer_pointer+getTensorEntryIndexOffset(td,mem_start)*dataSize/8;
 			}
-			printf("    mem %d",iterMem);
-			for (uint32_t i = 0; i < n_dims; i++)
-			{
-				printf("%4d,",mem_start[i]);
-			}
-			printf(" : ");
-			for (uint32_t i = 0; i < n_dims; i++)
-			{
-				printf("%4d,",mem_end[i]);
-			}
-			printf(" -> ");
-			for (uint32_t i = 0; i < n_dims; i++)
-			{
-				printf("%4d,",result_start[i]);
-			}
-			printf("\n");
 
 			memPoolAccess((MemPool*)t->mem_pool_identifier,&req,&resp); 
 
@@ -204,8 +167,23 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 			req.arguments[0] += CEILING(copyDestOffset,8);
 			req.arguments[0] = MIN(req.arguments[0],MAX_SIZE_OF_REQUEST_IN_WORDS);
 
-			req.write_data[0]=((MemPool*)result->mem_pool_identifier)->mem_pool_buffer[offset*dataSize/8+result->mem_pool_buffer_pointer];
-			req.write_data[words_left-1]=((MemPool*)result->mem_pool_identifier)->mem_pool_buffer[offset*dataSize/8+result->mem_pool_buffer_pointer+words_left-1];
+
+            MemPoolRequest req1;
+            MemPoolResponse resp1;
+
+            req1.request_type= READ;
+            req1.arguments[0] = 1;
+            req1.arguments[1] = offset*dataSize/8+result->mem_pool_buffer_pointer;
+
+            memPoolAccess((MemPool*)result->mem_pool_identifier,&req1,&resp1); 
+            req.write_data[0]= resp1.read_data[0];
+
+            req1.request_type= READ;
+            req1.arguments[0] = 1;
+            req1.arguments[1] = offset*dataSize/8+result->mem_pool_buffer_pointer+words_left-1;
+
+            memPoolAccess((MemPool*)result->mem_pool_identifier,&req1,&resp1); 
+            req.write_data[words_left-1]= resp1.read_data[0];
 
 			copyTensorArray(td,array1,mem_start,mem_end,array2,copySrcOffset,copyDestOffset);
 
@@ -217,14 +195,202 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 
 			//7. incement result_start goto 3
 			incrementCoordinateVectorByOffset(n_dims,elements_toCopy,td_r.dimensions,result_start,td_r.row_major_form);
-
-
-			// printf("\nTensor Result\n");
-			// print2dTensor(result,&req,&resp);
 		}
 	}
 	return 0;
 }
+
+
+int concatTensorsAlongDim (Tensor* a, Tensor*  b, Tensor* result, uint32_t dim){
+	TensorDescriptor td_a, td_b,td_r;
+
+	td_a = a->descriptor;
+	td_b = b->descriptor;
+	td_r = result->descriptor;
+	if (td_a.row_major_form != td_b.row_major_form || td_a.number_of_dimensions != td_b.number_of_dimensions || td_a.data_type != td_b.data_type)
+	{
+		fprintf(stderr,"ERROR: invalid tensor input\n");
+		return -1;
+	}
+
+	uint32_t dx = dim,tot_elem=1,n_dims;  
+	n_dims = td_a.number_of_dimensions;
+	for (uint32_t i = 0; i < n_dims; i++)
+	{
+		if(td_a.dimensions[i] != td_b.dimensions[i]){
+			fprintf(stderr,"ERROR: all dimensions not equal\n");
+			return -1;
+		}
+		tot_elem *= td_a.dimensions[i];
+	}
+	// printf("dx = %d\n",dx);
+
+	uint32_t index_start[MAX_DIMENSIONS], index_end[MAX_DIMENSIONS];
+	uint32_t result_start[MAX_DIMENSIONS];// result_end[MAX_DIMENSIONS];
+	uint32_t mem_start[MAX_DIMENSIONS], mem_end[MAX_DIMENSIONS];
+
+	for (uint32_t i = 0; i < n_dims; i++)
+	{
+		index_start[i] = 0;
+		index_end[i] = 0;
+		result_start[i] = 0;
+		//result_end[i] = 0;
+		mem_start[i]=0;
+		mem_end[i]=0;
+	}
+
+	uint32_t dataSize = sizeofTensorDataInBytes(td_a.data_type);
+	int32_t DSTART,DINCREMENT,DEND;
+	int iter = -1;
+
+	DINCREMENT = (td_a.row_major_form ? -1 : 1);
+	DEND =  (td_a.row_major_form ? -1 : n_dims);
+	DSTART = dx + DINCREMENT ;
+
+	uint32_t tot_iter = 1;
+	for (uint32_t i = DSTART; i != DEND; i+=DINCREMENT)
+	{
+		tot_iter *= td_a.dimensions[i];
+	}
+
+	TensorDescriptor* td;
+	Tensor* t;
+	for(iter=0 ;iter < 2*tot_iter; iter++ ){          
+		//3. switch tensor
+		if(iter%2 ==0){
+			td = &td_a; 
+			t = a;
+		}else{
+			td = &td_b;
+			t = b;
+		}
+
+		//4. find start and end index
+		//find index_start
+		if (iter > 1 && iter%2 == 0){
+			incrementCoordinateVectorFromDim(n_dims, dx, td->dimensions, index_start, td->row_major_form);
+		}
+
+		//find index_end
+		DINCREMENT = (td->row_major_form ? -1 : 1);
+		DSTART = (td->row_major_form ? n_dims-1 : 0);
+		DEND =  dx+DINCREMENT;
+		for (uint32_t i = DSTART; i != DEND; i+=DINCREMENT)
+		{
+			index_end[i] = td->dimensions[i]-1;
+		}
+		DINCREMENT = (td->row_major_form ? -1 : 1);
+		DEND =  (td->row_major_form ? -1 : n_dims);
+		DSTART =dx+DINCREMENT;
+		for (uint32_t i = DSTART; i != DEND; i+=DINCREMENT)
+		{
+			index_end[i] = index_start[i];
+		}
+
+		//5. request elements required to copy
+		uint32_t n_elem=1;
+		n_elem=getTensorEntryIndexOffset(td,index_end)-getTensorEntryIndexOffset(td,index_start)+1;
+
+		int32_t words_left = CEILING(n_elem*dataSize,8);
+		uint32_t elements_toCopy,is_lessThan1024Words=0;
+
+		if (words_left < MAX_SIZE_OF_REQUEST_IN_WORDS){
+			is_lessThan1024Words = 1;
+		}
+
+		int32_t iterMem = -1;
+		for (; words_left > 0; words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
+		{   
+			iterMem++;
+			req.request_type = READ;
+			req.request_tag = 1; // confirm dis
+			req.arguments[2] = 1; // stride = 1 as pointwise
+			if (words_left+1 < MAX_SIZE_OF_REQUEST_IN_WORDS && is_lessThan1024Words == 1 ){
+				elements_toCopy = n_elem;
+				req.arguments[0] =  words_left+1; 
+				req.arguments[1] = t->mem_pool_buffer_pointer+getTensorEntryIndexOffset(td,index_start)*dataSize/8;
+				copyCoordinateVector(n_dims,mem_start,index_start);
+				copyCoordinateVector(n_dims,mem_end,index_end);
+			}else if (words_left+1 < MAX_SIZE_OF_REQUEST_IN_WORDS){
+				// last iteration
+				elements_toCopy = n_elem-iterMem*MAX_SIZE_OF_REQUEST_IN_WORDS*8/dataSize;
+				req.arguments[0] = words_left; 
+				copyCoordinateVector(n_dims,mem_start,mem_end);
+				incrementCoordinateVector(n_dims,td->dimensions, mem_start,td->row_major_form);
+				incrementCoordinateVectorByOffset(n_dims,elements_toCopy,td->dimensions,mem_end,td->row_major_form);
+				req.arguments[1] = t->mem_pool_buffer_pointer+getTensorEntryIndexOffset(td,mem_start)*dataSize/8;
+			}else if (iterMem == 0) {
+				// first iteration
+				elements_toCopy = MAX_SIZE_OF_REQUEST_IN_WORDS*8/dataSize;
+				req.arguments[0] = MAX_SIZE_OF_REQUEST_IN_WORDS;
+				copyCoordinateVector(n_dims,mem_start,index_start);
+				copyCoordinateVector(n_dims,mem_end,index_start);
+				incrementCoordinateVectorByOffset(n_dims,elements_toCopy-1,td->dimensions,mem_end,td->row_major_form);          
+				req.arguments[1] = t->mem_pool_buffer_pointer+getTensorEntryIndexOffset(td,mem_start)*dataSize/8;
+			}else {
+				elements_toCopy = MAX_SIZE_OF_REQUEST_IN_WORDS*8/dataSize;
+				req.arguments[0] = MAX_SIZE_OF_REQUEST_IN_WORDS;
+				copyCoordinateVector(n_dims,mem_start,mem_end);
+				incrementCoordinateVector(n_dims,td->dimensions, mem_start,td->row_major_form);
+				incrementCoordinateVectorByOffset(n_dims,elements_toCopy,td->dimensions,mem_end,td->row_major_form);
+				req.arguments[1] = t->mem_pool_buffer_pointer+getTensorEntryIndexOffset(td,mem_start)*dataSize/8;
+			}
+
+			memPoolAccess((MemPool*)t->mem_pool_identifier,&req,&resp); 
+
+			if(resp.status == NOT_OK) {
+				fprintf(stderr,"read Tensor FAILURE.\n");
+				return -1;
+			}
+
+			//6. copy all the values till dx starting from d0/dn-1 depending row/column major from both tensor to result
+			void *array1, *array2;
+			array1 = resp.read_data;  
+			array2 = req.write_data;
+			uint32_t offset;
+
+			uint32_t copySrcOffset = getTensorEntryIndexOffset(td,mem_start);
+			copySrcOffset /= 8/dataSize;
+			copySrcOffset *= 8/dataSize;
+			offset  =getTensorEntryIndexOffset(&td_r,result_start);
+			uint32_t copyDestOffset;
+			copyDestOffset = offset%(8/dataSize);
+			req.arguments[0] += CEILING(copyDestOffset,8);
+			req.arguments[0] = MIN(req.arguments[0],MAX_SIZE_OF_REQUEST_IN_WORDS);
+
+
+            MemPoolRequest req1;
+            MemPoolResponse resp1;
+
+            req1.request_type= READ;
+            req1.arguments[0] = 1;
+            req1.arguments[1] = offset*dataSize/8+result->mem_pool_buffer_pointer;
+
+            memPoolAccess((MemPool*)result->mem_pool_identifier,&req1,&resp1); 
+            req.write_data[0]= resp1.read_data[0];
+
+            req1.request_type= READ;
+            req1.arguments[0] = 1;
+            req1.arguments[1] = offset*dataSize/8+result->mem_pool_buffer_pointer+words_left-1;
+
+            memPoolAccess((MemPool*)result->mem_pool_identifier,&req1,&resp1); 
+            req.write_data[words_left-1]= resp1.read_data[0];
+
+			copyTensorArray(td,array1,mem_start,mem_end,array2,copySrcOffset,copyDestOffset);
+
+			req.request_type = WRITE;
+			req.request_tag = 1; // confirm dis
+			req.arguments[1] = result->mem_pool_buffer_pointer + offset*dataSize/8;
+
+			memPoolAccess((MemPool*)result->mem_pool_identifier,&req,&resp); 
+
+			//7. incement result_start goto 3
+			incrementCoordinateVectorByOffset(n_dims,elements_toCopy,td_r.dimensions,result_start,td_r.row_major_form);
+		}
+	}
+	return 0;
+}
+
 
 
 void incrementCoordinateVectorFromDim (int ndim, int dim_start, uint32_t* dims, uint32_t* vec, uint8_t row_major_form)

@@ -5,7 +5,6 @@
 #include "unary_fn.h" 
 // tensor.h
 #include "createTensor.h"
-#include "copyTensor.h"
 // This testbench is for unary in-place providing random valued input tensors
 // here random values given are in (-pos_range, pos_range): where pos_range can be specified as an argument in fillTensorRandomValues
 #define NPAGES 8
@@ -68,7 +67,7 @@ int main(){
 
     //copy Tensor a into tensor for saving the input values
     int copy_ret;
-    copy_ret = copyTensorInMemory(&a,&b);
+    copy_ret = copyTensor(&a,&b);
 
 	//call the function
 	unaryOperateOnTensor_inplace(&a, operation);
@@ -212,7 +211,7 @@ int main(){
 					inputi64 = (int64_t) *(((int64_t*)array2) + i);
 					ex_resulti64 = operate_int64(inputi64, operation);
 					if (resulti64 != ex_resulti64){
-						printf("fail at %d, iter = %d Diff = %d\n",i,iter, resulti64-ex_resulti64);
+						printf("fail at %d, iter = %d Diff = %ld\n",i,iter, resulti64-ex_resulti64);
 					}
 					else{
 						printf("pass at %d, iter = %d Expected Result = %ld Output = %ld  \n",i,iter, ex_resulti64,resulti64);

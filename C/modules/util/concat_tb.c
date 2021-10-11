@@ -27,9 +27,9 @@ int main(){
     initMemPool(&pool,1,NPAGES);
 	//define tensor
 	const TensorDataType dataType = i32;
-	const int8_t row_major_form = 0;
-	const uint32_t ndim  = 2;
-	const uint32_t dx = 1,dim_dx = 2;
+	const int8_t row_major_form = 1;
+	const uint32_t ndim  = 3;
+	const uint32_t dx = 1,dim_dx = 5;
 	uint32_t dims[ndim];
 	dims[0] = 3;
 	dims[1] = 5;
@@ -83,7 +83,7 @@ int main(){
     offset = 1;
 	fillTensorValues(&r, num_elems_b+num_elems_a, -1,&req,&resp);
     
-    concatTensors(&a,&b,&r);
+    concatTensorsAlongDim(&a,&b,&r,dx);
 
 	printf("\nTensor A\n");
 	print2dTensor(&a,&req,&resp);

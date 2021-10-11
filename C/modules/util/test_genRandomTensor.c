@@ -13,6 +13,7 @@ MemPool 	pool;
 
 #define NPAGES     8
 
+// Function to call create Tensor and do some intialisation work
 void my_createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool *mpool, Tensor* result){
 	// To create and intialize tensor which will be sent to genrandomTensor function
 	TensorDescriptor t ;
@@ -38,6 +39,7 @@ void my_createTensor (uint32_t ndim, uint32_t* dims, TensorDataType dt, MemPool 
 	return ;
 }
 
+// Funciton to print tensors as 2D slices. Can be brought out later if required for fast checking of result on terminal?
 void preetyprint(Tensor *result){
 
 	// Additional function to print any tensor in 2D slices 
@@ -62,8 +64,8 @@ void preetyprint(Tensor *result){
 		total_num *= result->descriptor.dimensions[I] ; 
 	}
 	// ceil is replaced as below. ceil(a/b) = a/b + (a%b != 0)
-	uint32_t num_words = (total_num*ten_sz / 8 + ((total_num * ten_sz)%8 != 0) )  ; 
-	uint32_t num_requests = num_words / MAX_SIZE_OF_REQUEST_IN_WORDS + (num_words%MAX_SIZE_OF_REQUEST_IN_WORDS != 0); 
+	uint32_t num_words = CEILING(total_num*ten_sz, 8); 
+	uint32_t num_requests = CEILING(num_words,MAX_SIZE_OF_REQUEST_IN_WORDS ); 
 
 	if(num_dims == 0)printf("[]\n");
 	// Printing on tenrminal
@@ -239,15 +241,62 @@ int main(int argc, char const *argv[])
 	initMemPool(&pool, 1, NPAGES);	
 
 	// Change parameters below
-	uint32_t ndim = 2 ;
-	uint32_t dims[] = {4,2};  
-	TensorDataType dt = i8 ;
+    printf("Enter the data-type of the tensor:\n");
+    printf("0. uint_8\t1. uint16_t\t2. uint32_t\t3. uint64_t\n");
+    printf("4. int8_t\t5. int16_t\t6. int32_t\t7. int64_t\n");
+    printf("8. float32\t9. float64\n");
+    uint8_t tem ;
+    scanf("%u",&tem);
+    TensorDataType dt ;
+    switch(tem){
+    	case 0:
+			dt = u8 ;
+			break;
+    	case 1:
+			dt = u16 ;
+			break;
+    	case 2:
+			dt = u32 ;
+			break;
+    	case 3:
+			dt = u64 ;
+			break;
+    	case 4:
+			dt = i8 ;
+			break;
+    	case 5:
+			dt = i16 ;	
+			break;
+    	case 6:
+			dt = i32 ;
+			break;
+    	case 7:
+			dt = i64 ;
+			break;
+    	case 8:
+			dt = float32 ;
+			break;
+    	default:
+			dt = float64 ;									
+			break;
+    }
+
+    uint32_t ndim;
+    printf("Enter number of dimensions: ");
+    scanf("%u",&ndim);
+
+    uint32_t dims[ndim], i;
+    printf("Fill the dimensional array: ");
+    for (i=0;i<ndim;i++){
+         scanf("%u",&dims[i]);
+    }
+
 	Tensor *result ;
 
     my_createTensor( ndim, dims, dt, &pool, result);
-	printf("--------Initial Tensor-------\n\n");
-	preetyprint(result)	;
-	printf("-----------------------\n\n");
+	//printf("--------Initial Tensor-------\n\n");
+	//preetyprint(result)	;
+	printf("-------------------------\n");
 	printf("--------Random Tensor-------\n\n");
 	RngType r = mersenne_Twister ;
     genRandomTensor(177, r, result) ;

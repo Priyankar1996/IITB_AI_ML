@@ -83,9 +83,39 @@
 		returns status = 0
 		writes write_data[I] to address (I-1)*stride.
 
+4. Request Packet
+-------------------
 
-4. Responses
+	The request packet consists of 64-bit words.   The first word
+	is the header.
+		header[63:56]    request type
+					1	Allocate-at-head
+					2	Allocate-at-tail
+					3 	Deallocate
+					4	Read
+					5	Write
+		header[55:40]	request tag
+		header[39:32]   number of arguments
+					(maximum of 3 arguments)
+		header[31:0]	argument 0	
+	
+	The second word is a continuation of the header.
+		second_word[63:32]  argument 1
+		second_word[31:0]   argument 2
+	
+	The third word is a continuation of the header
+	if more arguments are needed.
+
+
+	After the headers have been exhausted, then 
+	we have possible several words corresponding to
+	the write data.
+			
+			
+
+5. Responses
 --------------
+
 
 	For ALLOCATE*
 	returns 
@@ -112,3 +142,18 @@
 		status
 		request_tag
 		
+
+6. Response packets
+--------------------
+
+	Response packets are also constructed using 64-bit
+	words.
+
+	The header is 
+		[63:55]		status (0 if OK, non-zero else)
+		[55:40]		request tag
+		[39:32]		unused
+		[31:0]		number of read data words
+				   or allocated base address.
+
+	The remaining words corresponse to read data.

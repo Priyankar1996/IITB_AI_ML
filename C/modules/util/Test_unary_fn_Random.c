@@ -206,7 +206,7 @@ int main(){
 					inputi64 = (int64_t) *(((int64_t*)array2) + i);
 					ex_resulti64 = operate_int64(inputi64, operation);
 					if (resulti64 != ex_resulti64){
-						printf("fail at %d, iter = %d Diff = %d\n",i,iter, resulti64-ex_resulti64);
+						printf("fail at %d, iter = %d Diff = %ld\n",i,iter, resulti64-ex_resulti64);
 					}
 					else{
 						printf("pass at %d, iter = %d Expected Result = %ld Output = %ld  \n",i,iter, ex_resulti64,resulti64);

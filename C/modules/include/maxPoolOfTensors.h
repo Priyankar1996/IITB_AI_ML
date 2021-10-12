@@ -57,7 +57,7 @@ uint32_t getSizeOfTensor(Tensor *T);
 //		int mode			: Mode (0 = floor, 1 = ceiling)
 // RETURN VALUES:
 //      NULL
-void updateOutputSizeMaxPoolOfTensors(Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode);
+void updateOutputDescriptorMaxPoolOfTensors(Tensor *src, Tensor *dst, int l, int stride, int num_dims_to_pool,int * dims_to_pool, int mode);
 
 // ASSUMPTIONS:
 //      1. The system where compilation is done has a Little Endian architecture

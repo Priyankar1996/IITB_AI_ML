@@ -22,7 +22,7 @@ OBJ = _maxPoolOfTensors
 TESTFILE=util/Test_maxpool.c
 
 compile: createDir $(PRIMITIVES) $(OBJ)
-	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -L$(LIB)
+	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -I $(CREATETENSOR)/include -L$(LIB)
 	cd $(BIN); $(CC) -o Test Testfile.o $(OBJ) $(PRIMFILES) $(CFLAGS)
 
 createDir:

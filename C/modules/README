@@ -32,3 +32,26 @@ unaryOperateOnTensor:
 		Test_unary_inplace_fn
 		Test_unary_fn_Random
 		Test_unary_fn_inplace_Random
+
+genRandomTensor:
+       Run command "./setup_genRandomTensor.sh" followed by ./bin/genRandom
+       This will generate an executable file(app) which is executed using 
+       the second command.
+       Output will be printed on command line itself as 2D slices of tensors
+       
+zeropad:
+	Run command "./setup_zero_pad_tensor.sh" 
+	This will generate the executabe file (zero_pad_tensor_test.exe) which is executed
+	using the command "./bin/zero_pad_tensor_test"
+	Outputs will be printed on the screen of the shell. 
+	Which will show from which location the data was read from and to which location 
+	the data is written to, is printed for all the elements of the tensor.
+	The details about the tensor can be changes from thentest file in "./util/zero_pad_tensor_test.c"
+	
+convolution(conv.c):
+	Run python script in helpers folder by typing "python3 genInputFileFromImg" to generate a file recognized by parser from image.
+	Run command ./setup_conv.sh from modules folder to generate an executable.
+	Then run "cd bin" first and then run "./conv" to run the function.
+	Note that "cd bin" is necessaryu because the relative path path is specified from bin(./bin/conv will not work).
+	After convolution is completed successfully, go to helpers again and run "python3 genImgFromOutputFile" to generate the resultant image.
+	Check the images inside /students/deval/convolution/bin for results.

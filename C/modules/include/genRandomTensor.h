@@ -7,6 +7,8 @@
 #include "tensor.h"
 #include "mtwist.h"
 
+#define CEILING(x,y) (((x) + (y) - 1) / (y))
+
 typedef enum {
 	mersenne_Twister, // Used in python
 	wichmann_Hill,

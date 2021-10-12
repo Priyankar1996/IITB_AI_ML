@@ -60,8 +60,8 @@ void genRandomTensor(uint32_t seed, RngType t, Tensor* result)
 	for (I=0; I < num_dims; I++)	total_num *= result->descriptor.dimensions[I] ; 
 
 	// ceil is replaced as below. ceil(a/b) = a/b + (a%b != 0)
-	uint32_t num_words = (total_num*ten_sz / 8 + ((total_num * ten_sz)%8 != 0) )  ; 
-	uint32_t num_requests = num_words / MAX_SIZE_OF_REQUEST_IN_WORDS + (num_words%MAX_SIZE_OF_REQUEST_IN_WORDS != 0); 
+	uint32_t num_words = CEILING(total_num*ten_sz, 8) ; 
+	uint32_t num_requests = CEILING(num_words, MAX_SIZE_OF_REQUEST_IN_WORDS); 
 	// This switch statement can later be removed competely
 	switch (t)
 	{

@@ -50,7 +50,7 @@ void fillTensorDescriptor(Tensor *t)
     // scanf("%u",&dummy.descriptor.number_of_dimensions);
 
     // Initializing the number of dimensions
-    dummy.descriptor.number_of_dimensions = 3;
+    dummy.descriptor.number_of_dimensions = 2;
     if(dummy.descriptor.number_of_dimensions > 64)
     {
         printf("ERROR! MAX DIMENSION PERMISSIBLE IS 64.");
@@ -65,7 +65,7 @@ void fillTensorDescriptor(Tensor *t)
     // Describing the dimensions to be used 
     dummy.descriptor.dimensions[0] = 5;
     dummy.descriptor.dimensions[1] = 4;
-    dummy.descriptor.dimensions[2] = 3;
+    // dummy.descriptor.dimensions[2] = 3;
 
     // Copying the temsor data to the source tensor
     for(i=0;i<5;i++)

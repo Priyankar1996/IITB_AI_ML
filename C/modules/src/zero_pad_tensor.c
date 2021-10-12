@@ -8,13 +8,10 @@
 #include "tensor.h"
 #include "zero_padding.h"
 
-
 void read_write_data(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest,uint32_t *ind,uint32_t *desti);
-uint32_t i[MAX_DIMENSION] = { };
-uint32_t ind[MAX_DIMENSION] = { };
-uint32_t desti[MAX_DIMENSION] = { };
-
-// Function for creating the indices
+uint32_t i[MAX_DIMENSIONS] = { };
+uint32_t ind[MAX_DIMENSIONS] = { };
+uint32_t desti[MAX_DIMENSIONS] = { };
 void funcn(Tensor *src, Tensor *dest,int n,int scale_factor, int constant){
     // printf("\n func entered !!!");
     if (n == 0){
@@ -45,7 +42,6 @@ void zeropad(Tensor *src, uint32_t scale_factor, uint32_t constant, Tensor *dest
     // printf("%d\n", sizeof(i)/sizeof(i[0]));
     
     printf("\n func started !!!");
-    // Creating indices and reading as well as writing the tensor
     funcn(src,dest,src->descriptor.number_of_dimensions,scale_factor,constant);
     printf("\n func ended !!!");
 
@@ -86,11 +82,16 @@ void read_write_data(Tensor *src, uint32_t scale_factor, uint32_t constant, Tens
             // uint32_t *address1 = getTensorEntryIndexOffset(&src,ind);
             uint32_t address1 = getTensorEntryIndexOffset(&(src->descriptor),ind) * sizeof(src->descriptor.data_type);
             // printf("\n index offset of ind is %u",getTensorEntryIndexOffset(&(src->descriptor),ind));
-            printf("\n address1 is %u",address1);
+            
+            
+            // printf("\n address1 is %u",address1);
+            
             // uint32_t *address2 = getTensorEntryIndexOffset(&dest,desti);
             uint32_t address2 = getTensorEntryIndexOffset(&(dest->descriptor),desti) * sizeof(dest->descriptor.data_type);
             // printf("\n index offset of dest is %u",getTensorEntryIndexOffset(&(dest->descriptor),desti));
-            printf("\n address2 is %u",address2);
+            
+            
+            // printf("\n address2 is %u",address2);
 
             
 

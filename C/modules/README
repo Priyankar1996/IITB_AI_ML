@@ -47,3 +47,11 @@ zeropad:
 	Which will show from which location the data was read from and to which location 
 	the data is written to, is printed for all the elements of the tensor.
 	The details about the tensor can be changes from thentest file in "./util/zero_pad_tensor_test.c"
+	
+convolution(conv.c):
+	Run python script in helpers folder by typing "python3 genInputFileFromImg" to generate a file recognized by parser from image.
+	Run command ./setup_conv.sh from modules folder to generate an executable.
+	Then run "cd bin" first and then run "./conv" to run the function.
+	Note that "cd bin" is necessaryu because the relative path path is specified from bin(./bin/conv will not work).
+	After convolution is completed successfully, go to helpers again and run "python3 genImgFromOutputFile" to generate the resultant image.
+	Check the images inside /students/deval/convolution/bin for results.

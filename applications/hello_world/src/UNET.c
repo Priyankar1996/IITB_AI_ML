@@ -145,7 +145,8 @@ int main()
         createTensor(&S[num_iters+i],&pool,1,1);
         dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
 
-        createTensor(&R[num_iters+1],&pool,1,1);
+        void updateOutputDescriptorConcatTensors( &S[num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i], 2);
+        createTensor(&R[num_iters+i],&pool,1,1);
         concatTensors(&S[num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i]);
 
         sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*i,2*i);

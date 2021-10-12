@@ -30,16 +30,18 @@ OBJ = 	_maxPoolOfTensors \
 		_conv \
 		_convolutionTranspose \
 		_unary_fn \
-		_readWriteTensorsFromStandardIO
+		_readWriteTensorsFromStandardIO \
+		_batchNormalization \
+		_concat
 
 # User defined function - Change according to the file to run.
-TESTFILE=src/hello_world.c
+TESTFILE=src/UNET.c
 
 
 all: compile
 
 compile: createDir $(PRIMITIVES) $(OBJ)
-	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -L$(LIB)
+	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(MEMPOOL)/include -I $(TENSOR)/include -I $(INCLUDE) -L$(LIB)
 	cd $(BIN); $(CC) -o Test Testfile.o $(OBJ) $(PRIMFILES) $(CFLAGS)
 
 createDir:

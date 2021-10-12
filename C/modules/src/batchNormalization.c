@@ -1,13 +1,17 @@
+#include <stdint.h>
+#include <assert.h>
 #include "mempool.h"
 #include "tensor.h"
 
 void batchNormalization(Tensor *input, Tensor *beta, Tensor *gamma, 
-						Tensor *moving_mean, Tensor *moving_variance)
+						Tensor *moving_mean, Tensor *moving_variance, double epsilon)
 {
 	// Write beta, gamma, moving_mean and moving_variance values in array.
     TensorDescriptor td = beta->descriptor;
-    int num_elems = numberOfElementsInTensor(beta);
-    int num_elems_input = numberOfElementsInTensor(input);
+    uint32_t num_elems = numberOfElementsInTensor(beta);
+    uint32_t num_elems_input = numberOfElementsInTensor(input);
+	uint32_t x = input->descriptor.dimensions[input->descriptor.number_of_dimensions-1];
+	assert(num_elems==x)
     switch(td.datatype)
     {
         case u8:
@@ -20,20 +24,20 @@ void batchNormalization(Tensor *input, Tensor *beta, Tensor *gamma,
         case i64:
         case float8:{break;}
         case float16:{break;}
-        case float32:{
-                        float *beta_arr, *gamma_arr, *mm_arr, *mv_arr, *input_arr, *resultant;
-                        fillArrayFromTensor(beta, num_elems, beta_arr);
-                        fillArrayFromTensor(gamma, num_elems, gamma_arr);
-                        fillArrayFromTensor(moving_mean, num_elems, mm_arr);
-                        fillArrayFromTensor(moving_variance,num_elems,mv_arr);
-                        fillArrayFromTensor(input,num_elems_input,input_arr);
-                        for(i=0;i<num_elems_input;i++)
-                        {
-                            int count = i%(input->descriptor.dimensions[input->descriptor.number_of_dimensions-1]);
-                            resultant[i] = gamma_arr[count]*(input[i]-mm[count])/(mv[count] + 0.001) + beta_arr[count];
-                        }
-                        fillTensorFromArray(input,num_elems_input,resultant);
-                    }
+        case float32:
+			float beta_arr[x], gamma_arr[x], mm_arr[x], mv_arr[x], input_arr[num_elems_input], resultant[num_elems_input];
+			fillArrayFromTensor(beta, num_elems, beta_arr);
+			fillArrayFromTensor(gamma, num_elems, gamma_arr);
+			fillArrayFromTensor(moving_mean, num_elems, mm_arr);
+			fillArrayFromTensor(moving_variance,num_elems,mv_arr);
+			fillArrayFromTensor(input,num_elems_input,input_arr);
+			for(i=0;i<num_elems_input;i++)
+			{
+				int count = i%x;
+				resultant[i] = gamma_arr[count]*(input[i]-mm[count])/(mv[count] + epsilon) + beta_arr[count];
+			}
+			fillTensorFromArray(input,num_elems_input,resultant);
+			break;
         case float64:
     }
 

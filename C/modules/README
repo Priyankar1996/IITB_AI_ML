@@ -38,3 +38,12 @@ genRandomTensor:
        This will generate an executable file(app) which is executed using 
        the second command.
        Output will be printed on command line itself as 2D slices of tensors
+       
+zeropad:
+	Run command "./setup_zero_pad_tensor.sh" 
+	This will generate the executabe file (zero_pad_tensor_test.exe) which is executed
+	using the command "./bin/zero_pad_tensor_test"
+	Outputs will be printed on the screen of the shell. 
+	Which will show from which location the data was read from and to which location 
+	the data is written to, is printed for all the elements of the tensor.
+	The details about the tensor can be changes from thentest file in "./util/zero_pad_tensor_test.c"

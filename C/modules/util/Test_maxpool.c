@@ -5,6 +5,7 @@
 #include "mempool.h"
 #include "tensor.h"
 #include "createTensor.h"
+#include "maxPoolOfTensors.h"
 
 MemPool pool;
 
@@ -13,23 +14,31 @@ int main(int argc, char**argv){
 	srand(time(0));
 
 	FILE *file, *outFile, *octaveInFile;
+
+	// Open input file
 	if ((file = fopen(argv[1],"r")) == NULL){
 		fprintf(stderr,"Input File error\n");
 		exit(-1);
 	}
+
+	// Open output file
 	if ((outFile = fopen("COutFile.txt","w")) == NULL){
 		fprintf(stderr,"Output File error\n");
 		exit(-1);
 	}
+
+	// Open file to be used as input to octave
 	char *oct = "octaveInput.txt";
 	if ((octaveInFile = fopen(oct,"w")) == NULL){
 		fprintf(stderr,"Octave Input File error\n");
 		exit(-1);
 	}
+
 	Tensor T,B;
 	MemPoolRequest req;
 	MemPoolResponse resp;
 
+	// Read whether data is to be ranom or sequential
 	uint8_t rand_data;
 	fscanf(file,"%hhd",&rand_data);
 
@@ -37,6 +46,7 @@ int main(int argc, char**argv){
 	uint8_t dt_temp;
 	fscanf(file,"%hhd",&dt_temp);
 	fprintf(octaveInFile,"%hhd\n",dt_temp);
+	// Update descriptor of input tensor
 	switch (dt_temp)
 	{
 	case 0:
@@ -95,11 +105,14 @@ int main(int argc, char**argv){
 		fscanf(file,"%d",&T.descriptor.dimensions[i]);
 		fprintf(octaveInFile,"%d\n",T.descriptor.dimensions[i]);
 	}
+
+	// Take the following factors as input
 	int length,stride,mode,num_dims;
 	fscanf(file,"%d%d%d%d",&length,&stride,&mode,&num_dims);
 	fprintf(octaveInFile,"%d\n%d\n%d\n%d\n",length,stride,mode,num_dims);
 	// mode = 0 for floor, 1 for ceil
 	
+	// Read the dimensions to pool
 	int dims_to_pool[num_dims];
 	for (int i = 0;i < num_dims;i++){
 		fscanf(file,"%d",&dims_to_pool[i]);
@@ -109,11 +122,13 @@ int main(int argc, char**argv){
 	uint64_t size = getSizeOfTensor(&T);
 	int dsize = sizeofTensorDataInBytes(T.descriptor.data_type);
 
+	// Initialize mempool
 	initMemPool(&pool,1,3 + 3*size*dsize/(MEMPOOL_PAGE_SIZE*8));
-	// printf("Memory Size In Pages = %d\n",3 + 3*size*dsize/(MEMPOOL_PAGE_SIZE*8));
 	
+	//  Create input tensor
 	createTensorAtHead(&T,&pool);
 
+	// Write the values of tensor into its mempool
 	req.request_type = WRITE;
 	req.arguments[2] = 1;
 	req.arguments[0] = 1;
@@ -267,6 +282,7 @@ int main(int argc, char**argv){
 	}
 	fclose(octaveInFile);
 	
+	// Perform pooling
 	updateOutputDescriptorMaxPoolOfTensors(&T,&B,length,stride,num_dims,dims_to_pool,mode);
 	createTensorAtHead(&B,&pool);
 
@@ -274,6 +290,7 @@ int main(int argc, char**argv){
 
 	// Arguments ){ input , output , pool_size , stride , num_dims , dims_to_pool , mode  
 
+	// Write output to file
 	fprintf(outFile,"Size of output is ");
 	for (int i =0; i<B.descriptor.number_of_dimensions;i++) fprintf(outFile,"%d ",B.descriptor.dimensions[i]);
 	fprintf(outFile,"\n");
@@ -411,13 +428,16 @@ int main(int argc, char**argv){
 
 	fclose(file);
 	fclose(outFile);
+
+	// Run the octave file
 	int system(const char *command);
-	char arr[100] = "octave ../util/octaveFile <";
+	char arr[100] = "octave ../util/maxPool <";
 	strcat(arr,oct);
 	strcat(arr," >OctaveOutFile.txt\n");
 	system(arr);
 
 	printf("If no message is printed after this one, there is no error!!\n");
+	// Compare the outputs of the two files
 	system("cmp COutFile.txt OctaveOutFile.txt");
 	return 0;
 }

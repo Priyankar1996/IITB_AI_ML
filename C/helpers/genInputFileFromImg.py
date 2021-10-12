@@ -3,6 +3,7 @@ from PIL import Image as im
 import csv
 import sys
 
+#0:u8 1:u16 2:u32 3:u64 4:i8 5:i16 6:i32 7:i64 8:f8 9:f16 10:f32 11:f64
 def genInputFileFromImg(data_type,row_major,image_file_name,csv_file_name):
   #Load image variable
   img = im.open(image_file_name)

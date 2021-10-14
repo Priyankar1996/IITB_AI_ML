@@ -1,0 +1,149 @@
+$module [mempoolAllocator]
+	$in (
+		init: $uint<1>
+		is_alloc_from_head is_alloc_from_tail is_dealloc: $uint<1>
+		request_tag : $uint<16>
+		number_of_pages_requested: $uint<32>
+	    )
+	$out ()
+$is
+{
+
+	// pointers..
+
+	// If head pointer points to 0, then it is a free slot.
+	// To insert at head, write into *head_pointer if it is 0,
+	// else, increment it and write into it.
+	//	
+	//
+	// If tail pointer points to 0, then it is a free slot.
+	// To insert at tail, write into *tail_pointer if it is
+	// 0, else, decrement it and write into it.
+	//
+	// On a deallocate from head, confirm that head points to
+	// non-zero.  Write 0 into *head, and decrement head.
+	//
+	$pipe head_pointer tail_pointer number_of_free_pages: $uint<16>  $signal
+	COUNTER := ($mux init $one<8> (COUNTER + $one<8>))
+
+	$rreport (mempoolAllocator inargs COUNTER is_alloc_from_head is_alloc_from_tail is_dealloc request_tag number_of_pages_requested)
+	nfp := number_of_free_pages
+
+	//
+	// not enough pages...
+	//
+	$volatile np_16 := ($bitcast ($uint<16>) number_of_pages_requested)
+	$volatile page_request_count_error := ($excmux (is_alloc_from_head | is_alloc_from_tail) 
+							(nfp < np_16) 
+						is_dealloc
+							((np_16 + nfp) > MAX_MEMPOOL_SIZE_IN_PAGES))
+
+	// old head points to the next free slot in the head direction.
+	old_head := head_pointer
+
+	// old tail points to the next free slot in the head direction.
+	old_tail := tail_pointer
+
+	$rreport (mempoolAllocator pointers old_head old_tail)
+
+	// last written head would be at old_head - 1.
+	tag_at_head := requester_array[ (old_head & MEMPOOL_SIZE_MASK_16) ] 
+	$volatile old_head_was_free := (tag_at_head == 0)
+	$volatile dealloc_from_head :=
+		(is_dealloc & ( tag_at_head == request_tag))
+
+	tag_at_tail := requester_array[ (old_tail & MEMPOOL_SIZE_MASK_16) ] 
+	$volatile old_tail_was_free := (tag_at_tail == 0)
+	dealloc_from_tail :=
+		($reduce & is_dealloc (~dealloc_from_head) ( tag_at_tail == request_tag))
+
+	$rreport (mempoolAllocator tags tag_at_head tag_at_tail dealloc_from_head dealloc_from_tail)
+
+	$volatile illegal_dealloc := (is_dealloc & (~ (dealloc_from_head | dealloc_from_tail)))
+
+	// on de-allocate
+	$volatile new_head_from_dealloc := 
+			($mux dealloc_from_head ((old_head - 1) & MEMPOOL_SIZE_MASK_16) old_head)
+	$volatile new_tail_from_dealloc := 
+			($mux dealloc_from_tail ((old_tail + 1) & MEMPOOL_SIZE_MASK_16) old_tail)
+
+	$volatile status := ((~init) & (page_request_count_error | illegal_dealloc))
+	$guard (~status)
+		number_of_free_pages := 
+			($mux init MAX_MEMPOOL_SIZE_IN_PAGES 
+				($mux is_dealloc (nfp + np_16) (nfp - np_16)))
+
+	$rreport (mempoolAllocator free_pages number_of_free_pages np_16)
+
+	// allocate from head.
+	$volatile alloc_head := (is_alloc_from_head & (~status))
+	$volatile new_head_from_alloc := ($mux old_head_was_free old_head ((old_head + 1) & MEMPOOL_SIZE_MASK_16))
+
+	// on dealloc, write a 0 into old_head..
+	$volatile change_head := (alloc_head | dealloc_from_head)
+	$volatile change_head_index := ($excmux 
+						alloc_head 
+							new_head_from_alloc 
+						dealloc_from_head 
+							old_head)
+		
+	// allocate from tail
+	$volatile alloc_tail := (is_alloc_from_tail & (~status))
+	$volatile new_tail_from_alloc := ($mux old_tail_was_free old_tail ((old_tail - 1) & MEMPOOL_SIZE_MASK_16))
+	$volatile change_tail := (alloc_tail | dealloc_from_tail)
+	$volatile change_tail_index := ($excmux 
+						alloc_tail 
+							new_tail_from_alloc
+						dealloc_from_tail 
+							old_tail)
+	$volatile change_ra := (change_head | change_tail)
+	$volatile change_ra_index := ($mux change_head change_head_index change_tail_index)
+	$volatile change_ra_value := ($mux change_head ($mux alloc_head request_tag 0)  ($mux alloc_tail request_tag 0))
+	$guard (change_ra)
+		requester_array[change_ra_index] := change_ra_value
+
+	$rreport (mempoolAllocator new_head_calculation alloc_head dealloc_from_head old_head old_head_was_free 
+					new_head_from_alloc new_head_from_dealloc
+					change_ra change_ra_index change_ra_value)
+
+	// modify head/tail pointers..
+	$volatile modify_head := ($reduce | alloc_head dealloc_from_head init)
+	$guard (modify_head)
+		head_pointer := ($mux init $zero<16> 
+						($mux alloc_head new_head_from_alloc new_head_from_dealloc))
+
+	$volatile modify_tail := ($reduce | dealloc_from_tail alloc_tail init)
+	$guard (modify_tail)
+		tail_pointer := ($mux init $zero<16> ($mux alloc_tail new_tail_from_alloc new_tail_from_dealloc))
+
+	$volatile page_address_offset :=
+		($slice ($concat number_of_pages_requested $zero<LOG_MEMPOOL_PAGE_SIZE>) 31 0)
+	head_base_address := ($prioritymux
+						init 		$zero<32>
+						// on allocate, increment the head base address by the required number of pages.
+						alloc_head
+								((head_base_address + page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+						// on deallocate, decrement...
+						dealloc_from_head  
+							    	((head_base_address - page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+						$default	 head_base_address)
+	tail_base_address := ($prioritymux
+						init 		$zero<32>
+						alloc_tail 
+								((tail_base_address - page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+						dealloc_from_tail 
+							    	((tail_base_address + page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+						$default	 tail_base_address)
+
+
+	$volatile resp_header := ($concat 
+						($bitcast ($uint<8>) status) 
+						request_tag  
+						$zero<8> 
+						($mux alloc_head head_base_address tail_base_address))
+	$rreport (mempoolAllocator base_addresses head_base_address tail_base_address alloc_head alloc_tail dealloc_from_head dealloc_from_tail 
+					page_address_offset resp_header old_head_was_free old_tail_was_free)
+	$guard (~init)
+		RESPONSE_PIPE := resp_header
+}
+

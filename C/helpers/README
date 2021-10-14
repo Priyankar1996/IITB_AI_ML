@@ -1,0 +1,33 @@
+1)def genInputFileFromImg(data_type,row_major,image_file_name,csv_file_name):
+  ->Description: Generates input file acceptable by parser from the image that is to be loaded
+    in tensor. The file format is as follows.
+      10           --data type
+      1            --row major
+      2            --number of dimensions
+      3,3,1        --shape along dimension
+      12,34,67     --pixel data starts from here
+      14,89,234
+      75,34,23
+    ->data_type is integer specified as follows
+        0:u8
+        1:u16
+        2:u32
+        3:u64
+        4:i8
+        5:i16
+        6:i32
+        7:i64
+        8:f8
+        9:f16
+        10:f32
+        11:f64
+    ->row_major is also an integer specified as follows
+        1:row major arrangement in tensor.
+        0:column major arrangement in tensor.
+    ->image_file_name specifies the file path for the source image.
+    ->csv_file_name specifies the path for the file to be written.Note that an empty file must be created before specifying the path.
+    
+ 2)def genImgFromOutputFile(csv_file_name):
+    ->Description: Takes the above mentioned format file removes the first 4 rows and converts rest of the pixel values back
+      to png image.
+    ->csv_file_name specifies the path of the file from which image is to be generated.

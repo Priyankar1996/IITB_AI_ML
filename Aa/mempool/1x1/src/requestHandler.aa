@@ -2,13 +2,15 @@ $parameter MEMPOOL_WORD_SIZE		8
 $parameter MEMPOOL_PAGE_SIZE		512
 $parameter LOG_MEMPOOL_PAGE_SIZE 	9
 $parameter MAX_SIZE_OF_REQUEST_IN_WORDS 1024
-$parameter MAX_MEMPOOL_SIZE_IN_PAGES    256
+$parameter MAX_MEMPOOL_SIZE_IN_PAGES    32
 
 $pipe REQUEST_PIPE: $uint<64> $depth 2
 $pipe RESPONSE_PIPE: $uint<64> $depth 2
 
-$constant MEMPOOL_SIZE_MASK : $uint<16> := {MAX_MEMPOOL_SIZE_IN_PAGES - 1}
-$constant MEMPOOL_BUFFER_SIZE_MASK : $uint<32> := {{MAX_MEMPOOL_SIZE_IN_PAGES * MAX_MEMPOOL_SIZE_IN_PAGES} - 1}
+$constant MEMPOOL_SIZE_MASK : $uint<32> := {MAX_MEMPOOL_SIZE_IN_PAGES - 1}
+$constant MEMPOOL_SIZE_MASK_16 : $uint<16> := {MAX_MEMPOOL_SIZE_IN_PAGES - 1}
+$constant MEMPOOL_BUFFER_SIZE_MASK : $uint<32> := {{MAX_MEMPOOL_SIZE_IN_PAGES * MEMPOOL_PAGE_SIZE} - 1}
+
 
 $parameter ALLOC_HEAD 1
 $parameter ALLOC_TAIL 2
@@ -16,7 +18,8 @@ $parameter DEALLOC    3
 $parameter READ       4
 $parameter WRITE      5
 
-$storage mempool_array   : $array [ {{{MEMPOOL_PAGE_SIZE * MAX_MEMPOOL_SIZE_IN_PAGES}*MEMPOOL_WORD_SIZE}*8} ] $of $uint< {8*MEMPOOL_WORD_SIZE} >
+$storage mempool_array   : $array [ {MEMPOOL_PAGE_SIZE * MAX_MEMPOOL_SIZE_IN_PAGES} ] $of $uint< {8*MEMPOOL_WORD_SIZE} >
+$storage requester_array : $array [ MAX_MEMPOOL_SIZE_IN_PAGES ] $of $uint< 16 >
 
 $module [requestHandlerDaemon]
 	$in () $out () $is
@@ -28,17 +31,34 @@ $module [requestHandlerDaemon]
 
 	$branchblock[loop] {
 
+		// initialize requester array to 0..
+		$merge $entry init_loopback 
+			$phi II := $zero<16> $on $entry nII $on init_loopback
+		$endmerge
+			$volatile nII := (II + 1)
+			requester_array[II] := 0
+			
+			$if (II < {MAX_MEMPOOL_SIZE_IN_PAGES-1}) $then
+				$place [init_loopback]
+			$endif
+		
+
 		// optimize but pipeline depth = 1.
-		$dopipeline $depth 1 $fullrate
-			$merge $entry $loopback $endmerge
+			$merge $entry loopback $endmerge
 
 			header := REQUEST_PIPE
+
 			$volatile $split (header 8 16 8 32) (req_type request_tag number_of_args arg_0)
 			$volatile fetch_one_more := (number_of_args > 1)
+
+			$rreport (requestHandlerDaemon received_header_0 header req_type request_tag number_of_args arg_0)
 
 			$guard (fetch_one_more)
 				header_2 := REQUEST_PIPE
 			$volatile $split (header_2 32 32) (arg_1 arg_2)
+
+			$guard (fetch_one_more)
+				$rreport (requestHandlerDaemon received_header_1 arg_1 arg_2)
 
 			$volatile is_alloc_from_head := (req_type == ALLOC_HEAD)
 			$volatile is_alloc_from_tail := (req_type == ALLOC_TAIL)
@@ -57,96 +77,18 @@ $module [requestHandlerDaemon]
 			$guard (is_write)
 				$call memWriteAndSendResponse (request_tag arg_0 arg_1 arg_2) ()
 
-		$while 1
+			$place [loopback]
 	}
 }
 
 
-$module [mempoolAllocator]
-	$in (
-		init: $uint<1>
-		is_alloc_from_head is_alloc_from_tail is_dealloc: $uint<1>
-		request_tag : $uint<16>
-		number_of_pages_requested: $uint<32>
-	    )
-	$out ()
-$is
-{
-	$storage requester_array : $array [ MAX_MEMPOOL_SIZE_IN_PAGES ] $of $uint< 16 >
-	$storage head_pointer tail_pointer number_of_free_pages: $uint<16>
-	
-	nfp := number_of_free_pages
-
-	$volatile np_16 := ($bitcast ($uint<16>) number_of_pages_requested)
-	$volatile not_enough_pages := (nfp < np_16)
-
-
-	old_head := head_pointer
-	old_tail := tail_pointer
-	
-
-	dealloc_from_head :=
-		(is_dealloc & (requester_array[ ((old_head-1) & MEMPOOL_SIZE_MASK) ] == request_tag))
-	dealloc_from_tail :=
-		(is_dealloc & (requester_array[ ((old_tail+1) & MEMPOOL_SIZE_MASK) ] == request_tag))
-	$volatile illegal_dealloc := (is_dealloc & (~ (dealloc_from_head | dealloc_from_tail)))
-
-	$volatile new_head_from_dealloc := ((old_head - np_16) & MEMPOOL_SIZE_MASK)
-	$volatile new_tail_from_dealloc := ((old_tail + np_16) & MEMPOOL_SIZE_MASK)
-
-	$volatile status := (not_enough_pages | illegal_dealloc)
-	$guard (~status)
-		number_of_free_pages := 
-			($mux init MAX_MEMPOOL_SIZE_IN_PAGES 
-				($mux is_dealloc (nfp + np_16) (nfp - np_16)))
-
-
-
-	// allocate logic.
-
-	// allocate from head.
-	$volatile alloc_head := (is_alloc_from_head & (~status))
-	$volatile new_head_from_alloc := ((old_head + np_16) & MEMPOOL_SIZE_MASK)
-	$guard (alloc_head)
-		requester_array[old_head] := request_tag
-		
-	// allocate from tail
-	$volatile alloc_tail := (is_alloc_from_tail & (~status))
-	$volatile new_tail_from_alloc := ((old_tail - np_16) & MEMPOOL_SIZE_MASK)
-	$guard (alloc_tail)
-		requester_array[old_tail] := request_tag
-
-	// modify head/tail pointers..
-	$volatile modify_head := ($reduce | alloc_head dealloc_from_head init)
-	$guard (modify_head)
-		head_pointer := ($mux init $zero<16> ($mux alloc_head new_head_from_alloc new_head_from_dealloc))
-
-	$volatile modify_tail := ($reduce | dealloc_from_tail alloc_tail init)
-	$guard (modify_tail)
-		tail_pointer := ($mux init $zero<16> ($mux alloc_tail new_tail_from_alloc new_tail_from_dealloc))
-
-
-	// base address.
-	$volatile base_address := 
-				($bitcast ($uint<32>)
-					($excmux 
-						is_alloc_from_head old_head 
-						is_alloc_from_tail ((new_tail_from_alloc + 1) & MEMPOOL_SIZE_MASK)))
-		
-	$volatile resp_header := ($concat ($bitcast ($uint<8>) status) request_tag  $zero<8> base_address)
-	$volatile send_response := ($reduce | is_alloc_from_tail is_alloc_from_head is_dealloc)
-	$guard (send_response)
-		RESPONSE_PIPE := resp_header
-}
-
-		
-		
 				
-$opaque $module [memReadAndSendResponse]
+$module [memReadAndSendResponse]
 	$in (request_tag: $uint<16> number_of_dwords base_address stride: $uint<32>)
 	$out () $is
 {
-			
+	$rreport  (memReadAndSendResponse inargs request_tag number_of_dwords base_address stride)
+
 	$volatile resp_header := ($concat $zero<8> request_tag $zero<8> number_of_dwords)
 	RESPONSE_PIPE := resp_header
 
@@ -155,13 +97,13 @@ $opaque $module [memReadAndSendResponse]
 
 			$merge $entry $loopback
 				$phi I := $zero<32> $on $entry nI $on $loopback
-				$phi A := $zero<32> $on $entry nA $on $loopback
+				$phi A := base_address $on $entry nA $on $loopback
 			$endmerge
 
 			$volatile nI := (I + 1)
 			$volatile nA := (A + stride)
 		
-			$volatile continue_flag := (nI == number_of_dwords)
+			$volatile continue_flag := (nI < number_of_dwords)
 			$volatile A_masked := (A & MEMPOOL_BUFFER_SIZE_MASK)
 
 			D := mempool_array[A_masked]
@@ -171,32 +113,36 @@ $opaque $module [memReadAndSendResponse]
 	}
 }
  
-$opaque $module [memWriteAndSendResponse]
+$module [memWriteAndSendResponse]
 	$in (request_tag: $uint<16> number_of_dwords base_address stride: $uint<32>)
 	$out () $is
 {
 			
+	$rreport  (memWriteAndSendResponse inargs request_tag number_of_dwords base_address stride)
+
 	$volatile resp_header := ($concat $zero<8> request_tag $zero<8> $zero<32>)
-	RESPONSE_PIPE := resp_header
 
 	$branchblock[loop] {
 		$dopipeline $depth 15 $fullrate 
 
 			$merge $entry $loopback
 				$phi I := $zero<32> $on $entry nI $on $loopback
-				$phi A := $zero<32> $on $entry nA $on $loopback
+				$phi A := base_address $on $entry nA $on $loopback
 				$phi X := REQUEST_PIPE $on $entry, $loopback
 			$endmerge
+
+			$rreport (memWriteAndSendResponse loop_status I A X)
 
 			$volatile nI := (I + 1)
 			$volatile nA := (A + stride)
 		
-			$volatile continue_flag := (nI == number_of_dwords)
+			$volatile continue_flag := (nI < number_of_dwords)
 			$volatile A_masked := (A & MEMPOOL_BUFFER_SIZE_MASK)
 
 			mempool_array[A_masked] := X
 
 		$while continue_flag
 	}
+	RESPONSE_PIPE := resp_header
 }
  

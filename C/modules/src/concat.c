@@ -2,6 +2,8 @@
 MemPoolRequest req;
 MemPoolResponse resp;
 
+
+
 int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 	TensorDescriptor td_a, td_b,td_r;
 
@@ -199,6 +201,26 @@ int concatTensors (Tensor* a, Tensor*  b, Tensor* result){
 	}
 	return 0;
 }
+
+void updateOutputDescriptorConcatTensors(Tensor* a,Tensor *b,Tensor *result, uint32_t dim)
+{
+	TensorDescriptor* td_a = &(a->descriptor);
+	TensorDescriptor* td_b = &(b -> descriptor);
+	TensorDescriptor* td_result = &(result -> descriptor);
+
+	td_result->data_type = td_a->data_type;
+	td_result->row_major_form = td_a->row_major_form;
+	td_result->number_of_dimensions = td_a->number_of_dimensions;
+
+	for(int i=0;i<td_result->number_of_dimensions;i++)
+	{
+		if(dim == i)
+			td_result->dimensions[i] = td_a->dimensions[i] + td_b->dimensions[i];
+		else
+			td_result->dimensions[i] = td_a->dimensions[i];
+	}
+}
+
 
 
 int concatTensorsAlongDim (Tensor* a, Tensor*  b, Tensor* result, uint32_t dim){

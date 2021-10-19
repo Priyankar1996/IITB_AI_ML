@@ -5,7 +5,7 @@ VHDL_LIB=$(AHIR_RELEASE)/vhdl
 VHDL_VHPI_LIB=$(AHIR_RELEASE)/CtestBench/vhdl
 FUNCTIONLIB=$(AHIR_RELEASE)/functionLibrary/
 SRC=./src
-all: HW 
+all: SW HW 
 TOVC:aalink aa2vc 
 VC2VHDL: vc2vhdl  vhdlsim
 AA2VHDLSIM: aa2vc  vc2vhdl  vhdlsim
@@ -18,16 +18,25 @@ TOPMODULES=-T requestHandlerDaemon
 
 # five steps from C to vhdl simulator.
 HW: aalink aa2vc  vc2vhdl  vhdltb ghdlsim
+SW: aalink aa2c
 
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # Aa to vC
 aalink: $(SRC)/requestHandler.aa 
-	AaLinkExtMem $(SRC)/requestHandler.aa | vcFormat > requestHandler.linked.aa
+	AaLinkExtMem $(SRC)/requestHandler.aa $(SRC)/mempoolAllocator.aa | vcFormat > requestHandler.linked.aa
 	AaOpt -B requestHandler.linked.aa | vcFormat > requestHandler.linked.opt.aa
 
 aa2vc: requestHandler.linked.opt.aa
 	Aa2VC -O -C requestHandler.linked.opt.aa | vcFormat > requestHandler.vc
+
+aa2c: requestHandler.linked.opt.aa
+	Aa2C $(TOPMODULES) requestHandler.linked.opt.aa 
+	gcc -g -c -D AA2C -I ./ -I $(AHIR_INCLUDE) aa_c_model.c
+	gcc -g -c -D AA2C -D SW -I ./  -I $(AHIR_INCLUDE) src/testbench.c
+	gcc -g -o testbench_AA2C aa_c_model.o testbench.o -L $(AHIR_RELEASE)/lib -lBitVectors -lPipeHandlerDebugPthreads -lpthread  -lSockPipes
+	rm *.o
+
 
 # vC to VHDL
 vc2vhdl: requestHandler.vc
@@ -48,7 +57,7 @@ ghdlsim: ahir_system.vhdl ahir_system_test_bench.vhdl $(SRC)/testbench.c vhdlCSt
 	ghdl --remove
 	ghdl -i --work=GhdlLink  $(VHDL_LIB)/GhdlLink.vhdl
 	ghdl -i --work=aHiR_ieee_proposed  $(VHDL_LIB)/aHiR_ieee_proposed.vhdl
-	ghdl -i --work=ahir  $(VHDL_LIB)/ahirForAsicFpga.umc65.vhdl
+	ghdl -i --work=ahir  $(VHDL_LIB)/ahir.vhdl
 	ghdl -i --work=work ahir_system_global_package.vhdl
 	ghdl -i --work=work ahir_system.vhdl
 	ghdl -i --work=work ahir_system_test_bench.vhdl

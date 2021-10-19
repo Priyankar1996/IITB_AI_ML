@@ -145,7 +145,7 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
                         mp_req.arguments[0] = elementsToWrite; 
 		                mp_req.arguments[1] = t->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter++;
 		                mp_req.arguments[2] = 1;
-                        printf("INFO: Words to write:%d\n",elementsToWrite);
+                        //printf("INFO: Words to write:%d\n",elementsToWrite);
                         memPoolAccess(mp,&mp_req,&mp_resp);
 
                         words_left -= elementsToWrite;
@@ -198,7 +198,7 @@ int writeTensorToFile(char *filename, Tensor *t)
         {
             iter ++;
             int elements_to_read = MIN(words_left,MAX_SIZE_OF_REQUEST_IN_WORDS);
-            printf("INFO: Words to read:%d\n",elements_to_read);
+            //printf("INFO: Words to read:%d\n",elements_to_read);
             mp_req.request_type = READ;
             mp_req.arguments[0] = elements_to_read;
             mp_req.arguments[1] = t->mem_pool_buffer_pointer+MAX_SIZE_OF_REQUEST_IN_WORDS*iter;

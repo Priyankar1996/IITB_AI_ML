@@ -40,7 +40,7 @@ int main()
 {
     //Create and initialize mempools.
     int num_pools = 8;
-    int num_pools_k = 2;
+    int num_pools_k = 4;
     int num_pools_r = 4;
     
     MemPool pool[num_pools];

@@ -1,0 +1,5 @@
+To extract the weights, run
+tar -xf updated_weights.tar.gz
+
+Run make to compile the script.
+Run make clean to clean the working directory.

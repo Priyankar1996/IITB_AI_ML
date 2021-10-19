@@ -90,40 +90,46 @@ int main()
     for(int i=0;i<num_iters;i++)
     {
         sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*i,2*i);
+        //Read kernel_tensor from file and create.
         readTensorFromFile(next_file,&K, &kernel_pool);
         fprintf(stderr,"K is %ld\n",getSizeOfTensor(&K));
         fprintf(stderr,"T is %ld\n",getSizeOfTensor(&T[i]));
 
+        //Calculate the size of the output_tensor and create.
         updateOutputDescriptorConvTensors(&T[i], &K, &S[i], stride, pad);
         createTensor(&S[i],&pool,1,1);
+        //Convolution of input_image with kernel(Stage-1).
         new_convTensors(&T[i], &K, &S[i] ,stride,pad );
         fprintf(stderr,"S is %ld\n",getSizeOfTensor(&S[i]));
 
-
+        //Destroy the input and kernel.
         destroyTensor(&K);
         destroyTensor(&T[i]);
-
+        //Batch normalize the data for cleanup.
         batch(2*i,&kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&S[i]);
-
+        //point-wise-non-linearity (rectification) on the intermediate tensor.
         unaryOperateOnTensor_inplace(&S[i], 2);
 
+        //Load the kernel for convolution(Stage-2).
         sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*i+1,2*i+1);
         readTensorFromFile(next_file,&K, &kernel_pool);
         fprintf(stderr,"K is %ld\n",getSizeOfTensor(&K));
 
+
+        //Compute output size, create the tensor and convolve.
         updateOutputDescriptorConvTensors(&S[i], &K, &R[i], stride, pad);
         createTensor(&R[i],&r_pool,1,1);
         new_convTensors(&S[i], &K, &R[i] ,stride,pad );
         fprintf(stderr,"R is %ld\n",getSizeOfTensor(&R[i]));
 
-
+        //Destroy intermediate tensors.
         destroyTensor(&K);
         destroyTensor(&S[i]);
-
+        //Final batch_normalize and linear rectification.
         batch(2*i+1,&kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&S[i]);
 
         unaryOperateOnTensor_inplace(&R[i], 2);
-
+        //Maxpool the output tensor of previous stage for dimensionality reduction.
         updateOutputDescriptorMaxPoolOfTensors(&R[i], &T[i+1], str, str, 2,dim_to_pool, 0);
         createTensor(&T[i+1],&pool,1,1);
         maxPoolOfTensors(&R[i], &T[i+1], 2, 2, 2,dim_to_pool, 0);
@@ -178,34 +184,31 @@ int main()
         sprintf(next_file,"Updated_weights/Parameters/ConvT/%dconv2d_transpose_%dkernel.csv",i-num_iters-1,i-num_iters-1);
         readTensorFromFile(next_file,&K, &kernel_pool);
         fprintf(stderr,"Size of K :%ld\n",getSizeOfTensor(&K));
-
+        //ConvTranpose for enhancement.
         int str_dec[2] = {2,2};
         updateOutputSDescriptorDilateTensors(&T[i], &K, str_dec, &S[i]);
         createTensor(&S[i],&pool,1,1);
         dilateTensor(&T[i],&K, stride, &S[i]);
         fprintf(stderr,"Size of T :%ld\n",getSizeOfTensor(&T[i]));
         fprintf(stderr,"Size of S :%ld\n",getSizeOfTensor(&S[i]));
-
         destroyTensor(&T[i]);
-
         updateOutputSDescriptorDepadTensors(&S[i], pad_deconv, &S[num_iters+i]);
         createTensor(&S[num_iters+i],&pool,1,1);
         dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
         fprintf(stderr,"Size of S :%ld\n",getSizeOfTensor(&S[num_iters+i]));
-
         updateOutputDescriptorConvTensors(&S[num_iters+i], &K, &S[i+3*num_iters], stride, pad);
         createTensor(&S[i+3*num_iters],&pool,1,1);
         new_convTensors(&S[num_iters+i], &K, &S[i+3*num_iters] ,stride,pad );
         fprintf(stderr,"Size of S :%ld\n",getSizeOfTensor(&S[3*num_iters+i]));
-
         destroyTensor(&K);
         
+        //Concat output tensor of convTranspose with that of the convolved tensor from input state.
         updateOutputDescriptorConcatTensors( &S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i], 3);
         createTensor(&R[num_iters+i],&pool,1,1);
         concatTensorsAlongDim(&S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i],3);
         fprintf(stderr,"Size of R :%ld\n",getSizeOfTensor(&R[num_iters+i]));
 
-
+        //Convolve,batch-normalize and linear rectification in two stages.
         sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*i,2*i);
         readTensorFromFile(next_file,&K, &kernel_pool);
         fprintf(stderr,"Size of K :%ld\n",getSizeOfTensor(&K));

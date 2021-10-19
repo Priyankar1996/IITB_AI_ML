@@ -8,7 +8,7 @@
 #define MEMPOOL_WORD_SIZE         	8	 // bytes.
 #define MEMPOOL_PAGE_SIZE      	  	512	 // words.
 #define MAX_SIZE_OF_REQUEST_IN_WORDS    1024	 // words.
-#define MAX_MEMPOOL_SIZE_IN_PAGES	1024	 // pages
+#define MAX_MEMPOOL_SIZE_IN_PAGES	1024*128	 // pages
 
 typedef enum {
 	ALLOCATE_AT_HEAD,

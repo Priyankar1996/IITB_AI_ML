@@ -39,9 +39,9 @@ void batch(int x,MemPool*kernel_pool,Tensor*gamma,Tensor*beta,Tensor*moving_mean
 int main()
 {
     //Create and initialize mempools.
-    int num_pools = 8;
-    int num_pools_k = 4;
-    int num_pools_r = 4;
+    int num_pools = 1;
+    int num_pools_k = 1;
+    int num_pools_r = 1;
     
     MemPool pool[num_pools];
     for (int i = 0; i < num_pools; i++)

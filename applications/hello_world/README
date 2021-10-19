@@ -1,3 +1,6 @@
+Link for tar files for the weights. (accessible only through IITB institute email ID)
+https://drive.google.com/file/d/1ltk0jXO3esqCJqfGlhZPrThJLeFftGEO/view?usp=sharing
+
 To extract the weights, run
 tar -xf updated_weights.tar.gz
 

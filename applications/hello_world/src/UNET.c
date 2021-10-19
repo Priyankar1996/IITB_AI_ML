@@ -39,16 +39,22 @@ void batch(int x,MemPool*kernel_pool,Tensor*gamma,Tensor*beta,Tensor*moving_mean
 int main()
 {
     //Create and initialize mempools.
-    int num_pools = 4;
-    int num_pools_k = 4;
+    int num_pools = 8;
+    int num_pools_k = 2;
+    int num_pools_r = 4;
+    
     MemPool pool[num_pools];
     for (int i = 0; i < num_pools; i++)
         initMemPool(&pool+i,i+1,MAX_MEMPOOL_SIZE_IN_PAGES);
 
-
     MemPool kernel_pool[num_pools_k];
     for (int i = 0; i < num_pools_k; i++)
         initMemPool(&kernel_pool+i,num_pools+i+1,MAX_MEMPOOL_SIZE_IN_PAGES);
+    
+    MemPool r_pool[num_pools_r];
+    for (int i = 0; i < num_pools_r; i++)
+        initMemPool(&r_pool+i,num_pools+num_pools_k+i+1,MAX_MEMPOOL_SIZE_IN_PAGES);
+
 
     int num_iters = 3;
     
@@ -93,7 +99,7 @@ int main()
         fprintf(stderr,"K is %ld\n",getSizeOfTensor(&K));
 
         updateOutputDescriptorConvTensors(&S[i], &K, &R[i], stride, pad);
-        createTensor(&R[i],&pool,4,1);
+        createTensor(&R[i],&r_pool,4,1);
         new_convTensors(&S[i], &K, &R[i] ,stride,pad );
         fprintf(stderr,"R is %ld\n",getSizeOfTensor(&R[i]));
 
@@ -108,34 +114,42 @@ int main()
         updateOutputDescriptorMaxPoolOfTensors(&R[i], &T[i+1], str, str, 2,dim_to_pool, 0);
         createTensor(&T[i+1],&pool,4,1);
         maxPoolOfTensors(&R[i], &T[i+1], 2, 2, 2,dim_to_pool, 0);
-        fprintf(stderr,"Loop 1 destroyed\n");
+        fprintf(stderr,"Loop encoder destroyed\n");
     } 
 
     sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*num_iters,2*num_iters);
     readTensorFromFile(next_file,&K, &kernel_pool);
+    fprintf(stderr,"Reached here 1");
 
     updateOutputDescriptorConvTensors(&T[num_iters], &K, &S[num_iters], stride, pad);
     createTensor(&S[num_iters],&pool,4,1);
     new_convTensors(&T[num_iters], &K, &S[num_iters], stride, pad);
+    fprintf(stderr,"Reached here 2");
 
     destroyTensor(&T[num_iters]);
     destroyTensor(&K);
+    fprintf(stderr,"Reached here 3");
 
     batch(2*num_iters,&kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&S[num_iters]);
+    fprintf(stderr,"Reached here 4");
 
     unaryOperateOnTensor_inplace(&S[num_iters],2);
+    fprintf(stderr,"Reached here 5");
 
     sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*num_iters+1,2*num_iters+1);
+    fprintf(stderr,"Reached here 6");
     readTensorFromFile(next_file,&K, &kernel_pool);
+    fprintf(stderr,"Reached here 7");
 
     updateOutputDescriptorConvTensors(&S[num_iters], &K, &R[num_iters], stride, pad);
-    createTensor(&R[num_iters],&pool,4,1);
+    createTensor(&R[num_iters],&r_pool,4,1);
     new_convTensors(&S[num_iters], &K, &R[num_iters] ,stride,pad );
 
     destroyTensor(&K);
     destroyTensor(&S[num_iters]);
 
     batch(2*num_iters+1,&kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&R[num_iters]);
+    fprintf(stderr,"Reached here 8");
 
     unaryOperateOnTensor(&R[num_iters],&T[num_iters+1] ,2);
 
@@ -199,6 +213,9 @@ int main()
         updateOutputDescriptorMaxPoolOfTensors(&R[2*num_iters+i], &T[i+1], str, str, 2,dim_to_pool, 0);
         createTensor(&T[i+1],&pool,4,1);
         maxPoolOfTensors(&R[2*num_iters+i], &T[i+1], str, str, 2,dim_to_pool, 0);
+
+    fprintf(stderr,"Destroying decode loop");
+
     }
 
     sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",4*num_iters+2,4*num_iters+2);

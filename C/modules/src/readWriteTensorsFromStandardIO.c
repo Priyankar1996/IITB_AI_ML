@@ -21,7 +21,7 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
     uint32_t dims_array[MAX_DIMENSIONS];
     uint32_t flag = 0;
 
-    char line[4096];
+    char line[12000];
     if(file == NULL)
     {
         perror("ERROR: File opening failed.\n");

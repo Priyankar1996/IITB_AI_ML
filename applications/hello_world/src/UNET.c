@@ -52,9 +52,9 @@ void batch(int x,MemPool*kernel_pool,Tensor*gamma,Tensor*beta,Tensor*moving_mean
 int main()
 {
     //Create and initialize mempools.
-    int num_pools = 8;
-    int num_pools_k = 4;
-    int num_pools_r = 4;
+    int num_pools = 1;
+    int num_pools_k = 1;
+    int num_pools_r = 1;
     
     MemPool pool[num_pools];
     for (int i = 0; i < num_pools; i++)
@@ -81,7 +81,7 @@ int main()
     int str = 1;
     int stride[2] = {str,str};
     int dim_to_pool[2] = {0,1};
-    int pad_deconv = 0;
+    int pad_deconv = 1;
 
     readTensorFromFile("Updated_weights/T0.csv",&T[0],&pool);
 
@@ -179,25 +179,32 @@ int main()
         readTensorFromFile(next_file,&K, &kernel_pool);
         fprintf(stderr,"Size of K :%ld\n",getSizeOfTensor(&K));
 
-        updateOutputSDescriptorDilateTensors(&T[i], &K, stride, &S[i]);
+        int str_dec[2] = {2,2};
+        updateOutputSDescriptorDilateTensors(&T[i], &K, str_dec, &S[i]);
         createTensor(&S[i],&pool,1,1);
         dilateTensor(&T[i],&K, stride, &S[i]);
+        fprintf(stderr,"Size of T :%ld\n",getSizeOfTensor(&T[i]));
+        fprintf(stderr,"Size of S :%ld\n",getSizeOfTensor(&S[i]));
 
         destroyTensor(&T[i]);
 
         updateOutputSDescriptorDepadTensors(&S[i], pad_deconv, &S[num_iters+i]);
         createTensor(&S[num_iters+i],&pool,1,1);
         dePadTensor(&S[i],pad_deconv,&S[num_iters+i]);
+        fprintf(stderr,"Size of S :%ld\n",getSizeOfTensor(&S[num_iters+i]));
 
         updateOutputDescriptorConvTensors(&S[num_iters+i], &K, &S[i+3*num_iters], stride, pad);
         createTensor(&S[i+3*num_iters],&pool,1,1);
         new_convTensors(&S[num_iters+i], &K, &S[i+3*num_iters] ,stride,pad );
+        fprintf(stderr,"Size of S :%ld\n",getSizeOfTensor(&S[3*num_iters+i]));
 
         destroyTensor(&K);
         
-        updateOutputDescriptorConcatTensors( &S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i], 2);
+        updateOutputDescriptorConcatTensors( &S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i], 3);
         createTensor(&R[num_iters+i],&pool,1,1);
-        concatTensors(&S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i]);
+        concatTensorsAlongDim(&S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i],3);
+        fprintf(stderr,"Size of R :%ld\n",getSizeOfTensor(&R[num_iters+i]));
+
 
         sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*i,2*i);
         readTensorFromFile(next_file,&K, &kernel_pool);

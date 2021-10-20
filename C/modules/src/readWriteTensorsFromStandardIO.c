@@ -170,7 +170,6 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
 
 int writeTensorToFile(char *filename, Tensor *t)
 {
-    fprintf(stderr,filename);
     int flag = 0; //float fvalue; double dvalue;
     FILE *file;
     file = fopen(filename,"w");

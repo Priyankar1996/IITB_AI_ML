@@ -18,7 +18,7 @@ void fillArrayFromTensor(Tensor *T,  int size, void *array)
 	while (temp_var > 0)
 	{
 		req.arguments[0] = ((temp_var*dsize/8 >= MAX_SIZE_OF_REQUEST_IN_WORDS) ? MAX_SIZE_OF_REQUEST_IN_WORDS : 1 - (-temp_var*dsize/8));
-		req.arguments[1] = T->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (size - temp_var)*dsize/8;
+		req.arguments[1] = T->mem_pool_buffer_pointer + (size - temp_var)*dsize/8;
 		memPoolAccess((MemPool*)T->mem_pool_identifier,&req,&resp);
 		if (resp.status == NOT_OK)
 		{
@@ -48,7 +48,7 @@ void fillTensorFromArray(Tensor *T, int size, void *array)
 	while (temp_var > 0)
 	{
 		req.arguments[0] = ((temp_var*dsize/8 >= MAX_SIZE_OF_REQUEST_IN_WORDS) ? MAX_SIZE_OF_REQUEST_IN_WORDS : 1 - (-temp_var*dsize/8));
-		req.arguments[1] = T->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (size - temp_var)*dsize/8;
+		req.arguments[1] = T->mem_pool_buffer_pointer + (size - temp_var)*dsize/8;
 		uint32_t num_iterations = ((temp_var*dsize/8 >= MAX_SIZE_OF_REQUEST_IN_WORDS) ? MAX_SIZE_OF_REQUEST_IN_WORDS*8/dsize : temp_var);
 
 		for (int i = 0; i < num_iterations; i++)
@@ -74,7 +74,7 @@ void batchNormalization(Tensor *input, Tensor *beta, Tensor *gamma,
     uint32_t num_elems_input = numberOfElementsInTensor(input);
 	uint32_t x = input->descriptor.dimensions[input->descriptor.number_of_dimensions-1];
 	assert(num_elems==x);
-    switch(td.data_type)
+    switch(input->descriptor.data_type)
     {
         case u8:
         case u16:
@@ -106,7 +106,7 @@ void batchNormalization(Tensor *input, Tensor *beta, Tensor *gamma,
 			{
 				float in_arr[2*MAX_SIZE_OF_REQUEST_IN_WORDS],out_arr[2*MAX_SIZE_OF_REQUEST_IN_WORDS];
 				req1.arguments[0] = ((temp_var*dsize/8 >= MAX_SIZE_OF_REQUEST_IN_WORDS) ? MAX_SIZE_OF_REQUEST_IN_WORDS : 1 - (-temp_var*dsize/8));
-				req1.arguments[1] = input->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (num_elems_input - temp_var)*dsize/8;
+				req1.arguments[1] = input->mem_pool_buffer_pointer + (num_elems_input - temp_var)*dsize/8;
 				memPoolAccess((MemPool*)input->mem_pool_identifier,&req1,&resp1);
 				if (resp1.status == NOT_OK)
 				{
@@ -118,8 +118,8 @@ void batchNormalization(Tensor *input, Tensor *beta, Tensor *gamma,
 				{
 					copyTensorEntry(&desc,in_arr,i,resp1.read_data,i);
 				}
-				req2.arguments[0] = ((temp_var*dsize/8 >= MAX_SIZE_OF_REQUEST_IN_WORDS) ? MAX_SIZE_OF_REQUEST_IN_WORDS : 1 - (-temp_var*dsize/8));
-				req2.arguments[1] = input->mem_pool_buffer_pointer*MEMPOOL_PAGE_SIZE + (num_elems_input - temp_var)*dsize/8;
+				req2.arguments[0] = req1.arguments[0];
+				req2.arguments[1] = req1.arguments[1];
 				for (int i = 0; i < num_iterations; i++)
 				{
 					int count = (num_elems_input + i - temp_var)%x;

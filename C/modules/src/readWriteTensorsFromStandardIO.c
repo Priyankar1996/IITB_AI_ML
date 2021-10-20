@@ -164,11 +164,13 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
         perror("ERROR: Could not read from file.\n");
     else   
         printf("SUCCESS: Read from File.\n");
+    fclose(file);
     return flag;
 }
 
 int writeTensorToFile(char *filename, Tensor *t)
 {
+    fprintf(stderr,filename);
     int flag = 0; //float fvalue; double dvalue;
     FILE *file;
     file = fopen(filename,"w");
@@ -368,5 +370,6 @@ int writeTensorToFile(char *filename, Tensor *t)
         fprintf(stderr,"SUCCESS: Wrote Into File.\n");
     else
         fprintf(stderr,"Couldn't write into File.\n");
+    fclose(file);
     return flag;
 }

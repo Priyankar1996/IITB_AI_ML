@@ -33,6 +33,14 @@ unaryOperateOnTensor:
 		Test_unary_fn_Random
 		Test_unary_fn_inplace_Random
 
+scalarOperator:
+	Run command "./setup_scalarOperator.sh" followed by ./bin/app
+	This will generate an executable file(app) which is executed using 
+	the second command.
+	app can be chosen from: (as per the desired test)
+		Test_scalarOperator
+		Test_scalarOperator_inplace
+
 genRandomTensor:
        Run command "./setup_genRandomTensor.sh" followed by ./bin/genRandom
        This will generate an executable file(app) which is executed using 

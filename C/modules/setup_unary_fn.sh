@@ -13,4 +13,3 @@ gcc -o bin/Test_unary_inplace_fn obj/Test_unary_inplace_fn.o obj/mempool.o obj/t
 gcc -o bin/Test_unary_fn_Random obj/Test_unary_fn_Random.o obj/mempool.o obj/tensor.o obj/createTensor.o obj/unary_fn.o -lm
 gcc -o bin/Test_unary_fn_inplace_Random obj/Test_unary_fn_inplace_Random.o obj/mempool.o obj/tensor.o obj/createTensor.o obj/unary_fn.o -lm
 # Use the ar comand to put all the .o files (other than the test benches into your archive.
-

@@ -1,0 +1,9 @@
+NAME 
+    scalarOperator - performs point-wise addition or multiplication on Tensor 
+    scalarOperator_inplace - inplace version of scalarOperator function
+
+DESCRIPTION
+    The scalarOperator (Operator op, Scalar* s, Tensor* src, Tensor* result) function takes in input from user as 2 tensors and the operation to be performed.
+    It writes the output in the result Tensor. 
+    If dest and src tensor are the same, it reduces to the inplace function. 
+    scalarOperator_inplace (Operator op, Scalar* s, Tensor* src) 

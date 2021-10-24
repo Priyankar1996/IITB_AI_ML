@@ -180,22 +180,20 @@ int main()
     sprintf(next_file,"Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv",2*num_iters+1,2*num_iters+1);
     readTensorFromFile(next_file,&K, kernel_pool);
 
-    updateOutputDescriptorConvTensors(&S[num_iters], &K, &R[num_iters], stride, pad);
-    createTensor(&R[num_iters],r_pool,1,1);
-    new_convTensors(&S[num_iters], &K, &R[num_iters] ,stride,pad );
+    updateOutputDescriptorConvTensors(&S[num_iters], &K, &T[num_iters+1], stride, pad);
+    createTensor(&T[num_iters+1],r_pool,1,1);
+    new_convTensors(&S[num_iters], &K, &T[num_iters+1] ,stride,pad );
     sprintf(write_file,"intermediateTensors/Conv%d.txt",2*num_iters+1);
-    writeTensorToFile(write_file,&R[num_iters]);
+    writeTensorToFile(write_file,&T[num_iters+1]);
 
     destroyTensor(&K);
     destroyTensor(&S[num_iters]);
 
-    batch(2*num_iters+1,kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&R[num_iters]);
+    batch(2*num_iters+1,kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&T[num_iters+1]);
     sprintf(write_file,"intermediateTensors/BN%d.txt",2*num_iters+1);
-    writeTensorToFile(write_file,&R[num_iters]);
+    writeTensorToFile(write_file,&T[num_iters+1]);
 
-    copyTensorDescriptor(&R[num_iters],&T[num_iters+1]);
-    createTensor(&T[num_iters+1],pool,1,1);
-    unaryOperateOnTensor(&R[num_iters],&T[num_iters+1] ,2);
+    unaryOperateOnTensor_inplace(&T[num_iters+1],2);
     sprintf(write_file,"intermediateTensors/Relu%d.txt",2*num_iters+1);
     writeTensorToFile(write_file,&T[num_iters+1]);
     //decoding loop

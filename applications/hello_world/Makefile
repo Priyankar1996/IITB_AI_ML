@@ -47,6 +47,7 @@ compile: createDir $(PRIMITIVES) $(OBJ)
 createDir:
 	mkdir -p $(BIN);
 	mkdir -p $(LIB);
+	mkdir -p intermediateTensors;
 
 $(BIN)/mempool.o: $(MEMPOOL)/src/mempool.c $(MEMPOOL)/include/mempool.h
 	$(CC) $(CFLAGS) -o $@ -c $< -I $(MEMPOOL)/include

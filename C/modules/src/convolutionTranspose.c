@@ -131,13 +131,14 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
 
     void *array;
     array = mp_req2.write_data;
-    for(i=0;i<1024*8/datasize;i++)
-        *((uint8_t*)mp_req2.write_data + i) = 0;
-
+    for(i=0;i<1024;i++)
+        *((uint64_t*)mp_req2.write_data + i) = 0;
+    printf("Input Words:%d\n",input_words_left);
     for(; input_words_left > 0; input_words_left -= MAX_SIZE_OF_REQUEST_IN_WORDS)
     {
         iter++;
         int elements_to_read = MIN(input_words_left,MAX_SIZE_OF_REQUEST_IN_WORDS);
+        printf("Elements to read:%d\n",elements_to_read);
         mp_req1.request_type = READ;
         mp_req1.arguments[0] = elements_to_read;
         mp_req1.arguments[1] = input->mem_pool_buffer_pointer + MAX_SIZE_OF_REQUEST_IN_WORDS*iter;
@@ -378,8 +379,9 @@ int dilateTensor(Tensor *input, Tensor *kernel, uint32_t *stride, Tensor *output
             }
                                             
         }
-        return flag;
+        //return flag;
     }
+    return flag;
 }
 
 int dePadTensor(Tensor *input, uint32_t padding, Tensor *output)

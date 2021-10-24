@@ -1,7 +1,11 @@
+// AUTHORS : Aman Dhammani , Priyankar Sarkar
+// Department of Electrical Engineering, IITB
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include "mempool.h"
 #include "tensor.h"
 
@@ -123,7 +127,7 @@ void batchNormalization(Tensor *input, Tensor *beta, Tensor *gamma,
 				for (int i = 0; i < num_iterations; i++)
 				{
 					int count = (num_elems_input + i - temp_var)%x;
-					out_arr[i] = gamma_arr[count]*(in_arr[i]-mm_arr[count])/(mv_arr[count] + epsilon) + beta_arr[count];
+					out_arr[i] = gamma_arr[count]*(in_arr[i]-mm_arr[count])/(sqrt(mv_arr[count]) + epsilon) + beta_arr[count];
 				}
 				for (int i = 0; i < num_iterations; i++)
 				{

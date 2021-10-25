@@ -33,7 +33,7 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
 
         void *array;
         array = mp_req.write_data;     
-        while(fgets(line, 4096, file))
+        while(fgets(line, 12000, file))
         {
             linenumber++;
             const char *tok;
@@ -337,9 +337,9 @@ int writeTensorToFile(char *filename, Tensor *t)
                                             if(count<=num_elems)
                                             {
                                                 if(t->descriptor.dimensions[t->descriptor.number_of_dimensions-1] == 1)
-                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
+                                                    fprintf(file, "%f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -2])!=0 ? ",":"\n"));
                                                 else    
-                                                    fprintf(file, "%.4f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
+                                                    fprintf(file, "%f%s",(*bytes32)[k],(count%(t->descriptor.dimensions[t->descriptor.number_of_dimensions -1])!=0 ? ",":"\n"));
                                             }
                                         }
                                     /*memcpy(&fvalue, &mp_resp.read_data[j],sizeof(float));

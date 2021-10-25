@@ -90,7 +90,7 @@ int main()
     readTensorFromFile("Updated_weights/T0.csv",&T[0],pool);
 
     char next_file[100];
-    char write_file[30];
+    char write_file[60];
     //encoding loop
     for(int i=0;i<num_iters;i++)
     {
@@ -224,16 +224,16 @@ int main()
         updateOutputDescriptorConvTensors(&S[num_iters+i], &K, &S[i+3*num_iters], stride, pad);
         createTensor(&S[i+3*num_iters],pool,1,1);
         new_convTensors(&S[num_iters+i], &K, &S[i+3*num_iters] ,stride,pad );
-        sprintf(write_file,"intermediateTensors/Conv%d.txt",2*i);
+        sprintf(write_file,"intermediateTensors/ConvT%d.txt",i-num_iters-1);
         writeTensorToFile(write_file,&S[3*num_iters+i]);
 
         destroyTensor(&K);
         destroyTensor(&S[i+num_iters]);
         
         //Concat output tensor of convTranspose with that of the convolved tensor from input state.
-        updateOutputDescriptorConcatTensors( &S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i], 3);
+        updateOutputDescriptorConcatTensors( &S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i], 2);
         createTensor(&R[num_iters+i],pool,1,1);
-        concatTensorsAlongDim(&S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i],3);
+        concatTensorsAlongDim(&S[3*num_iters+i],&R[i-2*(i-num_iters)],&R[num_iters+i],2);
         sprintf(write_file,"intermediateTensors/Concat%d.txt",i-num_iters-1);
         writeTensorToFile(write_file,&R[num_iters+i]);
 

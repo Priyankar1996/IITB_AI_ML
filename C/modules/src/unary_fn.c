@@ -166,7 +166,7 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 	int total_dwords = (ceil((num_elems*element_size)/8.0)); //number of dwords of the tensor (assuming positive)
 	int num_iter = (total_dwords%CHUNK_SIZE) ?  (1+(total_dwords/CHUNK_SIZE)) : (total_dwords/CHUNK_SIZE); // 63/16 --> in the loop 16 16 16 15
 	for(int k=0; k<num_iter;k=k+1){
-		printf("Iteration %d: \n",k+1);
+		//printf("Iteration %d: \n",k+1);
 		int num_in_cache; // number of elements in CHUNK
 		int num_dwords_stored; // number of dwords to be stored in CHUNK
 		if((k==num_iter-1)&&(total_dwords%CHUNK_SIZE!=0)){
@@ -177,8 +177,8 @@ void unaryOperateOnTensor(Tensor* a, Tensor* b, Operation op) {
 			num_in_cache = (CHUNK_SIZE*8)/element_size;
 			num_dwords_stored = CHUNK_SIZE;
 		}	
-		printf("num_in_chunk = %d \n",num_in_cache);
-		printf("num_dwords_stored = %d \n",num_dwords_stored);
+		//printf("num_in_chunk = %d \n",num_in_cache);
+		//printf("num_dwords_stored = %d \n",num_dwords_stored);
 		/////////////////////////////////////////////////
 		// FIRST STAGE of Pipeline : Fetching from Memory 
 		/////////////////////////////////////////////////

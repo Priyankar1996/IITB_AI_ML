@@ -36,6 +36,10 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
         while(fgets(line, 12000, file))
         {
             linenumber++;
+
+	    if(line[0] == '!')
+		continue;
+
             const char *tok;
             char *eptr;
             for(tok = strtok(line, ","); tok && *tok;tok = strtok(NULL,","))

@@ -109,7 +109,7 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
 	//Read kernel data.
 	
 	//Create local memory for kernel data.(Limited by?)
-	uint64_t ker_data[(num_elems_ker*data_size/8) + 1];
+	static uint64_t ker_data[9999999];
     	int iter = -1;
     	int flag;
     	int words_left = CEILING(num_elems_ker * data_size,8);
@@ -144,7 +144,7 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
 	//Read image data.
 
 	//Create local memory for image data.(Limited by?)
-	uint64_t img_data[(num_elems_img*data_size/8) + 1];
+	static uint64_t img_data[9999999];
 
 	//uint64_t img_data_array_base;
 	//uint64_t *img_data = &img_data_array_base;
@@ -180,7 +180,7 @@ int new_convTensors(Tensor *in_img, Tensor *kernel, Tensor *out_img, const int s
 	//Perform convolution.
 	
 	//Create local memory for output data.(Limited by?)
-	uint64_t res[(num_elems_out*data_size/8) + 1];
+	static uint64_t res[9999999];
 	//Reset memory to zero.
 	memset(res,0,((num_elems_out*data_size/8)+1)*sizeof(uint64_t));
 	void *result_array_base = res;

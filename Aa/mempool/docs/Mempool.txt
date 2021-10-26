@@ -94,8 +94,8 @@
 					3 	Deallocate
 					4	Read
 					5	Write
-		header[55:40]	request tag
-		header[39:32]   number of arguments
+		header[55:48]	request tag
+		header[47:32]   number of arguments
 					(maximum of 3 arguments)
 		header[31:0]	argument 0	
 	

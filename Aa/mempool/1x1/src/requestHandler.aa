@@ -18,8 +18,10 @@ $parameter DEALLOC    3
 $parameter READ       4
 $parameter WRITE      5
 
-$storage mempool_array   : $array [ {MEMPOOL_PAGE_SIZE * MAX_MEMPOOL_SIZE_IN_PAGES} ] $of $uint< {8*MEMPOOL_WORD_SIZE} >
-$storage requester_array : $array [ MAX_MEMPOOL_SIZE_IN_PAGES ] $of $uint< 16 >
+$storage mempool_array   : 
+	$array [ {MEMPOOL_PAGE_SIZE * MAX_MEMPOOL_SIZE_IN_PAGES} ] $of $uint< {8*MEMPOOL_WORD_SIZE} >
+$storage requester_array : 
+	$array [ MAX_MEMPOOL_SIZE_IN_PAGES ] $of $uint< 16 >
 
 $module [requestHandlerDaemon]
 	$in () $out () $is
@@ -43,7 +45,6 @@ $module [requestHandlerDaemon]
 			$endif
 		
 
-		// optimize but pipeline depth = 1.
 			$merge $entry loopback $endmerge
 
 			header := REQUEST_PIPE

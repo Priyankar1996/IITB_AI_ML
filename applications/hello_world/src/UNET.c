@@ -30,7 +30,16 @@ void copyTensorDescriptor(Tensor *src, Tensor *dst)
     }
 }
 
-void batch(int x,MemPool*kernel_pool,Tensor*gamma,Tensor*beta,Tensor*moving_mean,Tensor*moving_variance,Tensor*T){
+
+// translate and scale of 
+void batch(int x,
+		MemPool*kernel_pool,
+		Tensor*gamma,
+		Tensor*beta,
+		Tensor*moving_mean,
+		Tensor*moving_variance,
+		Tensor*T)
+{
         char next_file[100];
         sprintf(next_file,"Updated_weights/Parameters/BN/%dbatch_normalization_%dgamma.csv",x,x);
         readTensorFromFile(next_file,gamma, kernel_pool);
@@ -53,6 +62,29 @@ void batch(int x,MemPool*kernel_pool,Tensor*gamma,Tensor*beta,Tensor*moving_mean
         destroyTensor(moving_variance);
 }
 
+
+//
+// What are the inputs to this program?
+//   Dang! these seem to be hardwired!!  CHANGE IT
+//
+//              
+// INPUTS...
+//    num_iters = 3
+//   "Updated_weights/T0.csv"
+//		contains the source image...
+//   "Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv"
+//           for %d=0,2,4   (these are specified kernels)
+//
+// INTERMEDIATES (for debugging)...
+//   "intermediateTensors/EncoderIn%d.txt"
+//	     for %d = 0,1,2  (intermediate outputs after each iteration).
+//   "intermediateTensors/Conv%d.txt"
+//           for %d = 0,2,4  (intermediate result of convolution)
+//    etc...
+//
+// OUTPUTS
+//    "GeneratedImage.csv", the final image...
+//
 int main()
 {
     //Create and initialize mempools.
@@ -139,6 +171,7 @@ int main()
         //Destroy intermediate tensors.
         destroyTensor(&K);
         destroyTensor(&S[i]);
+
         //Final batch_normalize and linear rectification.
         batch(2*i+1,kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&R[i]);
         sprintf(write_file,"intermediateTensors/BN%d.txt",2*i+1);
@@ -169,6 +202,7 @@ int main()
     destroyTensor(&T[num_iters]);
     destroyTensor(&K);
 
+    // What is "batch"?
     batch(2*num_iters,kernel_pool,&gamma,&beta,&moving_mean,&moving_variance,&S[num_iters]);
     sprintf(write_file,"intermediateTensors/BN%d.txt",2*num_iters);
     writeTensorToFile(write_file,&S[num_iters]);

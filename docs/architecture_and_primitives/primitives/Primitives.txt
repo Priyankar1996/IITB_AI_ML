@@ -35,3 +35,5 @@
    2. Dilation: Expand the size of an n-dimensional tensor in one of its dimensions by inserting zeros between two consecutive indices.
 11. Concatenation: Take two n-dimensional tensors whose sizes can differ only in one dimension, and concatenate them into a new n-dimensional tensor joined by the only the dimension that is allowed to differ.
 12. Convolution: Compute the result of convolution between an n-dimensional tensor and another n-dimensional tensor
+13. Normalization: given a tensor, with a specified translation X, and specified scale-factor Y, 
+	takes each value v in the tensor and replaces it with (v - X)*Y.

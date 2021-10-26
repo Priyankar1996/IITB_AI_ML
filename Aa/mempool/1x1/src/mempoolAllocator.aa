@@ -118,22 +118,26 @@ $is
 
 	$volatile page_address_offset :=
 		($slice ($concat number_of_pages_requested $zero<LOG_MEMPOOL_PAGE_SIZE>) 31 0)
-	head_base_address := ($prioritymux
-						init 		$zero<32>
-						// on allocate, increment the head base address by the required number of pages.
-						alloc_head
-								((head_base_address + page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
-						// on deallocate, decrement...
-						dealloc_from_head  
-							    	((head_base_address - page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
-						$default	 head_base_address)
-	tail_base_address := ($prioritymux
-						init 		$zero<32>
-						alloc_tail 
-								((tail_base_address - page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
-						dealloc_from_tail 
-							    	((tail_base_address + page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
-						$default	 tail_base_address)
+
+	// This logic is not yet satisfactory... TBD.
+	head_base_address := 
+		($prioritymux
+			init 		$zero<32>
+			// on allocate, increment the head base address by the required number of pages.
+			alloc_head
+				((head_base_address + page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+			// on deallocate, decrement...
+			dealloc_from_head  
+			    	((head_base_address - page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+			$default	 head_base_address)
+	tail_base_address := 
+		($prioritymux
+			init 		$zero<32>
+			alloc_tail 
+				((tail_base_address - page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+			dealloc_from_tail 
+			    	((tail_base_address + page_address_offset) & MEMPOOL_BUFFER_SIZE_MASK)
+			$default	 tail_base_address)
 
 
 	$volatile resp_header := ($concat 
@@ -141,8 +145,11 @@ $is
 						request_tag  
 						$zero<8> 
 						($mux alloc_head head_base_address tail_base_address))
-	$rreport (mempoolAllocator base_addresses head_base_address tail_base_address alloc_head alloc_tail dealloc_from_head dealloc_from_tail 
-					page_address_offset resp_header old_head_was_free old_tail_was_free)
+	$rreport (mempoolAllocator base_addresses 
+				head_base_address tail_base_address alloc_head 
+				alloc_tail dealloc_from_head dealloc_from_tail 
+				page_address_offset resp_header 
+				old_head_was_free old_tail_was_free)
 	$guard (~init)
 		RESPONSE_PIPE := resp_header
 }

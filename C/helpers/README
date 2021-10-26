@@ -1,4 +1,4 @@
-1)def genInputFileFromImg(data_type,row_major,image_file_name,csv_file_name):
+1)def genInputFileFromImg(data_type,row_major,is_grayscale,image_file_name,csv_file_name):
   ->Description: Generates input file acceptable by parser from the image that is to be loaded
     in tensor. The file format is as follows.
       10           --data type
@@ -24,6 +24,9 @@
     ->row_major is also an integer specified as follows
         1:row major arrangement in tensor.
         0:column major arrangement in tensor.
+    ->is_grayscale is either 0 or 1
+        1:Only considers one color channel
+        0:Considers all three channels
     ->image_file_name specifies the file path for the source image.
     ->csv_file_name specifies the path for the file to be written.Note that an empty file must be created before specifying the path.
     

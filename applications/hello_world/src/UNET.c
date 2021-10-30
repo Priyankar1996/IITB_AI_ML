@@ -63,24 +63,53 @@ void batch(int x,
 }
 
 
-//
-// What are the inputs to this program?
-//   Dang! these seem to be hardwired!!  CHANGE IT
-//
-//              
+//         
 // INPUTS...
 //    num_iters = 3
 //   "Updated_weights/T0.csv"
 //		contains the source image...
 //   "Updated_weights/Parameters/Conv/%dconv2d_%dkernel.csv"
-//           for %d=0,2,4   (these are specified kernels)
+//           for %d=0,1,2,3,4,5     (these are specified kernels) in the encoder stage
+//           for %d=6,7             (these are specified kernels) in the middle stage
+//           for %d=8,9,10,11,12,13 (these are specified kernels) in the decoder stage
+//           for %d=14              for obtaining the final output.
+//   "Updated_weights/Parameters/BN/%dbatch_normalization_%dgamma.csv"
+//   "Updated_weights/Parameters/BN/%dbatch_normalization_%dbeta.csv"
+//   "Updated_weights/Parameters/BN/%dbatch_normalization_%dmoving_mean.csv"
+//   "Updated_weights/Parameters/BN/%dbatch_normalization_%dmoving_variance.csv"
+//           for %d=0,1,2,3,4,5     (these are specified kernels) in the encoder stage
+//           for %d=6,7             (these are specified kernels) in the middle stage
+//           for %d=8,9,10,11,12,13 (these are specified kernels) in the decoder stage
+//   "Updated_weights/Parameters/ConvT/%dconv2d_transpose_%dkernel.csv"
+//           for %d=0,1,2           (these are specified kernels) in the decoder stage
+//
 //
 // INTERMEDIATES (for debugging)...
 //   "intermediateTensors/EncoderIn%d.txt"
 //	     for %d = 0,1,2  (intermediate outputs after each iteration).
 //   "intermediateTensors/Conv%d.txt"
-//           for %d = 0,2,4  (intermediate result of convolution)
-//    etc...
+//           for %d =0,1,2,3,4,5     (intermediate result of convolution in the encoder stage)
+//           for %d =6,7             (intermediate result of convolution in the middle stage)
+//           for %d =8,9,10,11,12,13 (intermediate result of convolution in the decoder stage)
+//   "intermediateTensors/BN%d.txt"
+//           for %d=0,1,2,3,4,5      (intermediate result of batch_norm in the encoder stage)
+//           for %d=6,7              (intermediate result of batch_norm in the middle stage)
+//           for %d=8,9,10,11,12,13  (intermediate result of batch_norm in the decoder stage)
+//   "intermediateTensors/Relu%d.txt"
+//           for %d=0,1,2,3,4,5      (intermediate result of unaryOperateOnTensors in the encoder stage)
+//           for %d=6,7              (intermediate result of unaryOperateOnTensors in the middle stage)
+//           for %d=8,9,10,11,12,13  (intermediate result of unaryOperateOnTensors in the decoder stage)
+//   "intermediateTensors/MP%d.txt"
+//           for %d=0,1,2            (intermediate result of maxPoolOnTensors)
+//   "intermediateTensors/Concat%d.txt"
+//           for %d=0,1,2            (intermediate result of concatTensors)
+//   "intermediateTensors/Dilate%d.txt"
+//           for %d=0,1,2            (intermediate result of dilateTensors)
+//   "intermediateTensors/Depad%d.txt"
+//           for %d=0,1,2            (intermediate result of depadTensors)
+//   "intermediateTensors/ConvT%d.txt"
+//           for %d=0,1,2            (intermediate result of convolutionTranpose post dilate and depad)
+//
 //
 // OUTPUTS
 //    "GeneratedImage.csv", the final image...

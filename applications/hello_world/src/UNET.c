@@ -30,8 +30,7 @@ void copyTensorDescriptor(Tensor *src, Tensor *dst)
     }
 }
 
-
-// translate and scale of 
+//wrapper for batch normalisation. 
 void batch(int x,
 		MemPool*kernel_pool,
 		Tensor*gamma,
@@ -41,6 +40,7 @@ void batch(int x,
 		Tensor*T)
 {
         char next_file[100];
+        //Reads the parameters(gamma,beta,moving_variance,moving_mean) from the necessary files.
         sprintf(next_file,"Updated_weights/Parameters/BN/%dbatch_normalization_%dgamma.csv",x,x);
         readTensorFromFile(next_file,gamma, kernel_pool);
         // writeTensorToFile("gamma.txt",gamma);
@@ -54,6 +54,7 @@ void batch(int x,
         readTensorFromFile(next_file, moving_variance, kernel_pool);
         // writeTensorToFile("mv.txt",moving_variance);
 
+        //Performs batch_normalization on input tensors.
         batchNormalization(T, beta, gamma, moving_mean, moving_variance, 0.001);
 
         destroyTensor(gamma);

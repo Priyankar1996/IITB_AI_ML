@@ -1,43 +1,10 @@
 //
-// Given a tensor descriptor:
-// How will a tensor descriptor be given to it?
-//   What are the possibilities?
-//          directly with a FIFO
-// 
-// Assumption: the tensor is already in some 
-//                memory pool..
-// Interfaces needed by unary..
-//       - in-place
-//		one memory pool interface
-//       - not-in-place
-//               one/two memory pools??
+// In-place unary operator.
 //
-// unary implementation interfaces: there are some choices...
+// Single mempool attached to operator.
 //
-//
-// When the tensor arrives through the request FIFO, it
-//  will contain information about which mempool 
-//  its data is in...
-//         Routing/Forwarding Wrapper...
-
-//
-// Core working thread (in place):
-//           while (1) {
-//               t,op,ctrl = getTensor(), getOperation(), getCtrl()
-//               while(notDone) {
-//                    c = getChunk()
-//                    w = computeOnChunk(c)
-//                    writeChunk(w)
-//               }
-//               sendTensor(t)
-//           }
-//
-// Core init thread
-//           while(1)
-//           {
-//                 x, counter = scanIn();
-//                 if (inRange(counter))
-//                     storeData(x,counter);
-//                 scanOut(x)
-//           }
-//           
+// while (1) {
+//      Td <- Get Tensor Descriptor
+//      operate on Tensor in place
+//      Send Tensor Descriptor (Td)
+// }

@@ -34,5 +34,5 @@
 //      epsilon : epsilon is a constant value.
 
 void batchNormalization(Tensor *input, Tensor *beta, Tensor *gamma, 
-						Tensor *moving_mean, Tensor *moving_variance, double epsilon)
+						Tensor *moving_mean, Tensor *moving_variance, double epsilon);
 #endif

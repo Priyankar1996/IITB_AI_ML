@@ -155,9 +155,9 @@ int main()
 		// Tensor arguments are implicit: T, K, S
 		updateOutputDescriptorConvTensors[T,K,S](stride, pad);
 		// Tensor argument S
-		createTensorInInputPool();
+		createTensorInInputPool[T]();
 		// Implicit arguments: T, K, S
-		new_convTensors(stride,pad );
+		new_convTensors[T,K,S](stride,pad );
 
 		// implicit Tensor arguments gamma, beta, moving_mean, moving_variance, S
 		batch[S](2*i);
@@ -173,7 +173,7 @@ int main()
 		//Compute output size, create the tensor and convolve.
 		updateOutputDescriptorConvTensors[S,K,R](stride, pad);
 		// implicit argument R
-		createTensorInOutputPool();
+		createTensorInOutputPool[R]();
 		new_convTensors[S,K,R](stride,pad );
 
 		batch[R](2*i+1);

@@ -5,7 +5,7 @@
 # Necessary variables and definitions. Do not change
 CC=gcc
 AR=ar
-CFLAGS = -Wall -std=c99 -lm
+CFLAGS = -g -Wall -std=c99 -lm
 ARFLAGS = -cq	# add v if need verbose output
 
 # Directory paths for various functions/primitives

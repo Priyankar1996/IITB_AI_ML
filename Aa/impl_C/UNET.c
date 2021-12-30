@@ -18,55 +18,6 @@
 #include "concat.h"
 
 
-// // Functions in C model
-// 
-// //fill output tensor descriptor
-// void copyTensorDescriptor(Tensor *src, Tensor *dst)
-// {
-//     dst->descriptor.data_type = src->descriptor.data_type;
-//     dst->descriptor.row_major_form = src->descriptor.row_major_form;
-//     dst->descriptor.number_of_dimensions = src->descriptor.number_of_dimensions;
-
-//     for (int i = 0; i < src->descriptor.number_of_dimensions; i++)
-//     {
-//         dst->descriptor.dimensions[i] = src->descriptor.dimensions[i];
-//     }
-// }
-
-// //wrapper for batch normalisation. 
-// void batch(int x,
-// 		MemPool*kernel_pool,
-// 		Tensor*gamma,
-// 		Tensor*beta,
-// 		Tensor*moving_mean,
-// 		Tensor*moving_variance,
-// 		Tensor*T)
-// {
-//         char next_file[100];
-//         //Reads the parameters(gamma,beta,moving_variance,moving_mean) from the necessary files.
-//         sprintf(next_file,"Updated_weights/Parameters/BN/%dbatch_normalization_%dgamma.csv",x,x);
-//         readTensorFromFile(next_file,gamma, kernel_pool);
-//         // writeTensorToFile("gamma.txt",gamma);
-//         sprintf(next_file,"Updated_weights/Parameters/BN/%dbatch_normalization_%dbeta.csv",x,x);
-//         readTensorFromFile(next_file,beta, kernel_pool);
-//         // writeTensorToFile("beta.txt",beta);
-//         sprintf(next_file,"Updated_weights/Parameters/BN/%dbatch_normalization_%dmoving_mean.csv",x,x);
-//         readTensorFromFile(next_file,moving_mean, kernel_pool);
-//         // writeTensorToFile("mm.txt",moving_mean);
-//         sprintf(next_file,"Updated_weights/Parameters/BN/%dbatch_normalization_%dmoving_variance.csv",x,x);
-//         readTensorFromFile(next_file, moving_variance, kernel_pool);
-//         // writeTensorToFile("mv.txt",moving_variance);
-
-//         //Performs batch_normalization on input tensors.
-//         batchNormalization(T, beta, gamma, moving_mean, moving_variance, 0.001);
-
-//         destroyTensor(gamma);
-//         destroyTensor(beta);
-//         destroyTensor(moving_mean);
-//         destroyTensor(moving_variance);
-// }
-
-// Earlier comments
 //         
 // INPUTS...
 //    num_iters = 3
@@ -139,117 +90,119 @@ SizedTensor_8M    S;
 SizedTensor_8M    R[num_iters];
 SizedTensor_1024  beta, gamma, moving_mean, moving_variance;
 
+// Read the elements of T from an input FIFO
+#define __readSizedTensorFromInputDataPipe__(T)  {\
+	int ne = __NumberOfElementsInSizedTensor__(T);\
+	int I;\
+	for(I = 0; I < ne; I++)\
+	{\
+		uint64_t w = read_uint64 ("input_data_pipe");\
+		__InsertIntoSizedTensorDataArray__(T,I,w);\
+	}}
+
+#define __updateOutputDescriptorForConvTensors (X, Y, RESULT, stride, pad) {\
+		// size of the result tensor is calculated here.
+	}}
+
+/*
+void fooT(T*)
+
+	fooT(&tT);
+
+void fooS(S*)
+
+	fooS(&tS);
+
+>>>>> what we want >>>>>>>>>>	tT and tS are kept in different memory spaces.
+
+
+void foo(T*)
+
+	foo (&tT);
+	foo (&tS);
+>>>> we want to avoid this >>>>>   tT, tS are forced into the same memory space.
+
+*/
+
+	
+
 int main()
 {
-	readTensorIntoT();
+	__readSizedTensorFromInputDataPipe__(T);
 
 	//encoding loop
 	for(int i=0;i<num_iters;i++)
 	{
 		//Read kernel_tensor from file and create.
-		readTensorIntoK();
+		__readSizedTensorFromInputDataPipe__(K);
 
-		//Calculate the size of the output_tensor and create.
-		// Tensor arguments are implicit: T, K, S
-		updateOutputDescriptorConvTensors[T,K,S](stride, pad);
-		createTensorInInputPool[S]();
-		new_convTensors[T,K,S](stride,pad );
+		// Write a macro
+		__convTensors__(T,K,S,stride,pad);
 
 		// implicit Tensor arguments gamma, beta, moving_mean, moving_variance, S
-		batch[S](2*i);
+		__batch__(S, gamma, beta, moving_mean, moving_variance, 2*i)
 
-		// unary: implicit argument S
-		unaryOperateOnTensor[S](2);
+		__unaryOperateOnTensor__(S,RELU_OP);
 
-		// TODO: break all allocateAndRead* into two
-		//       functions..
-		readTensorIntoK();
+		// read tensor into K
+		__readSizedTensorFromInputDataPipe__(K);
 
 
 		//Compute output size, create the tensor and convolve.
-		updateOutputDescriptorConvTensors[S,K,R[i]](stride, pad);
-		createTensorInOutputPool[R[i]]();
-		new_convTensors[S,K,R[i]](stride,pad );
+		__convTensors__(S,K,(R[i]),stride,pad);
+		__batch__((R[i]), gamma, beta, moving_mean, moving_variance, ((2*i)+1))
 
-		batch[R[i]](2*i+1);
-
-		unaryOperateOnTensor[R[i]](2);
+	
+		__unaryOperateOnTensor__((R[i]), RELU_OP);
 
 		//Maxpool the output tensor of previous stage for dimensionality reduction.
-		updateOutputDescriptorMaxPoolOfTensors[R[i],T](str, str, 2,dim_to_pool, 0);
-		createTensorInInputPool[T]()
-		maxPoolOfTensors[R[i], T](2, 2, 2,dim_to_pool, 0);
+		__maxPoolOfTensors__((R[i]), T, 2, 2, 2, dim_to_pool, 0);
 	} 
 
-	// K is read into...
-	readTensorIntoK();
+	__readSizedTensorFromInputDataPipe__(K);
+	__convTensors__(T,K,S,stride,pad);
 
-	updateOutputDescriptorConvTensors[T,K,S](stride, pad);
-	createTensorInInputPool[S]();
-	new_convTensors[T,K,S](stride, pad);
+	__batch__(S, gamma, beta, moving_mean, moving_variance, (2*num_iters));
+	__unaryOperateOnTensor__(S, RELU_OP);
 
-	batch[S](2*num_iters);
 
-	unaryOperateOnTensor[S](2);
+	__readSizedTensorFromInputDataPipe__(K);
+	__convTensors__(S,K,T,stride,pad);
 
-	readTensorIntoK();
 
-	updateOutputDescriptorConvTensors[S,K,T](stride, pad);
-	createTensorInInputPool[T]();
-	new_convTensors[S,K,T](stride, pad);
-
-	batch[T](2*num_iters+1);
-	unaryOperateOnTensor[T](2);
+	__batch__(T, gamma, beta, moving_mean, moving_variance, ((2*num_iters)+1));
+	__unaryOperateOnTensor__(T, RELU_OP);
 
 	//decoding loop
 	for(int i = 1; i <= num_iters; i++)
 	{
-		readTensorIntoK();
+		__readSizedTensorFromInputDataPipe__(K);
+		__dilateTensor__(T,K,S, decode_stride);
 
-		//ConvTranpose for enhancement.
-		updateOutputSDescriptorDilateTensors[T,K,S](str_dec);
-
-		createTensorInInputPool[S]();
-		dilateTensor[T,K,S](str_dec);
-
-		updateOutputSDescriptorDepadTensors[S,T](pad_deconv);
-		createTensorInInputPool[T]();
-		dePadTensor[S,T](pad_deconv);
-
-		updateOutputDescriptorConvTensors[T,K,S](stride, pad);
-		createTensorInInputPool[S]();
-		new_convTensors[T,K,S](stride, pad);
+		__depadTensor(S,T, deconv_pad);
+		__convTensors__(T,K,S, stride, pad);
 
 
 		//Concat output tensor of convTranspose with that of the convolved tensor from input state.
-		updateOutputDescriptorConcatTensors[S,R[num_iters-i],T](2);
-		createTensorInInputPool[T]();
-		concatTensorsAlongDim[S,R[num_iters-i],T](2);
+		__concatTensorsAlongDim(S,(R[num_iters-i]), T, 2);
 
-		readTensorIntoK();
+		__readSizedTensorFromInputDataPipe__(K);
+		__convTensors__(T,K,S, stride, pad);
 
-		updateOutputDescriptorConvTensors[T,K,S](stride, pad);
-		createTensorInInputPool[S]();
-		new_convTensors[T,K,S](stride, pad);
+		__batch__(S, gamma, beta, moving_mean, moving_variance, ((2*(num_iters+i))));
+		__unaryOperateOnTensor__(S, RELU_OP);
 
-		batch[S](2*(num_iters+i));
-		unaryOperateOnTensor[S](2);
 
-		readTensorIntoK();
-		updateOutputDescriptorConvTensors[S,K,T](stride, pad);
-		createTensorInInputPool[S]();
-		new_convTensors[S,K,T](stride, pad);
+		__readSizedTensorFromInputDataPipe__(K);
+		__convTensors__(S,K,T, stride, pad);
 
-		batch[T](2*(num_iters+i)+1);
-		unaryOperateOnTensor[T](2);
+		__batch__(T, gamma, beta, moving_mean, moving_variance, ((2*(num_iters+i))+1));
+		__unaryOperateOnTensor__(T, RELU_OP);
 
 	}
 
-	readTensorIntoK();
+	__readSizedTensorFromInputDataPipe__(K);
+	__convTensors__(T,K,S, stride, pad);
 
-	updateOutputDescriptorConvTensors[T,K,S](stride, new_pad);
-	createTensorInInputPool[S]();
-	new_convTensors[T,K,S](stride, new_pad);
-
-	writeTensorFromT(S);
+	__writeTensorToOutputDataPipe__(S);
 }

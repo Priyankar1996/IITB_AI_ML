@@ -1,12 +1,10 @@
 # Necessary variables and definitions. Do not change
 CC=gcc
-AR=ar
 CFLAGS = -Wall -std=c99 -lm
-ARFLAGS = -cq	# add v if need verbose output
 BIN=bin
 LIB=lib
-SRC=src_macro
 INCLUDE=include_macro
+SIZED_TENSOR=../../../C/primitives/include
 
 # User defined function - Change according to the file to run.
 TESTFILE=util_macro/Test_maxpool.c
@@ -14,7 +12,7 @@ TESTFILE=util_macro/Test_maxpool.c
 all: compile run
 
 compile: createDir
-	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(INCLUDE)
+	$(CC) $(CFLAGS) -o $(BIN)/Testfile.o -c $(TESTFILE) -I $(SIZED_TENSOR) -I $(INCLUDE)
 	cd $(BIN); $(CC) -o Test Testfile.o $(CFLAGS)
 
 createDir:

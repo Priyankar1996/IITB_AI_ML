@@ -33,6 +33,12 @@
 // Compute bitmask givne the datatype and its position in the word
 #define getBitMask(dsize , position) ({\
 	uint64_t mask;\
+#if (__U64 || __I64 || __F64)
+		mask = (uint64_t)(0xFFFFFFFFFFFFFFFF);\
+#endif
+#if (__U32 || __I32 || __F32) 
+		mask = ((uint64_t)(0xFFFFFFFF) << 32*(position));\
+#endif
 	switch (dsize)\
 	{\
 	case 8:\

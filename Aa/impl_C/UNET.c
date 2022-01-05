@@ -91,18 +91,41 @@ SizedTensor_8M    R[num_iters];
 SizedTensor_1024  beta, gamma, moving_mean, moving_variance;
 
 // Read the elements of T from an input FIFO
-#define __readSizedTensorFromInputDataPipe__(T)  {\
+#define __InsertIntoSizedTensorDataArray__(T, iter, input_data) ({\
+	T.data_array[iter] = input_data;\
+})
+
+#define __readSizedTensorFromInputDataPipe__(T)  ({\
 	int ne = __NumberOfElementsInSizedTensor__(T);\
 	int I;\
 	for(I = 0; I < ne; I++)\
 	{\
 		uint64_t w = read_uint64 ("input_data_pipe");\
 		__InsertIntoSizedTensorDataArray__(T,I,w);\
-	}}
+	}})
 
-#define __updateOutputDescriptorForConvTensors (X, Y, RESULT, stride, pad) {\
+
+#define __convTensors__(X, Y, RESULT, stride, pad) ({\
 		// size of the result tensor is calculated here.
-	}}
+	})
+
+#define __batch__(X, gamma, beta, moving_mean, moving_variance, iter) ({\
+	})
+
+#define __unaryOperateOnTensor__(X, operation) ({\
+	})
+
+#define __maxPoolOfTensors__(Tensor_IN, Tensor_OUT, length, stride, num_dims_to_pool, dims, mode) ({\
+	})
+
+#define __dilateTensors__(Tensor_IN, Tensor_KERNEL, Tensor_OUT, stride) ({\
+	})
+
+#define __depadTensors__(Tensor_IN, Tensor_OUT, pad) ({\
+	})
+
+#define __concatTensors__(Tensor_IN1,Tensor_IN2,Tensor_OUT,dims)({\
+	})
 
 /*
 void fooT(T*)

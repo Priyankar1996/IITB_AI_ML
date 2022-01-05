@@ -3,7 +3,7 @@
 #include <time.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "tensor.h"
+#include "sized_tensor.h"
 #include "maxPoolOfTensors.h"
 
 int main(int argc, char**argv){
@@ -102,7 +102,7 @@ int main(int argc, char**argv){
 		fprintf(octaveInFile,"%d\n",dims_to_pool[i]);	
 	}
 
-	uint64_t size = __getSizeOfTensor__(T);
+	uint64_t size = __NumberOfElementsInSizedTensor__(T);
 
 	int i;
 	if (T.descriptor.descriptor.data_type == u8){
@@ -247,7 +247,7 @@ int main(int argc, char**argv){
 	fprintf(outFile,"Size of output is ");
 	for (int i =0; i<B.descriptor.descriptor.number_of_dimensions;i++) fprintf(outFile,"%d ",B.descriptor.descriptor.dimensions[i]);
 	fprintf(outFile,"\n");
-	size = __getSizeOfTensor__(B);
+	size = __NumberOfElementsInSizedTensor__(B);
 
 	if (T.descriptor.descriptor.data_type == u8){
 		uint8_t temp[8];

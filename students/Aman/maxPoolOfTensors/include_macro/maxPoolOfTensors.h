@@ -5,17 +5,8 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "tensor.h"
+#include "sized_tensor.h"
 
-
-// Compute size of tensor
-#define __getSizeOfTensor__(T) ({\
-	uint32_t size = 1;\
-	for (int i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++){\
-		size *= T.descriptor.descriptor.dimensions[i];\
-	}\
-	size;\
-})
 
 #define __updateOutputDescriptorMaxPoolOfTensors__(src, dst, l, stride, num_dims_to_pool, dims_to_pool, mode) {\
 	dst.descriptor.descriptor.row_major_form = src.descriptor.descriptor.row_major_form;\
@@ -149,7 +140,7 @@
 // Input tensor src, output dst
 #define __maxpool1D__(src, size, x,  l,  s,  cs, dst, mode) ({\
 	uint8_t dt = src.descriptor.descriptor.data_type;\
-	uint8_t dsize = sizeofTensorDataInBytes(dt);\
+	uint8_t dsize = __sizeOfTensorDataInBytes__(dt);\
 	int num_units = size/(x*cs);\
 	int num_1D_steps = ((mode == 0) ? 1 + (x-l)/s : 1 + (x-1)/s);\
 	if (l>x)\
@@ -204,7 +195,7 @@
 		}\
 	}\
 	uint8_t row_major = src.descriptor.descriptor.row_major_form;\
-	uint64_t size = __getSizeOfTensor__(src);\
+	uint64_t size = __NumberOfElementsInSizedTensor__(src);\
 	uint32_t x;\
 	int64_t cs = 1;\
 	int8_t iStart,iEnd,iInc,jStart,jEnd,jInc;\

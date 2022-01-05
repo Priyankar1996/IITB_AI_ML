@@ -72,9 +72,9 @@ typedef struct __SizedTensor_8M {
 	num_elems;\
 })
 
-#define __SizeOfTensorDataInBytes__(st) ({\
+#define __sizeOfTensorDataInBytes__(st) ({\
 	uint32_t ret_val =  0;\
-	switch(st.descriptor.descriptor.data_type)\
+	switch(st)\
 	{\
 		case u8:\
 		case i8:\

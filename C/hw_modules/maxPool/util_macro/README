@@ -1,0 +1,14 @@
+Test_maxpool.c is used to test the function declared in ../include/maxPoolOfTensors.h .
+It takes the parameters as user-inputs, fill in sequential/random data and gives a function call to maxPoolOfTensors() with these parameters. It compares the output with another maxPooled tensor computed using GNU Octave, and prints if there are differences in the outputs.
+
+Input-format:
+	On NEW lines, specify (in the given order):
+		Sequential (0) or random (1) data 
+		Row_major_form (0/1)(1 for row_major)
+		Num_dims_of_input
+		Size of vector across each dims ( = Num_dims_of_input different inputs. Begin each input on a NEW line)
+		Pool_size (l)
+		Stride (s)
+		Mode (0 = floor, 1 = ceiling)
+		Num_dims_to_pool
+		Dims_to_pool ( = Num_dims_of_pool different inputs. Begin each input on a NEW line). Each of them will lie b/w 0 and Num_dims_of_input )

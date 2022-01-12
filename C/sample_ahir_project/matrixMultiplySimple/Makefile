@@ -33,7 +33,7 @@ AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
 c2llvmbc: prog.c prog.h
-	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c prog.c
+	clang -m32 -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c prog.c
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o
 
@@ -42,7 +42,7 @@ llvmbc2aa:  prog.opt.o
 	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
 
 # link and optimize
-aalink: prog.aa  timer.aa
+aalink: prog.aa  timer.Aa
 	AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa

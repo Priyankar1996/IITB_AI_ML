@@ -62,7 +62,7 @@
 	#define __dt_min_val__ 0
 #endif
 
-#define __maxOperation__(src,dst,l,address,add_src) ({\
+#define __maxOperation__(src,l,add_src) ({\
 		__dt__ data = __dt_min_val__;\
 		for (uint16_t i = 0; i < l; i++)\
 		{\
@@ -74,7 +74,7 @@
 			}\
 			add_src+=(__dim1__(src)-1)*__dim2__(src);\
 		}\
-		*((__dt__*)dst.data_array+address) = data;\
+		data;\
 	})
 
 #define __maxPoolOfTensors3D__(src, dst, l, stride) ({\
@@ -89,7 +89,8 @@
 			for (uint16_t chl = 0; chl < __dim2__(dst); chl++)\
 			{\
 			add_src = chl+__dim2__(src)*(col*stride+__dim1__(src)*row*stride);\
-			__maxOperation__(src,dst,l,address,add_src);\
+			__dt__ data = __maxOperation__(src,l,add_src);\
+			*((__dt__*)dst.data_array+address) = data;\
 			address++;\
 			}\
 		}\

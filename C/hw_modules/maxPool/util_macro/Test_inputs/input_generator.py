@@ -1,24 +1,17 @@
 import random
 import sys
 
-print(random.randint(0,1))
 # Is sequence random?
-
-data_type = random.randint(0,11)
-if (data_type == 8):
-    data_type = data_type - random.randint(1,8)
-if (data_type == 9):
-    data_type = data_type + random.randint(1,2)
-print(data_type)
-
 print(random.randint(0,1))
-# Row major form
 
-num_dims = random.randint(1,6)
+# Row major form
+print(random.randint(0,1))
+
+num_dims = 3
 print(num_dims)
 dims = []
 for i in range(num_dims):
-    dims.append(random.randint(4,60/num_dims))
+    dims.append(random.randint(4,200))
     print(dims[i])
 
 print(random.randint(1,min(dims)))

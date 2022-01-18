@@ -35,10 +35,11 @@ int readTensorFromFile(char *filename, Tensor *t, MemPool *mp)
         array = mp_req.write_data;     
         while(fgets(line, 12000, file))
         {
-            linenumber++;
 
 	    if(line[0] == '!')
 		continue;
+
+            linenumber++;
 
             const char *tok;
             char *eptr;

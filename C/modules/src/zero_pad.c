@@ -99,8 +99,13 @@ void zero_pad_3d(Tensor *src, uint32_t scale_factor, Tensor *dest)
 				//	=source[k+n3*j+n2*n3*i];
 
                 {
+<<<<<<< HEAD
                  address1 = ( 1) * (k+n3*j+n2*n3*i);
                  temp_address = (1) * ((n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad)));
+=======
+                 address1 = (size + 1) * (k+n3*j+n2*n3*i);
+                 temp_address = (size + 1) * ((n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad)));
+>>>>>>> 95ccc8fecbba7d15c2bd7e014cefd800044f6b11
                 /////////////////////////////////////////////
             //read one word at a time from src tensor
         mp_req.request_type = READ;
@@ -167,8 +172,13 @@ void zero_pad_3d(Tensor *src, uint32_t scale_factor, Tensor *dest)
 			    // here dest2 will contain the required output in sequential form 
                 
                  {
+<<<<<<< HEAD
                  temp_address = (1) * (k*jump_matrix +  j*(n1+2*pad) + i );
                  address2 = ( 1) * (index);
+=======
+                 temp_address = (size + 1) * (k*jump_matrix +  j*(n1+2*pad) + i );
+                 address2 = (size + 1) * (index);
+>>>>>>> 95ccc8fecbba7d15c2bd7e014cefd800044f6b11
                  index = index + 1 ;
                 /////////////////////////////////////////////
             //read one word at a time from src tensor

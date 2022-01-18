@@ -49,7 +49,8 @@
 		{\
 			for(int k=0;k<n3;k++)\
 			{\
-				dest2.data_array[(n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))]=src.data_array[k+n3*j+n2*n3*i];\
+				//dest2.data_array[(n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))]=src.data_array[k+n3*j+n2*n3*i];
+                *(((int16_t*)dest2.data_array) + (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))) = *(((int16_t*)src.data_array) + (k+n3*j+n2*n3*i]));\
 			}\
 		}\
 	}\
@@ -63,8 +64,9 @@
 		{\
 			for(int k=0;k<n3;k++)\
 			{\
-			    dest.data_array[index] = dest2.data_array[ k*jump_matrix +  j*(n1+2*pad) + i ];\ 
-		        printf("%ld ",dest.data_array[index]);\
+			    //dest.data_array[index] = dest2.data_array[ k*jump_matrix +  j*(n1+2*pad) + i ];\ 
+                *(((int16_t*)dest.data_array) + index) = *(((int16_t*)dest2.data_array) +  k*jump_matrix +  j*(n1+2*pad) + i );\
+		        printf("%ld ",*(((int16_t*)dest.data_array) + index));\
 			    index = index + 1 ;\
 			}\
 		}\

@@ -40,8 +40,8 @@
     dest2.descriptor.descriptor.row_major_form = 1;\
     dest2.descriptor.tensor_size = (dest.descriptor.descriptor.dimensions[0])*(dest.descriptor.descriptor.dimensions[1])*(dest.descriptor.descriptor.dimensions[2]);\
     int size=(n1*n2*n3);\
-    int pad=scale_factor;\ 
-	int idx   = 0;\
+    int pad=scale_factor;\
+    int idx   = 0;\
 	int width = 0;\
 	for(int i=0;i<n1;i++)\
 	{\
@@ -49,24 +49,22 @@
 		{\
 			for(int k=0;k<n3;k++)\
 			{\
-				//dest2.data_array[(n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))]=src.data_array[k+n3*j+n2*n3*i];
-                *(((int16_t*)dest2.data_array) + (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))) = *(((int16_t*)src.data_array) + (k+n3*j+n2*n3*i]));\
+				*(((int16_t*)dest2.data_array) + (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))) = *(((int16_t*)src.data_array) + (k+n3*j+n2*n3*i));\
 			}\
 		}\
 	}\
-	int index=0;\
-	int jump_matrix = ((n1+2*pad)*(n2+2*pad));\ 
-	int row_jump = (n1+2*pad);\ 
-	int column_jump = (n2+2*pad);\
+    int index=0;\
+    int jump_matrix = ((n1+2*pad)*(n2+2*pad));\
+    int row_jump = (n1+2*pad);\
+    int column_jump = (n2+2*pad);\
     for(int i=0;i<n1+2*pad;i++)\
 	{\
 		for(int j=0;j<n2+2*pad;j++)\
 		{\
 			for(int k=0;k<n3;k++)\
 			{\
-			    //dest.data_array[index] = dest2.data_array[ k*jump_matrix +  j*(n1+2*pad) + i ];\ 
                 *(((int16_t*)dest.data_array) + index) = *(((int16_t*)dest2.data_array) +  k*jump_matrix +  j*(n1+2*pad) + i );\
-		        printf("%ld ",*(((int16_t*)dest.data_array) + index));\
+		        printf("%d ",*(((int16_t*)dest.data_array) + index));\
 			    index = index + 1 ;\
 			}\
 		}\

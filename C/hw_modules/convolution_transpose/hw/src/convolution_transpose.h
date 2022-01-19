@@ -160,10 +160,10 @@
     for(int XX=0;XX<CEILING(num_elems_dinput*datasize,8);XX++){\
         uint64_t read_data = input.data_array[XX];\
         uint16_t bytes[4];\
-        uint16_t bytes[0] = read_data & 0xFFFF;\
-        uint16_t bytes[1] = (read_data >> 16) & 0xFFFF;\
-        uint16_t bytes[2] = (read_data >> 32) & 0xFFFF;\
-        uint16_t bytes[3] = (read_data >> 48) & 0xFFFF;\
+        bytes[0] = read_data & 0xFFFF;\
+        bytes[1] = (read_data >> 16) & 0xFFFF;\
+        bytes[2] = (read_data >> 32) & 0xFFFF;\
+        bytes[3] = (read_data >> 48) & 0xFFFF;\
         for(int kk=0;kk<__dt_size__;kk++) {\
             d_count++;\
             d_offset = d_count;\

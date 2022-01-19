@@ -1,8 +1,8 @@
-#include "convolveTensors.h"
 #include <stdio.h>
 #include <stdint.h>
 #include "sized_tensor.h"
 #include <inttypes.h>
+#include "convolveTensors.h"
 
 #define __I16 5
 

@@ -1,4 +1,4 @@
-Assumptions : 3D tensor, row_major, int16 data type
+//Assumptions : 3D tensor, row_major, int16 data type
 
 #include <stdio.h>
 #include <stdint.h>

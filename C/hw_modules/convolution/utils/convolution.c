@@ -1,21 +1,18 @@
 #include "convolveTensors.h"
 #include <stdio.h>
 #include <stdint.h>
-#include "tensor.h"
 #include "sized_tensor.h"
 #include <inttypes.h>
 
-SizedTensor_1024 T,K,R;
-
 #define __I16 5
 
-void initTensor(SizedTensor_1024 T)
+SizedTensor_1024 T,K,R;
+
+void initTensor(SizedTensor_1024* T)
 {
-    for (int i = 0; i < T.descriptor.tensor_size; i++)
+    for (int i = 0; i < T->descriptor.tensor_size; i++)
     {
-        *((int16_t*)T.data_array + i) = 5;
-        printf("%"PRIu16"\t",*(((int16_t*)T.data_array) + i));
-        printf("%d\n",i);
+        *((int16_t*)T->data_array + i) = 5;
     }
 }
 
@@ -38,13 +35,10 @@ int main()
     K.descriptor.descriptor.row_major_form = 1;
     K.descriptor.tensor_size = 3;
 
-    initTensor(T);
-    initTensor(K);
+    initTensor(&T);
+    initTensor(&K);
     int stride = 1;
     __convolveTensors__(T,K,R,stride);
-    for(int i = 0; i < R.descriptor.tensor_size; i++)
-    {
-        printf("%"PRIu16"\n",*((int16_t*)R.data_array + i));
-    }
+    printf("CONVOLUTION COMPLETED\n");
     return 0;
 }

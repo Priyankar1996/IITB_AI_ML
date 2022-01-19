@@ -10,14 +10,14 @@
 
 SizedTensor_256K input, output;
 SizedTensor_4096 kernel;
-int stride[2] = {2,2}, padding = 1;
+int stride[2],padding;
 //Fill input and kernel tensors with random values.
     
 
 int main(int argc,char **argv)
 {
 
-    FILE *input_file, *kernel_file, *out_file;
+    FILE *input_file,*param_file, *kernel_file, *out_file;
 
     if ((input_file = fopen(argv[1],"r")) == NULL){
         fprintf(stderr,"Input File Error\n");
@@ -29,6 +29,11 @@ int main(int argc,char **argv)
         exit(-1);
     }
     
+	if ((param_file = fopen(argv[3],"r")) ==  NULL){
+        fprintf(stderr,"Input parameters file error\n");
+        exit(-1);
+    }
+
     if ((out_file = fopen("CoutFile.txt","w")) == NULL){
 		fprintf(stderr,"Output File error\n");
 		exit(-1);
@@ -102,6 +107,10 @@ int main(int argc,char **argv)
 		fscanf(kernel_file,"%d",&kernel.descriptor.descriptor.dimensions[ii]);
 	}
 
+	for (ii = 0;ii < 2;ii++){
+		fscanf(param_file,"%d",&stride[ii]);
+	}
+	fscanf(param_file,"%d",&padding);
     //View output
     uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
 	uint64_t kernel_size = __NumberOfElementsInSizedTensor__(kernel);

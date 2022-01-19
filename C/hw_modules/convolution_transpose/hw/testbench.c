@@ -133,14 +133,14 @@ int main(int argc,char **argv)
         write_uint16("convTranspose_input_pipe",kernel.descriptor.descriptor.dimensions[ii]);
 	}
 
-    uint16_t stride[2],padding;
+    int stride[2],padding;
 
     for(ii = 0;ii < 2;ii ++){
-		fscanf(param_file,"%d",&stride[i]);
+		fscanf(param_file,"%d",&stride[ii]);
         write_uint16("convTranspose_input_pipe",stride[ii]);
 	}
 	fscanf(param_file,"%d",padding);
-    write_uint16("convTranspose_input_pipe",padding);
+    write_uint16("convTranspose_input_pipe",&padding);
 
     uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
 	uint64_t kernel_size = __NumberOfElementsInSizedTensor__(kernel);

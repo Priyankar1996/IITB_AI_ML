@@ -12,7 +12,7 @@ void initTensor(SizedTensor_1024* T)
 {
     for (int i = 0; i < T->descriptor.tensor_size; i++)
     {
-        *((int16_t*)T->data_array + i) = i;
+        *((int16_t*)T->data_array + i) = i+1;
     }
 }
 
@@ -29,9 +29,9 @@ int main(){
 
     K.descriptor.descriptor.data_type = i16;
     K.descriptor.descriptor.number_of_dimensions = 4;
-    K.descriptor.descriptor.dimensions[0] = T.descriptor.descriptor.dimensions[0] + scale_factor;
-    K.descriptor.descriptor.dimensions[1] = T.descriptor.descriptor.dimensions[1] + scale_factor;
-    K.descriptor.descriptor.dimensions[2] = T.descriptor.descriptor.dimensions[2] + scale_factor;
+    K.descriptor.descriptor.dimensions[0] = T.descriptor.descriptor.dimensions[0] + 2*scale_factor;
+    K.descriptor.descriptor.dimensions[1] = T.descriptor.descriptor.dimensions[1] + 2*scale_factor;
+    K.descriptor.descriptor.dimensions[2] = T.descriptor.descriptor.dimensions[2] + 2*scale_factor;
     K.descriptor.descriptor.row_major_form = 1;
     K.descriptor.tensor_size = K.descriptor.descriptor.dimensions[0] * K.descriptor.descriptor.dimensions[1] * K.descriptor.descriptor.dimensions[2]; 
     // Zero-padding the the source tensor in order to generate the

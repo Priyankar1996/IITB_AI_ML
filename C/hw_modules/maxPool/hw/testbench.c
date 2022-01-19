@@ -277,6 +277,7 @@ int main(int argc, char**argv){
 	{
 		uint16_t dim = read_uint16("maxpool_output_pipe");
 		fprintf(outFile,"%hu ",dim);
+		B.descriptor.descriptor.dimensions[i] = dim;
 	}
 	fprintf(outFile,"\n");
 	size = __NumberOfElementsInSizedTensor__(B);

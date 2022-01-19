@@ -28,7 +28,7 @@ int main(int argc,char **argv)
     fprintf(stderr,"Entering testbench main program\n");
     srand(time(0));
 
-    FILE *input_file, *param_file, *kernel_file, *out_file;
+    FILE *input_file,*param_file, *kernel_file, *out_file;
 
     if ((input_file = fopen(argv[1],"r")) == NULL){
         fprintf(stderr,"Input File Error\n");
@@ -136,18 +136,17 @@ int main(int argc,char **argv)
     uint16_t stride[2],padding;
 
     for(ii = 0;ii < 2;ii ++){
-        fscanf(param_file,"%hu",&stride[ii]);
+		fscanf(param_file,"%d",&stride[i]);
         write_uint16("convTranspose_input_pipe",stride[ii]);
-    }
-
-    fscanf(param_file,"%hu",&padding);
+	}
+	fscanf(param_file,"%d",padding);
     write_uint16("convTranspose_input_pipe",padding);
 
     uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
 	uint64_t kernel_size = __NumberOfElementsInSizedTensor__(kernel);
 
-    if (input.descriptor.descriptor.data_type == i16){
-		int16_t temp[4];
+    if (input.descriptor.descriptor.data_type == u16){
+		uint16_t temp[4];
 		for (ii = 0; ii < input_size; ii++)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
@@ -175,8 +174,8 @@ int main(int argc,char **argv)
 	fprintf(out_file,"\n");
 	int size = __NumberOfElementsInSizedTensor__(output);
 
-	if (input.descriptor.descriptor.data_type == i16){
-		int16_t temp[4];
+	if (input.descriptor.descriptor.data_type == u16){
+		uint16_t temp[4];
 		for (ii = 0; ii < size; ii++)
 		{
 			if ((ii&3)==0) *((uint64_t*)temp) = output.data_array[ii/4];
@@ -189,8 +188,8 @@ int main(int argc,char **argv)
     fprintf(stderr,"Read back the values from hardware\n");
 
 	fclose(input_file);
+	fclose(param_file);
     fclose(kernel_file);
-    fclose(param_file);
 	fclose(out_file);
 
     #ifdef SW

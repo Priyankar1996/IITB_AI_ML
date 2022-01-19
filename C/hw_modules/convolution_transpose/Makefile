@@ -22,7 +22,7 @@ createDir:
 run:
 	@echo "Enter input filename (file must be present in util/Test_inputs/)"; \
 	# read FILENAME; \
-	cd $(BIN); ./Test ../util/Test_inputs/input_image.txt ../util/Test_inputs/input_kernel.txt
+	cd $(BIN); ./Test ../util/Test_inputs/input_image.txt ../util/Test_inputs/input_kernel.txt ../util/Test_inputs/input_parameters.txt
 
 .PHONY : clean
 clean:

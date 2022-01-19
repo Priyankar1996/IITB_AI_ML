@@ -1,3 +1,5 @@
+//Assumptions : 3D tensor, row_major, int16 data type
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -13,23 +15,33 @@
     out.descriptor.descriptor.data_type = i16;\
     out.descriptor.descriptor.number_of_dimensions = 3;\
     out.descriptor.descriptor.row_major_form = 1;\
+    
+    //calculate output dimension
+    
 	__dim0__(out) = (__dim0__(inp) - __dim1__(ker))/stride + 1;\
 	__dim1__(out) = (__dim1__(inp) - __dim2__(ker))/stride + 1;\
 	__dim2__(out) = (__dim0__(ker));\
 	out.descriptor.tensor_size = __dim0__(out) * __dim1__(out) * __dim2__(out);\
 	int out_idx = 0;\
+	
+	//p,q,r are for output index
+	
 	for (int p = 0; p < __dim0__(out); p++)\
 	{\
 		for(int q = 0; q < __dim1__(out); q++)\
 		{\
 			for(int r = 0; r < __dim2__(out); r++)\
 			{\
+				
+				//i,j,k are for the window multiplication
+				
 				for(int i = 0; i < __dim1__(ker); i++)\
 				{\
 					for(int j = 0; j < __dim2__(ker); j++)\
 					{\
 						for(int k = 0; k < __dim3__(ker); k++)\
 						{\
+							//sliding window logic
 							int img_index[3] = {p*stride+i,q*stride+j,k};\
 							int ker_index[4] = {r,i,j,k};\
 							int img_data_array_idx = __getTensorEntryIndexOffset__(inp,img_index);\

@@ -38,12 +38,34 @@ uint16_t length, stride;
 	write_uint16 ("maxpool_output_pipe",out_data[3]);\
 })
 
+uint64_t getRemainingElements(uint16_t ne){
+	uint64_t element = 0;
+	for (uint16_t n = 0 ; n < ne; n++){
+		element += read_uint16 ("maxpool_input_pipe");
+		element <<= 16;
+	}
+	element <<= 16*(3-ne);
+	return element;
+}
+
+void sendRemainingElements(int addr, uint16_t ne){
+	uint64_t element = B.data_array[addr];\
+	uint16_t out_data[3];\
+	element>>=16;\
+	out_data[2] = element & 0xFFFF;\
+	element>>=16;\
+	out_data [1]= element & 0xFFFF;\
+	element>>=16;\
+	out_data[0] = element & 0xFFFF;\
+	for (int n = 0; n < ne; n++)
+		write_uint16 ("maxpool_output_pipe",out_data[n]);
+}
+
 void testConfigure()
 {
 	// configure the tensor T
-	fprintf(stderr,"Starting test_configure\n");
 
-	T.descriptor.descriptor.data_type = i16;
+	T.descriptor.descriptor.data_type = u16;
 	T.descriptor.descriptor.row_major_form = 1;
 	T.descriptor.descriptor.number_of_dimensions = 3;
 	int i;
@@ -66,14 +88,12 @@ void testConfigure()
 
 		T.data_array[i] = element;
 	}
-	fprintf(stderr,"Ending test_configure\n");
-
+	if (size&3) T.data_array[i] = getRemainingElements(size&3);
 }
 
 // this sends B...
 void sendB()
 {
-	fprintf(stderr,"Starting test_send\n");
 	write_uint16("maxpool_output_pipe",__dim0__(B));
 	write_uint16("maxpool_output_pipe",__dim1__(B));
 	write_uint16("maxpool_output_pipe",__dim2__(B));
@@ -83,13 +103,21 @@ void sendB()
 	{
 		__set4xi16__(i);
 	}
-	fprintf(stderr,"Ending test_send\n");
+	if (size&3) sendRemainingElements(i,size&3);
 }
 
 
 void maxPool3D()
 {
+#ifndef SW
+	uint64_t start_time = timer();
+#endif
 	testConfigure();	
 	__maxPoolOfTensors3D__(T,B,length,stride);
 	sendB ();
+#ifndef SW
+	uint64_t stop_time = timer();
+	uint64_t elapsed_time = stop_time - start_time;
+	write_uint64("elapsed_time_pipe", elapsed_time);
+#endif
 }

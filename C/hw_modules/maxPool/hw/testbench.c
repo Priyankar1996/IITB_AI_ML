@@ -115,14 +115,7 @@ int main(int argc, char**argv){
 		fprintf(octaveInFile,"11\n");
 	#endif
 
-	//Take row-major-form as input
-	fscanf(file,"%hhd",&T.descriptor.descriptor.row_major_form);
-	fprintf(octaveInFile,"%hhd\n",T.descriptor.descriptor.row_major_form);
-
-	//Take input tensor dimensions){ num_diminsions followed by size of each dimension
-	fscanf(file,"%d",&T.descriptor.descriptor.number_of_dimensions);
-	fprintf(octaveInFile,"%d\n",T.descriptor.descriptor.number_of_dimensions);
-	
+	T.descriptor.descriptor.number_of_dimensions = 3;
 	int i;
 	for (i = 0;i < T.descriptor.descriptor.number_of_dimensions;i++){
 		fscanf(file,"%d",&T.descriptor.descriptor.dimensions[i]);
@@ -130,18 +123,12 @@ int main(int argc, char**argv){
 		write_uint16("maxpool_input_pipe",T.descriptor.descriptor.dimensions[i]);
 	}
 	uint16_t length,stride,mode,num_dims;
-	fscanf(file,"%hu%hu%hu%hu",&length,&stride,&mode,&num_dims);
-	fprintf(octaveInFile,"%hu\n%hu\n%hu\n%hu\n",length,stride,mode,num_dims);
+	fscanf(file,"%hu%hu",&length,&stride);
+	fprintf(octaveInFile,"%hu\n%hu\n",length,stride);
 	write_uint16("maxpool_input_pipe",length);
 	write_uint16("maxpool_input_pipe",stride);
 	// mode = 0 for floor, 1 for ceil
 	
-	int dims_to_pool[num_dims];
-	for (i = 0;i < num_dims;i++){
-		fscanf(file,"%d",&dims_to_pool[i]);
-		fprintf(octaveInFile,"%d\n",dims_to_pool[i]);	
-	}
-
 	fprintf(stderr,"Entering data to tensor\n");
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(T);
@@ -286,13 +273,15 @@ int main(int argc, char**argv){
 	fprintf(stderr,"Reading back the values from hardware\n");
 
 	fprintf(outFile,"Size of output is ");
-	for (i =0; i<B.descriptor.descriptor.number_of_dimensions;i++)
+	for (i =0; i<T.descriptor.descriptor.number_of_dimensions;i++)
 	{
 		uint16_t dim = read_uint16("maxpool_output_pipe");
 		fprintf(outFile,"%hu ",dim);
+		B.descriptor.descriptor.dimensions[i] = dim;
 	}
 	fprintf(outFile,"\n");
 	size = __NumberOfElementsInSizedTensor__(B);
+	fprintf(stderr,"Size of output is %d\n",size );
 
 	if (T.descriptor.descriptor.data_type == u8){
 		uint8_t temp[8];
@@ -408,6 +397,10 @@ int main(int argc, char**argv){
 	system(arr);
 
 	printf("If no message is printed after this one, there is no error!!\n");
+#ifndef SW
+	uint64_t time_taken = read_uint64("elapsed_time_pipe");
+	fprintf(stderr,"Time taken is %lu\n",time_taken);
+#endif
 	system("cmp COutFile.txt OctaveOutFile.txt");
 
 #ifdef SW

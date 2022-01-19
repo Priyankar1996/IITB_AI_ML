@@ -138,7 +138,11 @@
              count=0,offset,output_offset=0;\
     for(int i=0;i<CEILING(num_elems_input*datasize,8);i++){\
         uint64_t read_data = input.data_array[i];\
-        __dt__ (*bytes)[__dt_size__] = ((void*)&read_data);\
+        uint16_t bytes[4];\
+        uint16_t bytes[0] = read_data & 0xFFFF;\
+        uint16_t bytes[1] = (read_data >> 16) & 0xFFFF;\
+        uint16_t bytes[2] = (read_data >> 32) & 0xFFFF;\
+        uint16_t bytes[3] = (read_data >> 48) & 0xFFFF;\       
         for(int k=0;k<__dt_size__;k++) {\
             count++;\
             offset = count;\
@@ -155,7 +159,11 @@
     int d_count=0,d_offset,check_depad=0,d_output_offset=0;\
     for(int XX=0;XX<CEILING(num_elems_dinput*datasize,8);XX++){\
         uint64_t read_data = input.data_array[XX];\
-        __dt__ (*bytes)[__dt_size__] = ((void*)&read_data);\
+        uint16_t bytes[4];\
+        uint16_t bytes[0] = read_data & 0xFFFF;\
+        uint16_t bytes[1] = (read_data >> 16) & 0xFFFF;\
+        uint16_t bytes[2] = (read_data >> 32) & 0xFFFF;\
+        uint16_t bytes[3] = (read_data >> 48) & 0xFFFF;\
         for(int kk=0;kk<__dt_size__;kk++) {\
             d_count++;\
             d_offset = d_count;\
@@ -165,6 +173,4 @@
             }\
         }\
     }})
-
-
 #endif

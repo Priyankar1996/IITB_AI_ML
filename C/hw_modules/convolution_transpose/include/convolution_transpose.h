@@ -128,7 +128,11 @@
         output.data_array[i] = 0;\
     for(int i=0;i<num_elems_input;i++){\
         uint64_t read_data = input.data_array[i];\
-        __dt__ (*bytes)[__dt_size__] = ((void*)&read_data);\
+        uint16_t bytes[4];\
+        bytes[0] = read_data & 0xFFFF;\
+        bytes[1] = (read_data >> 16) & 0xFFFF;\
+        bytes[2] = (read_data >> 32) & 0xFFFF;\
+        bytes[3] = (read_data >> 48) & 0xFFFF;\
         for(int k=0;k<__dt_size__;k++) {\
             count++;\
             output_offset = __ComputeDilatedTensorOffset__(count,input,output,kernel,stride);\
@@ -147,7 +151,11 @@
         output.data_array[i] = 0;\
     for(int i=0;i<num_elems_input;i++){\
         uint64_t read_data = input.data_array[i];\
-        __dt__ (*bytes)[__dt_size__] = ((void*)&read_data);\
+        uint16_t bytes[4];\
+        bytes[0] = read_data & 0xFFFF;\
+        bytes[1] = (read_data >> 16) & 0xFFFF;\
+        bytes[2] = (read_data >> 32) & 0xFFFF;\
+        bytes[3] = (read_data >> 48) & 0xFFFF;\
         for(int k=0;k<__dt_size__;k++) {\
             count++;\
             check_depad = __CheckPadding__(count,input,output,padding);\

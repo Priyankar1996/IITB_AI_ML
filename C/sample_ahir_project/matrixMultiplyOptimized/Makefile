@@ -16,7 +16,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T mmultiply -T timerDaemon 
+TOPMODULES=-T mmultiply -T mmultiplyUpper -T mmultiplyLower -T timerDaemon 
 
 
 # compile with SW defined.
@@ -27,6 +27,7 @@ SW: prog.c prog.h testbench.c
 	gcc -g -o testbench_sw prog.o testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread
 
 # five steps from C to vhdl simulator.
+VHDL: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
 
 AA2VHDL: aa2vc vc2vhdl vhdlsim
@@ -43,7 +44,7 @@ llvmbc2aa:  prog.opt.o
 
 # link and optimize
 aalink: prog.aa  timer.Aa
-	AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
+	AaLinkExtMem prog.aa timer.Aa | vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 

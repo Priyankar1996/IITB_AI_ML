@@ -4,8 +4,6 @@
 #include <inttypes.h>
 #include "convolveTensors.h"
 
-#define __I16 5
-
 SizedTensor_1024 T,K,R;
 
 void initTensor(SizedTensor_1024* T)

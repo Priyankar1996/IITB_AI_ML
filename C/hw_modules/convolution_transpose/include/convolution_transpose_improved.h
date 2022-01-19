@@ -113,13 +113,17 @@
     int conv_offset;\
     for(int i=0;i<CEILING(num_elems_input*datasize,8);i++){\
         uint64_t read_data = input.data_array[i];\
-        __dt__ (*bytes)[__dt_size__] = ((void*)&read_data);\
+        uint16_t bytes[4];\
+        bytes[0] = read_data & 0xFFFF;\
+        bytes[1] = (read_data >> 16) & 0xFFFF;\
+        bytes[2] = (read_data >> 32) & 0xFFFF;\
+        bytes[3] = (read_data >> 48) & 0xFFFF;\
         for(int kl=0;kl<__dt_size__;kl++) {\
             count++;\
             offset = count;\
             conv_offset = __CheckConvTransposedTensor__(offset,input,output,kernel,stride,padding);\
             if(conv_offset>=0)\
-                *((__dt__*)output.data_array + conv_offset) = (*bytes)[kl];\
+                *((__dt__*)output.data_array + conv_offset) = bytes[kl];\
         }\
     }\
 })

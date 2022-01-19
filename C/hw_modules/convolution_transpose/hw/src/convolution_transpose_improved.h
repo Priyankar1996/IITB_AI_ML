@@ -87,7 +87,7 @@
 
 #define __CheckConvTransposedTensor__(conv_offset,src,output,kernel,stride,padding) ({\
     __UpdateOutputDescriptorConvTransTensors__(input,kernel,stride,padding,output);\
-    int mm,ppp; uint32_t conv_indices[3], conv_output_indices[3],flag=0,conv_output_flag=0;\
+    int16_t mm,ppp; int16_t conv_indices[3], conv_output_indices[3],flag=0,conv_output_flag=0;\
     for(ppp=src.descriptor.descriptor.number_of_dimensions-1;ppp>=0;ppp--) {\
         conv_indices[ppp] = ((conv_offset % src.descriptor.descriptor.dimensions[ppp])? (conv_offset % src.descriptor.descriptor.dimensions[ppp]):src.descriptor.descriptor.dimensions[ppp])-1;\
         conv_offset = CEILING(conv_offset,src.descriptor.descriptor.dimensions[ppp]);\
@@ -117,13 +117,17 @@
     int conv_offset,i,kl;\
     for(i=0;i<CEILING(num_elems_input*datasize,8);i++){\
         uint64_t read_data = input.data_array[i];\
-        __dt__ (*bytes)[__dt_size__] = ((void*)&read_data);\
+        uint16_t bytes[4];\
+        bytes[0] = read_data & 0xFFFF;\
+        bytes[1] = (read_data >> 16) & 0xFFFF;\
+        bytes[2] = (read_data >> 32) & 0xFFFF;\
+        bytes[3] = (read_data >> 48) & 0xFFFF;\
         for(kl=0;kl<__dt_size__;kl++) {\
             count++;\
             offset = count;\
             conv_offset = __CheckConvTransposedTensor__(offset,input,output,kernel,stride,padding);\
             if(conv_offset>=0)\
-                *((__dt__*)output.data_array + conv_offset) = (*bytes)[kl];\
+                *((__dt__*)output.data_array + conv_offset) = bytes[kl];\
         }\
     }\
 })

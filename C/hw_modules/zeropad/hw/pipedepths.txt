@@ -1,2 +1,2 @@
-zeropad_input_pipe 2
-zeropad_output_pipe 2
+ZeroPad_input_pipe 2
+ZeroPad_output_pipe 2

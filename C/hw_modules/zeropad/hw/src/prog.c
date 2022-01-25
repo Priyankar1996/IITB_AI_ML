@@ -45,16 +45,16 @@ void ReadInputInfo()
     input.descriptor.descriptor.data_type = i16;
     input.descriptor.descriptor.row_major_form = 1;
     input.descriptor.descriptor.number_of_dimensions = 3;
-    int i;
-    for(i = 0;i < input.descriptor.descriptor.number_of_dimensions;i++){
-        input.descriptor.descriptor.dimensions[i] = read_uint16 ("ZeroPad_input_pipe");
+    int i1;
+    for(i1 = 0;i1 < input.descriptor.descriptor.number_of_dimensions;i1++){
+        input.descriptor.descriptor.dimensions[i1] = read_uint16 ("ZeroPad_input_pipe");
     }
 
     pad = read_uint16 ("ZeroPad_input_pipe");
     
     uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
 
-    for(i = 0; i < (input_size >> 2); i ++)
+    for(i1 = 0; i1 < (input_size >> 2); i1++)
     {
         uint64_t element;
         // __get4xi16__ reads 4 16-bit numbers from
@@ -62,7 +62,7 @@ void ReadInputInfo()
 		// a 64 bit number
         __get4xi16__(element);
 
-        input.data_array[i] = element;
+        input.data_array[i1] = element;
     }
     fprintf(stderr,"Ending test_configure\n");
 }
@@ -74,9 +74,9 @@ void sendOutput()
     write_uint16("ZeroPad_output_pipe",output.descriptor.descriptor.dimensions[1]);
     write_uint16("ZeroPad_output_pipe",output.descriptor.descriptor.dimensions[2]);
     uint64_t size = __NumberOfElementsInSizedTensor__(output);
-    int i;
-    for (i = 0; i < size; i++){
-        __set4xi16__(i);
+    int i2;
+    for (i2 = 0; i2 < size; i2++){
+        __set4xi16__(i2);
     }
     fprintf(stderr,"Ending test_send\n");
 }

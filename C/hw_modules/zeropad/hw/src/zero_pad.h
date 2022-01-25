@@ -31,7 +31,7 @@
     int n1 = src.descriptor.descriptor.dimensions[0];\
     int n2 = src.descriptor.descriptor.dimensions[1];\
     int n3 = src.descriptor.descriptor.dimensions[2];\
-    __SizedTensor_1M dest2;\
+    SizedTensor_1M dest2;\
     dest2.descriptor.descriptor.data_type = i16;\
     dest2.descriptor.descriptor.number_of_dimensions = 3;\
     dest2.descriptor.descriptor.dimensions[0] = dest.descriptor.descriptor.dimensions[0];\
@@ -43,11 +43,12 @@
     int pad=scale_factor;\
     int idx   = 0;\
 	int width = 0;\
-	for(int i=0;i<n1;i++)\
+	int i, j, k;\
+	for(i=0;i<n1;i++)\
 	{\
-		for(int j=0;j<n2;j++ )\
+		for(j=0;j<n2;j++ )\
 		{\
-			for(int k=0;k<n3;k++)\
+			for(k=0;k<n3;k++)\
 			{\
 				*(((int16_t*)dest2.data_array) + (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))) = *(((int16_t*)src.data_array) + (k+n3*j+n2*n3*i));\
 			}\
@@ -57,11 +58,11 @@
     int jump_matrix = ((n1+2*pad)*(n2+2*pad));\
     int row_jump = (n1+2*pad);\
     int column_jump = (n2+2*pad);\
-    for(int i=0;i<n1+2*pad;i++)\
+    for(i=0;i<n1+2*pad;i++)\
 	{\
-		for(int j=0;j<n2+2*pad;j++)\
+		for(j=0;j<n2+2*pad;j++)\
 		{\
-			for(int k=0;k<n3;k++)\
+			for(k=0;k<n3;k++)\
 			{\
                 *(((int16_t*)dest.data_array) + index) = *(((int16_t*)dest2.data_array) +  k*jump_matrix +  j*(n1+2*pad) + i );\
 		        printf("%d ",*(((int16_t*)dest.data_array) + index));\

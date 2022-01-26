@@ -1,3 +1,4 @@
+#define __U16 1
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
@@ -105,13 +106,18 @@ int main(int argc,char **argv)
 	#endif
 
     fscanf(input_file,"%hhd",&input.descriptor.descriptor.row_major_form);
-    fscanf(input_file,"%d",&input.descriptor.descriptor.number_of_dimensions);
+    write_uint16("ZeroPad_input_pipe",input.descriptor.descriptor.row_major_form);
+	fscanf(input_file,"%d",&input.descriptor.descriptor.number_of_dimensions);
+	write_uint16("ZeroPad_input_pipe",input.descriptor.descriptor.number_of_dimensions);
 	int ii;
 	for (ii = 0;ii < input.descriptor.descriptor.number_of_dimensions;ii++){
 		fscanf(input_file,"%d",&input.descriptor.descriptor.dimensions[ii]);
         write_uint16("ZeroPad_input_pipe",input.descriptor.descriptor.dimensions[ii]);
 
 	}
+	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",input.descriptor.descriptor.dimensions[0],input.descriptor.descriptor.dimensions[1],input.descriptor.descriptor.dimensions[2]);
+	
+	
 	// Entering the padding size that needs to be done
     int pad = 1;
 	write_uint16("ZeroPad_input_pipe",&pad);
@@ -123,38 +129,41 @@ int main(int argc,char **argv)
 		for (ii = 0; ii < input_size; ii++)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
-			else temp[ii&3] = ii+1;					//Sequential data
+			else temp[ii&3] = ii+1;	
+			write_uint16("ZeroPad_input_pipe",temp[ii&3]);
+			fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
 			if ((ii&3)==3) input.data_array[ii/4] = *(uint64_t*)temp;
 		}
 		input.data_array[ii/4] = *(uint64_t*)temp;
 	}	
 	else{
-		fprintf(stderr,"Error. Datatypes mismatch.");
+		fprintf(stderr,"Error. Datatypes mismatch. \n");
 	}
 
     fprintf(stderr,"Reading the output values from hardware\n");
-    fprintf(stderr,"Size of output is ");
-
-    for (ii =0; ii<output.descriptor.descriptor.number_of_dimensions;ii++) 
-    fprintf(out_file,"%d ",output.descriptor.descriptor.dimensions[ii]);
-	fprintf(out_file,"\n");
+    printf(out_file,"\n");
 	int size = __NumberOfElementsInSizedTensor__(output);
 
 	if (input.descriptor.descriptor.data_type == u16){
-		uint16_t temp[4];
+		uint16_t val;
 		for (ii = 0; ii < size; ii++)
 		{
-			if ((ii&3)==0) *((uint64_t*)temp) = output.data_array[ii/4];
-			fprintf(out_file,"%d %hd\n",ii+1, temp[ii&3]);
+			val = read_uint16("ZeroPad_output_pipe");
+			fprintf(stderr,"%hu\n",val);
 		}
 	}		
 	else{
-		fprintf(stderr,"Error. Datypes mismatch.");
+		fprintf(stderr,"Error. Datypes mismatch. \n");
 	}
     fprintf(stderr,"Read back the values from hardware\n");
 
 	fclose(input_file);
 	fclose(out_file);
+
+	#ifndef SW
+		uint64_t time_taken = read_uint64("elapsed_time_pipe");
+		fprintf(stderr,"Time taken is %lu\n",time_taken);
+	#endif
 
     #ifdef SW
 	    PTHREAD_CANCEL(zeropad_thread);

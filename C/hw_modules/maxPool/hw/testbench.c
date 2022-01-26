@@ -8,11 +8,7 @@
 
 #include "sized_tensor.h"
 #include "maxPoolOfTensors.h"
-
-//
-// the next two inclusions are
-// to be used in the software version
-//  
+ 
 #ifdef SW
 #include <pipeHandler.h>
 #include <Pipes.h>
@@ -25,8 +21,8 @@
 DEFINE_THREAD(maxPool3D);
 #endif
 
-
 SizedTensor_16K T,B;
+
 int main(int argc, char**argv){
 
 	fprintf(stderr,"Entering testbench main program\n");
@@ -63,8 +59,6 @@ int main(int argc, char**argv){
 
 	uint8_t rand_data;
 	fscanf(file,"%hhd",&rand_data);
-
-	//Take datatype as input
 
 	#ifdef __U8
 		T.descriptor.descriptor.data_type = u8;
@@ -115,275 +109,62 @@ int main(int argc, char**argv){
 		fprintf(octaveInFile,"11\n");
 	#endif
 
+	fprintf(stderr,"Entering data to tensor\n");
+	uint16_t length,stride;
+	fscanf(file,"%hu%hu",&length,&stride);
+	fprintf(octaveInFile,"%hu\n%hu\n",length,stride);
+	write_uint16("maxpool_input_pipe",length);
+	write_uint16("maxpool_input_pipe",stride);
+
 	T.descriptor.descriptor.number_of_dimensions = 3;
+	B.descriptor.descriptor.number_of_dimensions = T.descriptor.descriptor.number_of_dimensions;
 	int i;
 	for (i = 0;i < T.descriptor.descriptor.number_of_dimensions;i++){
 		fscanf(file,"%d",&T.descriptor.descriptor.dimensions[i]);
 		fprintf(octaveInFile,"%d\n",T.descriptor.descriptor.dimensions[i]);
 		write_uint16("maxpool_input_pipe",T.descriptor.descriptor.dimensions[i]);
-	}
-	uint16_t length,stride,mode,num_dims;
-	fscanf(file,"%hu%hu",&length,&stride);
-	fprintf(octaveInFile,"%hu\n%hu\n",length,stride);
-	write_uint16("maxpool_input_pipe",length);
-	write_uint16("maxpool_input_pipe",stride);
-	// mode = 0 for floor, 1 for ceil
 	
-	fprintf(stderr,"Entering data to tensor\n");
+		if (i==2) B.descriptor.descriptor.dimensions[i] = T.descriptor.descriptor.dimensions[i];
+		else B.descriptor.descriptor.dimensions[i] = 1 + (T.descriptor.descriptor.dimensions[i]-length)/stride;
+		write_uint16("maxpool_input_pipe",B.descriptor.descriptor.dimensions[i]);
+	}
+	
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(T);
 
-	if (T.descriptor.descriptor.data_type == u8){
-		uint8_t temp[8];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&7] = rand();	//Random data
-			else temp[i&7] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hhu\n",temp[i&7]);
-			if ((i&7)==7) T.data_array[i/8] = *(uint64_t*)temp;
-		}
-		T.data_array[i/8] = *(uint64_t*)temp;
+	int16_t temp[4];
+	for (i = 0; i < size; i++)
+	{
+		if (rand_data)	temp[i&3] = rand();	//Random data
+		else temp[i&3] = i+1;					//Sequential data
+		fprintf(octaveInFile,"%hd\n",temp[i&3]);
+		write_uint16("maxpool_input_pipe",temp[i&3]);
+		if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
 	}
-	else if (T.descriptor.descriptor.data_type == u16){
-		uint16_t temp[4];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&3] = rand();	//Random data
-			else temp[i&3] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hu\n",temp[i&3]);
-			write_uint16("maxpool_input_pipe",temp[i&3]);
-			if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
-		}
-		T.data_array[i/4] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == u32){
-		uint32_t temp[2];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&1] = rand();	//Random data
-			else temp[i&1] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%u\n",temp[i&1]);
-			if ((i&1)==1) T.data_array[i/2] = *(uint64_t*)temp;
-		}
-		T.data_array[i/2] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == u64){
-		uint64_t temp[1];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[0] = rand();	//Random data
-			else temp[0] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%lu\n",temp[0]);
-			T.data_array[i] = *(uint64_t*)temp;
-		}
-	}
-	else if (T.descriptor.descriptor.data_type == i8){
-		int8_t temp[8];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&7] = rand();	//Random data
-			else temp[i&7] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hhd\n",temp[i&7]);
-			if ((i&7)==7) T.data_array[i/8] = *(uint64_t*)temp;
-		}
-		T.data_array[i/8] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == i16){
-		int16_t temp[4];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&3] = rand();	//Random data
-			else temp[i&3] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%hd\n",temp[i&3]);
-			if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
-		}
-		T.data_array[i/4] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == i32){
-		int32_t temp[2];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&1] = rand();	//Random data
-			else temp[i&1] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%d\n",temp[i&1]);
-			if ((i&1)==1) T.data_array[i/2] = *(uint64_t*)temp;
-		}
-		T.data_array[i/2] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == i64){
-		int64_t temp[1];
-
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[0] = rand();	//Random data
-			else temp[0] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%ld\n",temp[0]);
-			T.data_array[i] = *(uint64_t*)temp;
-		}
-	}
-	else if (T.descriptor.descriptor.data_type == float8){
-		uint8_t temp[8];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&7] = rand();	//Random data
-			else temp[i&7] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%d\n",temp[i&7]);
-			if ((i&7)==7) T.data_array[i/8] = *(uint64_t*)temp;
-		}
-		T.data_array[i/8] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == float16){
-		uint16_t temp[4];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&3] = rand();	//Random data
-			else temp[i&3] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%d\n",temp[i&3]);
-			if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
-		}
-		T.data_array[i/4] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == float32){
-		float temp[2];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[i&1] = rand();	//Random data
-			else temp[i&1] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%f\n",temp[i&1]);
-			if ((i&1)==1) T.data_array[i/2] = *(uint64_t*)temp;
-		}
-		T.data_array[i/2] = *(uint64_t*)temp;
-	}
-	else if (T.descriptor.descriptor.data_type == float64){
-		double temp[1];
-		for (i = 0; i < size; i++)
-		{
-			if (rand_data)	temp[0] = rand();	//Random data
-			else temp[0] = i+1;					//Sequential data
-			fprintf(octaveInFile,"%lf\n",temp[0]);
-			T.data_array[i] = *(uint64_t*)temp;
-		}
-	}	
-	else{
-		fprintf(stderr,"Error. Datatypes mismatch.");
-	}
-	fprintf(stderr,"Checkpoint\n");
+	T.data_array[i/4] = *(uint64_t*)temp;
 	fclose(octaveInFile);
-	
-	fprintf(stderr,"Reading back the values from hardware\n");
 
+	fprintf(stderr,"Checkpoint\n");
+	
 	fprintf(outFile,"Size of output is ");
-	for (i =0; i<T.descriptor.descriptor.number_of_dimensions;i++)
+	for (i =0; i<B.descriptor.descriptor.number_of_dimensions;i++)
 	{
 		uint16_t dim = read_uint16("maxpool_output_pipe");
 		fprintf(outFile,"%hu ",dim);
-		B.descriptor.descriptor.dimensions[i] = dim;
 	}
 	fprintf(outFile,"\n");
 	size = __NumberOfElementsInSizedTensor__(B);
 	fprintf(stderr,"Size of output is %d\n",size );
-
-	if (T.descriptor.descriptor.data_type == u8){
-		uint8_t temp[8];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&7)==0) *((uint64_t*)temp) = B.data_array[i/8];
-			fprintf(outFile,"%d %hhu\n",i+1, temp[i&7]);
-		}
-		*((uint64_t*)temp) = B.data_array[i/8];
-	}	
-	else if (T.descriptor.descriptor.data_type == u16){
-		uint16_t val;
-		for (i = 0; i < size; i++)
-		{
-			val = read_uint16("maxpool_output_pipe");
-			fprintf(outFile,"%d %hu\n",i+1, val);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == u32){
-		uint32_t temp[2];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&1)==0) *((uint64_t*)temp) = B.data_array[i/2];
-			fprintf(outFile,"%d %u\n",i+1, temp[i&1]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == u64){
-		uint64_t temp[1];
-		for (i = 0; i < size; i++)
-		{
-			*((uint64_t*)temp) = B.data_array[i];
-			fprintf(outFile,"%d %lu\n",i+1, temp[0]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == i8){
-		int8_t temp[8];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&7)==0) *((uint64_t*)temp) = B.data_array[i/8];
-			fprintf(outFile,"%d %hhd\n",i+1, temp[i&7]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == i16){
-		int16_t temp[4];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&3)==0) *((uint64_t*)temp) = B.data_array[i/4];
-			fprintf(outFile,"%d %hd\n",i+1, temp[i&3]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == i32){
-		int32_t temp[2];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&1)==0) *((uint64_t*)temp) = B.data_array[i/2];
-			fprintf(outFile,"%d %d\n",i+1, temp[i&1]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == i64){
-		int64_t temp[1];
-		for (i = 0; i < size; i++)
-		{
-			*((uint64_t*)temp) = B.data_array[i];
-			fprintf(outFile,"%d %ld\n",i+1, temp[0]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == float8){
-		uint8_t temp[8];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&7)==0) *((uint64_t*)temp) = B.data_array[i/8];
-			fprintf(outFile,"%d %hhu\n",i+1, temp[i&7]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == float16){
-		uint16_t temp[4];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&3)==0) *((uint64_t*)temp) = B.data_array[i/4];
-			fprintf(outFile,"%d %hu\n",i+1, temp[i&3]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == float32){
-		float temp[2];
-		for (i = 0; i < size; i++)
-		{
-			if ((i&1)==0) *((uint64_t*)temp) = B.data_array[i/2];
-			fprintf(outFile,"%d %f\n",i+1, temp[i&1]);
-		}
-	}	
-	else if (T.descriptor.descriptor.data_type == float64){
-		double temp[1];
-		for (i = 0; i < size; i++)
-		{
-			*((uint64_t*)temp) = B.data_array[i];
-			fprintf(outFile,"%d %f\n",i+1, temp[0]);
-		}
-	}	
-	else{
-		fprintf(stderr,"Error. Datypes mismatch.");
+	fprintf(stderr,"Reading back the values from hardware\n");
+	
+	int16_t val;
+	for (i = 0; i < size; i++)
+	{
+		val = read_uint16("maxpool_output_pipe");
+		fprintf(outFile,"%d %hu\n",i+1, val);
+		fprintf(stderr,"%d %hu\n",i+1, val);
 	}
-
+	
 	fprintf(stderr,"Read back the values from hardware\n");
 
 	fclose(file);

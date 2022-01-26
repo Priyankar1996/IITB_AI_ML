@@ -55,7 +55,7 @@ void sendRemainingElements(int addr, uint16_t ne){
 	element>>=16;\
 	out_data[2] = element & 0xFFFF;\
 	element>>=16;\
-	out_data [1]= element & 0xFFFF;\
+	out_data[1]= element & 0xFFFF;\
 	element>>=16;\
 	out_data[0] = element & 0xFFFF;\
 	for (n = 0; n < ne; n++)

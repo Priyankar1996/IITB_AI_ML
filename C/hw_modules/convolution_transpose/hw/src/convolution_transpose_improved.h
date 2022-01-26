@@ -26,7 +26,10 @@ void convTranspose();
     uint16_t datasize = __SizeOfTensorDataInBytes__(input.descriptor.descriptor.data_type),\
             num_elems_input = __NumberOfElementsInSizedTensor__(input),\
             conv_output_indices[3],flag=0,conv_output_flag,i,kl,mm;\
-    static uint16_t input_indices[3];\
+    uint16_t input_indices[3];\
+    input_indices[0] = 0;\
+    input_indices[1] = 0;\
+    input_indices[2] = 0;\
     uint16_t num_words = CEILING(num_elems_input);\
     for(i=0;i<num_words;i++){\
         uint64_t read_data = input.data_array[i],element;\

@@ -1,10 +1,8 @@
-#include "convolveTensors.h"
 #include <stdio.h>
 #include <stdint.h>
 #include "sized_tensor.h"
 #include <inttypes.h>
-
-#define __I16 5
+#include "convolveTensors.h"
 
 SizedTensor_1024 T,K,R;
 

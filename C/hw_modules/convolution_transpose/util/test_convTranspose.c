@@ -120,7 +120,7 @@ int main(int argc,char **argv)
 		for (ii = 0; ii < input_size; ii++)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
-			else temp[ii&3] = ii+1;					//Sequential data
+			else temp[ii&3] = (ii+1);					//Sequential data
 			if ((ii&3)==3) input.data_array[ii/4] = *(uint64_t*)temp;
 		}
 		input.data_array[ii/4] = *(uint64_t*)temp;
@@ -136,7 +136,7 @@ int main(int argc,char **argv)
 		fprintf(stderr,"Error. Datatypes mismatch.");	
     }
     
-    __ConvTranspose__(input,kernel,stride,padding,output);
+    __ConvTranspose2__(input,kernel,stride,padding,output);
 
     for (ii =0; ii<output.descriptor.descriptor.number_of_dimensions;ii++) 
         fprintf(out_file,"%d ",output.descriptor.descriptor.dimensions[ii]);
@@ -144,7 +144,7 @@ int main(int argc,char **argv)
 	int size = __NumberOfElementsInSizedTensor__(output);
 
 	if (input.descriptor.descriptor.data_type == u16){
-		uint16_t temp[4];
+		int16_t temp[4];
 		for (ii = 0; ii < size; ii++)
 		{
 			if ((ii&3)==0) *((uint64_t*)temp) = output.data_array[ii/4];

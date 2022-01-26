@@ -8,10 +8,6 @@
 #include "sized_tensor.h"
 #include "maxPoolOfTensors.h"
 
-#ifndef SW
-void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
-#endif
-
 SizedTensor_16K T,B;
 uint16_t length, stride;
 
@@ -63,18 +59,19 @@ void sendRemainingElements(int addr, uint16_t ne){
 
 void testConfigure()
 {
-	// configure the tensor T
+	length = read_uint16 ("maxpool_input_pipe");
+	stride = read_uint16 ("maxpool_input_pipe");
 
+	// configure the tensor T
 	T.descriptor.descriptor.data_type = u16;
 	T.descriptor.descriptor.row_major_form = 1;
 	T.descriptor.descriptor.number_of_dimensions = 3;
+	B.descriptor.descriptor.number_of_dimensions = 3;
 	int i;
 	for (i = 0;i < T.descriptor.descriptor.number_of_dimensions;i++){
 		T.descriptor.descriptor.dimensions[i] = read_uint16 ("maxpool_input_pipe");
+		B.descriptor.descriptor.dimensions[i] = read_uint16 ("maxpool_input_pipe");
 	}
-
-	length = read_uint16 ("maxpool_input_pipe");
-	stride = read_uint16 ("maxpool_input_pipe");
 
 	// size = number of 16-bit values in data array..
 	uint64_t size = __NumberOfElementsInSizedTensor__(T);
@@ -109,15 +106,15 @@ void sendB()
 
 void maxPool3D()
 {
+	testConfigure();	
 #ifndef SW
 	uint64_t start_time = timer();
 #endif
-	testConfigure();	
 	__maxPoolOfTensors3D__(T,B,length,stride);
-	sendB ();
 #ifndef SW
 	uint64_t stop_time = timer();
 	uint64_t elapsed_time = stop_time - start_time;
 	write_uint64("elapsed_time_pipe", elapsed_time);
 #endif
+	sendB ();
 }

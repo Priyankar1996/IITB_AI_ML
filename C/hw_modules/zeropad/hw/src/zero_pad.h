@@ -4,6 +4,8 @@
 #include <float.h>
 #include "sized_tensor.h"
 
+void zeropad_thread();
+
 #define __dim0__(dest) ({dest.descriptor.descriptor.dimensions[0];})
 #define __dim1__(dest) ({dest.descriptor.descriptor.dimensions[1];})
 #define __dim2__(dest) ({dest.descriptor.descriptor.dimensions[2];})

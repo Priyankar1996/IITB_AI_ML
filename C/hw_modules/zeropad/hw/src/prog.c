@@ -42,7 +42,7 @@ void ReadInputInfo()
 {
     fprintf(stderr,"Starting test configure\n");
 
-    input.descriptor.descriptor.data_type = i16;
+    input.descriptor.descriptor.data_type = u16;
     input.descriptor.descriptor.row_major_form = 1;
     input.descriptor.descriptor.number_of_dimensions = 3;
     int i1;
@@ -84,6 +84,14 @@ void sendOutput()
 void zeropad_thread()
 {
     ReadInputInfo();
+    #ifndef SW
+        uint64_t start_time = timer();
+    #endif
     __zero_pad__(input,pad,output);
+    #ifndef SW
+	    uint64_t stop_time = timer();
+	    uint64_t elapsed_time = stop_time - start_time;
+	    write_uint64("elapsed_time_pipe", elapsed_time);
+    #endif
     sendOutput();
 }

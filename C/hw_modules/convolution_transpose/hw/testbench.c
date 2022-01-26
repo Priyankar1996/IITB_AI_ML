@@ -203,7 +203,7 @@ int main(int argc,char **argv)
 		for (ii = 0; ii < size; ii++)
 		{
 			val = read_uint16("ConvTranspose_output_pipe");
-			fprintf(stderr,"%hu\n",val);		
+			fprintf(stderr,"%d\n",val);		
 		}
 	}		
 	else{

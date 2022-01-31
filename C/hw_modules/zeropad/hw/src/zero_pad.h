@@ -11,9 +11,20 @@
 
 void zeropad_thread();
 
+#define __I16 1
 #define __dim0__(dest) ({dest.descriptor.descriptor.dimensions[0];})
 #define __dim1__(dest) ({dest.descriptor.descriptor.dimensions[1];})
 #define __dim2__(dest) ({dest.descriptor.descriptor.dimensions[2];})
+
+#define __dt__ int16_t
+#define __dt_min_val__ 0x8000
+
+#ifndef SW
+void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
+	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
+#else
+	#define __loop_pipeline_var__ {;}
+#endif
 // The function "zeropadtensor" creates a new tensor for zero padding 
 // It creates it from the src tensor by reading and then writing the 
 // destination tensor according to scale factor provded. 

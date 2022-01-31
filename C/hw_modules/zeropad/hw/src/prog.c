@@ -8,10 +8,6 @@
 #include "sized_tensor.h"
 #include "zero_pad.h"
 
-#ifndef SW
-void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
-#endif
-
 SizedTensor_16K input,output;
 uint16_t pad;
 
@@ -97,6 +93,9 @@ void ReadInputInfo()
 void sendOutput()
 {
     fprintf(stderr,"Starting test send\n");
+	write_uint16("maxpool_output_pipe",__dim0__(output));
+	write_uint16("maxpool_output_pipe",__dim1__(output));
+	write_uint16("maxpool_output_pipe",__dim2__(output));
     uint64_t size = __NumberOfElementsInSizedTensor__(output);
     int i2;
     for (i2 = 0; i2 < size; i2++){

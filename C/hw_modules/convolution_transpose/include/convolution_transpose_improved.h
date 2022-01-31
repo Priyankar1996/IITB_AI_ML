@@ -72,6 +72,7 @@
 #endif
 
 #define CEILING(x,y) (((x) + (y) - 1) / (y))
+#define tensor_dims(tensor,dim) (tensor.descriptor.descriptor.dimensions[dim])
 
 #define __UpdateOutputDescriptorConvTransTensors__(src,kernel,stride,padding,output) ({\
     output.descriptor.descriptor.data_type = src.descriptor.descriptor.data_type;\
@@ -167,6 +168,29 @@
             }\
             else\
                 input_indices[2]++;\
+        }\
+    }\
+})
+
+#define __ConvTranspose3__(input,kernel,stride,padding,output) ({\
+    __UpdateOutputDescriptorConvTransTensors__(input,kernel,stride,padding,output);\
+    __dt__ row,col,channel,add_src,add_dest_dim0,add_dest_dim1,add_out;\
+    for (row = 0; row < tensor_dims(input,0); row++) {\
+        add_dest_dim0 = row*stride[0] + tensor_dims(kernel,1) -padding - 1;\
+        if(add_dest_dim0 >= 0 && add_dest_dim0 < tensor_dims(output,0)) {\
+            for(col = 0; col < tensor_dims(input,1); col++) {\
+                add_dest_dim1 = col*stride[1] + tensor_dims(kernel,2) - padding - 1;\
+                if(add_dest_dim1 >= 0 && add_dest_dim1 < tensor_dims(output,1)) {\
+                    for(channel = 0; channel < tensor_dims(input,2); channel++) {\
+                        add_src = channel + tensor_dims(input,2)*(col + tensor_dims(input,1)*row);\
+                        uint64_t data = input.data_array[add_src>>2],out_data;\
+                        uint16_t value = (data >> (16*(3 - (add_src & 3))));\
+                        out_data = value;\
+                        add_out = channel + tensor_dims(output,2)*(add_dest_dim1 + tensor_dims(output,1)*add_dest_dim0);\
+                        output.data_array[add_out >> 2] += (out_data << 16*(3 - (add_out & 3)));\
+                    }\
+                }\
+            }\
         }\
     }\
 })

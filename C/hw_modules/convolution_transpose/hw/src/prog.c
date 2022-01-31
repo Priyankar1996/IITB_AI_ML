@@ -33,10 +33,10 @@ uint16_t stride[2],padding;
 	out_data[1]= element & 0xFFFF;\
 	element>>=16;\
 	out_data[0] = element & 0xFFFF;\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[3]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[2]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[1]);\
 	write_uint16 ("ConvTranspose_output_pipe",out_data[0]);\
+	write_uint16 ("ConvTranspose_output_pipe",out_data[1]);\
+	write_uint16 ("ConvTranspose_output_pipe",out_data[2]);\
+	write_uint16 ("ConvTranspose_output_pipe",out_data[3]);\
 })
 
 uint64_t getRemainingElements(uint16_t ne){
@@ -84,9 +84,9 @@ void testConfigure()
 
     padding = read_uint16 ("ConvTranspose_input_pipe");
     
-	output.descriptor.descriptor.dimensions[0] = read_uint16("ConvTranspose_input_pipe");
-    output.descriptor.descriptor.dimensions[1] = read_uint16("ConvTranspose_input_pipe");
-    output.descriptor.descriptor.dimensions[2] = read_uint16("ConvTranspose_input_pipe");
+	output.descriptor.descriptor.dimensions[0] = read_uint16 ("ConvTranspose_input_pipe");
+    output.descriptor.descriptor.dimensions[1] = read_uint16 ("ConvTranspose_input_pipe");
+    output.descriptor.descriptor.dimensions[2] = read_uint16 ("ConvTranspose_input_pipe");
     
 	uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
     uint64_t kernel_size = __NumberOfElementsInSizedTensor__(kernel);
@@ -111,11 +111,11 @@ void testConfigure()
 
 }
 
-void sendB()
+void sendOutput()
 {
     uint64_t size = __NumberOfElementsInSizedTensor__(output);
     int i;
-    for (i = 0; i < size; i++){
+    for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
     }
     if (size&3) sendRemainingElements(i,size&3);
@@ -133,5 +133,5 @@ void convTranspose()
 	    uint64_t elapsed_time = stop_time - start_time;
 	    write_uint64("elapsed_time_pipe", elapsed_time);
     #endif
-    sendB();
+    sendOutput();
 }

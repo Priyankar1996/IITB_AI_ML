@@ -27,6 +27,7 @@
     output.descriptor.descriptor.dimensions[0] = (src.descriptor.descriptor.dimensions[0])*stride0 + kernel.descriptor.descriptor.dimensions[1] - 1 - (2*padding);\
     output.descriptor.descriptor.dimensions[1] = (src.descriptor.descriptor.dimensions[1])*stride1 + kernel.descriptor.descriptor.dimensions[2] - 1 - (2*padding);\
 	output.descriptor.descriptor.dimensions[output.descriptor.descriptor.number_of_dimensions-1] = src.descriptor.descriptor.dimensions[src.descriptor.descriptor.number_of_dimensions-1];\
+	output.descriptor.tensor_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];\
 })
 
 #ifdef SW
@@ -139,12 +140,14 @@ int main(int argc,char **argv)
         write_uint16("ConvTranspose_input_pipe",input.descriptor.descriptor.dimensions[ii]);
 	}
 	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",input.descriptor.descriptor.dimensions[0],input.descriptor.descriptor.dimensions[1],input.descriptor.descriptor.dimensions[2]);
+	input.descriptor.tensor_size = __NumberOfElementsInSizedTensor__(input);
 
 	fscanf(kernel_file,"%hhd",&kernel.descriptor.descriptor.row_major_form);
 	write_uint16("ConvTranspose_input_pipe",kernel.descriptor.descriptor.row_major_form);
 	fscanf(kernel_file,"%d",&kernel.descriptor.descriptor.number_of_dimensions);
 	write_uint16("ConvTranspose_input_pipe",kernel.descriptor.descriptor.number_of_dimensions);
-	
+	kernel.descriptor.tensor_size = __NumberOfElementsInSizedTensor__(output);
+
 	for (ii = 0;ii < kernel.descriptor.descriptor.number_of_dimensions;ii++){
 		fscanf(kernel_file,"%d",&kernel.descriptor.descriptor.dimensions[ii]);
         write_uint16("ConvTranspose_input_pipe",kernel.descriptor.descriptor.dimensions[ii]);
@@ -175,7 +178,7 @@ int main(int argc,char **argv)
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
 			else temp[ii&3] = ii+1;	
 			write_uint16("ConvTranspose_input_pipe",temp[ii&3]);
-			fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
+			//fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
 			if ((ii&3)==3) input.data_array[ii/4] = *(uint64_t*)temp;
 		}
 		input.data_array[ii/4] = *(uint64_t*)temp;
@@ -198,12 +201,12 @@ int main(int argc,char **argv)
 	int size = __NumberOfElementsInSizedTensor__(output);
 	fprintf(stderr,"Size of output is %d,%d,%d\n",output.descriptor.descriptor.dimensions[0],output.descriptor.descriptor.dimensions[1],output.descriptor.descriptor.dimensions[2]);
 
-	if (input.descriptor.descriptor.data_type == u16){
+	if (output.descriptor.descriptor.data_type == u16){
 		uint16_t val;
-		for (ii = 0; ii < size; ii++)
+		for (ii = 0; ii < (size); ii++)
 		{
-			val = read_uint16("ConvTranspose_output_pipe");
-			fprintf(stderr,"%d\n",val);		
+			val = read_uint16 ("ConvTranspose_output_pipe");
+			fprintf(stderr,"%lu\n",val);		
 		}
 	}		
 	else{

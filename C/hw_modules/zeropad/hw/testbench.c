@@ -28,10 +28,15 @@ int main(int argc,char **argv)
     fprintf(stderr,"Entering testbench main program\n");
     srand(time(0));
 
-    FILE *input_file, *out_file;
+    FILE *input_file,*param_file,*out_file;
 
     if ((input_file = fopen(argv[1],"r")) == NULL){
         fprintf(stderr,"Input File Error\n");
+        exit(-1);
+    }
+
+	if ((param_file = fopen(argv[2],"r")) == NULL){
+        fprintf(stderr,"Parameters File Error\n");
         exit(-1);
     }
 
@@ -58,51 +63,39 @@ int main(int argc,char **argv)
     //Take datatype as input
     #ifdef __U8
 		input.descriptor.descriptor.data_type = u8;
-        kernel.descriptor.descriptor.data_type = u8;
 	#endif
 	#ifdef __U16
 		input.descriptor.descriptor.data_type = u16;
-        kernel.descriptor.descriptor.data_type = u16;
 	#endif
 	#ifdef __U32
 		input.descriptor.descriptor.data_type = u32;
-        kernel.descriptor.descriptor.data_type = u32;
 	#endif
 	#ifdef __U64
 		input.descriptor.descriptor.data_type = u64;
-        kernel.descriptor.descriptor.data_type = u64;
 	#endif
 	#ifdef __I8
 		input.descriptor.descriptor.data_type = i8;
-        kernel.descriptor.descriptor.data_type = i8;
 	#endif
 	#ifdef __I16
 		input.descriptor.descriptor.data_type = i16;
-		kernel.descriptor.descriptor.data_type = i16;
 	#endif
 	#ifdef __I32
 		input.descriptor.descriptor.data_type = i32;
-        kernel.descriptor.descriptor.data_type = i32;
 	#endif
 	#ifdef __I64
 		input.descriptor.descriptor.data_type = i64;
-        kernel.descriptor.descriptor.data_type = i64;
 	#endif
 	#ifdef __F8
 		input.descriptor.descriptor.data_type = float8;
-        kernel.descriptor.descriptor.data_type = float8;
 	#endif
 	#ifdef __F16
         input.descriptor.descriptor.data_type = float16;
-        kernel.descriptor.descriptor.data_type = float16;
 	#endif
 	#ifdef __F32
 		input.descriptor.descriptor.data_type = float32;
-        kernel.descriptor.descriptor.data_type = float32;
 	#endif
 	#ifdef __F64
 		input.descriptor.descriptor.data_type = float64;
-        kernel.descriptor.descriptor.data_type = float64;
 	#endif
 
     fscanf(input_file,"%hhd",&input.descriptor.descriptor.row_major_form);
@@ -119,7 +112,8 @@ int main(int argc,char **argv)
 	
 	
 	// Entering the padding size that needs to be done
-    int pad = 1;
+    int pad;
+	fscanf(param_file,"%d",&pad);
 	write_uint16("ZeroPad_input_pipe",&pad);
 
     uint64_t input_size = __NumberOfElementsInSizedTensor__(input);

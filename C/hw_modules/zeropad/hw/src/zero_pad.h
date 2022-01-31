@@ -1,7 +1,12 @@
+#ifndef __zerp_pad_h__
+#define __zerp_pad_h__
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <float.h>
+#include <inttypes.h>
+#include <assert.h>
 #include "sized_tensor.h"
 
 void zeropad_thread();
@@ -73,3 +78,4 @@ void zeropad_thread();
 		}\
 	}\
 })
+#endif

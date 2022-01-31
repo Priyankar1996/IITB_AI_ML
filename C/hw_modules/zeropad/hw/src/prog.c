@@ -38,19 +38,45 @@ uint16_t pad;
 	write_uint16 ("ZeroPad_output_pipe",out_data[3]);\
 })
 
+uint64_t getRemainingElements(uint16_t ne){
+	uint64_t element = 0;uint16_t n;
+	for (n = 0 ; n < ne; n++){
+		element += read_uint16 ("ZeroPad_input_pipe");
+		element <<= 16;
+	}
+	element <<= 16*(3-ne);
+	return element;
+}
+
+void sendRemainingElements(int addr, uint16_t ne){
+	uint64_t element = output.data_array[addr];\
+	uint16_t out_data[3],n;\
+	element>>=16;\
+	out_data[2] = element & 0xFFFF;\
+	element>>=16;\
+	out_data[1]= element & 0xFFFF;\
+	element>>=16;\
+	out_data[0] = element & 0xFFFF;\
+	for (n = 0; n < ne; n++)
+		write_uint16 ("ZeroPad_output_pipe",out_data[n]);
+}
+
 void ReadInputInfo()
 {
-    fprintf(stderr,"Starting test configure\n");
-
     input.descriptor.descriptor.data_type = u16;
-    input.descriptor.descriptor.row_major_form = 1;
-    input.descriptor.descriptor.number_of_dimensions = 3;
+    input.descriptor.descriptor.row_major_form = read_uint16 ("ZeroPad_input_pipe");;
+    input.descriptor.descriptor.number_of_dimensions = read_uint16 ("ZeroPad_input_pipe");
     int i1;
     for(i1 = 0;i1 < input.descriptor.descriptor.number_of_dimensions;i1++){
         input.descriptor.descriptor.dimensions[i1] = read_uint16 ("ZeroPad_input_pipe");
     }
 
     pad = read_uint16 ("ZeroPad_input_pipe");
+    
+    
+	output.descriptor.descriptor.dimensions[0] = read_uint16("ZeroPad_input_pipe");
+    output.descriptor.descriptor.dimensions[1] = read_uint16("ZeroPad_input_pipe");
+    output.descriptor.descriptor.dimensions[2] = read_uint16("ZeroPad_input_pipe");
     
     uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
 
@@ -64,20 +90,19 @@ void ReadInputInfo()
 
         input.data_array[i1] = element;
     }
+    if (input_size&3) input.data_array[i1] = getRemainingElements(input_size&3);
     fprintf(stderr,"Ending test_configure\n");
 }
 
 void sendOutput()
 {
     fprintf(stderr,"Starting test send\n");
-    write_uint16("ZeroPad_output_pipe",output.descriptor.descriptor.dimensions[0]);
-    write_uint16("ZeroPad_output_pipe",output.descriptor.descriptor.dimensions[1]);
-    write_uint16("ZeroPad_output_pipe",output.descriptor.descriptor.dimensions[2]);
     uint64_t size = __NumberOfElementsInSizedTensor__(output);
     int i2;
     for (i2 = 0; i2 < size; i2++){
         __set4xi16__(i2);
     }
+    if (size&3) sendRemainingElements(i2,size&3);
     fprintf(stderr,"Ending test_send\n");
 }
 

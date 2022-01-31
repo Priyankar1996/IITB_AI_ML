@@ -136,7 +136,7 @@ int main(int argc,char **argv)
 		fprintf(stderr,"Error. Datatypes mismatch.");	
     }
     
-    __ConvTranspose2__(input,kernel,stride,padding,output);
+    __ConvTranspose3__(input,kernel,stride,padding,output);
 
     for (ii =0; ii<output.descriptor.descriptor.number_of_dimensions;ii++) 
         fprintf(out_file,"%d ",output.descriptor.descriptor.dimensions[ii]);

@@ -1,942 +1,1006 @@
-clang -O3 -std=gnu89   -I/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include -emit-llvm -c src/prog.c -I../../../primitives/include
-opt --indvars --loopsimplify prog.o -o prog.opt.o
-llvm-dis prog.opt.o
-llvm2aa -extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt  prog.opt.o | vcFormat >  prog.aa
-Warning: no modules specified.. will translate all functions
-Info: pipe ZeroPad_input_pipe max-depth set to 2
-Info: pipe ZeroPad_output_pipe max-depth set to 2
-Info: -storageinit=true: storage initializers will be generated
-Info: -extract_do_while=true: storage initializers will be generated
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: added pipe ZeroPad_input_pipe with type $uint<16>
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: added pipe ZeroPad_output_pipe with type $uint<16>
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
-
-Info: added pipe maxpool_output_pipe with type $uint<16>
-Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: locating portname in constant GEP [18 x i8] c"elapsed_time_pipe\00"
-
-Info: added pipe elapsed_time_pipe with type $uint<64>
-Info: Initial value specified for progx_xoptx_xo_iNtErNal_xx_xstr2: will create initializer module
-Info: Initial value specified for progx_xoptx_xo_iNtErNal_xx_xstr3: will create initializer module
-Info: Initial value specified for progx_xoptx_xo_iNtErNal_xx_xstr5: will create initializer module
-Info: generating storage initialization module which calls all initializers in parallel
-Info: visiting function getRemainingElements
-Info: traversal: visited block entry
-Info: traversal: visited block for.end
-Info: traversal: visited block for.body.preheader
-Info: traversal: visited block for.body
-Info: traversal: visited block for.end.loopexit
-Info: starting new BB-chain-dag with header entry
-Info: starting new BB-chain-dag with header for.body.preheader
-Info: starting new BB-chain-dag with header for.body
-Info: starting new BB-chain-dag with header for.end.loopexit
-Info: starting new BB-chain-dag with header for.end
-Basic Block Chain DAGS.
-Basic-block-chain-DAG with header = entry
- entry
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  entry
-Basic-block-chain-DAG with header = forx_xbodyx_xpreheader
- forx_xbodyx_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xbodyx_xpreheader
-Basic-block-chain-DAG with header = forx_xbody
- forx_xbody
-   -> 
-   <- 
-loop-backs 
-  forx_xbody
-exit-points 
-  forx_xbody
-Basic-block-chain-DAG with header = forx_xendx_xloopexit
- forx_xendx_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xendx_xloopexit
-Basic-block-chain-DAG with header = forx_xend
- forx_xend
-   -> 
-   <- 
-loop-backs 
-exit-points 
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: visiting function read_uint16
-Info: ignoring external function read_uint16
-Info: visiting function sendRemainingElements
-Info: traversal: visited block entry
-Info: traversal: visited block for.end
-Info: traversal: visited block bb.nph
-Info: traversal: visited block for.body
-Info: traversal: visited block for.end.loopexit
-Info: traversal: visited block for.body.for.body_crit_edge
-Info: starting new BB-chain-dag with header entry
-Info: starting new BB-chain-dag with header bb.nph
-Info: starting new BB-chain-dag with header for.body
-Info: starting new BB-chain-dag with header for.body.for.body_crit_edge
-Info: starting new BB-chain-dag with header for.end.loopexit
-Info: starting new BB-chain-dag with header for.end
-Basic Block Chain DAGS.
-Basic-block-chain-DAG with header = entry
- entry
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  entry
-Basic-block-chain-DAG with header = bbx_xnph
- bbx_xnph
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph
-Basic-block-chain-DAG with header = forx_xbody
- forx_xbody
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xbody
-Basic-block-chain-DAG with header = forx_xbodyx_xforx_xbody_crit_edge
- forx_xbodyx_xforx_xbody_crit_edge
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xbodyx_xforx_xbody_crit_edge
-Basic-block-chain-DAG with header = forx_xendx_xloopexit
- forx_xendx_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xendx_xloopexit
-Basic-block-chain-DAG with header = forx_xend
- forx_xend
-   -> 
-   <- 
-loop-backs 
-exit-points 
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: visiting function write_uint16
-Info: ignoring external function write_uint16
-Info: visiting function ReadInputInfo
-Info: traversal: visited block entry
-Info: traversal: visited block for.end
-Info: traversal: visited block for.body.preheader
-Info: traversal: visited block for.body.i.preheader
-Info: traversal: visited block bb.nph88
-Info: traversal: visited block for.body
-Info: traversal: visited block for.body.i
-Info: traversal: visited block for.body24
-Info: traversal: visited block for.end.loopexit
-Info: traversal: visited block getRemainingElements.exit
-Info: traversal: visited block for.end33
-Info: traversal: visited block if.end
-Info: traversal: visited block bb.nph
-Info: traversal: visited block for.end69
-Info: traversal: visited block for.body42
-Info: traversal: visited block for.cond36.for.end69_crit_edge
-Info: starting new BB-chain-dag with header entry
-Info: starting new BB-chain-dag with header for.body.preheader
-Info: starting new BB-chain-dag with header for.body
-Info: starting new BB-chain-dag with header for.end.loopexit
-Info: starting new BB-chain-dag with header for.end
-Info: starting new BB-chain-dag with header bb.nph88
-Info: starting new BB-chain-dag with header for.body24
-Info: starting new BB-chain-dag with header for.end33
-Info: starting new BB-chain-dag with header bb.nph
-Info: starting new BB-chain-dag with header for.body42
-Info: starting new BB-chain-dag with header for.cond36.for.end69_crit_edge
-Info: starting new BB-chain-dag with header for.end69
-Info: starting new BB-chain-dag with header for.body.i.preheader
-Info: starting new BB-chain-dag with header for.body.i
-Info: starting new BB-chain-dag with header getRemainingElements.exit
-Info: starting new BB-chain-dag with header if.end
-Basic Block Chain DAGS.
-Basic-block-chain-DAG with header = entry
- entry
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  entry
-Basic-block-chain-DAG with header = forx_xbodyx_xpreheader
- forx_xbodyx_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xbodyx_xpreheader
-Basic-block-chain-DAG with header = forx_xbody
- forx_xbody
-   -> 
-   <- 
-loop-backs 
-  forx_xbody
-exit-points 
-  forx_xbody
-Basic-block-chain-DAG with header = forx_xendx_xloopexit
- forx_xendx_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xendx_xloopexit
-Basic-block-chain-DAG with header = forx_xend
- forx_xend
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend
-Basic-block-chain-DAG with header = bbx_xnph88
- bbx_xnph88
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph88
-Basic-block-chain-DAG with header = forx_xbody24
- forx_xbody24
-   -> 
-   <- 
-loop-backs 
-  forx_xbody24
-exit-points 
-  forx_xbody24
-Basic-block-chain-DAG with header = forx_xend33
- forx_xend33
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend33
-Basic-block-chain-DAG with header = bbx_xnph
- bbx_xnph
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph
-Basic-block-chain-DAG with header = forx_xbody42
- forx_xbody42
-   -> 
-   <- 
-loop-backs 
-  forx_xbody42
-exit-points 
-  forx_xbody42
-Basic-block-chain-DAG with header = forx_xcond36x_xforx_xend69_crit_edge
- forx_xcond36x_xforx_xend69_crit_edge
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xcond36x_xforx_xend69_crit_edge
-Basic-block-chain-DAG with header = forx_xend69
- forx_xend69
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend69
-Basic-block-chain-DAG with header = forx_xbodyx_xix_xpreheader
- forx_xbodyx_xix_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xbodyx_xix_xpreheader
-Basic-block-chain-DAG with header = forx_xbodyx_xi
- forx_xbodyx_xi
-   -> 
-   <- 
-loop-backs 
-  forx_xbodyx_xi
-exit-points 
-  forx_xbodyx_xi
-Basic-block-chain-DAG with header = getRemainingElementsx_xexit
- getRemainingElementsx_xexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  getRemainingElementsx_xexit
-Basic-block-chain-DAG with header = ifx_xend
- ifx_xend
-   -> 
-   <- 
-loop-backs 
-exit-points 
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
-Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
-
-Info: visiting function sendOutput
-Info: traversal: visited block entry
-Info: traversal: visited block bb.nph76
-Info: traversal: visited block bb.nph81
-Info: traversal: visited block for.body25
-Info: traversal: visited block for.body
-Info: traversal: visited block for.end63.loopexit
-Info: traversal: visited block for.end
-Info: traversal: visited block for.end63
-Info: traversal: visited block if.end
-Info: traversal: visited block bb.nph.i
-Info: traversal: visited block bb.nph
-Info: traversal: visited block for.body.for.body_crit_edge.i
-Info: traversal: visited block if.end.loopexit
-Info: traversal: visited block for.body.for.body_crit_edge.i.for.body.for.body_crit_edge.i_crit_edge
-Info: starting new BB-chain-dag with header entry
-Info: starting new BB-chain-dag with header bb.nph81
-Info: starting new BB-chain-dag with header for.body
-Info: starting new BB-chain-dag with header for.end
-Info: starting new BB-chain-dag with header bb.nph76
-Info: starting new BB-chain-dag with header for.body25
-Info: starting new BB-chain-dag with header for.end63.loopexit
-Info: starting new BB-chain-dag with header for.end63
-Info: starting new BB-chain-dag with header bb.nph.i
-Info: starting new BB-chain-dag with header bb.nph
-Info: starting new BB-chain-dag with header for.body.for.body_crit_edge.i
-Info: starting new BB-chain-dag with header for.body.for.body_crit_edge.i.for.body.for.body_crit_edge.i_crit_edge
-Info: starting new BB-chain-dag with header if.end.loopexit
-Info: starting new BB-chain-dag with header if.end
-Basic Block Chain DAGS.
-Basic-block-chain-DAG with header = entry
- entry
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  entry
-Basic-block-chain-DAG with header = bbx_xnph81
- bbx_xnph81
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph81
-Basic-block-chain-DAG with header = forx_xbody
- forx_xbody
-   -> 
-   <- 
-loop-backs 
-  forx_xbody
-exit-points 
-  forx_xbody
-Basic-block-chain-DAG with header = forx_xend
- forx_xend
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend
-Basic-block-chain-DAG with header = bbx_xnph76
- bbx_xnph76
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph76
-Basic-block-chain-DAG with header = forx_xbody25
- forx_xbody25
-   -> 
-   <- 
-loop-backs 
-  forx_xbody25
-exit-points 
-  forx_xbody25
-Basic-block-chain-DAG with header = forx_xend63x_xloopexit
- forx_xend63x_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend63x_xloopexit
-Basic-block-chain-DAG with header = forx_xend63
- forx_xend63
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend63
-Basic-block-chain-DAG with header = bbx_xnphx_xi
- bbx_xnphx_xi
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnphx_xi
-Basic-block-chain-DAG with header = bbx_xnph
- bbx_xnph
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph
-Basic-block-chain-DAG with header = forx_xbodyx_xforx_xbody_crit_edgex_xi
- forx_xbodyx_xforx_xbody_crit_edgex_xi
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xbodyx_xforx_xbody_crit_edgex_xi
-Basic-block-chain-DAG with header = forx_xbodyx_xforx_xbody_crit_edgex_xix_xforx_xbodyx_xforx_xbody_crit_edgex_xi_crit_edge
- forx_xbodyx_xforx_xbody_crit_edgex_xix_xforx_xbodyx_xforx_xbody_crit_edgex_xi_crit_edge
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xbodyx_xforx_xbody_crit_edgex_xix_xforx_xbodyx_xforx_xbody_crit_edgex_xi_crit_edge
-Basic-block-chain-DAG with header = ifx_xendx_xloopexit
- ifx_xendx_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  ifx_xendx_xloopexit
-Basic-block-chain-DAG with header = ifx_xend
- ifx_xend
-   -> 
-   <- 
-loop-backs 
-exit-points 
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr4 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr4 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr4 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
-Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
-
-Info: visiting function zeropad_thread
-Info: traversal: visited block entry
-Info: traversal: visited block bb.nph226
-Info: traversal: visited block for.end196
-Info: traversal: visited block for.cond51.preheader
-Info: traversal: visited block for.inc112
-Info: traversal: visited block bb.nph220.us.preheader
-Info: traversal: visited block for.end115
-Info: traversal: visited block bb.nph220.us
-Info: traversal: visited block bb.nph217
-Info: traversal: visited block for.body62.us
-Info: traversal: visited block for.cond146.preheader
-Info: traversal: visited block for.inc108.us
-Info: traversal: visited block bb.nph212
-Info: traversal: visited block for.inc193
-Info: traversal: visited block for.inc112.loopexit
-Info: traversal: visited block bb.nph.us.preheader
-Info: traversal: visited block for.inc189.preheader
-Info: traversal: visited block for.end196.loopexit
-Info: traversal: visited block bb.nph.us
-Info: traversal: visited block for.inc189
-Info: traversal: visited block for.body160.us
-Info: traversal: visited block for.inc193.loopexit
-Info: traversal: visited block for.inc189.us
-Info: traversal: visited block for.inc193.loopexit20
-Info: starting new BB-chain-dag with header entry
-Info: starting new BB-chain-dag with header bb.nph226
-Info: starting new BB-chain-dag with header for.cond51.preheader
-Info: starting new BB-chain-dag with header bb.nph220.us.preheader
-Info: starting new BB-chain-dag with header for.inc108.us
-Info: starting new BB-chain-dag with header for.body62.us
-Info: starting new BB-chain-dag with header bb.nph220.us
-Info: starting new BB-chain-dag with header for.inc112.loopexit
-Info: starting new BB-chain-dag with header for.inc112
-Info: starting new BB-chain-dag with header for.end115
-Info: starting new BB-chain-dag with header bb.nph217
-Info: starting new BB-chain-dag with header for.cond146.preheader
-Info: starting new BB-chain-dag with header bb.nph212
-Info: starting new BB-chain-dag with header bb.nph.us.preheader
-Info: starting new BB-chain-dag with header for.inc189.preheader
-Info: starting new BB-chain-dag with header for.inc189.us
-Info: starting new BB-chain-dag with header for.body160.us
-Info: starting new BB-chain-dag with header bb.nph.us
-Info: starting new BB-chain-dag with header for.inc189
-Info: starting new BB-chain-dag with header for.inc193.loopexit
-Info: starting new BB-chain-dag with header for.inc193.loopexit20
-Info: starting new BB-chain-dag with header for.inc193
-Info: starting new BB-chain-dag with header for.end196.loopexit
-Info: starting new BB-chain-dag with header for.end196
-Basic Block Chain DAGS.
-Basic-block-chain-DAG with header = entry
- entry
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  entry
-Basic-block-chain-DAG with header = bbx_xnph226
- bbx_xnph226
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph226
-Basic-block-chain-DAG with header = forx_xcond51x_xpreheader
- forx_xcond51x_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xcond51x_xpreheader
-Basic-block-chain-DAG with header = bbx_xnph220x_xusx_xpreheader
- bbx_xnph220x_xusx_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph220x_xusx_xpreheader
-Basic-block-chain-DAG with header = forx_xinc108x_xus
- forx_xinc108x_xus
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc108x_xus
-Basic-block-chain-DAG with header = forx_xbody62x_xus
- forx_xbody62x_xus
-   -> 
-   <- 
-loop-backs 
-  forx_xbody62x_xus
-exit-points 
-  forx_xbody62x_xus
-Basic-block-chain-DAG with header = bbx_xnph220x_xus
- bbx_xnph220x_xus
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph220x_xus
-Basic-block-chain-DAG with header = forx_xinc112x_xloopexit
- forx_xinc112x_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc112x_xloopexit
-Basic-block-chain-DAG with header = forx_xinc112
- forx_xinc112
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc112
-Basic-block-chain-DAG with header = forx_xend115
- forx_xend115
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend115
-Basic-block-chain-DAG with header = bbx_xnph217
- bbx_xnph217
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph217
-Basic-block-chain-DAG with header = forx_xcond146x_xpreheader
- forx_xcond146x_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xcond146x_xpreheader
-Basic-block-chain-DAG with header = bbx_xnph212
- bbx_xnph212
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnph212
-Basic-block-chain-DAG with header = bbx_xnphx_xusx_xpreheader
- bbx_xnphx_xusx_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnphx_xusx_xpreheader
-Basic-block-chain-DAG with header = forx_xinc189x_xpreheader
- forx_xinc189x_xpreheader
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc189x_xpreheader
-Basic-block-chain-DAG with header = forx_xinc189x_xus
- forx_xinc189x_xus
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc189x_xus
-Basic-block-chain-DAG with header = forx_xbody160x_xus
- forx_xbody160x_xus
-   -> 
-   <- 
-loop-backs 
-  forx_xbody160x_xus
-exit-points 
-  forx_xbody160x_xus
-Basic-block-chain-DAG with header = bbx_xnphx_xus
- bbx_xnphx_xus
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  bbx_xnphx_xus
-Basic-block-chain-DAG with header = forx_xinc189
- forx_xinc189
-   -> 
-   <- 
-loop-backs 
-  forx_xinc189
-exit-points 
-  forx_xinc189
-Basic-block-chain-DAG with header = forx_xinc193x_xloopexit
- forx_xinc193x_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc193x_xloopexit
-Basic-block-chain-DAG with header = forx_xinc193x_xloopexit20
- forx_xinc193x_xloopexit20
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc193x_xloopexit20
-Basic-block-chain-DAG with header = forx_xinc193
- forx_xinc193
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xinc193
-Basic-block-chain-DAG with header = forx_xend196x_xloopexit
- forx_xend196x_xloopexit
-   -> 
-   <- 
-loop-backs 
-exit-points 
-  forx_xend196x_xloopexit
-Basic-block-chain-DAG with header = forx_xend196
- forx_xend196
-   -> 
-   <- 
-loop-backs 
-exit-points 
-Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr6 since it is not (really) used in any function..
-Info: locating portname in constant GEP [18 x i8] c"elapsed_time_pipe\00"
-
-Info: visiting function timer
-Info: ignoring external function timer
-Info: visiting function write_uint64
-Info: ignoring external function write_uint64
-Info: visiting function fwrite
-Info: ignoring external function fwrite
-AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
-Info:  AaLinkExtMem built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
-Info:     Date: Mon Feb 1 17:21:43 2021 +0530
-Info: parsed and added pipe ZeroPad_input_pipe width = 16 depth = 2
-Info: parsed and added pipe ZeroPad_output_pipe width = 16 depth = 2
-Info: parsed and added pipe elapsed_time_pipe width = 64 depth = 1
-Info: parsed and added pipe maxpool_output_pipe width = 16 depth = 1
-Info: Added module progx_xoptx_xo_iNtErNal_xx_xstr2_initializer_in_progx_xoptx_xo
-Info: Added module progx_xoptx_xo_iNtErNal_xx_xstr3_initializer_in_progx_xoptx_xo
-Info: Added module progx_xoptx_xo_iNtErNal_xx_xstr5_initializer_in_progx_xoptx_xo
-Info: Added module progx_xoptx_xo_storage_initializer_
-Info: Added module getRemainingElements
-Info: Added module sendRemainingElements
-Info: Added module ReadInputInfo
-Info: Added module sendOutput
-Info: Added module zeropad_thread
-Info: finished parsing file prog.aa
-Info: parsed and added pipe timer_req width = 1 depth = 1
-Info: parsed and added pipe timer_resp width = 64 depth = 1
-Info: Added module timerDaemon
-Info: Added module timer
-Info: finished parsing file timer.aa
-Info: Added module global_storage_initializer_
-Info: elaborating the program .... initializing the call-graph
-Info: mapping target object references..
-Info: mapping source object references..
-AaLinkExtMem Error: module fwrite not found!: file prog.aa, line 405
-AaLinkExtMem Error: module fwrite not found!: file prog.aa, line 423
-AaLinkExtMem Error: module fwrite not found!: file prog.aa, line 575
-Info: checking for cycles in the call-graph ... 
-Info: module order:
-	ReadInputInfo
-	getRemainingElements
-	progx_xoptx_xo_iNtErNal_xx_xstr2_initializer_in_progx_xoptx_xo
-	progx_xoptx_xo_iNtErNal_xx_xstr3_initializer_in_progx_xoptx_xo
-	progx_xoptx_xo_iNtErNal_xx_xstr5_initializer_in_progx_xoptx_xo
-	progx_xoptx_xo_storage_initializer_
-	global_storage_initializer_
-	sendOutput
-	sendRemainingElements
-	timer
-	timerDaemon
-	zeropad_thread
-Info: marking modules reachable from root-modules ... 
-Info: module ReadInputInfo is reachable from a specified root module.
-Info: module getRemainingElements is reachable from a specified root module.
-Info: module global_storage_initializer_ is reachable from a specified root module.
-Info: module progx_xoptx_xo_storage_initializer_ is reachable from a specified root module.
-Info: module progx_xoptx_xo_iNtErNal_xx_xstr2_initializer_in_progx_xoptx_xo is reachable from a specified root module.
-Info: module progx_xoptx_xo_iNtErNal_xx_xstr5_initializer_in_progx_xoptx_xo is reachable from a specified root module.
-Info: module progx_xoptx_xo_iNtErNal_xx_xstr3_initializer_in_progx_xoptx_xo is reachable from a specified root module.
-Info: module sendOutput is reachable from a specified root module.
-Info: module sendRemainingElements is reachable from a specified root module.
-Info: module timer is reachable from a specified root module.
-Info: module timerDaemon is reachable from a specified root module.
-Info: module zeropad_thread is reachable from a specified root module.
-Info: propagating types in the program ... 
-Info: coalescing storage into distinct memory spaces ... 
-Info: Marking foreign pointers in modules which are not called from the program
-Info: Coalescing storage from native objects..
-Info: Finished coalescing storage.. identified 10 disjoint memory space(s)
-Info: Memory space 0: output 
-Info: Memory space 1: input 
-Info: Memory space 2: pad 
-Info: Memory space 3: stderr 
-Info: Memory space 4: progx_xoptx_xo_iNtErNal_xx_xstr2 
-Info: Memory space 5: progx_xoptx_xo_iNtErNal_xx_xstr3 
-Info: Memory space 6: progx_xoptx_xo_iNtErNal_xx_xstr5 
-Info: Memory space 7: %sendRemainingElements%body:out_data_alloc 
-Info: Memory space 8: %sendOutput%body:out_datax_xi_alloc 
-Info: Memory space 9: %zeropad_thread%body:dest2_alloc 
-Warning: memory space memory_space_2 is not read from in the program
-Warning: memory space memory_space_3 is not written into in the program
-Info: propagating constants in the program ... 
-Error: there were errors during elaboration, check the log
-Error: there were errors during elaboration, check the log
-AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
-Info:  AaOpt built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
-Info:     Date: Mon Feb 1 17:21:43 2021 +0530
-Info: elaborating the program .... initializing the call-graph
-Info: mapping target object references..
-Info: mapping source object references..
-Info: checking for cycles in the call-graph ... 
-Info: module order:
-Info: marking modules reachable from root-modules ... 
-Info: propagating types in the program ... 
-Info: coalescing storage into distinct memory spaces ... 
-Info: Marking foreign pointers in modules which are not called from the program
-Info: Coalescing storage from native objects..
-Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
-Info: propagating constants in the program ... 
-Info: added 0 bits of buffering during path balancing.
-AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
-Info:  AaOpt built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
-Info:     Date: Mon Feb 1 17:21:43 2021 +0530
-Info: elaborating the program .... initializing the call-graph
-Info: mapping target object references..
-Info: mapping source object references..
-Info: checking for cycles in the call-graph ... 
-Info: module order:
-Info: marking modules reachable from root-modules ... 
-Info: propagating types in the program ... 
-Info: coalescing storage into distinct memory spaces ... 
-Info: Marking foreign pointers in modules which are not called from the program
-Info: Coalescing storage from native objects..
-Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
-Info: propagating constants in the program ... 
-Info: added 0 bits of buffering during path balancing.
-Aa2VC -O -C prog.linked.opt.aa | vcFormat > prog.vc
-Info:  Aa2VC built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
-Info:     Date: Mon Feb 1 17:21:43 2021 +0530
-Info: -O option selected, will parallelize straight-line sequences
-Info: -C option selected, will generate C-stubs for mixed C-VHDL simulation
-Info: elaborating the program .... initializing the call-graph
-Info: mapping target object references..
-Info: mapping source object references..
-Info: checking for cycles in the call-graph ... 
-Info: module order:
-Info: marking modules reachable from root-modules ... 
-Info: propagating types in the program ... 
-Info: coalescing storage into distinct memory spaces ... 
-Info: Marking foreign pointers in modules which are not called from the program
-Info: Coalescing storage from native objects..
-Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
-Info: propagating constants in the program ... 
-Info: Writing optimized VC model.. 
-Info: Done writing optimized VC model.. 
-vc2vhdl -D -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl -T zeropad_thread -T timerDaemon -f prog.vc 
-Info: -D option selected: VHDL will have debug assertions..
-Info: -S option selected: bypass stride will be set to 4.
-Info: -O option selected, will try to compress control-path..
-Info: -I will treat errors as warnings.
-Info: -v option selected: lots of info will be printed (to stderr, and also dot-files of control-paths if -O option is selected).
-Info: -a option selected: will try for minimum overall circuit area.
-Info: -C option selected: will generate testbench which connects to foreign link.
-Info: -e ahir_system top-level VHDL entity will have name ahir_system.unformatted_vhdl
-Info: -w ahir_system will write separate system and testbench VHDL files.
-Info: -s ghdl option selected: will generate testbench with VHPI link.
-Info: module zeropad_thread set as one of the ever-running top modules. 
-   NOTE: zeropad_thread cannot have any input/output arguments.
-Info: module timerDaemon set as one of the ever-running top modules. 
-   NOTE: timerDaemon cannot have any input/output arguments.
-vc2vhdl Error: did not find module timerDaemon in the system
-vc2vhdl Error: did not find module zeropad_thread in the system
-vc2vhdl Error: did not find module timerDaemon in the system
-vc2vhdl Error: did not find module zeropad_thread in the system
-There were errors during elaboration ... will not print VHDL
+Info: ADD_u32_u32_1423_inst included in vcBinarySplitOperator group 4
+Info: ADD_u32_u32_1477_inst included in vcBinarySplitOperator group 5
+Info: ADD_u32_u32_1507_inst included in vcBinarySplitOperator group 6
+Info: ADD_u32_u32_1568_inst included in vcBinarySplitOperator group 7
+Info: ADD_u32_u32_1588_inst included in vcBinarySplitOperator group 8
+Info: ADD_u32_u32_1622_inst included in vcBinarySplitOperator group 9
+Info: ADD_u32_u32_1636_inst included in vcBinarySplitOperator group 10
+Info: ADD_u32_u32_1668_inst included in vcBinarySplitOperator group 11
+Info: ADD_u32_u32_1702_inst included in vcBinarySplitOperator group 12
+Info: ADD_u32_u32_1707_inst included in vcBinarySplitOperator group 13
+Info: ADD_u32_u32_1731_inst included in vcBinarySplitOperator group 14
+Info: ADD_u32_u32_1766_inst included in vcBinarySplitOperator group 15
+Info: ADD_u32_u32_1807_inst included in vcBinarySplitOperator group 16
+Info: ADD_u32_u32_1936_inst included in vcBinarySplitOperator group 17
+Info: ADD_u32_u32_1974_inst included in vcBinarySplitOperator group 18
+Info: ADD_u32_u32_1993_inst included in vcBinarySplitOperator group 19
+Info: ADD_u32_u32_2203_inst included in vcBinarySplitOperator group 20
+Info: ADD_u32_u32_867_inst included in vcBinarySplitOperator group 21
+Info: ADD_u64_u64_1366_inst included in vcBinarySplitOperator group 22
+Info: ADD_u64_u64_1438_inst included in vcBinarySplitOperator group 23
+Info: ADD_u64_u64_1522_inst included in vcBinarySplitOperator group 24
+Info: ADD_u64_u64_1532_inst included in vcBinarySplitOperator group 25
+Info: ADD_u64_u64_1646_inst included in vcBinarySplitOperator group 26
+Info: ADD_u64_u64_1838_inst included in vcBinarySplitOperator group 27
+Info: ADD_u64_u64_1878_inst included in vcBinarySplitOperator group 28
+Info: ADD_u64_u64_1896_inst included in vcBinarySplitOperator group 29
+Info: ADD_u64_u64_1958_inst included in vcBinarySplitOperator group 30
+Info: ADD_u64_u64_2010_inst included in vcBinarySplitOperator group 31
+Info: ADD_u64_u64_2093_inst included in vcBinarySplitOperator group 32
+Info: ADD_u64_u64_2103_inst included in vcBinarySplitOperator group 33
+Info: ADD_u64_u64_2213_inst included in vcBinarySplitOperator group 34
+Info: ADD_u64_u64_2263_inst included in vcBinarySplitOperator group 35
+Info: ADD_u64_u64_2310_inst included in vcBinarySplitOperator group 36
+Info: ADD_u64_u64_763_inst included in vcBinarySplitOperator group 37
+Info: ADD_u64_u64_773_inst included in vcBinarySplitOperator group 38
+Info: ADD_u64_u64_877_inst included in vcBinarySplitOperator group 39
+Info: ADD_u64_u64_927_inst included in vcBinarySplitOperator group 40
+Info: ADD_u64_u64_985_inst included in vcBinarySplitOperator group 41
+Info: ASHR_i64_i64_1872_inst included in vcBinarySplitOperator group 42
+Info: EQ_u32_u1_1403_inst included in vcBinarySplitOperator group 43
+Info: EQ_u32_u1_1482_inst included in vcBinarySplitOperator group 44
+Info: EQ_u32_u1_1812_inst included in vcBinarySplitOperator group 45
+Info: EQ_u32_u1_1979_inst included in vcBinarySplitOperator group 46
+Info: EQ_u32_u1_2059_inst included in vcBinarySplitOperator group 47
+Info: EQ_u32_u1_2184_inst included in vcBinarySplitOperator group 48
+Info: EQ_u32_u1_2286_inst included in vcBinarySplitOperator group 49
+Info: EQ_u32_u1_848_inst included in vcBinarySplitOperator group 50
+Info: EQ_u64_u1_1537_inst included in vcBinarySplitOperator group 51
+Info: EQ_u64_u1_1901_inst included in vcBinarySplitOperator group 52
+Info: EQ_u64_u1_2015_inst included in vcBinarySplitOperator group 53
+Info: EQ_u64_u1_2268_inst included in vcBinarySplitOperator group 54
+Info: EQ_u64_u1_932_inst included in vcBinarySplitOperator group 55
+Info: LOAD_pad_1253_load_0 included in vcLoad group 0
+Info: LOAD_pad_1288_load_0 included in vcLoad group 0
+Info: MUL_u32_u32_1217_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1222_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1293_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1311_inst included in vcBinarySplitOperator group 57
+Info: MUL_u32_u32_1327_inst included in vcBinarySplitOperator group 58
+Info: MUL_u32_u32_1342_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1428_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1502_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1512_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1663_inst included in vcBinarySplitOperator group 58
+Info: MUL_u32_u32_1697_inst included in vcBinarySplitOperator group 58
+Info: MUL_u32_u32_1712_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1726_inst included in vcBinarySplitOperator group 58
+Info: MUL_u32_u32_1751_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1761_inst included in vcBinarySplitOperator group 58
+Info: MUL_u32_u32_1921_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_1931_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_2257_inst included in vcBinarySplitOperator group 56
+Info: MUL_u32_u32_921_inst included in vcBinarySplitOperator group 56
+Info: MUL_u64_u64_1357_inst included in vcBinarySplitOperator group 59
+Info: MUL_u64_u64_1833_inst included in vcBinarySplitOperator group 60
+Info: MUL_u64_u64_1864_inst included in vcBinarySplitOperator group 59
+Info: MUL_u64_u64_1947_inst included in vcBinarySplitOperator group 60
+Info: MUL_u64_u64_1953_inst included in vcBinarySplitOperator group 61
+Info: OR_u1_u1_1383_inst included in vcBinarySplitOperator group 62
+Info: RPIPE_zeropad_input_pipe_776_inst included in vcInport group 0
+Info: RPIPE_zeropad_input_pipe_964_inst included in vcInport group 0
+Info: SGT_i32_u1_1243_inst included in vcBinarySplitOperator group 63
+Info: SGT_i32_u1_1263_inst included in vcBinarySplitOperator group 64
+Info: SGT_i32_u1_1271_inst included in vcBinarySplitOperator group 65
+Info: SGT_i32_u1_1576_inst included in vcBinarySplitOperator group 66
+Info: SGT_i32_u1_1596_inst included in vcBinarySplitOperator group 67
+Info: SGT_i32_u1_1604_inst included in vcBinarySplitOperator group 68
+Info: SGT_i32_u1_1630_inst included in vcBinarySplitOperator group 69
+Info: SGT_i32_u1_1676_inst included in vcBinarySplitOperator group 70
+Info: SGT_i32_u1_1739_inst included in vcBinarySplitOperator group 71
+Info: SHL_u32_u32_1563_inst included in vcBinarySplitOperator group 72
+Info: SLT_i32_u1_961_inst included in vcBinarySplitOperator group 73
+Info: STORE_pad_1008_store_0 included in vcStore group 0
+Info: SUB_u64_u64_2036_inst included in vcBinarySplitOperator group 74
+Info: UGT_u32_u1_2197_inst included in vcBinarySplitOperator group 75
+Info: UGT_u32_u1_861_inst included in vcBinarySplitOperator group 76
+Info: ULT_u32_u1_2133_inst included in vcBinarySplitOperator group 77
+Info: ULT_u32_u1_803_inst included in vcBinarySplitOperator group 78
+Info: WPIPE_elapsed_time_pipe_2038_inst included in vcOutport group 0
+Info: WPIPE_zeropad_output_pipe_2113_inst included in vcOutport group 1
+Info: WPIPE_zeropad_output_pipe_2303_inst included in vcOutport group 1
+Info: XOR_u1_u1_1372_inst included in vcBinarySplitOperator group 79
+Info: XOR_u1_u1_1378_inst included in vcBinarySplitOperator group 80
+Info: array_obj_ref_1459_index_0_scale included in vcBinarySplitOperator group 81
+Info: array_obj_ref_1459_root_address_inst included in vcBinarySplitOperator group 82
+Info: array_obj_ref_1467_index_0_scale included in vcBinarySplitOperator group 83
+Info: array_obj_ref_1467_root_address_inst included in vcBinarySplitOperator group 84
+Info: array_obj_ref_1855_root_address_inst included in vcBinarySplitOperator group 85
+Info: array_obj_ref_1882_index_0_scale included in vcBinarySplitOperator group 83
+Info: array_obj_ref_1882_root_address_inst included in vcBinarySplitOperator group 86
+Info: array_obj_ref_2086_index_3_scale included in vcBinarySplitOperator group 87
+Info: array_obj_ref_2086_index_offset included in vcBinarySplitOperator group 88
+Info: array_obj_ref_2177_index_1_scale included in vcBinarySplitOperator group 89
+Info: array_obj_ref_2177_index_offset included in vcBinarySplitOperator group 90
+Info: array_obj_ref_2247_index_3_scale included in vcBinarySplitOperator group 87
+Info: array_obj_ref_2247_index_offset included in vcBinarySplitOperator group 91
+Info: array_obj_ref_756_index_3_scale included in vcBinarySplitOperator group 87
+Info: array_obj_ref_756_index_offset included in vcBinarySplitOperator group 92
+Info: array_obj_ref_837_index_1_scale included in vcBinarySplitOperator group 89
+Info: array_obj_ref_837_index_offset included in vcBinarySplitOperator group 93
+Info: array_obj_ref_911_index_3_scale included in vcBinarySplitOperator group 87
+Info: array_obj_ref_911_index_offset included in vcBinarySplitOperator group 94
+Info: call_stmt_1012_call included in vcCall group 0
+Info: call_stmt_2027_call included in vcCall group 0
+Info: ptr_deref_1033_addr_0 included in vcBinarySplitOperator group 95
+Info: ptr_deref_1033_addr_1 included in vcBinarySplitOperator group 96
+Info: ptr_deref_1033_addr_2 included in vcBinarySplitOperator group 97
+Info: ptr_deref_1033_addr_3 included in vcBinarySplitOperator group 98
+Info: ptr_deref_1033_load_0 included in vcLoad group 1
+Info: ptr_deref_1033_load_1 included in vcLoad group 1
+Info: ptr_deref_1033_load_2 included in vcLoad group 1
+Info: ptr_deref_1033_load_3 included in vcLoad group 1
+Info: ptr_deref_1049_addr_0 included in vcBinarySplitOperator group 99
+Info: ptr_deref_1049_addr_1 included in vcBinarySplitOperator group 100
+Info: ptr_deref_1049_addr_2 included in vcBinarySplitOperator group 101
+Info: ptr_deref_1049_addr_3 included in vcBinarySplitOperator group 102
+Info: ptr_deref_1049_load_0 included in vcLoad group 1
+Info: ptr_deref_1049_load_1 included in vcLoad group 1
+Info: ptr_deref_1049_load_2 included in vcLoad group 1
+Info: ptr_deref_1049_load_3 included in vcLoad group 1
+Info: ptr_deref_1065_addr_0 included in vcBinarySplitOperator group 103
+Info: ptr_deref_1065_addr_1 included in vcBinarySplitOperator group 104
+Info: ptr_deref_1065_addr_2 included in vcBinarySplitOperator group 105
+Info: ptr_deref_1065_addr_3 included in vcBinarySplitOperator group 106
+Info: ptr_deref_1065_load_0 included in vcLoad group 1
+Info: ptr_deref_1065_load_1 included in vcLoad group 1
+Info: ptr_deref_1065_load_2 included in vcLoad group 1
+Info: ptr_deref_1065_load_3 included in vcLoad group 1
+Info: ptr_deref_1079_addr_0 included in vcBinarySplitOperator group 107
+Info: ptr_deref_1079_addr_1 included in vcBinarySplitOperator group 108
+Info: ptr_deref_1079_addr_2 included in vcBinarySplitOperator group 109
+Info: ptr_deref_1079_addr_3 included in vcBinarySplitOperator group 110
+Info: ptr_deref_1079_store_0 included in vcStore group 1
+Info: ptr_deref_1079_store_1 included in vcStore group 1
+Info: ptr_deref_1079_store_2 included in vcStore group 1
+Info: ptr_deref_1079_store_3 included in vcStore group 1
+Info: ptr_deref_1095_addr_0 included in vcBinarySplitOperator group 111
+Info: ptr_deref_1095_addr_1 included in vcBinarySplitOperator group 112
+Info: ptr_deref_1095_addr_2 included in vcBinarySplitOperator group 113
+Info: ptr_deref_1095_addr_3 included in vcBinarySplitOperator group 114
+Info: ptr_deref_1095_store_0 included in vcStore group 1
+Info: ptr_deref_1095_store_1 included in vcStore group 1
+Info: ptr_deref_1095_store_2 included in vcStore group 1
+Info: ptr_deref_1095_store_3 included in vcStore group 1
+Info: ptr_deref_1113_addr_0 included in vcBinarySplitOperator group 115
+Info: ptr_deref_1113_addr_1 included in vcBinarySplitOperator group 116
+Info: ptr_deref_1113_addr_2 included in vcBinarySplitOperator group 117
+Info: ptr_deref_1113_addr_3 included in vcBinarySplitOperator group 118
+Info: ptr_deref_1113_load_0 included in vcLoad group 2
+Info: ptr_deref_1113_load_1 included in vcLoad group 2
+Info: ptr_deref_1113_load_2 included in vcLoad group 2
+Info: ptr_deref_1113_load_3 included in vcLoad group 2
+Info: ptr_deref_1129_addr_0 included in vcBinarySplitOperator group 119
+Info: ptr_deref_1129_addr_1 included in vcBinarySplitOperator group 120
+Info: ptr_deref_1129_addr_2 included in vcBinarySplitOperator group 121
+Info: ptr_deref_1129_addr_3 included in vcBinarySplitOperator group 122
+Info: ptr_deref_1129_store_0 included in vcStore group 1
+Info: ptr_deref_1129_store_1 included in vcStore group 1
+Info: ptr_deref_1129_store_2 included in vcStore group 1
+Info: ptr_deref_1129_store_3 included in vcStore group 1
+Info: ptr_deref_1146_addr_0 included in vcBinarySplitOperator group 123
+Info: ptr_deref_1146_addr_1 included in vcBinarySplitOperator group 124
+Info: ptr_deref_1146_addr_2 included in vcBinarySplitOperator group 125
+Info: ptr_deref_1146_addr_3 included in vcBinarySplitOperator group 126
+Info: ptr_deref_1146_load_0 included in vcLoad group 2
+Info: ptr_deref_1146_load_1 included in vcLoad group 2
+Info: ptr_deref_1146_load_2 included in vcLoad group 2
+Info: ptr_deref_1146_load_3 included in vcLoad group 2
+Info: ptr_deref_1162_addr_0 included in vcBinarySplitOperator group 127
+Info: ptr_deref_1162_addr_1 included in vcBinarySplitOperator group 128
+Info: ptr_deref_1162_addr_2 included in vcBinarySplitOperator group 129
+Info: ptr_deref_1162_addr_3 included in vcBinarySplitOperator group 130
+Info: ptr_deref_1162_store_0 included in vcStore group 1
+Info: ptr_deref_1162_store_1 included in vcStore group 1
+Info: ptr_deref_1162_store_2 included in vcStore group 1
+Info: ptr_deref_1162_store_3 included in vcStore group 1
+Info: ptr_deref_1179_addr_0 included in vcBinarySplitOperator group 131
+Info: ptr_deref_1179_addr_1 included in vcBinarySplitOperator group 132
+Info: ptr_deref_1179_addr_2 included in vcBinarySplitOperator group 133
+Info: ptr_deref_1179_addr_3 included in vcBinarySplitOperator group 134
+Info: ptr_deref_1179_load_0 included in vcLoad group 2
+Info: ptr_deref_1179_load_1 included in vcLoad group 2
+Info: ptr_deref_1179_load_2 included in vcLoad group 2
+Info: ptr_deref_1179_load_3 included in vcLoad group 2
+Info: ptr_deref_1195_addr_0 included in vcBinarySplitOperator group 135
+Info: ptr_deref_1195_addr_1 included in vcBinarySplitOperator group 136
+Info: ptr_deref_1195_addr_2 included in vcBinarySplitOperator group 137
+Info: ptr_deref_1195_addr_3 included in vcBinarySplitOperator group 138
+Info: ptr_deref_1195_store_0 included in vcStore group 1
+Info: ptr_deref_1195_store_1 included in vcStore group 1
+Info: ptr_deref_1195_store_2 included in vcStore group 1
+Info: ptr_deref_1195_store_3 included in vcStore group 1
+Info: ptr_deref_1210_store_0 included in vcStore group 1
+Info: ptr_deref_1234_addr_0 included in vcBinarySplitOperator group 139
+Info: ptr_deref_1234_addr_1 included in vcBinarySplitOperator group 140
+Info: ptr_deref_1234_addr_2 included in vcBinarySplitOperator group 141
+Info: ptr_deref_1234_addr_3 included in vcBinarySplitOperator group 142
+Info: ptr_deref_1234_store_0 included in vcStore group 1
+Info: ptr_deref_1234_store_1 included in vcStore group 1
+Info: ptr_deref_1234_store_2 included in vcStore group 1
+Info: ptr_deref_1234_store_3 included in vcStore group 1
+Info: ptr_deref_1463_addr_0 included in vcBinarySplitOperator group 143
+Info: ptr_deref_1463_addr_1 included in vcBinarySplitOperator group 144
+Info: ptr_deref_1463_load_0 included in vcLoad group 1
+Info: ptr_deref_1463_load_1 included in vcLoad group 1
+Info: ptr_deref_1470_addr_0 included in vcBinarySplitOperator group 145
+Info: ptr_deref_1470_addr_1 included in vcBinarySplitOperator group 146
+Info: ptr_deref_1470_store_0 included in vcStore group 1
+Info: ptr_deref_1470_store_1 included in vcStore group 1
+Info: ptr_deref_1886_addr_0 included in vcBinarySplitOperator group 147
+Info: ptr_deref_1886_addr_1 included in vcBinarySplitOperator group 148
+Info: ptr_deref_1886_load_0 included in vcLoad group 3
+Info: ptr_deref_1886_load_1 included in vcLoad group 3
+Info: ptr_deref_1889_addr_0 included in vcBinarySplitOperator group 149
+Info: ptr_deref_1889_addr_1 included in vcBinarySplitOperator group 150
+Info: ptr_deref_1889_store_0 included in vcStore group 2
+Info: ptr_deref_1889_store_1 included in vcStore group 2
+Info: ptr_deref_2053_addr_0 included in vcBinarySplitOperator group 151
+Info: ptr_deref_2053_addr_1 included in vcBinarySplitOperator group 152
+Info: ptr_deref_2053_addr_2 included in vcBinarySplitOperator group 153
+Info: ptr_deref_2053_addr_3 included in vcBinarySplitOperator group 154
+Info: ptr_deref_2053_load_0 included in vcLoad group 2
+Info: ptr_deref_2053_load_1 included in vcLoad group 2
+Info: ptr_deref_2053_load_2 included in vcLoad group 2
+Info: ptr_deref_2053_load_3 included in vcLoad group 2
+Info: ptr_deref_2107_addr_0 included in vcBinarySplitOperator group 155
+Info: ptr_deref_2107_addr_1 included in vcBinarySplitOperator group 156
+Info: ptr_deref_2107_addr_2 included in vcBinarySplitOperator group 157
+Info: ptr_deref_2107_addr_3 included in vcBinarySplitOperator group 158
+Info: ptr_deref_2107_load_0 included in vcLoad group 2
+Info: ptr_deref_2107_load_1 included in vcLoad group 2
+Info: ptr_deref_2107_load_2 included in vcLoad group 2
+Info: ptr_deref_2107_load_3 included in vcLoad group 2
+Info: ptr_deref_2128_addr_0 included in vcBinarySplitOperator group 159
+Info: ptr_deref_2128_addr_1 included in vcBinarySplitOperator group 160
+Info: ptr_deref_2128_addr_2 included in vcBinarySplitOperator group 161
+Info: ptr_deref_2128_addr_3 included in vcBinarySplitOperator group 162
+Info: ptr_deref_2128_load_0 included in vcLoad group 2
+Info: ptr_deref_2128_load_1 included in vcLoad group 2
+Info: ptr_deref_2128_load_2 included in vcLoad group 2
+Info: ptr_deref_2128_load_3 included in vcLoad group 2
+Info: ptr_deref_2252_addr_0 included in vcBinarySplitOperator group 163
+Info: ptr_deref_2252_addr_1 included in vcBinarySplitOperator group 164
+Info: ptr_deref_2252_addr_2 included in vcBinarySplitOperator group 165
+Info: ptr_deref_2252_addr_3 included in vcBinarySplitOperator group 166
+Info: ptr_deref_2252_load_0 included in vcLoad group 2
+Info: ptr_deref_2252_load_1 included in vcLoad group 2
+Info: ptr_deref_2252_load_2 included in vcLoad group 2
+Info: ptr_deref_2252_load_3 included in vcLoad group 2
+Info: ptr_deref_2297_addr_0 included in vcBinarySplitOperator group 167
+Info: ptr_deref_2297_addr_1 included in vcBinarySplitOperator group 168
+Info: ptr_deref_2297_addr_2 included in vcBinarySplitOperator group 169
+Info: ptr_deref_2297_addr_3 included in vcBinarySplitOperator group 170
+Info: ptr_deref_2297_addr_4 included in vcBinarySplitOperator group 171
+Info: ptr_deref_2297_addr_5 included in vcBinarySplitOperator group 172
+Info: ptr_deref_2297_addr_6 included in vcBinarySplitOperator group 173
+Info: ptr_deref_2297_addr_7 included in vcBinarySplitOperator group 174
+Info: ptr_deref_2297_load_0 included in vcLoad group 2
+Info: ptr_deref_2297_load_1 included in vcLoad group 2
+Info: ptr_deref_2297_load_2 included in vcLoad group 2
+Info: ptr_deref_2297_load_3 included in vcLoad group 2
+Info: ptr_deref_2297_load_4 included in vcLoad group 2
+Info: ptr_deref_2297_load_5 included in vcLoad group 2
+Info: ptr_deref_2297_load_6 included in vcLoad group 2
+Info: ptr_deref_2297_load_7 included in vcLoad group 2
+Info: ptr_deref_2324_addr_0 included in vcBinarySplitOperator group 175
+Info: ptr_deref_2324_addr_1 included in vcBinarySplitOperator group 176
+Info: ptr_deref_2324_addr_2 included in vcBinarySplitOperator group 177
+Info: ptr_deref_2324_addr_3 included in vcBinarySplitOperator group 178
+Info: ptr_deref_2324_load_0 included in vcLoad group 2
+Info: ptr_deref_2324_load_1 included in vcLoad group 2
+Info: ptr_deref_2324_load_2 included in vcLoad group 2
+Info: ptr_deref_2324_load_3 included in vcLoad group 2
+Info: ptr_deref_704_addr_0 included in vcBinarySplitOperator group 179
+Info: ptr_deref_704_addr_1 included in vcBinarySplitOperator group 180
+Info: ptr_deref_704_addr_2 included in vcBinarySplitOperator group 181
+Info: ptr_deref_704_addr_3 included in vcBinarySplitOperator group 182
+Info: ptr_deref_704_store_0 included in vcStore group 3
+Info: ptr_deref_704_store_1 included in vcStore group 3
+Info: ptr_deref_704_store_2 included in vcStore group 3
+Info: ptr_deref_704_store_3 included in vcStore group 3
+Info: ptr_deref_719_store_0 included in vcStore group 3
+Info: ptr_deref_734_addr_0 included in vcBinarySplitOperator group 183
+Info: ptr_deref_734_addr_1 included in vcBinarySplitOperator group 184
+Info: ptr_deref_734_addr_2 included in vcBinarySplitOperator group 185
+Info: ptr_deref_734_addr_3 included in vcBinarySplitOperator group 186
+Info: ptr_deref_734_store_0 included in vcStore group 3
+Info: ptr_deref_734_store_1 included in vcStore group 3
+Info: ptr_deref_734_store_2 included in vcStore group 3
+Info: ptr_deref_734_store_3 included in vcStore group 3
+Info: ptr_deref_783_addr_0 included in vcBinarySplitOperator group 187
+Info: ptr_deref_783_addr_1 included in vcBinarySplitOperator group 188
+Info: ptr_deref_783_addr_2 included in vcBinarySplitOperator group 189
+Info: ptr_deref_783_addr_3 included in vcBinarySplitOperator group 190
+Info: ptr_deref_783_store_0 included in vcStore group 3
+Info: ptr_deref_783_store_1 included in vcStore group 3
+Info: ptr_deref_783_store_2 included in vcStore group 3
+Info: ptr_deref_783_store_3 included in vcStore group 3
+Info: ptr_deref_798_addr_0 included in vcBinarySplitOperator group 191
+Info: ptr_deref_798_addr_1 included in vcBinarySplitOperator group 192
+Info: ptr_deref_798_addr_2 included in vcBinarySplitOperator group 193
+Info: ptr_deref_798_addr_3 included in vcBinarySplitOperator group 194
+Info: ptr_deref_798_load_0 included in vcLoad group 1
+Info: ptr_deref_798_load_1 included in vcLoad group 1
+Info: ptr_deref_798_load_2 included in vcLoad group 1
+Info: ptr_deref_798_load_3 included in vcLoad group 1
+Info: ptr_deref_916_addr_0 included in vcBinarySplitOperator group 195
+Info: ptr_deref_916_addr_1 included in vcBinarySplitOperator group 196
+Info: ptr_deref_916_addr_2 included in vcBinarySplitOperator group 197
+Info: ptr_deref_916_addr_3 included in vcBinarySplitOperator group 198
+Info: ptr_deref_916_load_0 included in vcLoad group 1
+Info: ptr_deref_916_load_1 included in vcLoad group 1
+Info: ptr_deref_916_load_2 included in vcLoad group 1
+Info: ptr_deref_916_load_3 included in vcLoad group 1
+Info: ptr_deref_978_addr_0 included in vcBinarySplitOperator group 199
+Info: ptr_deref_978_addr_1 included in vcBinarySplitOperator group 200
+Info: ptr_deref_978_addr_2 included in vcBinarySplitOperator group 201
+Info: ptr_deref_978_addr_3 included in vcBinarySplitOperator group 202
+Info: ptr_deref_978_addr_4 included in vcBinarySplitOperator group 203
+Info: ptr_deref_978_addr_5 included in vcBinarySplitOperator group 204
+Info: ptr_deref_978_addr_6 included in vcBinarySplitOperator group 205
+Info: ptr_deref_978_addr_7 included in vcBinarySplitOperator group 206
+Info: ptr_deref_978_store_0 included in vcStore group 3
+Info: ptr_deref_978_store_1 included in vcStore group 3
+Info: ptr_deref_978_store_2 included in vcStore group 3
+Info: ptr_deref_978_store_3 included in vcStore group 3
+Info: ptr_deref_978_store_4 included in vcStore group 3
+Info: ptr_deref_978_store_5 included in vcStore group 3
+Info: ptr_deref_978_store_6 included in vcStore group 3
+Info: ptr_deref_978_store_7 included in vcStore group 3
+Info: ptr_deref_999_addr_0 included in vcBinarySplitOperator group 207
+Info: ptr_deref_999_addr_1 included in vcBinarySplitOperator group 208
+Info: ptr_deref_999_addr_2 included in vcBinarySplitOperator group 209
+Info: ptr_deref_999_addr_3 included in vcBinarySplitOperator group 210
+Info: ptr_deref_999_load_0 included in vcLoad group 1
+Info: ptr_deref_999_load_1 included in vcLoad group 1
+Info: ptr_deref_999_load_2 included in vcLoad group 1
+Info: ptr_deref_999_load_3 included in vcLoad group 1
+Info: type_cast_1016_inst included in vcUnarySplitOperator group 211
+Info: type_cast_1320_inst included in vcUnarySplitOperator group 212
+Info: type_cast_1432_inst included in vcUnarySplitOperator group 213
+Info: type_cast_1442_inst included in vcUnarySplitOperator group 214
+Info: type_cast_1516_inst included in vcUnarySplitOperator group 215
+Info: type_cast_1925_inst included in vcUnarySplitOperator group 216
+Info: type_cast_1940_inst included in vcUnarySplitOperator group 217
+Info: type_cast_2030_inst included in vcUnarySplitOperator group 218
 Info: printing VHDL global package
 Info: printing top-level system VHDL file ahir_system.unformatted_vhdl
 Info: printing VHDL model
-Info: total estimated buffering in system ahir_system is 0
+Info: printing VHDL model for module timer
+Info: resources used by CP timer_CP_3793: ff-count=2 (saved 0), mux2-count= 2, and2-count= 1
+Info: estimated buffering for operator RPIPE_timer_resp_657_inst = 64
+Info: estimated buffering in module timer is 64
+Info: printing VHDL model for module timerDaemon
+Info: resources used by CP timerDaemon_CP_3827: ff-count=48 (saved 18), mux2-count= 25, and2-count= 8
+Info: estimated buffering for operator RPIPE_timer_req_671_inst = 1
+Info: estimated buffering for operator nCOUNTER_677_666_buf = 64
+Info: estimated buffering for operator phi_stmt_664 = 64
+Info: estimated buffering in module timerDaemon is 129
+Info: printing VHDL model for module zeropad3D
+Info: resources used by CP zeropad3D_CP_3943: ff-count=774 (saved 0), mux2-count= 774, and2-count= 549
+Info: estimated buffering for operator ADD_u32_u32_1316_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1332_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1337_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1398_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1423_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1477_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1507_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1568_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1588_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1622_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1636_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1668_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1702_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1707_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1731_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1766_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1807_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1936_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1974_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_1993_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_2203_inst = 32
+Info: estimated buffering for operator ADD_u32_u32_867_inst = 32
+Info: estimated buffering for operator ADD_u64_u64_1366_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1438_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1522_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1532_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1646_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1838_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1878_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1896_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_1958_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_2010_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_2093_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_2103_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_2213_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_2263_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_2310_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_763_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_773_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_877_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_927_inst = 64
+Info: estimated buffering for operator ADD_u64_u64_985_inst = 64
+Info: estimated buffering for operator EQ_u32_u1_1403_inst = 1
+Info: estimated buffering for operator EQ_u32_u1_1482_inst = 1
+Info: estimated buffering for operator EQ_u32_u1_1812_inst = 1
+Info: estimated buffering for operator EQ_u32_u1_1979_inst = 1
+Info: estimated buffering for operator EQ_u32_u1_2059_inst = 1
+Info: estimated buffering for operator EQ_u32_u1_2184_inst = 1
+Info: estimated buffering for operator EQ_u32_u1_2286_inst = 1
+Info: estimated buffering for operator EQ_u32_u1_848_inst = 1
+Info: estimated buffering for operator EQ_u64_u1_1537_inst = 1
+Info: estimated buffering for operator EQ_u64_u1_1901_inst = 1
+Info: estimated buffering for operator EQ_u64_u1_2015_inst = 1
+Info: estimated buffering for operator EQ_u64_u1_2268_inst = 1
+Info: estimated buffering for operator EQ_u64_u1_932_inst = 1
+Info: estimated buffering for operator LOAD_pad_1253_load_0 = 16
+Info: estimated buffering for operator LOAD_pad_1288_load_0 = 16
+Info: estimated buffering for operator MUL_u32_u32_1217_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1222_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1293_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1311_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1327_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1342_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1428_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1502_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1512_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1663_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1697_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1712_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1726_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1751_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1761_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1921_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_1931_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_2257_inst = 32
+Info: estimated buffering for operator MUL_u32_u32_921_inst = 32
+Info: estimated buffering for operator MUL_u64_u64_1357_inst = 64
+Info: estimated buffering for operator MUL_u64_u64_1833_inst = 64
+Info: estimated buffering for operator MUL_u64_u64_1864_inst = 64
+Info: estimated buffering for operator MUL_u64_u64_1947_inst = 64
+Info: estimated buffering for operator MUL_u64_u64_1953_inst = 64
+Info: estimated buffering for operator MUX_1653_inst = 64
+Info: estimated buffering for operator MUX_1683_inst = 32
+Info: estimated buffering for operator MUX_1746_inst = 32
+Info: estimated buffering for operator MUX_2220_inst = 64
+Info: estimated buffering for operator MUX_884_inst = 64
+Info: estimated buffering for operator OR_u1_u1_1383_inst = 1
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_776_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_964_inst = 16
+Info: estimated buffering for operator SGT_i32_u1_1243_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1263_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1271_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1576_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1596_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1604_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1630_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1676_inst = 1
+Info: estimated buffering for operator SGT_i32_u1_1739_inst = 1
+Info: estimated buffering for operator SHL_u32_u32_1563_inst = 32
+Info: estimated buffering for operator SLT_i32_u1_961_inst = 1
+Info: estimated buffering for operator SUB_u64_u64_2036_inst = 64
+Info: estimated buffering for operator UGT_u32_u1_2197_inst = 1
+Info: estimated buffering for operator UGT_u32_u1_861_inst = 1
+Info: estimated buffering for operator ULT_u32_u1_2133_inst = 1
+Info: estimated buffering for operator ULT_u32_u1_803_inst = 1
+Info: estimated buffering for operator XOR_u1_u1_1372_inst = 1
+Info: estimated buffering for operator XOR_u1_u1_1378_inst = 1
+Info: estimated buffering for operator addr_of_2087_final_reg = 32
+Info: estimated buffering for operator addr_of_2178_final_reg = 32
+Info: estimated buffering for operator addr_of_2248_final_reg = 32
+Info: estimated buffering for operator addr_of_757_final_reg = 32
+Info: estimated buffering for operator addr_of_838_final_reg = 32
+Info: estimated buffering for operator addr_of_912_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_1459_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_1459_index_0_scale = 18
+Info: estimated buffering for operator array_obj_ref_1459_root_address_inst = 18
+Info: estimated buffering for operator array_obj_ref_1467_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_1467_index_0_scale = 24
+Info: estimated buffering for operator array_obj_ref_1467_root_address_inst = 24
+Info: estimated buffering for operator array_obj_ref_1855_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_1855_root_address_inst = 18
+Info: estimated buffering for operator array_obj_ref_1882_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_1882_index_0_scale = 24
+Info: estimated buffering for operator array_obj_ref_1882_root_address_inst = 24
+Info: estimated buffering for operator array_obj_ref_2086_index_3_scale = 18
+Info: estimated buffering for operator array_obj_ref_2086_index_offset = 18
+Info: estimated buffering for operator array_obj_ref_2177_index_1_scale = 18
+Info: estimated buffering for operator array_obj_ref_2177_index_offset = 18
+Info: estimated buffering for operator array_obj_ref_2247_index_3_scale = 18
+Info: estimated buffering for operator array_obj_ref_2247_index_offset = 18
+Info: estimated buffering for operator array_obj_ref_756_index_3_scale = 18
+Info: estimated buffering for operator array_obj_ref_756_index_offset = 18
+Info: estimated buffering for operator array_obj_ref_837_index_1_scale = 18
+Info: estimated buffering for operator array_obj_ref_837_index_offset = 18
+Info: estimated buffering for operator array_obj_ref_911_index_3_scale = 18
+Info: estimated buffering for operator array_obj_ref_911_index_offset = 18
+Info: estimated buffering for operator call_stmt_1012_call = 64
+Info: estimated buffering for operator call_stmt_1012_call (call to timer)  = 64
+Info: estimated buffering for operator call_stmt_2027_call = 64
+Info: estimated buffering for operator call_stmt_2027_call (call to timer)  = 64
+Info: estimated buffering for operator phi_stmt_1003 = 16
+Info: estimated buffering for operator phi_stmt_1346 = 64
+Info: estimated buffering for operator phi_stmt_1412 = 32
+Info: estimated buffering for operator phi_stmt_1491 = 32
+Info: estimated buffering for operator phi_stmt_1548 = 16
+Info: estimated buffering for operator phi_stmt_1770 = 64
+Info: estimated buffering for operator phi_stmt_1777 = 32
+Info: estimated buffering for operator phi_stmt_1821 = 64
+Info: estimated buffering for operator phi_stmt_1910 = 32
+Info: estimated buffering for operator phi_stmt_1962 = 32
+Info: estimated buffering for operator phi_stmt_1997 = 32
+Info: estimated buffering for operator phi_stmt_2070 = 64
+Info: estimated buffering for operator phi_stmt_2142 = 32
+Info: estimated buffering for operator phi_stmt_2149 = 32
+Info: estimated buffering for operator phi_stmt_2159 = 32
+Info: estimated buffering for operator phi_stmt_2165 = 64
+Info: estimated buffering for operator phi_stmt_2224 = 64
+Info: estimated buffering for operator phi_stmt_2231 = 32
+Info: estimated buffering for operator phi_stmt_2277 = 32
+Info: estimated buffering for operator phi_stmt_740 = 64
+Info: estimated buffering for operator phi_stmt_812 = 32
+Info: estimated buffering for operator phi_stmt_819 = 32
+Info: estimated buffering for operator phi_stmt_825 = 64
+Info: estimated buffering for operator phi_stmt_888 = 64
+Info: estimated buffering for operator phi_stmt_895 = 32
+Info: estimated buffering for operator phi_stmt_941 = 32
+Info: estimated buffering for operator phi_stmt_948 = 32
+Info: estimated buffering for operator ptr_deref_1033_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1033_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_1033_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_1033_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_1033_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1033_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1033_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1033_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1049_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1049_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_1049_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_1049_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_1049_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1049_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1049_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1049_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1065_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1065_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_1065_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_1065_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_1065_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1065_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1065_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1065_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1079_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1079_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1079_addr_2 = 24
+Info: estimated buffering for operator ptr_deref_1079_addr_3 = 24
+Info: estimated buffering for operator ptr_deref_1095_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1095_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1095_addr_2 = 24
+Info: estimated buffering for operator ptr_deref_1095_addr_3 = 24
+Info: estimated buffering for operator ptr_deref_1113_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1113_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_1113_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_1113_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_1113_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1113_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1113_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1113_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1129_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1129_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1129_addr_2 = 24
+Info: estimated buffering for operator ptr_deref_1129_addr_3 = 24
+Info: estimated buffering for operator ptr_deref_1146_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1146_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_1146_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_1146_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_1146_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1146_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1146_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1146_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1162_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1162_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1162_addr_2 = 24
+Info: estimated buffering for operator ptr_deref_1162_addr_3 = 24
+Info: estimated buffering for operator ptr_deref_1179_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1179_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_1179_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_1179_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_1179_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1179_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1179_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1179_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1195_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1195_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1195_addr_2 = 24
+Info: estimated buffering for operator ptr_deref_1195_addr_3 = 24
+Info: estimated buffering for operator ptr_deref_1234_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1234_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1234_addr_2 = 24
+Info: estimated buffering for operator ptr_deref_1234_addr_3 = 24
+Info: estimated buffering for operator ptr_deref_1463_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1463_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_1463_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1463_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1470_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1470_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1886_addr_0 = 24
+Info: estimated buffering for operator ptr_deref_1886_addr_1 = 24
+Info: estimated buffering for operator ptr_deref_1886_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1886_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1889_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_1889_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_2053_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_2053_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_2053_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_2053_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_2053_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2053_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2053_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2053_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2107_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_2107_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_2107_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_2107_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_2107_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2107_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2107_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2107_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2128_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_2128_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_2128_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_2128_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_2128_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2128_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2128_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2128_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2252_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_2252_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_2252_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_2252_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_2252_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2252_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2252_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2252_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2297_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_2297_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_2297_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_2297_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_2297_addr_4 = 18
+Info: estimated buffering for operator ptr_deref_2297_addr_5 = 18
+Info: estimated buffering for operator ptr_deref_2297_addr_6 = 18
+Info: estimated buffering for operator ptr_deref_2297_addr_7 = 18
+Info: estimated buffering for operator ptr_deref_2297_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2297_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2297_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2297_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2297_load_4 = 8
+Info: estimated buffering for operator ptr_deref_2297_load_5 = 8
+Info: estimated buffering for operator ptr_deref_2297_load_6 = 8
+Info: estimated buffering for operator ptr_deref_2297_load_7 = 8
+Info: estimated buffering for operator ptr_deref_2324_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_2324_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_2324_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_2324_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_2324_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2324_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2324_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2324_load_3 = 8
+Info: estimated buffering for operator ptr_deref_704_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_704_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_704_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_704_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_734_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_734_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_734_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_734_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_783_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_783_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_783_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_783_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_798_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_798_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_798_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_798_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_798_load_0 = 8
+Info: estimated buffering for operator ptr_deref_798_load_1 = 8
+Info: estimated buffering for operator ptr_deref_798_load_2 = 8
+Info: estimated buffering for operator ptr_deref_798_load_3 = 8
+Info: estimated buffering for operator ptr_deref_916_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_916_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_916_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_916_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_916_load_0 = 8
+Info: estimated buffering for operator ptr_deref_916_load_1 = 8
+Info: estimated buffering for operator ptr_deref_916_load_2 = 8
+Info: estimated buffering for operator ptr_deref_916_load_3 = 8
+Info: estimated buffering for operator ptr_deref_978_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_978_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_978_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_978_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_978_addr_4 = 18
+Info: estimated buffering for operator ptr_deref_978_addr_5 = 18
+Info: estimated buffering for operator ptr_deref_978_addr_6 = 18
+Info: estimated buffering for operator ptr_deref_978_addr_7 = 18
+Info: estimated buffering for operator ptr_deref_999_addr_0 = 18
+Info: estimated buffering for operator ptr_deref_999_addr_1 = 18
+Info: estimated buffering for operator ptr_deref_999_addr_2 = 18
+Info: estimated buffering for operator ptr_deref_999_addr_3 = 18
+Info: estimated buffering for operator ptr_deref_999_load_0 = 8
+Info: estimated buffering for operator ptr_deref_999_load_1 = 8
+Info: estimated buffering for operator ptr_deref_999_load_2 = 8
+Info: estimated buffering for operator ptr_deref_999_load_3 = 8
+Info: estimated buffering for operator type_cast_1006_inst = 16
+Info: estimated buffering for operator type_cast_1017_inst = 64
+Info: estimated buffering for operator type_cast_1297_inst = 64
+Info: estimated buffering for operator type_cast_1301_inst = 64
+Info: estimated buffering for operator type_cast_1305_inst = 32
+Info: estimated buffering for operator type_cast_1321_inst = 64
+Info: estimated buffering for operator type_cast_1352_inst = 64
+Info: estimated buffering for operator type_cast_1361_inst = 32
+Info: estimated buffering for operator type_cast_1418_inst = 32
+Info: estimated buffering for operator type_cast_1433_inst = 64
+Info: estimated buffering for operator type_cast_1443_inst = 64
+Info: estimated buffering for operator type_cast_1497_inst = 32
+Info: estimated buffering for operator type_cast_1517_inst = 64
+Info: estimated buffering for operator type_cast_1551_inst = 16
+Info: estimated buffering for operator type_cast_1553_inst = 16
+Info: estimated buffering for operator type_cast_1557_inst = 32
+Info: estimated buffering for operator type_cast_1640_inst = 64
+Info: estimated buffering for operator type_cast_1657_inst = 32
+Info: estimated buffering for operator type_cast_1687_inst = 64
+Info: estimated buffering for operator type_cast_1691_inst = 32
+Info: estimated buffering for operator type_cast_1716_inst = 64
+Info: estimated buffering for operator type_cast_1720_inst = 32
+Info: estimated buffering for operator type_cast_1755_inst = 32
+Info: estimated buffering for operator type_cast_1773_inst = 64
+Info: estimated buffering for operator type_cast_1780_inst = 32
+Info: estimated buffering for operator type_cast_1827_inst = 64
+Info: estimated buffering for operator type_cast_1859_inst = 32
+Info: estimated buffering for operator type_cast_1873_inst = 64
+Info: estimated buffering for operator type_cast_1916_inst = 32
+Info: estimated buffering for operator type_cast_1926_inst = 64
+Info: estimated buffering for operator type_cast_1941_inst = 64
+Info: estimated buffering for operator type_cast_1968_inst = 32
+Info: estimated buffering for operator type_cast_2000_inst = 32
+Info: estimated buffering for operator type_cast_2002_inst = 32
+Info: estimated buffering for operator type_cast_2004_inst = 32
+Info: estimated buffering for operator type_cast_2031_inst = 64
+Info: estimated buffering for operator type_cast_2073_inst = 64
+Info: estimated buffering for operator type_cast_2097_inst = 32
+Info: estimated buffering for operator type_cast_2111_inst = 16
+Info: estimated buffering for operator type_cast_2145_inst = 32
+Info: estimated buffering for operator type_cast_2152_inst = 32
+Info: estimated buffering for operator type_cast_2162_inst = 32
+Info: estimated buffering for operator type_cast_2164_inst = 32
+Info: estimated buffering for operator type_cast_2171_inst = 64
+Info: estimated buffering for operator type_cast_2207_inst = 64
+Info: estimated buffering for operator type_cast_2230_inst = 64
+Info: estimated buffering for operator type_cast_2234_inst = 32
+Info: estimated buffering for operator type_cast_2280_inst = 32
+Info: estimated buffering for operator type_cast_2301_inst = 16
+Info: estimated buffering for operator type_cast_746_inst = 64
+Info: estimated buffering for operator type_cast_767_inst = 32
+Info: estimated buffering for operator type_cast_780_inst = 32
+Info: estimated buffering for operator type_cast_815_inst = 32
+Info: estimated buffering for operator type_cast_822_inst = 32
+Info: estimated buffering for operator type_cast_824_inst = 32
+Info: estimated buffering for operator type_cast_828_inst = 64
+Info: estimated buffering for operator type_cast_842_inst = 32
+Info: estimated buffering for operator type_cast_871_inst = 64
+Info: estimated buffering for operator type_cast_894_inst = 64
+Info: estimated buffering for operator type_cast_901_inst = 32
+Info: estimated buffering for operator type_cast_944_inst = 32
+Info: estimated buffering for operator type_cast_954_inst = 32
+Info: estimated buffering for operator type_cast_975_inst = 64
+Info: estimated buffering in module zeropad3D is 10860
+Info: total estimated buffering in system ahir_system is 11053
 Info: finished printing VHDL model
-Info: number of register bits used in FIFO's = 0
+Info: number of register bits used in FIFO's = 193
+Info: printing Dot-file of CP for module timer
+Info: printing Dot-file of CP for module timerDaemon
+Info: printing Dot-file of CP for module zeropad3D
+Info: printing Dot-file of DP for module timer
+Info: printing Dot-file of DP for module timerDaemon
+Info: printing Dot-file of DP for module zeropad3D
 vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
 vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
 vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl
-gcc -c vhdlCStubs.c -I./ -I/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include -I../../../primitives/include -Isrc
-gcc -c testbench.c -I./ -I/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include -I../../../primitives/include -Isrc
-testbench.c: In function ‘main’:
-testbench.c:117:43: warning: passing argument 2 of ‘write_uint16’ makes integer from pointer without a cast []8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wint-conversion-Wint-conversion]8;;]
-  117 |         write_uint16("ZeroPad_input_pipe",&pad);
-      |                                           ^~
-      |                                           |
-      |                                           int *
-In file included from vhdlCStubs.h:5,
-                 from testbench.c:17:
-/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include/Pipes.h:48:44: note: expected ‘uint16_t’ {aka ‘short unsigned int’} but argument is of type ‘int *’
-   48 | void write_uint16(const char *id, uint16_t data);
-      |                                   ~~~^~
-gcc -o testbench_hw testbench.o vhdlCStubs.o  -L/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/lib -lSocketLibPipeHandler -lpthread
+gcc -c vhdlCStubs.c -I./ -I/home/ajinkya/IITB_AI_ML/ahir_release/include -I../../../primitives/include -Isrc
+gcc -c testbench.c -I./ -I/home/ajinkya/IITB_AI_ML/ahir_release/include -I../../../primitives/include -Isrc
+In file included from testbench.c:10:0:
+src/zero_pad.h:16:36: warning: backslash-newline at end of file
+ #define __zero_pad__(T, pad, R)  ({\
+ ^
+gcc -o testbench_hw testbench.o vhdlCStubs.o  -L/home/ajinkya/IITB_AI_ML/ahir_release/lib -lSocketLibPipeHandler -lpthread
 ghdl --clean
 ghdl --remove
-ghdl -i --work=GhdlLink  /home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/vhdl/GhdlLink.vhdl
-ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
-ghdl:error: cannot find "std" library
-ghdl -i --work=ahir  /home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/vhdl/ahir.vhdl
-ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
-ghdl:error: cannot find "std" library
-ghdl -i --work=aHiR_ieee_proposed  /home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/vhdl/aHiR_ieee_proposed.vhdl
-ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
-ghdl:error: cannot find "std" library
+ghdl -i --work=GhdlLink  /home/ajinkya/IITB_AI_ML/ahir_release/vhdl/GhdlLink.vhdl
+ghdl -i --work=ahir  /home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl
+ghdl -i --work=aHiR_ieee_proposed  /home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl
 ghdl -i --work=work ahir_system_global_package.vhdl
-ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
-ghdl:error: cannot find "std" library
 ghdl -i --work=work ahir_system.vhdl
-ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
-ghdl:error: cannot find "std" library
 ghdl -i --work=work ahir_system_test_bench.vhdl
-ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
-ghdl:error: cannot find "std" library
-ghdl -m --work=work -Wl,-L/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/lib -Wl,-lVhpi ahir_system_test_bench 
-ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
-ghdl:error: cannot find "std" library
-Makefile:73: recipe for target 'GHDL' failed
-make: * [GHDL] Error 1
+ghdl -m --work=work -Wl,-L/home/ajinkya/IITB_AI_ML/ahir_release/lib -Wl,-lVhpi ahir_system_test_bench 
+analyze /home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4571:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4571:1:warning: package "math_utility_pkg" defined at line 16:9 is now package "math_utility_pkg" [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4605:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4605:1:warning: package "fixed_float_types" defined at line 50:9 is now package "fixed_float_types" [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4643:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4643:1:warning: package "fixed_pkg" defined at line 95:9 is now package "fixed_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4673:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:4673:1:warning: package "float_pkg" defined at line 125:9 is now package "float_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:5393:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package body float_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:5393:1:warning: package body "float_pkg" defined at line 838:14 is now package body "float_pkg" [-Wlibrary]
+package body float_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9126:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9126:1:warning: package "math_utility_pkg" defined at line 4571:9 is now package "math_utility_pkg" [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9160:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9160:1:warning: package "fixed_float_types" defined at line 4605:9 is now package "fixed_float_types" [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9198:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9198:1:warning: package "fixed_pkg" defined at line 4650:9 is now package "fixed_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9228:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9228:1:warning: package "float_pkg" defined at line 4680:9 is now package "float_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9948:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package body float_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:9948:1:warning: package body "float_pkg" defined at line 5393:14 is now package body "float_pkg" [-Wlibrary]
+package body float_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13681:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13681:1:warning: package "math_utility_pkg" defined at line 9126:9 is now package "math_utility_pkg" [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13715:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13715:1:warning: package "fixed_float_types" defined at line 9160:9 is now package "fixed_float_types" [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13753:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13753:1:warning: package "fixed_pkg" defined at line 9205:9 is now package "fixed_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13783:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:13783:1:warning: package "float_pkg" defined at line 9235:9 is now package "float_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:14503:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package body float_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:14503:1:warning: package body "float_pkg" defined at line 9948:14 is now package body "float_pkg" [-Wlibrary]
+package body float_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18236:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18236:1:warning: package "math_utility_pkg" defined at line 13681:9 is now package "math_utility_pkg" [-Wlibrary]
+package math_utility_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18270:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18270:1:warning: package "fixed_float_types" defined at line 13715:9 is now package "fixed_float_types" [-Wlibrary]
+package fixed_float_types is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18308:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18308:1:warning: package "fixed_pkg" defined at line 13760:9 is now package "fixed_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18338:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:18338:1:warning: package "float_pkg" defined at line 13790:9 is now package "float_pkg" [-Wlibrary]
+use STD.TEXTIO.all;
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:19058:1:warning: redefinition of a library unit in same design file: [-Wlibrary]
+package body float_pkg is
+^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/aHiR_ieee_proposed.vhdl:19058:1:warning: package body "float_pkg" defined at line 14503:14 is now package body "float_pkg" [-Wlibrary]
+package body float_pkg is
+^
+analyze /home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:11109:7:warning: declaration of "cmerge" hides component instance "cmerge" [-Whide]
+      cmerge: combinational_merge
+      ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:11127:7:warning: declaration of "rptr" hides component instance "rptr" [-Whide]
+      Rptr: mem_shift_repeater generic map(name => name & "-Rptr",
+      ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:11926:7:warning: declaration of "cmerge" hides component instance "cmerge" [-Whide]
+      cmerge: CombinationalMux
+      ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:11939:7:warning: declaration of "rptr" hides component instance "rptr" [-Whide]
+      Rptr: QueueBase generic map(name => name & "-Rptr-" & Convert_Integer_To_String(J),
+      ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:21443:23:warning: declaration of "buffer_size" hides generic "buffer_size" [-Whide]
+  function DecrDepth (buffer_size: integer; bypass: boolean)
+                      ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:23199:5:warning: declaration of "normalizer" hides block statement labeled "normalizer" [-Whide]
+    normalizer: GenericFloatingPointNormalizer
+    ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:23623:5:warning: declaration of "normalizer" hides block statement labeled "normalizer" [-Whide]
+    normalizer: GenericFloatingPointNormalizer
+    ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:24219:26:warning: declaration of "check_error" hides generic "check_error" [-Whide]
+                constant check_error    : BOOLEAN    := float_check_error;
+                         ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:26020:27:warning: declaration of "rows" hides for generate statement [-Whide]
+        RightColumn:  for Rows in 0 to NumChunks-1 generate
+                          ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:29990:16:warning: declaration of "unload_ack_sig" hides signal "unload_ack_sig" [-Whide]
+        signal unload_ack_sig: boolean;
+               ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:30056:16:warning: declaration of "unload_ack_sig" hides signal "unload_ack_sig" [-Whide]
+        signal unload_ack_sig: boolean;
+               ^
+/home/ajinkya/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:33913:27:warning: declaration of "rows" hides for generate statement [-Whide]
+        RightColumn:  for Rows in 0 to NumChunks-1 generate
+                          ^
+analyze /home/ajinkya/IITB_AI_ML/ahir_release/vhdl/GhdlLink.vhdl
+analyze ahir_system_global_package.vhdl
+analyze ahir_system_test_bench.vhdl
+analyze ahir_system.vhdl
+elaborate ahir_system_test_bench
+/usr/bin/ld: e~ahir_system_test_bench.o: relocation R_X86_64_32 against `.rodata' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: /usr/local/lib/ghdl/std/v93/std_standard.o: relocation R_X86_64_32 against `.rodata' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: /usr/local/lib/ghdl/ieee/v93/std_logic_1164.o: relocation R_X86_64_32 against symbol `ieee__std_logic_1164__RTI' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: /usr/local/lib/ghdl/ieee/v93/std_logic_1164-body.o: relocation R_X86_64_32 against `.rodata' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: aHiR_ieee_proposed.o: relocation R_X86_64_32 against symbol `ahir_ieee_proposed__math_utility_pkg__RTI' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: /usr/local/lib/ghdl/std/v93/textio.o: relocation R_X86_64_32 against symbol `std__textio__RTI' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: /usr/local/lib/ghdl/std/v93/textio-body.o: relocation R_X86_64_32S against symbol `std__textio__time_unit__name__STL' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: /usr/local/lib/ghdl/ieee/v93/numeric_std.o: relocation R_X86_64_32 against symbol `ieee__numeric_std__RTI' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: /usr/local/lib/ghdl/ieee/v93/numeric_std-body.o: relocation R_X86_64_32 against `.rodata' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: ahir.o: relocation R_X86_64_32 against symbol `ahir__globalconstants__RTI' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: GhdlLink.o: relocation R_X86_64_32 against symbol `ghdllink__utility_package__RTI' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: ahir_system_global_package.o: relocation R_X86_64_32 against symbol `work__ahir_system_global_package__RTI' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: ahir_system_test_bench.o: relocation R_X86_64_32S against `.rodata' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: ahir_system.o: relocation R_X86_64_32 against symbol `work__timer__t__RTI' can not be used when making a PIE object; recompile with -fPIE
+collect2: error: ld returned 1 exit status
+ghdl:error: compilation error
+make: *** [Makefile:81: GHDL] Error 1
+ajinkya@ajinkya:~/IITB_AI_ML/C/hw_modules/zeropad/hw2$ make clean
+rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.bc

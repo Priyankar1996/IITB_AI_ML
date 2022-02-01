@@ -1,0 +1,25 @@
+$noblock $pipe timer_req : $uint<1>
+$pipe timer_resp : $uint<64>
+
+$module [timerDaemon] $in () $out () $is
+{
+	$branchblock[loop] {
+		$dopipeline $depth 7 $fullrate
+			$merge $entry $loopback
+				$phi COUNTER := $zero<64> $on $entry nCOUNTER $on $loopback
+				$phi req := timer_req $on $entry, $loopback
+			$endmerge
+	
+				$volatile nCOUNTER := (COUNTER + 1)
+				$guard (req)
+					timer_resp := COUNTER
+		$while 1
+	}
+}
+
+
+$module [timer] $in () $out (T: $uint<64>) $is
+{
+	timer_req := $one<1>
+	T := timer_resp
+}

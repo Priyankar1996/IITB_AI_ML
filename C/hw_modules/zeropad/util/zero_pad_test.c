@@ -38,6 +38,6 @@ int main(){
     // padded tensor
     initTensor(&T);
     __zero_pad__(T,scale_factor,K);
-    printf("\n ZeroPad Completed!!");
+    fprintf("\n ZeroPad Completed!!");
 	return 0;
 }

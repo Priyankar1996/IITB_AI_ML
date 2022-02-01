@@ -135,7 +135,7 @@ int main(int argc,char **argv)
 	}
 
     fprintf(stderr,"Reading the output values from hardware\n");
-    printf(out_file,"\n");
+    fprintf(out_file,"\n");
 	int size = __NumberOfElementsInSizedTensor__(output);
 
 	if (input.descriptor.descriptor.data_type == u16){

@@ -108,12 +108,14 @@ void testConfigure()
         kernel.data_array[i] = element;
     }
     if (kernel_size&3) kernel.data_array[i] = getRemainingElements(kernel_size&3);
-
+    uint64_t output_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
+    for(i = 0; i < output_size>>2; i++)
+        output.data_array[i] = 0;
 }
 
 void sendOutput()
 {
-    uint64_t size = __NumberOfElementsInSizedTensor__(output);
+    uint64_t size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
     int i;
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);

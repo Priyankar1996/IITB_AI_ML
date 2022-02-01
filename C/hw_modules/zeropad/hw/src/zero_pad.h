@@ -83,7 +83,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 			for(k=0;k<n3;k++)\
 			{\
                 *(((int16_t*)dest.data_array) + index) = *(((int16_t*)dest2.data_array) +  k*jump_matrix +  j*(n1+2*pad) + i );\
-		        printf("%d ",*(((int16_t*)dest.data_array) + index));\
+		        fprintf("%d ",*(((int16_t*)dest.data_array) + index));\
 			    index = index + 1 ;\
 			}\
 		}\

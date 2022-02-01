@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <prog.h>
 
 #include "sized_tensor.h"
 #include "convolveTensors.h"
@@ -19,17 +18,11 @@
 #endif
 
 #ifdef SW
-DEFINE_THREAD(conv);
+DEFINE_THREAD(conv2D);
 #endif
 
 SizedTensor_16K T,K,R;
 uint16_t stride = 1;
-
-void Exit(int sig)
-{
-	fprintf(stderr, "## Break! ##\n");
-	exit(0);
-}
 
 void write_input()
 {
@@ -79,10 +72,6 @@ void read_result()
 
 int main(int argc, char* argv[])
 {
-	signal(SIGINT,  Exit);
-  	signal(SIGTERM, Exit);
-  	signal(SIGSEGV, Exit);
-
         int i;
 
         srand(100);
@@ -109,9 +98,9 @@ int main(int argc, char* argv[])
 	register_pipe ("conv_input_pipe", 2, 32, PIPE_FIFO_MODE);
 	register_pipe ("conv_output_pipe", 2, 32, PIPE_FIFO_MODE);
 
-	PTHREAD_DECL(conv);
+	PTHREAD_DECL(conv2D);
 
-	PTHREAD_CREATE(conv);
+	PTHREAD_CREATE(conv2D);
 #endif
 	write_input();
 	write_kernel();
@@ -131,7 +120,7 @@ int main(int argc, char* argv[])
 #endif
 
 #ifdef SW
-	PTHREAD_CANCEL(conv);
+	PTHREAD_CANCEL(conv2D);
 	close_pipe_handler();
 	return 0;
 #endif

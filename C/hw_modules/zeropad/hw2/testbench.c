@@ -26,11 +26,12 @@ uint16_t pad = 1;
 
 void write_input()
 {
-	for(int i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++)
+	int i;
+	for(i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++)
 	{
 		write_uint16("zeropad_input_pipe",T.descriptor.descriptor.dimensions[i]);
 	}
-        for(int i = 0; i < __NumberOfElementsInSizedTensor__(T); i++) 
+        for(i = 0; i < __NumberOfElementsInSizedTensor__(T); i++) 
 	{
 		write_uint16("zeropad_input_pipe",T.data_array[i]);
 	}
@@ -45,11 +46,12 @@ void write_pad()
 
 void read_result()
 {
-	for(int i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++)
+	int i;
+	for(i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++)
 	{
 		R.descriptor.descriptor.dimensions[i] = read_uint16("zeropad_output_pipe");
 	}
-        for(int i = 0; i < __NumberOfElementsInSizedTensor__(R); i++) 
+        for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++) 
 	{
 		R.data_array[i] = read_uint16("zeropad_output_pipe");
 	}

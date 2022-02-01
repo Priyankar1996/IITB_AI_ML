@@ -50,7 +50,6 @@
 			for(k=0;k<n3;k++)\
 			{\
                 *(((int16_t*)R.data_array) + index) = *(((int16_t*)dest2.data_array) +  k*jump_matrix +  j*(n1+2*pad) + i );\
-		        fprintf("%d ",*(((int16_t*)R.data_array) + index));\
 			    index = index + 1 ;\
 			}\
 		}\

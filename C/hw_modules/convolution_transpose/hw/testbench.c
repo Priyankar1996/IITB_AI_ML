@@ -164,7 +164,7 @@ int main(int argc,char **argv)
 	fprintf(stderr,"Read pad value:%d\n",stride[2]);
 	__UpdateOutputDescriptorConvTransTensors__(input,kernel,stride[0],stride[1],stride[2],output);
     
-	for(ii = 0;ii < output.descriptor.descriptor.number_of_dimensions;ii++){
+	for(ii = 0;ii < 3;ii++){
 		write_uint16("ConvTranspose_input_pipe",output.descriptor.descriptor.dimensions[ii]);
 	}
 

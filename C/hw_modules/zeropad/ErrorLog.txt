@@ -1,0 +1,942 @@
+clang -O3 -std=gnu89   -I/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include -emit-llvm -c src/prog.c -I../../../primitives/include
+opt --indvars --loopsimplify prog.o -o prog.opt.o
+llvm-dis prog.opt.o
+llvm2aa -extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt  prog.opt.o | vcFormat >  prog.aa
+Warning: no modules specified.. will translate all functions
+Info: pipe ZeroPad_input_pipe max-depth set to 2
+Info: pipe ZeroPad_output_pipe max-depth set to 2
+Info: -storageinit=true: storage initializers will be generated
+Info: -extract_do_while=true: storage initializers will be generated
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: added pipe ZeroPad_input_pipe with type $uint<16>
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: added pipe ZeroPad_output_pipe with type $uint<16>
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
+
+Info: added pipe maxpool_output_pipe with type $uint<16>
+Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: locating portname in constant GEP [18 x i8] c"elapsed_time_pipe\00"
+
+Info: added pipe elapsed_time_pipe with type $uint<64>
+Info: Initial value specified for progx_xoptx_xo_iNtErNal_xx_xstr2: will create initializer module
+Info: Initial value specified for progx_xoptx_xo_iNtErNal_xx_xstr3: will create initializer module
+Info: Initial value specified for progx_xoptx_xo_iNtErNal_xx_xstr5: will create initializer module
+Info: generating storage initialization module which calls all initializers in parallel
+Info: visiting function getRemainingElements
+Info: traversal: visited block entry
+Info: traversal: visited block for.end
+Info: traversal: visited block for.body.preheader
+Info: traversal: visited block for.body
+Info: traversal: visited block for.end.loopexit
+Info: starting new BB-chain-dag with header entry
+Info: starting new BB-chain-dag with header for.body.preheader
+Info: starting new BB-chain-dag with header for.body
+Info: starting new BB-chain-dag with header for.end.loopexit
+Info: starting new BB-chain-dag with header for.end
+Basic Block Chain DAGS.
+Basic-block-chain-DAG with header = entry
+ entry
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  entry
+Basic-block-chain-DAG with header = forx_xbodyx_xpreheader
+ forx_xbodyx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xbodyx_xpreheader
+Basic-block-chain-DAG with header = forx_xbody
+ forx_xbody
+   -> 
+   <- 
+loop-backs 
+  forx_xbody
+exit-points 
+  forx_xbody
+Basic-block-chain-DAG with header = forx_xendx_xloopexit
+ forx_xendx_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xendx_xloopexit
+Basic-block-chain-DAG with header = forx_xend
+ forx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: visiting function read_uint16
+Info: ignoring external function read_uint16
+Info: visiting function sendRemainingElements
+Info: traversal: visited block entry
+Info: traversal: visited block for.end
+Info: traversal: visited block bb.nph
+Info: traversal: visited block for.body
+Info: traversal: visited block for.end.loopexit
+Info: traversal: visited block for.body.for.body_crit_edge
+Info: starting new BB-chain-dag with header entry
+Info: starting new BB-chain-dag with header bb.nph
+Info: starting new BB-chain-dag with header for.body
+Info: starting new BB-chain-dag with header for.body.for.body_crit_edge
+Info: starting new BB-chain-dag with header for.end.loopexit
+Info: starting new BB-chain-dag with header for.end
+Basic Block Chain DAGS.
+Basic-block-chain-DAG with header = entry
+ entry
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  entry
+Basic-block-chain-DAG with header = bbx_xnph
+ bbx_xnph
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph
+Basic-block-chain-DAG with header = forx_xbody
+ forx_xbody
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xbody
+Basic-block-chain-DAG with header = forx_xbodyx_xforx_xbody_crit_edge
+ forx_xbodyx_xforx_xbody_crit_edge
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xbodyx_xforx_xbody_crit_edge
+Basic-block-chain-DAG with header = forx_xendx_xloopexit
+ forx_xendx_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xendx_xloopexit
+Basic-block-chain-DAG with header = forx_xend
+ forx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: visiting function write_uint16
+Info: ignoring external function write_uint16
+Info: visiting function ReadInputInfo
+Info: traversal: visited block entry
+Info: traversal: visited block for.end
+Info: traversal: visited block for.body.preheader
+Info: traversal: visited block for.body.i.preheader
+Info: traversal: visited block bb.nph88
+Info: traversal: visited block for.body
+Info: traversal: visited block for.body.i
+Info: traversal: visited block for.body24
+Info: traversal: visited block for.end.loopexit
+Info: traversal: visited block getRemainingElements.exit
+Info: traversal: visited block for.end33
+Info: traversal: visited block if.end
+Info: traversal: visited block bb.nph
+Info: traversal: visited block for.end69
+Info: traversal: visited block for.body42
+Info: traversal: visited block for.cond36.for.end69_crit_edge
+Info: starting new BB-chain-dag with header entry
+Info: starting new BB-chain-dag with header for.body.preheader
+Info: starting new BB-chain-dag with header for.body
+Info: starting new BB-chain-dag with header for.end.loopexit
+Info: starting new BB-chain-dag with header for.end
+Info: starting new BB-chain-dag with header bb.nph88
+Info: starting new BB-chain-dag with header for.body24
+Info: starting new BB-chain-dag with header for.end33
+Info: starting new BB-chain-dag with header bb.nph
+Info: starting new BB-chain-dag with header for.body42
+Info: starting new BB-chain-dag with header for.cond36.for.end69_crit_edge
+Info: starting new BB-chain-dag with header for.end69
+Info: starting new BB-chain-dag with header for.body.i.preheader
+Info: starting new BB-chain-dag with header for.body.i
+Info: starting new BB-chain-dag with header getRemainingElements.exit
+Info: starting new BB-chain-dag with header if.end
+Basic Block Chain DAGS.
+Basic-block-chain-DAG with header = entry
+ entry
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  entry
+Basic-block-chain-DAG with header = forx_xbodyx_xpreheader
+ forx_xbodyx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xbodyx_xpreheader
+Basic-block-chain-DAG with header = forx_xbody
+ forx_xbody
+   -> 
+   <- 
+loop-backs 
+  forx_xbody
+exit-points 
+  forx_xbody
+Basic-block-chain-DAG with header = forx_xendx_xloopexit
+ forx_xendx_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xendx_xloopexit
+Basic-block-chain-DAG with header = forx_xend
+ forx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend
+Basic-block-chain-DAG with header = bbx_xnph88
+ bbx_xnph88
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph88
+Basic-block-chain-DAG with header = forx_xbody24
+ forx_xbody24
+   -> 
+   <- 
+loop-backs 
+  forx_xbody24
+exit-points 
+  forx_xbody24
+Basic-block-chain-DAG with header = forx_xend33
+ forx_xend33
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend33
+Basic-block-chain-DAG with header = bbx_xnph
+ bbx_xnph
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph
+Basic-block-chain-DAG with header = forx_xbody42
+ forx_xbody42
+   -> 
+   <- 
+loop-backs 
+  forx_xbody42
+exit-points 
+  forx_xbody42
+Basic-block-chain-DAG with header = forx_xcond36x_xforx_xend69_crit_edge
+ forx_xcond36x_xforx_xend69_crit_edge
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xcond36x_xforx_xend69_crit_edge
+Basic-block-chain-DAG with header = forx_xend69
+ forx_xend69
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend69
+Basic-block-chain-DAG with header = forx_xbodyx_xix_xpreheader
+ forx_xbodyx_xix_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xbodyx_xix_xpreheader
+Basic-block-chain-DAG with header = forx_xbodyx_xi
+ forx_xbodyx_xi
+   -> 
+   <- 
+loop-backs 
+  forx_xbodyx_xi
+exit-points 
+  forx_xbodyx_xi
+Basic-block-chain-DAG with header = getRemainingElementsx_xexit
+ getRemainingElementsx_xexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  getRemainingElementsx_xexit
+Basic-block-chain-DAG with header = ifx_xend
+ ifx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"ZeroPad_input_pipe\00"
+
+Info: visiting function sendOutput
+Info: traversal: visited block entry
+Info: traversal: visited block bb.nph76
+Info: traversal: visited block bb.nph81
+Info: traversal: visited block for.body25
+Info: traversal: visited block for.body
+Info: traversal: visited block for.end63.loopexit
+Info: traversal: visited block for.end
+Info: traversal: visited block for.end63
+Info: traversal: visited block if.end
+Info: traversal: visited block bb.nph.i
+Info: traversal: visited block bb.nph
+Info: traversal: visited block for.body.for.body_crit_edge.i
+Info: traversal: visited block if.end.loopexit
+Info: traversal: visited block for.body.for.body_crit_edge.i.for.body.for.body_crit_edge.i_crit_edge
+Info: starting new BB-chain-dag with header entry
+Info: starting new BB-chain-dag with header bb.nph81
+Info: starting new BB-chain-dag with header for.body
+Info: starting new BB-chain-dag with header for.end
+Info: starting new BB-chain-dag with header bb.nph76
+Info: starting new BB-chain-dag with header for.body25
+Info: starting new BB-chain-dag with header for.end63.loopexit
+Info: starting new BB-chain-dag with header for.end63
+Info: starting new BB-chain-dag with header bb.nph.i
+Info: starting new BB-chain-dag with header bb.nph
+Info: starting new BB-chain-dag with header for.body.for.body_crit_edge.i
+Info: starting new BB-chain-dag with header for.body.for.body_crit_edge.i.for.body.for.body_crit_edge.i_crit_edge
+Info: starting new BB-chain-dag with header if.end.loopexit
+Info: starting new BB-chain-dag with header if.end
+Basic Block Chain DAGS.
+Basic-block-chain-DAG with header = entry
+ entry
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  entry
+Basic-block-chain-DAG with header = bbx_xnph81
+ bbx_xnph81
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph81
+Basic-block-chain-DAG with header = forx_xbody
+ forx_xbody
+   -> 
+   <- 
+loop-backs 
+  forx_xbody
+exit-points 
+  forx_xbody
+Basic-block-chain-DAG with header = forx_xend
+ forx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend
+Basic-block-chain-DAG with header = bbx_xnph76
+ bbx_xnph76
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph76
+Basic-block-chain-DAG with header = forx_xbody25
+ forx_xbody25
+   -> 
+   <- 
+loop-backs 
+  forx_xbody25
+exit-points 
+  forx_xbody25
+Basic-block-chain-DAG with header = forx_xend63x_xloopexit
+ forx_xend63x_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend63x_xloopexit
+Basic-block-chain-DAG with header = forx_xend63
+ forx_xend63
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend63
+Basic-block-chain-DAG with header = bbx_xnphx_xi
+ bbx_xnphx_xi
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnphx_xi
+Basic-block-chain-DAG with header = bbx_xnph
+ bbx_xnph
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph
+Basic-block-chain-DAG with header = forx_xbodyx_xforx_xbody_crit_edgex_xi
+ forx_xbodyx_xforx_xbody_crit_edgex_xi
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xbodyx_xforx_xbody_crit_edgex_xi
+Basic-block-chain-DAG with header = forx_xbodyx_xforx_xbody_crit_edgex_xix_xforx_xbodyx_xforx_xbody_crit_edgex_xi_crit_edge
+ forx_xbodyx_xforx_xbody_crit_edgex_xix_xforx_xbodyx_xforx_xbody_crit_edgex_xi_crit_edge
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xbodyx_xforx_xbody_crit_edgex_xix_xforx_xbodyx_xforx_xbody_crit_edgex_xi_crit_edge
+Basic-block-chain-DAG with header = ifx_xendx_xloopexit
+ ifx_xendx_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xloopexit
+Basic-block-chain-DAG with header = ifx_xend
+ ifx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr4 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr4 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr4 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"maxpool_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"ZeroPad_output_pipe\00"
+
+Info: visiting function zeropad_thread
+Info: traversal: visited block entry
+Info: traversal: visited block bb.nph226
+Info: traversal: visited block for.end196
+Info: traversal: visited block for.cond51.preheader
+Info: traversal: visited block for.inc112
+Info: traversal: visited block bb.nph220.us.preheader
+Info: traversal: visited block for.end115
+Info: traversal: visited block bb.nph220.us
+Info: traversal: visited block bb.nph217
+Info: traversal: visited block for.body62.us
+Info: traversal: visited block for.cond146.preheader
+Info: traversal: visited block for.inc108.us
+Info: traversal: visited block bb.nph212
+Info: traversal: visited block for.inc193
+Info: traversal: visited block for.inc112.loopexit
+Info: traversal: visited block bb.nph.us.preheader
+Info: traversal: visited block for.inc189.preheader
+Info: traversal: visited block for.end196.loopexit
+Info: traversal: visited block bb.nph.us
+Info: traversal: visited block for.inc189
+Info: traversal: visited block for.body160.us
+Info: traversal: visited block for.inc193.loopexit
+Info: traversal: visited block for.inc189.us
+Info: traversal: visited block for.inc193.loopexit20
+Info: starting new BB-chain-dag with header entry
+Info: starting new BB-chain-dag with header bb.nph226
+Info: starting new BB-chain-dag with header for.cond51.preheader
+Info: starting new BB-chain-dag with header bb.nph220.us.preheader
+Info: starting new BB-chain-dag with header for.inc108.us
+Info: starting new BB-chain-dag with header for.body62.us
+Info: starting new BB-chain-dag with header bb.nph220.us
+Info: starting new BB-chain-dag with header for.inc112.loopexit
+Info: starting new BB-chain-dag with header for.inc112
+Info: starting new BB-chain-dag with header for.end115
+Info: starting new BB-chain-dag with header bb.nph217
+Info: starting new BB-chain-dag with header for.cond146.preheader
+Info: starting new BB-chain-dag with header bb.nph212
+Info: starting new BB-chain-dag with header bb.nph.us.preheader
+Info: starting new BB-chain-dag with header for.inc189.preheader
+Info: starting new BB-chain-dag with header for.inc189.us
+Info: starting new BB-chain-dag with header for.body160.us
+Info: starting new BB-chain-dag with header bb.nph.us
+Info: starting new BB-chain-dag with header for.inc189
+Info: starting new BB-chain-dag with header for.inc193.loopexit
+Info: starting new BB-chain-dag with header for.inc193.loopexit20
+Info: starting new BB-chain-dag with header for.inc193
+Info: starting new BB-chain-dag with header for.end196.loopexit
+Info: starting new BB-chain-dag with header for.end196
+Basic Block Chain DAGS.
+Basic-block-chain-DAG with header = entry
+ entry
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  entry
+Basic-block-chain-DAG with header = bbx_xnph226
+ bbx_xnph226
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph226
+Basic-block-chain-DAG with header = forx_xcond51x_xpreheader
+ forx_xcond51x_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xcond51x_xpreheader
+Basic-block-chain-DAG with header = bbx_xnph220x_xusx_xpreheader
+ bbx_xnph220x_xusx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph220x_xusx_xpreheader
+Basic-block-chain-DAG with header = forx_xinc108x_xus
+ forx_xinc108x_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc108x_xus
+Basic-block-chain-DAG with header = forx_xbody62x_xus
+ forx_xbody62x_xus
+   -> 
+   <- 
+loop-backs 
+  forx_xbody62x_xus
+exit-points 
+  forx_xbody62x_xus
+Basic-block-chain-DAG with header = bbx_xnph220x_xus
+ bbx_xnph220x_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph220x_xus
+Basic-block-chain-DAG with header = forx_xinc112x_xloopexit
+ forx_xinc112x_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc112x_xloopexit
+Basic-block-chain-DAG with header = forx_xinc112
+ forx_xinc112
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc112
+Basic-block-chain-DAG with header = forx_xend115
+ forx_xend115
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend115
+Basic-block-chain-DAG with header = bbx_xnph217
+ bbx_xnph217
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph217
+Basic-block-chain-DAG with header = forx_xcond146x_xpreheader
+ forx_xcond146x_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xcond146x_xpreheader
+Basic-block-chain-DAG with header = bbx_xnph212
+ bbx_xnph212
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph212
+Basic-block-chain-DAG with header = bbx_xnphx_xusx_xpreheader
+ bbx_xnphx_xusx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnphx_xusx_xpreheader
+Basic-block-chain-DAG with header = forx_xinc189x_xpreheader
+ forx_xinc189x_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc189x_xpreheader
+Basic-block-chain-DAG with header = forx_xinc189x_xus
+ forx_xinc189x_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc189x_xus
+Basic-block-chain-DAG with header = forx_xbody160x_xus
+ forx_xbody160x_xus
+   -> 
+   <- 
+loop-backs 
+  forx_xbody160x_xus
+exit-points 
+  forx_xbody160x_xus
+Basic-block-chain-DAG with header = bbx_xnphx_xus
+ bbx_xnphx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnphx_xus
+Basic-block-chain-DAG with header = forx_xinc189
+ forx_xinc189
+   -> 
+   <- 
+loop-backs 
+  forx_xinc189
+exit-points 
+  forx_xinc189
+Basic-block-chain-DAG with header = forx_xinc193x_xloopexit
+ forx_xinc193x_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc193x_xloopexit
+Basic-block-chain-DAG with header = forx_xinc193x_xloopexit20
+ forx_xinc193x_xloopexit20
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc193x_xloopexit20
+Basic-block-chain-DAG with header = forx_xinc193
+ forx_xinc193
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xinc193
+Basic-block-chain-DAG with header = forx_xend196x_xloopexit
+ forx_xend196x_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend196x_xloopexit
+Basic-block-chain-DAG with header = forx_xend196
+ forx_xend196
+   -> 
+   <- 
+loop-backs 
+exit-points 
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr6 since it is not (really) used in any function..
+Info: locating portname in constant GEP [18 x i8] c"elapsed_time_pipe\00"
+
+Info: visiting function timer
+Info: ignoring external function timer
+Info: visiting function write_uint64
+Info: ignoring external function write_uint64
+Info: visiting function fwrite
+Info: ignoring external function fwrite
+AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
+Info:  AaLinkExtMem built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
+Info:     Date: Mon Feb 1 17:21:43 2021 +0530
+Info: parsed and added pipe ZeroPad_input_pipe width = 16 depth = 2
+Info: parsed and added pipe ZeroPad_output_pipe width = 16 depth = 2
+Info: parsed and added pipe elapsed_time_pipe width = 64 depth = 1
+Info: parsed and added pipe maxpool_output_pipe width = 16 depth = 1
+Info: Added module progx_xoptx_xo_iNtErNal_xx_xstr2_initializer_in_progx_xoptx_xo
+Info: Added module progx_xoptx_xo_iNtErNal_xx_xstr3_initializer_in_progx_xoptx_xo
+Info: Added module progx_xoptx_xo_iNtErNal_xx_xstr5_initializer_in_progx_xoptx_xo
+Info: Added module progx_xoptx_xo_storage_initializer_
+Info: Added module getRemainingElements
+Info: Added module sendRemainingElements
+Info: Added module ReadInputInfo
+Info: Added module sendOutput
+Info: Added module zeropad_thread
+Info: finished parsing file prog.aa
+Info: parsed and added pipe timer_req width = 1 depth = 1
+Info: parsed and added pipe timer_resp width = 64 depth = 1
+Info: Added module timerDaemon
+Info: Added module timer
+Info: finished parsing file timer.aa
+Info: Added module global_storage_initializer_
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+AaLinkExtMem Error: module fwrite not found!: file prog.aa, line 405
+AaLinkExtMem Error: module fwrite not found!: file prog.aa, line 423
+AaLinkExtMem Error: module fwrite not found!: file prog.aa, line 575
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+	ReadInputInfo
+	getRemainingElements
+	progx_xoptx_xo_iNtErNal_xx_xstr2_initializer_in_progx_xoptx_xo
+	progx_xoptx_xo_iNtErNal_xx_xstr3_initializer_in_progx_xoptx_xo
+	progx_xoptx_xo_iNtErNal_xx_xstr5_initializer_in_progx_xoptx_xo
+	progx_xoptx_xo_storage_initializer_
+	global_storage_initializer_
+	sendOutput
+	sendRemainingElements
+	timer
+	timerDaemon
+	zeropad_thread
+Info: marking modules reachable from root-modules ... 
+Info: module ReadInputInfo is reachable from a specified root module.
+Info: module getRemainingElements is reachable from a specified root module.
+Info: module global_storage_initializer_ is reachable from a specified root module.
+Info: module progx_xoptx_xo_storage_initializer_ is reachable from a specified root module.
+Info: module progx_xoptx_xo_iNtErNal_xx_xstr2_initializer_in_progx_xoptx_xo is reachable from a specified root module.
+Info: module progx_xoptx_xo_iNtErNal_xx_xstr5_initializer_in_progx_xoptx_xo is reachable from a specified root module.
+Info: module progx_xoptx_xo_iNtErNal_xx_xstr3_initializer_in_progx_xoptx_xo is reachable from a specified root module.
+Info: module sendOutput is reachable from a specified root module.
+Info: module sendRemainingElements is reachable from a specified root module.
+Info: module timer is reachable from a specified root module.
+Info: module timerDaemon is reachable from a specified root module.
+Info: module zeropad_thread is reachable from a specified root module.
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 10 disjoint memory space(s)
+Info: Memory space 0: output 
+Info: Memory space 1: input 
+Info: Memory space 2: pad 
+Info: Memory space 3: stderr 
+Info: Memory space 4: progx_xoptx_xo_iNtErNal_xx_xstr2 
+Info: Memory space 5: progx_xoptx_xo_iNtErNal_xx_xstr3 
+Info: Memory space 6: progx_xoptx_xo_iNtErNal_xx_xstr5 
+Info: Memory space 7: %sendRemainingElements%body:out_data_alloc 
+Info: Memory space 8: %sendOutput%body:out_datax_xi_alloc 
+Info: Memory space 9: %zeropad_thread%body:dest2_alloc 
+Warning: memory space memory_space_2 is not read from in the program
+Warning: memory space memory_space_3 is not written into in the program
+Info: propagating constants in the program ... 
+Error: there were errors during elaboration, check the log
+Error: there were errors during elaboration, check the log
+AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
+Info:  AaOpt built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
+Info:     Date: Mon Feb 1 17:21:43 2021 +0530
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+Info: marking modules reachable from root-modules ... 
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
+Info: propagating constants in the program ... 
+Info: added 0 bits of buffering during path balancing.
+AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
+Info:  AaOpt built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
+Info:     Date: Mon Feb 1 17:21:43 2021 +0530
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+Info: marking modules reachable from root-modules ... 
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
+Info: propagating constants in the program ... 
+Info: added 0 bits of buffering during path balancing.
+Aa2VC -O -C prog.linked.opt.aa | vcFormat > prog.vc
+Info:  Aa2VC built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
+Info:     Date: Mon Feb 1 17:21:43 2021 +0530
+Info: -O option selected, will parallelize straight-line sequences
+Info: -C option selected, will generate C-stubs for mixed C-VHDL simulation
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+Info: marking modules reachable from root-modules ... 
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
+Info: propagating constants in the program ... 
+Info: Writing optimized VC model.. 
+Info: Done writing optimized VC model.. 
+vc2vhdl -D -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl -T zeropad_thread -T timerDaemon -f prog.vc 
+Info: -D option selected: VHDL will have debug assertions..
+Info: -S option selected: bypass stride will be set to 4.
+Info: -O option selected, will try to compress control-path..
+Info: -I will treat errors as warnings.
+Info: -v option selected: lots of info will be printed (to stderr, and also dot-files of control-paths if -O option is selected).
+Info: -a option selected: will try for minimum overall circuit area.
+Info: -C option selected: will generate testbench which connects to foreign link.
+Info: -e ahir_system top-level VHDL entity will have name ahir_system.unformatted_vhdl
+Info: -w ahir_system will write separate system and testbench VHDL files.
+Info: -s ghdl option selected: will generate testbench with VHPI link.
+Info: module zeropad_thread set as one of the ever-running top modules. 
+   NOTE: zeropad_thread cannot have any input/output arguments.
+Info: module timerDaemon set as one of the ever-running top modules. 
+   NOTE: timerDaemon cannot have any input/output arguments.
+vc2vhdl Error: did not find module timerDaemon in the system
+vc2vhdl Error: did not find module zeropad_thread in the system
+vc2vhdl Error: did not find module timerDaemon in the system
+vc2vhdl Error: did not find module zeropad_thread in the system
+There were errors during elaboration ... will not print VHDL
+Info: printing VHDL global package
+Info: printing top-level system VHDL file ahir_system.unformatted_vhdl
+Info: printing VHDL model
+Info: total estimated buffering in system ahir_system is 0
+Info: finished printing VHDL model
+Info: number of register bits used in FIFO's = 0
+vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
+vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
+vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl
+gcc -c vhdlCStubs.c -I./ -I/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include -I../../../primitives/include -Isrc
+gcc -c testbench.c -I./ -I/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include -I../../../primitives/include -Isrc
+testbench.c: In function ‘main’:
+testbench.c:117:43: warning: passing argument 2 of ‘write_uint16’ makes integer from pointer without a cast []8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wint-conversion-Wint-conversion]8;;]
+  117 |         write_uint16("ZeroPad_input_pipe",&pad);
+      |                                           ^~
+      |                                           |
+      |                                           int *
+In file included from vhdlCStubs.h:5,
+                 from testbench.c:17:
+/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/include/Pipes.h:48:44: note: expected ‘uint16_t’ {aka ‘short unsigned int’} but argument is of type ‘int *’
+   48 | void write_uint16(const char *id, uint16_t data);
+      |                                   ~~~^~
+gcc -o testbench_hw testbench.o vhdlCStubs.o  -L/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/lib -lSocketLibPipeHandler -lpthread
+ghdl --clean
+ghdl --remove
+ghdl -i --work=GhdlLink  /home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/vhdl/GhdlLink.vhdl
+ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
+ghdl:error: cannot find "std" library
+ghdl -i --work=ahir  /home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/vhdl/ahir.vhdl
+ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
+ghdl:error: cannot find "std" library
+ghdl -i --work=aHiR_ieee_proposed  /home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/vhdl/aHiR_ieee_proposed.vhdl
+ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
+ghdl:error: cannot find "std" library
+ghdl -i --work=work ahir_system_global_package.vhdl
+ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
+ghdl:error: cannot find "std" library
+ghdl -i --work=work ahir_system.vhdl
+ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
+ghdl:error: cannot find "std" library
+ghdl -i --work=work ahir_system_test_bench.vhdl
+ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
+ghdl:error: cannot find "std" library
+ghdl -m --work=work -Wl,-L/home/deval/work/ahir-master/prebuilt_ubuntu_16.04_release/lib -Wl,-lVhpi ahir_system_test_bench 
+ghdl:warning: ieee library directory '/usr/local/lib/ghdl/ieee/v93/' not found
+ghdl:error: cannot find "std" library
+Makefile:73: recipe for target 'GHDL' failed
+make: * [GHDL] Error 1

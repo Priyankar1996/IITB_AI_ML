@@ -1,5 +1,5 @@
-#ifndef __zerp_pad_h__
-#define __zerp_pad_h__
+#ifndef __zero_pad_h__
+#define __zero_pad_h__
 
 #include <stdio.h>
 #include <stdint.h>

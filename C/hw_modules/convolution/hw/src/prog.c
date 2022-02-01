@@ -12,7 +12,8 @@ SizedTensor_16K T,K,R;
 uint16_t stride;
 
 void sendOutput(){
-	for(int i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++){
+	int i;
+	for(i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++){
 		write_uint16("conv_output_pipe",R.descriptor.descriptor.dimensions[i]);		
 	}
 	for(i = 0; __NumberOfElementsInSizedTensor__(R); i++)
@@ -25,7 +26,8 @@ void getInput(){
 	T.descriptor.descriptor.data_type = i16;
 	T.descriptor.descriptor.row_major_form = 1;
 	T.descriptor.descriptor.number_of_dimensions = 3;
-	for(int i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++){
+	int i;
+	for(i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++){
 		T.descriptor.descriptor.dimensions[i] = read_uint16("conv_input_pipe");		
 	}
 	for(i = 0; i < __NumberOfElementsInSizedTensor__(T); i++)
@@ -38,8 +40,9 @@ void getKernel(){
 	K.descriptor.descriptor.data_type = i16;
 	K.descriptor.descriptor.row_major_form = 1;
 	K.descriptor.descriptor.number_of_dimensions = 4;
-	for(int i = 0; i < K.descriptor.descriptor.number_of_dimensions; i++){
-		T.descriptor.descriptor.dimensions[i] = read_uint16("conv_input_pipe");		
+	int i;
+	for(i = 0; i < K.descriptor.descriptor.number_of_dimensions; i++){
+		K.descriptor.descriptor.dimensions[i] = read_uint16("conv_input_pipe");		
 	}
 	for(i = 0; i < __NumberOfElementsInSizedTensor__(K); i++)
 	{
@@ -53,7 +56,7 @@ void getStride(){
 }
 
 
-void conv()
+void conv2D()
 {
 	getInput();
 	getKernel();

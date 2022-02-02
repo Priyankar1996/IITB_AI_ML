@@ -6,6 +6,8 @@
 #include <float.h>
 #include "sized_tensor.h"
 
+void conv2D();
+
 #define __dim0__(T) ({T.descriptor.descriptor.dimensions[0];})
 #define __dim1__(T) ({T.descriptor.descriptor.dimensions[1];})
 #define __dim2__(T) ({T.descriptor.descriptor.dimensions[2];})
@@ -20,17 +22,18 @@
 	out.descriptor.descriptor.dimensions[2] = (__dim0__(ker));\
 	out.descriptor.tensor_size = __dim0__(out) * __dim1__(out) * __dim2__(out);\
 	int out_idx = 0;\
-	for (int p = 0; p < __dim0__(out); p++)\
+	int p,q,r,i,j,k;\
+	for (p = 0; p < __dim0__(out); p++)\
 	{\
-		for(int q = 0; q < __dim1__(out); q++)\
+		for(q = 0; q < __dim1__(out); q++)\
 		{\
-			for(int r = 0; r < __dim2__(out); r++)\
+			for(r = 0; r < __dim2__(out); r++)\
 			{\
-				for(int i = 0; i < __dim1__(ker); i++)\
+				for(i = 0; i < __dim1__(ker); i++)\
 				{\
-					for(int j = 0; j < __dim2__(ker); j++)\
+					for(j = 0; j < __dim2__(ker); j++)\
 					{\
-						for(int k = 0; k < __dim3__(ker); k++)\
+						for(k = 0; k < __dim3__(ker); k++)\
 						{\
 							int img_index[3] = {p*stride+i,q*stride+j,k};\
 							int ker_index[4] = {r,i,j,k};\

@@ -16,6 +16,7 @@ SizedTensor_16K input,output;
 SizedTensor_1024 kernel;
 uint16_t stride[2],padding;
 
+#define __dt__ int16_t
 #define __get4xi16__(element) ({\
 	element = read_uint16 ("ConvTranspose_input_pipe");\
 	element = (element << 16) + read_uint16 ("ConvTranspose_input_pipe");\
@@ -25,7 +26,7 @@ uint16_t stride[2],padding;
 
 #define __set4xi16__(addr) ({\
 	uint64_t element = output.data_array[addr];\
-	uint16_t out_data[4];\
+	__dt__ out_data[4];\
 	out_data[3] = element & 0xFFFF;\
 	element>>=16;\
 	out_data[2] = element & 0xFFFF;\
@@ -51,7 +52,7 @@ uint64_t getRemainingElements(uint16_t ne){
 
 void sendRemainingElements(int addr, uint16_t ne){
 	uint64_t element = output.data_array[addr];\
-	uint16_t out_data[3],n;\
+	__dt__ out_data[3],n;\
 	element>>=16;\
 	out_data[2] = element & 0xFFFF;\
 	element>>=16;\
@@ -64,7 +65,7 @@ void sendRemainingElements(int addr, uint16_t ne){
 
 void testConfigure()
 {
-    input.descriptor.descriptor.data_type = u16;
+    input.descriptor.descriptor.data_type = i16;
     input.descriptor.descriptor.row_major_form = read_uint16 ("ConvTranspose_input_pipe");;
     input.descriptor.descriptor.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
     int i;
@@ -72,7 +73,7 @@ void testConfigure()
         input.descriptor.descriptor.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
     }
 
-    kernel.descriptor.descriptor.data_type = u16;
+    kernel.descriptor.descriptor.data_type = i16;
     kernel.descriptor.descriptor.row_major_form = read_uint16 ("ConvTranspose_input_pipe");
     kernel.descriptor.descriptor.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
     for(i = 0;i < kernel.descriptor.descriptor.number_of_dimensions;i++){

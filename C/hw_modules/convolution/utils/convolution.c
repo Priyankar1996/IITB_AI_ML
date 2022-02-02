@@ -8,7 +8,8 @@ SizedTensor_1024 T,K,R;
 
 void initTensor(SizedTensor_1024* T)
 {
-    for (int i = 0; i < T->descriptor.tensor_size; i++)
+	int i;
+    for (i = 0; i < T->descriptor.tensor_size; i++)
     {
         *((int16_t*)T->data_array + i) = 5;
     }

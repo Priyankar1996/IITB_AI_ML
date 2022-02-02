@@ -102,7 +102,7 @@ typedef struct __SizedTensor_8M {
 	ret_val;\
 	})
 
-#define __getTensorEntryIndexOffset__(st, indices) ({\
+#define __GetTensorEntryIndexOffset__(st, indices) ({\
 	int ret_value = 0,I,SCALE_FACTOR = 1;\
 	int DSTART = (st.descriptor.descriptor.row_major_form ? (st.descriptor.descriptor.number_of_dimensions - 1) : 0);\
 	int DEND   = (st.descriptor.descriptor.row_major_form ? 0 : (st.descriptor.descriptor.number_of_dimensions - 1));\

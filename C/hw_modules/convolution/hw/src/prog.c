@@ -13,6 +13,9 @@ uint16_t stride;
 
 void sendOutput(){
 	int i;
+	R.descriptor.descriptor.data_type = i16;
+	R.descriptor.descriptor.row_major_form = 1;
+	R.descriptor.descriptor.number_of_dimensions = 3;
 	for(i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++){
 		write_uint16("conv_output_pipe",R.descriptor.descriptor.dimensions[i]);		
 	}
@@ -26,6 +29,9 @@ void getInput(){
 	T.descriptor.descriptor.data_type = i16;
 	T.descriptor.descriptor.row_major_form = 1;
 	T.descriptor.descriptor.number_of_dimensions = 3;
+	K.descriptor.descriptor.data_type = i16;
+	K.descriptor.descriptor.row_major_form = 1;
+	K.descriptor.descriptor.number_of_dimensions = 4;
 	int i;
 	for(i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++){
 		T.descriptor.descriptor.dimensions[i] = read_uint16("conv_input_pipe");		
@@ -34,13 +40,6 @@ void getInput(){
 	{
 		T.data_array[i] = read_uint16("conv_input_pipe");
 	}
-}
-
-void getKernel(){
-	K.descriptor.descriptor.data_type = i16;
-	K.descriptor.descriptor.row_major_form = 1;
-	K.descriptor.descriptor.number_of_dimensions = 4;
-	int i;
 	for(i = 0; i < K.descriptor.descriptor.number_of_dimensions; i++){
 		K.descriptor.descriptor.dimensions[i] = read_uint16("conv_input_pipe");		
 	}
@@ -48,19 +47,14 @@ void getKernel(){
 	{
 		K.data_array[i] = read_uint16("conv_input_pipe");
 	}
-	
-}
 
-void getStride(){
 	stride = read_uint16("conv_input_pipe");
 }
 
 
 void conv2D()
 {
-	getInput();
-	getKernel();
-	getStride();	
+	getInput();	
 #ifndef SW
 	uint64_t start_time = timer();
 #endif

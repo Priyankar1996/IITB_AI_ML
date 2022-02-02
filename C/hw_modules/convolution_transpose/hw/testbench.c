@@ -1,4 +1,4 @@
-#define __U16 1
+#define __I16 1
 
 #include <pthread.h>
 #include <signal.h>
@@ -29,6 +29,8 @@
 	output.descriptor.descriptor.dimensions[output.descriptor.descriptor.number_of_dimensions-1] = src.descriptor.descriptor.dimensions[src.descriptor.descriptor.number_of_dimensions-1];\
 	output.descriptor.tensor_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];\
 })
+
+#define __dt__ int16_t
 
 #ifdef SW
 DEFINE_THREAD(convTranspose);
@@ -171,8 +173,8 @@ int main(int argc,char **argv)
 	uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
     uint64_t kernel_size = __NumberOfElementsInSizedTensor__(kernel);
 
-    if (input.descriptor.descriptor.data_type == u16){
-		uint16_t temp[4];
+    if (input.descriptor.descriptor.data_type == i16){
+		__dt__ temp[4];
 		for (ii = 0; ii < input_size; ii++)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
@@ -201,8 +203,8 @@ int main(int argc,char **argv)
 	int size = __NumberOfElementsInSizedTensor__(output);
 	fprintf(stderr,"Size of output is %d,%d,%d\n",output.descriptor.descriptor.dimensions[0],output.descriptor.descriptor.dimensions[1],output.descriptor.descriptor.dimensions[2]);
 
-	if (output.descriptor.descriptor.data_type == u16){
-		uint16_t val;
+	if (output.descriptor.descriptor.data_type == i16){
+		__dt__ val;
 		for (ii = 0; ii < (size); ii++)
 		{
 			val = read_uint16 ("ConvTranspose_output_pipe");

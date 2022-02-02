@@ -6,13 +6,11 @@ $storage  R :  structx_x__SizedTensor_16K  // memory space index = 0  base addre
 // can point into 
 $storage  T :  structx_x__SizedTensor_16K  // memory space index = 1  base address = 0  word size = 8
 // can point into 
+$storage  count : $uint<64> // memory space index = 4  base address = 0  word size = 64
+// can point into 
 $pipe  elapsed_time_pipe : $uint<64>  $depth 1 
 // can point into 
 $storage  pad : $uint<16> // memory space index = 2  base address = 0  word size = 16
-// can point into 
-$noblock $pipe  timer_req : $uint<1>  $depth 1 
-// can point into 
-$pipe  timer_resp : $uint<64>  $depth 1 
 // can point into 
 $pipe  zeropad_input_pipe : $uint<16>  $depth 2 
 // can point into 
@@ -269,29 +267,25 @@ $is
 }
 $module [timer]
 $in ()
-$out ( T : $uint<64>  )
+$out ( c : $uint<64>  )
 $is
 {
-  timer_req := ($bitcast ($uint<1>) _b1 ) $buffering 1// bits of buffering = 1. 
-  T := timer_resp $buffering 1// bits of buffering = 64. 
+  c := count $buffering 1// bits of buffering = 64. 
 }
 $module [timerDaemon]
 $in ()
 $out ()
 $is
 {
-  $branchblock [loop]
+  $branchblock [body]
   {
-    $dopipeline $depth 7 $buffering 1
+    $dopipeline $depth 3 $buffering 1
     $fullrate 
     $merge $entry $loopback 
-    $phi COUNTER := 			  nCOUNTER $on   $loopback 			  ($bitcast ($uint<64>) _b0 ) $on   $entry 
+    $phi ncount := 			  (ncount + 1 ) $on   $loopback 			  ($bitcast ($uint<64>) 0  ) $on   $entry 
     // type of target is $uint<64>
-    $phi req := 			  timer_req $on   $entry ,   $loopback 
-    // type of target is $uint<1>
     $endmerge
-    $volatile nCOUNTER := (COUNTER + 1 ) $buffering 1
-    $guard (req) timer_resp := COUNTER $buffering 1// bits of buffering = 64. 
+    count := ncount $buffering 1// bits of buffering = 64. 
     $while 1 
   }
 }
@@ -798,3 +792,4 @@ $is
 // Memory space 1: T 
 // Memory space 2: pad 
 // Memory space 3: %zeropad3D%body:dest2_alloc 
+// Memory space 4: count 

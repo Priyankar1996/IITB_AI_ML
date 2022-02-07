@@ -35,14 +35,12 @@ void write_input()
 	{
 		write_uint16("zeropad_input_pipe",T.data_array[i]);
 	}
-	fprintf(stderr,"Sent T.\n");
-}
+	fprintf(stderr,"Sent T from Testbench.\n");
 
-void write_pad()
-{
 	write_uint16("zeropad_input_pipe",pad);
-}
 
+	fprintf(stderr,"Sent pad from Testbench.\n");	
+}
 
 void read_result()
 {
@@ -55,7 +53,7 @@ void read_result()
 	{
 		R.data_array[i] = read_uint16("zeropad_output_pipe");
 	}
-	fprintf(stderr,"Read R.\n");
+	fprintf(stderr,"Read R from testbench.\n");
 }
 
 
@@ -73,6 +71,15 @@ int main(int argc, char* argv[])
 	{
 		T.data_array[i] = rand();
 	}
+
+	R.descriptor.descriptor.data_type = i16;\
+    R.descriptor.descriptor.number_of_dimensions = 3;\
+	R.descriptor.descriptor.row_major_form = 1;\
+    R.descriptor.descriptor.dimensions[0] = T.descriptor.descriptor.dimensions[0] + 2 * pad;\
+	R.descriptor.descriptor.dimensions[1] = T.descriptor.descriptor.dimensions[1] + 2 * pad;\
+	R.descriptor.descriptor.dimensions[2] = T.descriptor.descriptor.dimensions[2];\
+	R.descriptor.tensor_size = R.descriptor.descriptor.dimensions[0] * R.descriptor.descriptor.dimensions[1] * R.descriptor.descriptor.dimensions[2];\
+	
 	
 #ifdef SW
 	init_pipe_handler();
@@ -84,15 +91,14 @@ int main(int argc, char* argv[])
 	PTHREAD_CREATE(zeropad3D);
 #endif
 	write_input();
-	write_pad();
 	read_result();
 
-	fprintf(stdout,"results: \n ");
-	for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
-	{
-		fprintf(stdout,"R.data_array[%d] = %d\n", i, R.data_array[i]);
-	}
-	fprintf(stdout,"done\n");
+	//fprintf(stdout,"results: \n ");
+	//for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
+	//{
+	//	fprintf(stdout,"R.data_array[%d] = %d\n", i, R.data_array[i]);
+	//}
+	//fprintf(stdout,"done\n");
 
 #ifndef  SW
 	uint64_t et = read_uint64("elapsed_time_pipe");

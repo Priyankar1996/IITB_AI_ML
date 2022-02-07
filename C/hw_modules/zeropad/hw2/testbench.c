@@ -76,8 +76,8 @@ int main(int argc, char* argv[])
 	
 #ifdef SW
 	init_pipe_handler();
-	register_pipe ("zeropad_input_pipe", 2, 32, PIPE_FIFO_MODE);
-	register_pipe ("zeropad_output_pipe", 2, 32, PIPE_FIFO_MODE);
+	register_pipe ("zeropad_input_pipe", 2, 16, PIPE_FIFO_MODE);
+	register_pipe ("zeropad_output_pipe", 2, 16, PIPE_FIFO_MODE);
 
 	PTHREAD_DECL(zeropad3D);
 

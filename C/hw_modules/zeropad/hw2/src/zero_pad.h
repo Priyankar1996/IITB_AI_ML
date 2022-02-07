@@ -8,6 +8,7 @@
 #include <inttypes.h>
 #include <assert.h>
 
+void zeropad3D();
 
 #define __dim0__(T) ({T.descriptor.descriptor.dimensions[0];})
 #define __dim1__(T) ({T.descriptor.descriptor.dimensions[1];})
@@ -29,13 +30,16 @@
     int idx   = 0;\
 	int width = 0;\
 	int i, j, k;\
+	int dest2_ind, src_ind;\
 	for(i=0;i<n1;i++)\
 	{\
 		for(j=0;j<n2;j++ )\
 		{\
 			for(k=0;k<n3;k++)\
 			{\
-				*(((int16_t*)dest2.data_array) + (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad))) = *(((int16_t*)T.data_array) + (k+n3*j+n2*n3*i));\
+				dest2_ind = (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad));\
+				src_ind = (k+n3*j+n2*n3*i);\
+				*(((int16_t*)dest2.data_array) + dest2_ind ) = *(((int16_t*)T.data_array) + src_ind );\
 			}\
 		}\
 	}\
@@ -49,7 +53,8 @@
 		{\
 			for(k=0;k<n3;k++)\
 			{\
-                *(((int16_t*)R.data_array) + index) = *(((int16_t*)dest2.data_array) +  k*jump_matrix +  j*(n1+2*pad) + i );\
+				dest2_ind = k*jump_matrix +  j*(n1+2*pad) + i ;\
+                *(((int16_t*)R.data_array) + index) = *(((int16_t*)dest2.data_array) +  dest2_ind );\
 			    index = index + 1 ;\
 			}\
 		}\

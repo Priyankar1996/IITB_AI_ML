@@ -34,11 +34,6 @@ void getInput(){
 	{
 		T.data_array[i] = read_uint16("zeropad_input_pipe");
 	}
-}
-
-
-
-void getpadding(){
 	pad = read_uint16("zeropad_input_pipe");
 }
 
@@ -46,7 +41,6 @@ void getpadding(){
 void zeropad3D()
 {
 	getInput();
-	getpadding();	
 #ifndef SW
 	uint64_t start_time = timer();
 #endif

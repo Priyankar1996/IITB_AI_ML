@@ -6,7 +6,7 @@
 #include <Pipes.h>
 #include "pipeHandler.h"
 #include "sized_tensor.h"
-#include "convolution_transpose_improved.h"
+#include "convolution_transpose.h"
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);

@@ -98,7 +98,6 @@ int main(int argc, char* argv[])
 	{
 		*(((int16_t*)T.data_array) + i) = 5;
 	}
-
         for(i = 0; i < __NumberOfElementsInSizedTensor__(K); i++)
 	{
 		*(((int16_t*)K.data_array) + i) = 1;

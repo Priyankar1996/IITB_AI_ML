@@ -8,7 +8,7 @@
 #include <time.h>
 #include <stdint.h>
 #include "sized_tensor.h"
-#include "convolution_transpose_improved.h"
+#include "convolution_transpose.h"
 
 #ifdef SW
 #include <pipeHandler.h>

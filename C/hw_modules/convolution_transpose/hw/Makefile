@@ -35,7 +35,7 @@ HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c src/convolution_transpose_improved.h
+c2llvmbc: src/prog.c src/convolution_transpose.h
 	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o

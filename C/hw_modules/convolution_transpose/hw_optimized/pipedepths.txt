@@ -1,0 +1,10 @@
+ConvTranspose_input_pipe 2
+ConvTranspose_output_pipe 2
+Block0_start 1
+Block0_done 1
+Block1_start 1
+Block1_done 1
+Block2_start 1
+Block2_done 1
+Block3_start 1
+Block3_done 1

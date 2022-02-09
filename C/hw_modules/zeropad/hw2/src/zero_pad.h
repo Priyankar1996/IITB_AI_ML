@@ -18,7 +18,7 @@ void zeropad3D();
     int n1 = T.descriptor.descriptor.dimensions[0];\
     int n2 = T.descriptor.descriptor.dimensions[1];\
     int n3 = T.descriptor.descriptor.dimensions[2];\
-    SizedTensor_1M dest2;\
+    SizedTensor_16K dest2;\
     dest2.descriptor.descriptor.data_type = i16;\
     dest2.descriptor.descriptor.number_of_dimensions = 3;\
     dest2.descriptor.descriptor.dimensions[0] = R.descriptor.descriptor.dimensions[0];\

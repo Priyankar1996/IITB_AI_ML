@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <inttypes.h>
+#include "prog.h"
 
 #include "sized_tensor.h"
 #include "convolveTensors.h"
@@ -13,6 +15,7 @@
 #include <pipeHandler.h>
 #include <Pipes.h>
 #include <pthreadUtils.h>
+#include "prog.h"
 #else
 #include "vhdlCStubs.h"
 #endif
@@ -24,56 +27,65 @@ DEFINE_THREAD(conv2D);
 SizedTensor_16K T,K,R;
 uint16_t stride;
 
-void write_input()
-{
+void write_input_dim(){
 	int i;
 	for(i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++)
 	{
 		write_uint16("conv_input_pipe",T.descriptor.descriptor.dimensions[i]);
 	}
-        for(i = 0; i < __NumberOfElementsInSizedTensor__(T); i++) 
-	{
-		write_uint16("conv_input_pipe",T.data_array[i]);
-	}
-	fprintf(stderr,"Sent T from tb.\n");
+}
 
+void write_kernel_dim(){
+	int i;
 	for(i = 0; i < K.descriptor.descriptor.number_of_dimensions; i++)
 	{
 		write_uint16("conv_input_pipe",K.descriptor.descriptor.dimensions[i]);
 	}
+}
+
+void write_input_data(){
+	int i;
+        for(i = 0; i < __NumberOfElementsInSizedTensor__(T); i++) 
+	{
+		write_uint16("conv_input_pipe",*(((int16_t*)T.data_array) + i));
+	}
+}
+
+void write_kernel_data(){
+	int i;
         for(i = 0; i < __NumberOfElementsInSizedTensor__(K); i++) 
 	{
-		write_uint16("conv_input_pipe",K.data_array[i]);
+		write_uint16("conv_input_pipe",*(((int16_t*)K.data_array) + i));
 	}
-	fprintf(stderr,"Sent K from tb.\n");
-
+}
+void write_stride(){
 	write_uint16("conv_input_pipe",stride);
-	fprintf(stderr,"Sent Stride from tb.\n");
 }
 
 
-void read_result()
-{
-	fprintf(stderr,"Receiving R to tb.\n");
+void read_result_dim(){
 	int i;
 	for(i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++)
 	{
 		R.descriptor.descriptor.dimensions[i] = read_uint16("conv_output_pipe");
 	}
+}
+
+void read_result_data(){
+	int i;
         for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++) 
 	{
-		R.data_array[i] = read_uint16("conv_output_pipe");
+		*(((int16_t*)R.data_array) + i) = read_uint16("conv_output_pipe");
 	}
-	fprintf(stderr,"Received R to tb.\n");
 }
 
 
 int main(int argc, char* argv[])
 {
-        int i;
 
-        srand(100);
-
+	int i;
+	T.descriptor.descriptor.number_of_dimensions = 3;
+	K.descriptor.descriptor.number_of_dimensions = 4;
 	T.descriptor.descriptor.dimensions[0] = 10;
 	T.descriptor.descriptor.dimensions[1] = 10;
 	T.descriptor.descriptor.dimensions[2] = 3;
@@ -84,12 +96,11 @@ int main(int argc, char* argv[])
 	R.descriptor.descriptor.number_of_dimensions = 3;
         for(i = 0; i < __NumberOfElementsInSizedTensor__(T); i++)
 	{
-		T.data_array[i] = rand();
+		*(((int16_t*)T.data_array) + i) = 5;
 	}
-
         for(i = 0; i < __NumberOfElementsInSizedTensor__(K); i++)
 	{
-		K.data_array[i] = rand();
+		*(((int16_t*)K.data_array) + i) = 1;
 	}
 	stride = 1;
 
@@ -102,15 +113,18 @@ int main(int argc, char* argv[])
 
 	PTHREAD_CREATE(conv2D);
 #endif
-	write_input();
-	read_result();
-
-	//fprintf(stdout,"results: \n ");
-	//for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
-	//{
-	//	fprintf(stdout,"R.data_array[%d] = %d\n", i, R.data_array[i]);
-	//}
-	//fprintf(stdout,"done\n");
+	
+	write_input_dim();
+	write_input_data();
+	write_kernel_dim();
+	write_kernel_data();
+	write_stride();	
+	read_result_dim();
+	read_result_data();
+	for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
+	{
+		fprintf(stderr,"Result %d = %"PRId16"\n",i,*(((int16_t*)R.data_array) + i));
+	}
 
 #ifndef  SW
 	uint64_t et = read_uint64("elapsed_time_pipe");
@@ -120,6 +134,5 @@ int main(int argc, char* argv[])
 #ifdef SW
 	PTHREAD_CANCEL(conv2D);
 	close_pipe_handler();
-	return 0;
 #endif
 }

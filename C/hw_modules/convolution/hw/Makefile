@@ -24,7 +24,7 @@ TOPMODULES=-T conv2D -T timerDaemon
 
 # compile with SW defined.
 # note the use of IOLIB in building the testbench.
-SW: src/prog.c testbench.c 
+SW: src/prog.c testbench.c
 	gcc -g -std=c99 -c -DSW $(PROGDEFS) -I$(PIPEHANDLER_INCLUDE) src/prog.c -I$(SIZED_TENSOR)/ -Isrc
 	gcc -g -std=c99 -c -DSW $(PROGDEFS) -I$(PIPEHANDLER_INCLUDE) -I$(PTHREADUTILS_INCLUDE) -Isrc -I$(SIZED_TENSOR)/ testbench.c
 	gcc -g -std=c99 -o testbench_sw prog.o testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread

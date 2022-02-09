@@ -15,9 +15,9 @@
     	out.descriptor.descriptor.data_type = i16;\
     	out.descriptor.descriptor.number_of_dimensions = 3;\
     	out.descriptor.descriptor.row_major_form = 1;\
-    	out.descriptor.descriptor.dimensions[0] = (__dim0__(inp) - __dim1__(ker))/stride + 1;\
-	out.descriptor.descriptor.dimensions[1] = (__dim1__(inp) - __dim2__(ker))/stride + 1;\
-	out.descriptor.descriptor.dimensions[2] = (__dim0__(ker));\
+    	out.descriptor.descriptor.dimensions[0] = 1 + __udiv16__(__dim0__(inp) - __dim1__(ker),stride);\
+	out.descriptor.descriptor.dimensions[1] = 1 + __udiv16__(__dim1__(inp) - __dim2__(ker),stride);\
+	out.descriptor.descriptor.dimensions[2] = __dim0__(ker);\
 	out.descriptor.tensor_size = __dim0__(out) * __dim1__(out) * __dim2__(out);\
 	int out_idx = 0;\
 	int p,q,r,i,j,k;\
@@ -46,3 +46,32 @@
 		}\
 	}\
 })
+
+#define __udiv16__(dividend,divisor)({\
+	uint16_t quotient = 0;\
+	if(divisor != 0)\
+	{\
+   		uint16_t reduced_dividend = dividend;\
+		__DIV_LOOP(reduced_dividend,divisor,quotient,uint16_t);\
+	}\
+	quotient;\
+})
+
+#define __DIV_LOOP(reduced_dividend,divisor,quotient,TNAME) while(reduced_dividend >= divisor)\
+	({\
+		TNAME curr_quotient = 1;\
+        	TNAME shifted_divisor = divisor;\
+        	TNAME reduced_dividend_by_2 = (reduced_dividend >> 1);\
+		while(1)\
+		{\
+			if(shifted_divisor < reduced_dividend_by_2)\
+			{\
+				shifted_divisor = (shifted_divisor << 1);\
+				curr_quotient = (curr_quotient << 1);\
+			}\
+			else	\
+		  	break;\
+		}\
+		quotient += curr_quotient;\
+		reduced_dividend -= shifted_divisor;\
+   	})

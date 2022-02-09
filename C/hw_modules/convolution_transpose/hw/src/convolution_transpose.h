@@ -31,6 +31,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
             add_dest_dim1 = col*stride[1] + tensor_dim_2(kernel) - padding - 1;\
             add_out = tensor_dim_2(output)*(add_dest_dim1 + tensor_dim_1(output)*add_dest_dim0);\
             for(channel = 0; channel < tensor_dim_2(input); channel+=8) {\
+                __loop_pipeline_var__\
                 output.data_array[add_out >> 2] = input.data_array[add_src>>2];\
                 add_src+=4;\
                 add_out+=4;\

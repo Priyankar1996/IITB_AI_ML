@@ -7,6 +7,7 @@
 #include "pipeHandler.h"
 #include "sized_tensor.h"
 #include "convolveTensors.h"
+#include "prog.h"
 
 SizedTensor_16K T,K,R;
 uint16_t stride;

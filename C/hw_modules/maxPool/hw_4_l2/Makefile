@@ -46,7 +46,6 @@ llvmbc2aa:  prog.opt.o
 
 # link and optimize
 aalink:  timer.aa prog.aa
-	AaPreprocess -I. master.aa -o maxPoolFull.aa
 	AaLinkExtMem timer.aa prog.aa | vcFormat > prog.linked.aa
 	# AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.aa | vcFormat > prog.linked.opt.aa

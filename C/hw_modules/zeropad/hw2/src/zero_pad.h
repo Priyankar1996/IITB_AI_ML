@@ -26,20 +26,28 @@ void zeropad3D();
     dest2.descriptor.descriptor.dimensions[2] = R.descriptor.descriptor.dimensions[2];\
     dest2.descriptor.descriptor.row_major_form = 1;\
     dest2.descriptor.tensor_size = (R.descriptor.descriptor.dimensions[0])*(R.descriptor.descriptor.dimensions[1])*(R.descriptor.descriptor.dimensions[2]);\
-    int size=(n1*n2*n3);\
+	int out_idx = -1;\
+	int16_t result_temp;\
+	int size=(n1*n2*n3);\
     int idx   = 0;\
 	int width = 0;\
 	int i, j, k;\
 	int dest2_ind, src_ind;\
 	for(i=0;i<n1;i++)\
 	{\
+		out_idx++;\
+		result_temp = 0;\
 		for(j=0;j<n2;j++ )\
 		{\
 			for(k=0;k<n3;k++)\
 			{\
-				dest2_ind = (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad));\
 				src_ind = (k+n3*j+n2*n3*i);\
-				*(((int16_t*)dest2.data_array) + dest2_ind ) = *(((int16_t*)T.data_array) + src_ind );\
+				uint64_t img_data = T.data_array[src_ind >> 2];\
+				uint8_t temp_img_rem = src_ind - 4*(src_ind >> 2);\
+				int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
+				dest2_ind = (n1+2*pad+pad)+i+j*(n1+2*pad)+(k*(n1+2*pad)*(n2+2*pad));\
+				uint8_t temp_out_rem = dest2_ind - 4*(dest2_ind >> 2);\
+				dest2.data_array[dest2_ind >> 2] = __putOneBlock__(dest2.data_array[dest2_ind >> 2],temp_out_rem,img_one_block);\
 			}\
 		}\
 	}\
@@ -47,16 +55,31 @@ void zeropad3D();
     int jump_matrix = ((n1+2*pad)*(n2+2*pad));\
     int row_jump = (n1+2*pad);\
     int column_jump = (n2+2*pad);\
+	out_idx = -1;\
     for(i=0;i<n1+2*pad;i++)\
 	{\
+		out_idx++;\
+		result_temp = 0;\
 		for(j=0;j<n2+2*pad;j++)\
 		{\
 			for(k=0;k<n3;k++)\
 			{\
 				dest2_ind = k*jump_matrix +  j*(n1+2*pad) + i ;\
-                *(((int16_t*)R.data_array) + index) = *(((int16_t*)dest2.data_array) +  dest2_ind );\
-			    index = index + 1 ;\
+                uint64_t img_data = dest2.data_array[dest2_ind >> 2];\
+				uint8_t temp_img_rem = dest2_ind - 4*(dest2_ind >> 2);\
+				int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
+				uint8_t temp_out_rem = index - 4*(index >> 2);\
+				R.data_array[index >> 2] = __putOneBlock__(R.data_array[index >> 2],temp_out_rem,img_one_block);\
+				index = index + 1 ;\
 			}\
 		}\
 	}\
+})
+#define __getOneBlock__(array64bit,position)   ({\
+	int16_t result = (int16_t)((array64bit >> (position*16)) & 0x000000000000FFFF);\
+	result;\
+})
+#define __putOneBlock__(array64bit,position,result)  ({\
+	array64bit = array64bit | (((uint64_t)result) << (position*16));\
+	array64bit;\
 })

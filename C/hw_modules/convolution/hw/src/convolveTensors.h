@@ -6,6 +6,8 @@
 #include <float.h>
 #include "sized_tensor.h"
 
+void conv2D();
+
 #define __dim0__(T) ({T.descriptor.descriptor.dimensions[0];})
 #define __dim1__(T) ({T.descriptor.descriptor.dimensions[1];})
 #define __dim2__(T) ({T.descriptor.descriptor.dimensions[2];})

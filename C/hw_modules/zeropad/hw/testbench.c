@@ -1,4 +1,4 @@
-#define __U16 1
+#define __I16 1
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
@@ -16,6 +16,20 @@
 #else
 #include "vhdlCStubs.h"
 #endif
+
+#define __UpdateOutputDescriptorConvTransTensors__(src,pad,output) ({\
+	fprintf(stderr,"Updating output descriptor and writing inputs.\n");\
+    output.descriptor.descriptor.data_type = src.descriptor.descriptor.data_type;\
+    output.descriptor.descriptor.number_of_dimensions = src.descriptor.descriptor.number_of_dimensions;\
+	int ji;\
+    output.descriptor.descriptor.row_major_form = src.descriptor.descriptor.row_major_form;\
+    output.descriptor.descriptor.dimensions[0] = (src.descriptor.descriptor.dimensions[0]) + (2*pad);\
+    output.descriptor.descriptor.dimensions[1] = (src.descriptor.descriptor.dimensions[1]) + (2*pad);\
+	output.descriptor.descriptor.dimensions[output.descriptor.descriptor.number_of_dimensions-1] = src.descriptor.descriptor.dimensions[src.descriptor.descriptor.number_of_dimensions-1];\
+	output.descriptor.tensor_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];\
+})
+
+#define __dt__ int16_t
 
 #ifdef SW
 DEFINE_THREAD(zeropad_thread);
@@ -57,7 +71,7 @@ int main(int argc,char **argv)
     #endif
 
     fprintf(stderr,"Reading files\n");
-    uint16_t rand_input_data;
+	uint16_t rand_input_data;
 	fscanf(input_file,"%hhd",&rand_input_data);
 
     //Take datatype as input
@@ -109,41 +123,52 @@ int main(int argc,char **argv)
 
 	}
 	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",input.descriptor.descriptor.dimensions[0],input.descriptor.descriptor.dimensions[1],input.descriptor.descriptor.dimensions[2]);
-	
+	input.descriptor.tensor_size = __NumberOfElementsInSizedTensor__(input);
 	
 	// Entering the padding size that needs to be done
-    int pad;
+	uint16_t pad;
 	fscanf(param_file,"%d",&pad);
-	write_uint16("ZeroPad_input_pipe",&pad);
+	write_uint16("ZeroPad_input_pipe",pad);
+	
+	
+
+	fprintf(stderr,"Read pad value:%d\n",pad);
+	__UpdateOutputDescriptorConvTransTensors__(input,pad,output);
+    
+	for(ii = 0;ii < 3;ii++){
+		write_uint16("ZeroPad_input_pipe",output.descriptor.descriptor.dimensions[ii]);
+	}
 
     uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
 
-    if (input.descriptor.descriptor.data_type == u16){
-		uint16_t temp[4];
+	if (input.descriptor.descriptor.data_type == i16){
+		__dt__ temp[4];
 		for (ii = 0; ii < input_size; ii++)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
 			else temp[ii&3] = ii+1;	
 			write_uint16("ZeroPad_input_pipe",temp[ii&3]);
-			fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
+			//fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
 			if ((ii&3)==3) input.data_array[ii/4] = *(uint64_t*)temp;
 		}
 		input.data_array[ii/4] = *(uint64_t*)temp;
 	}	
 	else{
-		fprintf(stderr,"Error. Datatypes mismatch. \n");
+		fprintf(stderr,"Error. Datatypes mismatch.\n");
 	}
+
 
     fprintf(stderr,"Reading the output values from hardware\n");
     fprintf(out_file,"\n");
 	int size = __NumberOfElementsInSizedTensor__(output);
-
-	if (input.descriptor.descriptor.data_type == u16){
+	fprintf(stderr,"Size of output is %d,%d,%d\n",output.descriptor.descriptor.dimensions[0],output.descriptor.descriptor.dimensions[1],output.descriptor.descriptor.dimensions[2]);
+	
+	if (output.descriptor.descriptor.data_type == i16){
 		uint16_t val;
 		for (ii = 0; ii < size; ii++)
 		{
 			val = read_uint16("ZeroPad_output_pipe");
-			fprintf(stderr,"%hu\n",val);
+			fprintf(stderr,"%lu\n",val);
 		}
 	}		
 	else{
@@ -152,6 +177,7 @@ int main(int argc,char **argv)
     fprintf(stderr,"Read back the values from hardware\n");
 
 	fclose(input_file);
+	fclose(param_file);
 	fclose(out_file);
 
 	#ifndef SW

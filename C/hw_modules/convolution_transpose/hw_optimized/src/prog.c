@@ -113,9 +113,9 @@ void testConfigure()
         kernel.data_array[i] = element;
     }
     if (kernel_size&3) kernel.data_array[i] = getRemainingElements(kernel_size&3);
-    uint64_t output_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
+    /*uint64_t output_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
     for(i = 0; i < output_size>>2; i++)
-        output.data_array[i] = 0;
+        output.data_array[i] = 0;*/
 }
 
 void sendOutput()
@@ -128,69 +128,69 @@ void sendOutput()
     if (size&3) sendRemainingElements(i,size&3);
 }
 
-void convTranspose00()
+void convTransposeA()
 {
-    uint16_t s = read_uint16("Block0_start");
+    uint16_t s0 = read_uint16("Block0_start");
     #ifdef SW
         fprintf(stderr,"Block-0 started.\n");
     #endif
-    __ConvTransposeOptimized__(input,0,(input.descriptor.descriptor.dimensions[0]/2),
+    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]),
                                0,(input.descriptor.descriptor.dimensions[1]/2),
-                               kernel,stride,padding,output);
+                               input,kernel,stride,padding,output);
     #ifdef SW
 	    fprintf(stderr,"Block-0 done.\n");
     #endif
-	write_uint16 ("Block0_done", s);
+	write_uint16 ("Block0_done", s0);
 }
 
-void convTranspose01()
+void convTransposeB()
 {
-    uint16_t s = read_uint16("Block1_start");
+    uint16_t s1 = read_uint16("Block1_start");
     #ifdef SW
         fprintf(stderr,"Block-1 started.\n");
     #endif
-    __ConvTransposeOptimized__(input,0,(input.descriptor.descriptor.dimensions[0]/2),
+    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]),
                             (input.descriptor.descriptor.dimensions[1]/2),
                             input.descriptor.descriptor.dimensions[1],
-                            kernel,stride,padding,output);
+                            input,kernel,stride,padding,output);
     #ifdef SW
         fprintf(stderr,"Block-1 done.\n");
     #endif
-    write_uint16 ("Block1_done", s);
+    write_uint16 ("Block1_done", s1);
 }
 
-void convTranspose10()
+/*void convTransposeC()
 {
-    uint16_t s = read_uint16("Block2_start");
+    uint16_t s2 = read_uint16("Block2_start");
     #ifdef SW
         fprintf(stderr,"Block-2 started.\n");
     #endif
-    __ConvTransposeOptimized__(input,(input.descriptor.descriptor.dimensions[0]/2),
+    __ConvTransposeOptimized__((input.descriptor.descriptor.dimensions[0]/2),
                                input.descriptor.descriptor.dimensions[0],0,
-                               (input.descriptor.descriptor.dimensions[1]/2),kernel,
-                               stride,padding,output);
+                               (input.descriptor.descriptor.dimensions[1]/2),
+                               input,kernel,stride,padding,output);
     #ifdef SW
         fprintf(stderr,"Block-2 done.\n");
     #endif
-    write_uint16 ("Block2_done", s);
+    write_uint16 ("Block2_done", s2);
 }
 
-void convTranspose11()
+void convTransposeD()
 {
-    uint16_t s = read_uint16("Block3_start");
+    uint16_t s3 = read_uint16("Block3_start");
     #ifdef SW
         fprintf(stderr,"Block-3 started.\n");
     #endif
-    __ConvTransposeOptimized__(input,(input.descriptor.descriptor.dimensions[0]/2),
+    __ConvTransposeOptimized__((input.descriptor.descriptor.dimensions[0]/2),
                                input.descriptor.descriptor.dimensions[0],
                                (input.descriptor.descriptor.dimensions[1]/2),
-                               input.descriptor.descriptor.dimensions[1],kernel,
-                               stride,padding,output);    
+                               input.descriptor.descriptor.dimensions[1],
+                               input,kernel,stride,padding,output);    
     #ifdef SW
         fprintf(stderr,"Block-3 done.\n");
     #endif
-    write_uint16 ("Block3_done", s);
-}
+    write_uint16 ("Block3_done", s3);
+}*/
 
 void convTranspose()
 {
@@ -200,13 +200,13 @@ void convTranspose()
     #endif
     write_uint16("Block0_start", 1);
     write_uint16("Block1_start", 1);
-    write_uint16("Block2_start", 1);
-    write_uint16("Block3_start", 1);
+    //write_uint16("Block2_start", 1);
+    //write_uint16("Block3_start", 1);
 
     uint16_t s0 = read_uint16("Block0_done");
     uint16_t s1 = read_uint16("Block1_done");
-    uint16_t s2 = read_uint16("Block2_done");
-    uint16_t s3 = read_uint16("Block3_done");   
+    //uint16_t s2 = read_uint16("Block2_done");
+    //uint16_t s3 = read_uint16("Block3_done");   
     #ifndef SW
 	    uint64_t stop_time = timer();
 	    uint64_t elapsed_time = stop_time - start_time;

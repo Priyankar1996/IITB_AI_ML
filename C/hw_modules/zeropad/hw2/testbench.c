@@ -61,49 +61,19 @@ void read_result_data(){
 	}
 }
 
-// void write_input()
-// {
-// 	int i;
-// 	for(i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++)
-// 	{
-// 		write_uint16("zeropad_input_pipe",T.descriptor.descriptor.dimensions[i]);
-// 	}
-//         for(i = 0; i < __NumberOfElementsInSizedTensor__(T); i++) 
-// 	{
-// 		write_uint16("zeropad_input_pipe",T.data_array[i]);
-// 	}
-// 	fprintf(stderr,"Sent T from Testbench.\n");
-
-// 	write_uint16("zeropad_input_pipe",pad);
-
-// 	fprintf(stderr,"Sent pad from Testbench.\n");	
-// }
-
-// void read_result()
-// {
-// 	int i;
-// 	for(i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++)
-// 	{
-// 		R.descriptor.descriptor.dimensions[i] = read_uint16("zeropad_output_pipe");
-// 	}
-//         for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++) 
-// 	{
-// 		R.data_array[i] = read_uint16("zeropad_output_pipe");
-// 	}
-// 	fprintf(stderr,"Read R from testbench.\n");
-// }
 
 
 int main(int argc, char* argv[])
 {
+	fprintf(stderr,"Entering main testbench....\n");
         int i;
 
         //srand(100);
 	T.descriptor.descriptor.data_type = i16;
     T.descriptor.descriptor.number_of_dimensions = 3;
 	T.descriptor.descriptor.row_major_form = 1;
-	T.descriptor.descriptor.dimensions[0] = 10;
-	T.descriptor.descriptor.dimensions[1] = 10;
+	T.descriptor.descriptor.dimensions[0] = 4;
+	T.descriptor.descriptor.dimensions[1] = 4;
 	T.descriptor.descriptor.dimensions[2] = 3;
 	T.descriptor.tensor_size = T.descriptor.descriptor.dimensions[0] * T.descriptor.descriptor.dimensions[1] * T.descriptor.descriptor.dimensions[2];
 
@@ -149,8 +119,9 @@ int main(int argc, char* argv[])
 	//fprintf(stdout,"done\n");
 	for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
 	{
-		fprintf(stderr,"Result %d = %"PRId16"\n",i,*(((int16_t*)R.data_array) + i));
+		fprintf(stderr,"Result %d = %"PRId16"\n",*(((int16_t*)R.data_array) + i));
 	}
+	fprintf(stdout,"done\n");
 
 #ifndef  SW
 	uint64_t et = read_uint64("elapsed_time_pipe");

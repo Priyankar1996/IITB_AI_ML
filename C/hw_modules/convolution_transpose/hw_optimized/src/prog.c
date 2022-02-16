@@ -11,8 +11,10 @@
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
+void __aa_barrier__();
 #else
 	#define __loop_pipeline_var__ {;}
+	#define __aa_barrier__ {;}
 #endif
 
 SizedTensor_16K input,output;
@@ -67,7 +69,7 @@ void sendRemainingElements(int addr, uint16_t ne){
 		write_uint16 ("ConvTranspose_output_pipe",out_data[n]);
 }
 
-void testConfigure()
+uint16_t testConfigure()
 {
     input.descriptor.descriptor.data_type = i16;
     input.descriptor.descriptor.row_major_form = read_uint16 ("ConvTranspose_input_pipe");;
@@ -116,6 +118,8 @@ void testConfigure()
     /*uint64_t output_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
     for(i = 0; i < output_size>>2; i++)
         output.data_array[i] = 0;*/
+
+    return(input_size);
 }
 
 void sendOutput()
@@ -194,14 +198,19 @@ void convTransposeD()
 
 void convTranspose()
 {
-    testConfigure();
+    uint16_t rv = testConfigure();
     #ifndef SW
 	    uint64_t start_time = timer();
     #endif
-    write_uint16("Block0_start", 1);
-    write_uint16("Block1_start", 1);
+
+	__aa_barrier__();
+
+    write_uint16("Block0_start", rv);
+    write_uint16("Block1_start", rv);
     //write_uint16("Block2_start", 1);
     //write_uint16("Block3_start", 1);
+
+	__aa_barrier__();
 
     uint16_t s0 = read_uint16("Block0_done");
     uint16_t s1 = read_uint16("Block1_done");
@@ -212,5 +221,8 @@ void convTranspose()
 	    uint64_t elapsed_time = stop_time - start_time;
 	    write_uint64("elapsed_time_pipe", elapsed_time);
     #endif
+
+	__aa_barrier__();
+
     sendOutput();
 }

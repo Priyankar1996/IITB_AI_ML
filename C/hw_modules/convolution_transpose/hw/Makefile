@@ -47,8 +47,8 @@ llvmbc2aa:  prog.opt.o
 # link and optimize
 aalink: prog.aa  timer.aa
 	AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
-	# AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
-	AaOpt -B prog.linked.aa | vcFormat > prog.linked.opt.aa
+	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
+	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 
 # Aa to vC
 aa2vc: prog.linked.opt.aa

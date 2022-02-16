@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T maxPool3D -T timerDaemon
+TOPMODULES=-T timerDaemon -T maxPool3D
 
 
 # compile with SW defined.
@@ -45,10 +45,10 @@ llvmbc2aa:  prog.opt.o
 	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
 
 # link and optimize
-aalink: prog.aa  timer.aa
-	AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
-	# AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
-	AaOpt -B prog.linked.aa | vcFormat > prog.linked.opt.aa
+aalink:  timer.aa prog.aa
+	AaLinkExtMem timer.aa prog.aa | vcFormat > prog.linked.aa
+	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
+	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 
 # Aa to vC
 aa2vc: prog.linked.opt.aa

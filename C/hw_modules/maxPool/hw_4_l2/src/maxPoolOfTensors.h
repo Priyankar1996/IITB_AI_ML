@@ -25,6 +25,18 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	#define __loop_pipeline_var__ {;}
 #endif
 
+#define __increment__(row,col,chl,max_col,max_chl) ({\
+	chl++;\
+	if (chl == max_chl){\
+		chl = 0;\
+		col++;\
+	}\
+	if (col == max_col){\
+		col = 0;\
+		row++;\
+	}\
+})
+
 #define __maxOperation4__(src,add_src, offset1 ,offset2) ({\
 		__dt__ min_val1 , min_val2, min_val3, min_val4,\
 		min_val5, min_val6, min_val7, min_val8,\
@@ -77,18 +89,15 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 #define __maxPoolOfTensors3D__(src, dst, stride) ({\
 	uint32_t address = 0, add_src;\
 	uint32_t offset1 = __dim22__(src), offset2 = __dim1__(src)*offset1;\
-	uint16_t row,col,chl;\
-	for (row = 0; row < __dim0__(dst); row++)\
+	uint16_t dim1 = __dim1__(dst), dim1d = __dim1__(src);\
+	uint16_t row=0,col=0,chl=0;\
+	uint32_t size = __NumberOfElementsInSizedTensor__(dst);\
+	while(1)\
 	{\
-		for (col = 0; col < __dim1__(dst); col++)\
-		{\
-			for (chl = 0; chl < (__dim22__(dst)); chl++)\
-			{\
-				__loop_pipeline_var__\
-				add_src = chl+(__dim22__(dst))*(col*stride+__dim1__(src)*row*stride);\
-				dst.data_array[address] = __maxOperation4__(src,add_src,offset1,offset2);\
-				address++;\
-			}\
-		}\
+		add_src = chl+offset1*(col*stride+dim1d*row*stride);\
+		dst.data_array[address] = __maxOperation4__(src,add_src,offset1,offset2);\
+		address++;\
+		__increment__(row,col,chl,dim1,offset1);\
+		if (address == (size>>2)) break;\
 	}\
 })

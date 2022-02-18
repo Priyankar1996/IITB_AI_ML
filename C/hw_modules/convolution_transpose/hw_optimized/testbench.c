@@ -8,7 +8,7 @@
 #include <time.h>
 #include <stdint.h>
 #include "sized_tensor.h"
-#include "convolution_transpose.h"
+#include "convolution_transpose_improved.h"
 
 #ifdef SW
 #include <pipeHandler.h>
@@ -34,6 +34,10 @@
 
 #ifdef SW
 DEFINE_THREAD(convTranspose);
+DEFINE_THREAD(convTransposeA);
+DEFINE_THREAD(convTransposeB);
+//DEFINE_THREAD(convTransposeC);
+//DEFINE_THREAD(convTransposeD);
 #endif
 
 SizedTensor_16K input,output;
@@ -72,9 +76,24 @@ int main(int argc,char **argv)
         init_pipe_handler();
         register_pipe ("ConvTranspose_input_pipe",2,16,PIPE_FIFO_MODE);
         register_pipe ("ConvTranspose_output_pipe",2,16,PIPE_FIFO_MODE);
-
+		register_pipe ("Block0_start",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block1_start",1,16,PIPE_FIFO_MODE);
+		//register_pipe ("Block2_start",1,16,PIPE_FIFO_MODE);
+		//register_pipe ("Block3_start",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block0_done",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block1_done",1,16,PIPE_FIFO_MODE);
+		//register_pipe ("Block2_done",1,16,PIPE_FIFO_MODE);
+		//register_pipe ("Block3_done",1,16,PIPE_FIFO_MODE);
         PTHREAD_DECL(convTranspose);
+        PTHREAD_DECL(convTransposeA);
+        PTHREAD_DECL(convTransposeB);
+        //PTHREAD_DECL(convTransposeC);
+        //PTHREAD_DECL(convTransposeD);	
         PTHREAD_CREATE(convTranspose);
+		PTHREAD_CREATE(convTransposeA);
+		PTHREAD_CREATE(convTransposeB);
+		//PTHREAD_CREATE(convTransposeC);
+		//PTHREAD_CREATE(convTransposeD);
     #endif
 
     fprintf(stderr,"Reading files\n");
@@ -197,7 +216,8 @@ int main(int argc,char **argv)
 	else{
 		fprintf(stderr,"Error. Datatypes mismatch.\n");
 	}
-
+	fprintf(stderr,"Wrote all input values\n");
+	
     fprintf(stderr,"Reading the output values from hardware\n");
 	fprintf(out_file,"\n");
 	int size = __NumberOfElementsInSizedTensor__(output);
@@ -228,6 +248,10 @@ int main(int argc,char **argv)
 
     #ifdef SW
 	    PTHREAD_CANCEL(convTranspose);
+	    PTHREAD_CANCEL(convTransposeA);
+	    PTHREAD_CANCEL(convTransposeB);
+	    //PTHREAD_CANCEL(convTransposeC);
+	    //PTHREAD_CANCEL(convTransposeD);
 	    close_pipe_handler();
     #endif
 return 0;

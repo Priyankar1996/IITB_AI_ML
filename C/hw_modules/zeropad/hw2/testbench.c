@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
 	//fprintf(stdout,"done\n");
 	for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
 	{
-		fprintf(stderr,"Result %d = %"PRId16"\n",*(((int16_t*)R.data_array) + i));
+		fprintf(stderr,"Result %d = %"PRId16"\n",i,*(((int16_t*)R.data_array) + i));
 	}
 	fprintf(stdout,"done\n");
 

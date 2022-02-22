@@ -7,9 +7,14 @@
 #include "pipeHandler.h"
 #include "sized_tensor.h"
 #include "zero_pad.h"
+#include "prog.h"
 
 SizedTensor_16K T,R;
 uint16_t pad;
+
+#ifndef SW
+	void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
+#endif
 
 // void sendOutput(){
 // 	int i;

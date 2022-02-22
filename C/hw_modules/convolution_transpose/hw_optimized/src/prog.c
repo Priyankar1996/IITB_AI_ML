@@ -14,7 +14,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 void __aa_barrier__();
 #else
 	#define __loop_pipeline_var__ {;}
-	#define __aa_barrier__ {;}
+	#define __aa_barrier__() {;}
 #endif
 
 SizedTensor_16K input,output;
@@ -138,9 +138,11 @@ void convTransposeA()
     #ifdef SW
         fprintf(stderr,"Block-0 started.\n");
     #endif
-    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]),
+    __aa_barrier__();
+    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]/2),
                                0,(input.descriptor.descriptor.dimensions[1]/2),
                                input,kernel,stride,padding,output);
+    __aa_barrier__();
     #ifdef SW
 	    fprintf(stderr,"Block-0 done.\n");
     #endif
@@ -153,26 +155,30 @@ void convTransposeB()
     #ifdef SW
         fprintf(stderr,"Block-1 started.\n");
     #endif
-    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]),
+    __aa_barrier__();
+    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]/2),
                             (input.descriptor.descriptor.dimensions[1]/2),
                             input.descriptor.descriptor.dimensions[1],
                             input,kernel,stride,padding,output);
+    __aa_barrier__();
     #ifdef SW
         fprintf(stderr,"Block-1 done.\n");
     #endif
     write_uint16 ("Block1_done", s1);
 }
 
-/*void convTransposeC()
+void convTransposeC()
 {
     uint16_t s2 = read_uint16("Block2_start");
     #ifdef SW
         fprintf(stderr,"Block-2 started.\n");
     #endif
+    __aa_barrier__();
     __ConvTransposeOptimized__((input.descriptor.descriptor.dimensions[0]/2),
                                input.descriptor.descriptor.dimensions[0],0,
                                (input.descriptor.descriptor.dimensions[1]/2),
                                input,kernel,stride,padding,output);
+    __aa_barrier__();
     #ifdef SW
         fprintf(stderr,"Block-2 done.\n");
     #endif
@@ -185,44 +191,42 @@ void convTransposeD()
     #ifdef SW
         fprintf(stderr,"Block-3 started.\n");
     #endif
+    __aa_barrier__();
     __ConvTransposeOptimized__((input.descriptor.descriptor.dimensions[0]/2),
                                input.descriptor.descriptor.dimensions[0],
                                (input.descriptor.descriptor.dimensions[1]/2),
                                input.descriptor.descriptor.dimensions[1],
-                               input,kernel,stride,padding,output);    
+                               input,kernel,stride,padding,output);
+    __aa_barrier__();    
     #ifdef SW
         fprintf(stderr,"Block-3 done.\n");
     #endif
     write_uint16 ("Block3_done", s3);
-}*/
+}
 
 void convTranspose()
 {
     uint16_t rv = testConfigure();
+    __aa_barrier__();
     #ifndef SW
 	    uint64_t start_time = timer();
     #endif
-
-	__aa_barrier__();
-
     write_uint16("Block0_start", rv);
     write_uint16("Block1_start", rv);
-    //write_uint16("Block2_start", 1);
-    //write_uint16("Block3_start", 1);
-
-	__aa_barrier__();
-
+    write_uint16("Block2_start", rv);
+    write_uint16("Block3_start", rv);
     uint16_t s0 = read_uint16("Block0_done");
     uint16_t s1 = read_uint16("Block1_done");
-    //uint16_t s2 = read_uint16("Block2_done");
-    //uint16_t s3 = read_uint16("Block3_done");   
+    uint16_t s2 = read_uint16("Block2_done");
+    uint16_t s3 = read_uint16("Block3_done");   
+    __aa_barrier__();
+    
     #ifndef SW
 	    uint64_t stop_time = timer();
 	    uint64_t elapsed_time = stop_time - start_time;
 	    write_uint64("elapsed_time_pipe", elapsed_time);
     #endif
-
-	__aa_barrier__();
+    __aa_barrier__();
 
     sendOutput();
 }

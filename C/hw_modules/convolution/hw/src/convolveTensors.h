@@ -34,12 +34,13 @@ void conv2D();
 				result_temp = 0;\
 				for(i = 0; i < __dim1__(ker); i++)\
 				{\
+					int img_index_0 = p*stride + i;\
 					for(j = 0; j < __dim2__(ker); j++)\
 					{\
+						int img_index_1 = q*stride + j;\
 						for(k = 0; k < __dim3__(ker); k++)\
 						{\
-							int img_index[3] = {p*stride+i,q*stride+j,k};\
-							int ker_index[4] = {r,i,j,k};\
+							int img_index_2 = k;\
 							int img_data_array_idx = __GetTensorEntryIndexOffset__(inp,img_index);\
 							int ker_data_array_idx = __GetTensorEntryIndexOffset__(ker,ker_index);\
 							uint64_t img_data = inp.data_array[img_data_array_idx >> 2];\

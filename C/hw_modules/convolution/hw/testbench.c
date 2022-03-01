@@ -85,12 +85,12 @@ int main(int argc, char* argv[])
 
 	R.descriptor.descriptor.number_of_dimensions = 3;
 
-	T.descriptor.descriptor.dimensions[0] = 3;
-	T.descriptor.descriptor.dimensions[1] = 3;
+	T.descriptor.descriptor.dimensions[0] = 25;
+	T.descriptor.descriptor.dimensions[1] = 25;
 	T.descriptor.descriptor.dimensions[2] = 3;
 	K.descriptor.descriptor.dimensions[0] = 1;
-	K.descriptor.descriptor.dimensions[1] = 1;
-	K.descriptor.descriptor.dimensions[2] = 1;
+	K.descriptor.descriptor.dimensions[1] = 3;
+	K.descriptor.descriptor.dimensions[2] = 3;
 	K.descriptor.descriptor.dimensions[3] = 3;
 
         for(i = 0; i < (__NumberOfElementsInSizedTensor__(T) >> 2)+1; i++)

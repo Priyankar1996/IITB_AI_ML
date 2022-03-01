@@ -21,13 +21,10 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 #define __dim2__(T) ({T.descriptor.descriptor.dimensions[2];})
 
 #define __zero_pad__(T, pad, R)  ({\
-    int n1 = T.descriptor.descriptor.dimensions[0];\
-    int n2 = T.descriptor.descriptor.dimensions[1];\
-    int n3 = T.descriptor.descriptor.dimensions[2];\
 	int k = 0;\
 	int j = 0;\
 	int i = 0;\
-	while (k < n3)\
+	while (i < __dim0__(T))\
 	{\
 		int img_index[3] = {i,j,k};\
 		int dest_index[3] = {i+pad,j+pad,k};\
@@ -38,15 +35,15 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 		int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 		uint8_t temp_out_rem = dest_data_array_idx - 4*(dest_data_array_idx >> 2);\
 		R.data_array[dest_data_array_idx >> 2] = __putOneBlock__(R.data_array[dest_data_array_idx >> 2],temp_out_rem,img_one_block);\
-		j++;\
-		if (j == n2)\
+		k++;\
+		if (k == __dim2__(T))\
 		{\
-			j = 0;\
-			i++;\
-			if (i == n1)\
+			k = 0;\
+			j++;\
+			if (j == __dim1__(T))\
 			{\
-				i = 0;\
-				k++;\
+				j = 0;\
+				i++;\
 			}\
 		}\
 	}\

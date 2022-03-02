@@ -1,4 +1,4 @@
-$storage count : $uint<64>
+$pipe count : $uint<64> $depth 1
 
 $module [timerDaemon] $in () $out () $is
 {
@@ -6,9 +6,9 @@ $module [timerDaemon] $in () $out () $is
     {
     $dopipeline $depth 3 $fullrate
     $merge $entry $loopback
-        $phi ncount := ($bitcast($uint<64>) 0) $on $entry (ncount+1) $on $loopback
+        $phi ncount := ($bitcast($uint<64>) 0) $on $entry count $on $loopback
     $endmerge
-    count := ncount
+    count := (ncount + 1)
     $while 1
     }
 }
@@ -16,4 +16,5 @@ $module [timerDaemon] $in () $out () $is
 $module [timer] $in () $out (c : $uint<64>) $is
 {
     c := count
+    count := c
 }

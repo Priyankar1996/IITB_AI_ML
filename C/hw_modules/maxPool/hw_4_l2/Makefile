@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T maxPool3D
+TOPMODULES=-T timerDaemon -T maxPool3D -T maxPoolCore1 -T maxPoolCore2 -T maxPoolCore3 -T maxPoolCore4
 
 
 # compile with SW defined.
@@ -31,12 +31,12 @@ SW: src/prog.c testbench.c
 
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
-HW_FROM_AA : aalink aa2vc  vc2vhdl  vhdlsim
+
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
 c2llvmbc: src/prog.c src/maxPoolOfTensors.h
-	clang -m32 -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
+	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o
 

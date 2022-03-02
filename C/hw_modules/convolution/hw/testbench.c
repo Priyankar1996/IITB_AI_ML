@@ -85,21 +85,21 @@ int main(int argc, char* argv[])
 
 	R.descriptor.descriptor.number_of_dimensions = 3;
 
-	T.descriptor.descriptor.dimensions[0] = 25;
-	T.descriptor.descriptor.dimensions[1] = 25;
+	T.descriptor.descriptor.dimensions[0] = 4;
+	T.descriptor.descriptor.dimensions[1] = 4;
 	T.descriptor.descriptor.dimensions[2] = 3;
 	K.descriptor.descriptor.dimensions[0] = 1;
-	K.descriptor.descriptor.dimensions[1] = 3;
-	K.descriptor.descriptor.dimensions[2] = 3;
+	K.descriptor.descriptor.dimensions[1] = 1;
+	K.descriptor.descriptor.dimensions[2] = 1;
 	K.descriptor.descriptor.dimensions[3] = 3;
 
         for(i = 0; i < (__NumberOfElementsInSizedTensor__(T) >> 2)+1; i++)
 	{
-		T.data_array[i] = 5;
+		T.data_array[i] = 0x0005000500050005;
 	}
         for(i = 0; i < (__NumberOfElementsInSizedTensor__(K) >> 2)+1; i++)
 	{
-		K.data_array[i] = 1;
+		K.data_array[i] = 0x0001000100010001;
 	}
 	stride = 1;
 	
@@ -117,6 +117,10 @@ int main(int argc, char* argv[])
 	rd_output();
 
 	fprintf(stdout,"Done.\n");
+	for(i = 0; i < (__NumberOfElementsInSizedTensor__(R) >> 2) + 1; i++)
+	{
+		fprintf(stderr,"Value is %llx\n",R.data_array[i]);
+	}
 
 #ifndef  SW
 	uint64_t et = read_uint64("elapsed_time_pipe");

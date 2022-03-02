@@ -48,7 +48,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 					int y_idx_img = q*stride+j;\
 					int img_data_array_idx;\
 					__GetImgEntryIndexOffset__(inp,img_data_array_idx,x_idx_img,y_idx_img,k);\
-					int ker_data_array_idx = 0;\
+					int ker_data_array_idx;\
 					__GetKerEntryIndexOffset__(ker,ker_data_array_idx,r,i,j,k);\
 					fprintf(stderr,"img indx %d ker indx %d\n",img_data_array_idx,ker_data_array_idx);\
 					if((count - 4*(count >> 2)) == 0)\
@@ -61,17 +61,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 					int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 					int16_t ker_one_block = __getOneBlock__(ker_data,temp_ker_rem);\
 					result_temp += (img_one_block * ker_one_block);\
-					k++;\
-					if(k == __dim3__(ker))\
-					{\
-						k = 0;\
-						j++;\
-						if(j == __dim2__(ker))\
-						{\
-							j = 0;\
-							i++;\
-						}\
-					}\
+					__checkIncrementCondition__(i,j,k,ker);\
 					count++;\
 				}\
 				i = 0;j = 0;k = 0;\
@@ -80,6 +70,20 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 				uint8_t temp_out_rem = out_data_array_idx - 4*(out_data_array_idx >> 2);\
 				__putOneBlock__(out.data_array[out_data_array_idx >> 2],temp_out_rem,result_temp);\
 			}\
+		}\
+	}\
+})
+
+#define __checkIncrementCondition__(i,j,k,ker)({\
+	k++;\
+	if(k == __dim3__(ker))\
+	{\
+		k = 0;\
+		j++;\
+		if(j == __dim2__(ker))\
+		{\
+			j = 0;\
+			i++;\
 		}\
 	}\
 })

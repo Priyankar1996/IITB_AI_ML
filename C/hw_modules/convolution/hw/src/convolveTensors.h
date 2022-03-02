@@ -31,7 +31,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	out.descriptor.descriptor.dimensions[2] = __dim0__(ker);\
 	out.descriptor.tensor_size = __dim0__(out) * __dim1__(out) * __dim2__(out);\
 	int16_t result_temp,temp;\
-	int p,q,r,i,j,k;\
+	int p=0,q=0,r=0,i=0,j=0,k=0;\
 	int count = 0;\
 	uint64_t img_data;\
 	uint64_t ker_data;\
@@ -44,10 +44,13 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 				result_temp = 0;\
 				while(i < __dim1__(ker))\
 				{\
-					int img_data_array_idx = __GetTensorEntryIndexOffset__(inp,0,p*stride+i,q*stride+j,k);\
-					int ker_data_array_idx = __GetTensorEntryIndexOffset__(ker,r,i,j,k);\
-					uint64_t img_data = inp.data_array[img_data_array_idx >> 2];\
-					uint64_t ker_data = ker.data_array[ker_data_array_idx >> 2];\
+					int x_idx_img = p*stride+i;\
+					int y_idx_img = q*stride+j;\
+					int img_data_array_idx;\
+					__GetImgEntryIndexOffset__(inp,img_data_array_idx,x_idx_img,y_idx_img,k);\
+					int ker_data_array_idx = 0;\
+					__GetKerEntryIndexOffset__(ker,ker_data_array_idx,r,i,j,k);\
+					fprintf(stderr,"img indx %d ker indx %d\n",img_data_array_idx,ker_data_array_idx);\
 					if((count - 4*(count >> 2)) == 0)\
 					{\
 						__getOneTensorBlock__(inp,img_data,img_data_array_idx);\
@@ -57,8 +60,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 					uint8_t temp_ker_rem = ker_data_array_idx - 4*(ker_data_array_idx >> 2);\
 					int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 					int16_t ker_one_block = __getOneBlock__(ker_data,temp_ker_rem);\
-					temp = result_temp;\
-					result_temp = temp + (img_one_block * ker_one_block);\
+					result_temp += (img_one_block * ker_one_block);\
 					k++;\
 					if(k == __dim3__(ker))\
 					{\
@@ -72,12 +74,22 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 					}\
 					count++;\
 				}\
-				int out_data_array_idx = __GetTensorEntryIndexOffset__(out,0,p,q,r);\
+				i = 0;j = 0;k = 0;\
+				int out_data_array_idx;\
+				__GetImgEntryIndexOffset__(out,out_data_array_idx,p,q,r);\
 				uint8_t temp_out_rem = out_data_array_idx - 4*(out_data_array_idx >> 2);\
 				__putOneBlock__(out.data_array[out_data_array_idx >> 2],temp_out_rem,result_temp);\
 			}\
 		}\
 	}\
+})
+
+#define __GetImgEntryIndexOffset__(st,ret_val,x,y,z)({\
+	ret_val = z + st.descriptor.descriptor.dimensions[2]*y + st.descriptor.descriptor.dimensions[2]*st.descriptor.descriptor.dimensions[1]*x;\
+})
+
+#define __GetKerEntryIndexOffset__(st,ret_val,w,x,y,z)({\
+	ret_val = z + st.descriptor.descriptor.dimensions[3]*y + st.descriptor.descriptor.dimensions[3]*st.descriptor.descriptor.dimensions[2]*x + st.descriptor.descriptor.dimensions[3]*st.descriptor.descriptor.dimensions[2]*st.descriptor.descriptor.dimensions[1]*w;\
 })
 
 #define __getOneTensorBlock__(tnsr,data,index)({\

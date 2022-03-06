@@ -31,17 +31,23 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int k = 0;\
 	int j = col_low;\
 	int i = row_low;\
+	int dim2T = __dim2__(T);\
+	int dim1T = __dim1__(T);\
+	int dim0T = __dim0__(T);\
+	int dim2R = __dim2__(R);\
+	int dim1R = __dim1__(R);\
+	int dim0R = __dim0__(R);\
 	while (i < row_high)\
 	{\
-		int img_data_array_idx = k + __dim2__(T)*j + __dim2__(T)*__dim1__(T)*i;\
-		int dest_data_array_idx = k + __dim2__(R)*(j+pad) + __dim2__(R)*__dim1__(R)*(i+pad);\
+		int img_data_array_idx = k + dim2T*j + dim2T*dim1T*i;\
+		int dest_data_array_idx = k + dim2R*(j+pad) + dim2R*dim1R*(i+pad);\
 		uint64_t img_data = T.data_array[img_data_array_idx >> 2];\
 		uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
 		int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 		uint8_t temp_out_rem = dest_data_array_idx - 4*(dest_data_array_idx >> 2);\
-		R.data_array[dest_data_array_idx >> 2] = __putOneBlock__(R.data_array[dest_data_array_idx >> 2],temp_out_rem,img_one_block);\
+		__putOneBlock__(R.data_array[dest_data_array_idx >> 2],temp_out_rem,img_one_block);\
 		k++;\
-		if (k == __dim2__(T))\
+		if (k == dim2T)\
 		{\
 			k = 0;\
 			j++;\
@@ -59,6 +65,5 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 })
 #define __putOneBlock__(array64bit,position,result)({\
 	array64bit = array64bit | (((uint64_t)result) << (position*16));\
-	array64bit;\
 })
 #endif

@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 	T.descriptor.descriptor.row_major_form = 1;
 	T.descriptor.descriptor.dimensions[0] = 4;
 	T.descriptor.descriptor.dimensions[1] = 4;
-	T.descriptor.descriptor.dimensions[2] = 3;
+	T.descriptor.descriptor.dimensions[2] = 8;
 	T.descriptor.tensor_size = T.descriptor.descriptor.dimensions[0] * T.descriptor.descriptor.dimensions[1] * T.descriptor.descriptor.dimensions[2];
 
     for(i = 0; i < __NumberOfElementsInSizedTensor__(T); i++)
@@ -131,17 +131,14 @@ int main(int argc, char* argv[])
 	read_result_dim();
 	read_result_data();
 
-	//fprintf(stdout,"results: \n ");
-	//for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
-	//{
-	//	fprintf(stdout,"R.data_array[%d] = %d\n", i, R.data_array[i]);
-	//}
-	//fprintf(stdout,"done\n");
+	fprintf(stderr,"Size of output is %d,%d,%d\n",R.descriptor.descriptor.dimensions[0],R.descriptor.descriptor.dimensions[1],R.descriptor.descriptor.dimensions[2]);
 	for(i = 0; i < __NumberOfElementsInSizedTensor__(R); i++)
 	{
 		fprintf(stderr,"Result %d = %"PRId16"\n",i,*(((int16_t*)R.data_array) + i));
 	}
 	fprintf(stdout,"done\n");
+
+    fprintf(stderr,"Read back the values from hardware\n");
 
 #ifndef  SW
 	uint64_t et = read_uint64("elapsed_time_pipe");

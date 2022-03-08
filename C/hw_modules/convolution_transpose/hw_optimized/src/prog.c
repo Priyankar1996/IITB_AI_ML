@@ -8,6 +8,11 @@
 #include "sized_tensor.h"
 #include "convolution_transpose_improved.h"
 
+SizedTensor_16K input,output;
+SizedTensor_1024 kernel;
+TensorDescriptor desc_input,desc_output,desc_kernel;
+uint16_t stride[2],padding;
+
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
@@ -16,10 +21,6 @@ void __aa_barrier__();
 	#define __loop_pipeline_var__ {;}
 	#define __aa_barrier__() {;}
 #endif
-
-SizedTensor_16K input,output;
-SizedTensor_1024 kernel;
-uint16_t stride[2],padding;
 
 #define __dt__ int16_t
 
@@ -71,19 +72,19 @@ void sendRemainingElements(int addr, uint16_t ne){
 
 uint16_t testConfigure()
 {
-    input.descriptor.descriptor.data_type = i16;
-    input.descriptor.descriptor.row_major_form = read_uint16 ("ConvTranspose_input_pipe");;
-    input.descriptor.descriptor.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
+    desc_input.data_type = i16;
+    desc_input.row_major_form = read_uint16 ("ConvTranspose_input_pipe");;
+    desc_input.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
     int i;
-    for(i = 0;i < input.descriptor.descriptor.number_of_dimensions;i++){
-        input.descriptor.descriptor.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
+    for(i = 0;i < desc_input.number_of_dimensions;i++){
+        desc_input.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
     }
 
-    kernel.descriptor.descriptor.data_type = i16;
-    kernel.descriptor.descriptor.row_major_form = read_uint16 ("ConvTranspose_input_pipe");
-    kernel.descriptor.descriptor.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
-    for(i = 0;i < kernel.descriptor.descriptor.number_of_dimensions;i++){
-        kernel.descriptor.descriptor.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
+    desc_kernel.data_type = i16;
+    desc_kernel.row_major_form = read_uint16 ("ConvTranspose_input_pipe");
+    desc_kernel.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
+    for(i = 0;i < desc_kernel.number_of_dimensions;i++){
+        desc_kernel.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
     }
 
     for(i=0; i<2; i++)
@@ -91,12 +92,12 @@ uint16_t testConfigure()
 
     padding = read_uint16 ("ConvTranspose_input_pipe");
     
-	output.descriptor.descriptor.dimensions[0] = read_uint16 ("ConvTranspose_input_pipe");
-    output.descriptor.descriptor.dimensions[1] = read_uint16 ("ConvTranspose_input_pipe");
-    output.descriptor.descriptor.dimensions[2] = read_uint16 ("ConvTranspose_input_pipe");
+	desc_output.dimensions[0] = read_uint16 ("ConvTranspose_input_pipe");
+    desc_output.dimensions[1] = read_uint16 ("ConvTranspose_input_pipe");
+    desc_output.dimensions[2] = read_uint16 ("ConvTranspose_input_pipe");
     
-	uint64_t input_size = __NumberOfElementsInSizedTensor__(input);
-    uint64_t kernel_size = __NumberOfElementsInSizedTensor__(kernel);
+	uint64_t input_size = desc_input.dimensions[0]*desc_input.dimensions[1]*desc_input.dimensions[2];
+    uint64_t kernel_size = desc_kernel.dimensions[0]*desc_kernel.dimensions[1]*desc_kernel.dimensions[2]*desc_kernel.dimensions[3];
     for(i = 0; i < (input_size >> 2); i ++)
     {
         uint64_t element;
@@ -124,7 +125,7 @@ uint16_t testConfigure()
 
 void sendOutput()
 {
-    uint64_t size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
+    uint64_t size = desc_output.dimensions[0] * desc_output.dimensions[1] * desc_output.dimensions[2];
     int i;
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
@@ -134,13 +135,14 @@ void sendOutput()
 
 void convTransposeA()
 {
-    uint16_t s0 = read_uint16("Block0_start");
+    uint16_t s0 = read_uint16("Block0_start"); 
     #ifdef SW
         fprintf(stderr,"Block-0 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]/2),
-                               0,(input.descriptor.descriptor.dimensions[1]/2),
+    __ConvTransposeOptimized__(0,tensor_dim_0(desc_input)/2, 
+                               0,tensor_dim_1(desc_input)/2, 
+                               desc_input,desc_kernel,desc_output,
                                input,kernel,stride,padding,output);
     __aa_barrier__();
     #ifdef SW
@@ -156,10 +158,10 @@ void convTransposeB()
         fprintf(stderr,"Block-1 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__(0,(input.descriptor.descriptor.dimensions[0]/2),
-                            (input.descriptor.descriptor.dimensions[1]/2),
-                            input.descriptor.descriptor.dimensions[1],
-                            input,kernel,stride,padding,output);
+    __ConvTransposeOptimized__(0,tensor_dim_0(desc_input)/2,
+                               tensor_dim_1(desc_input)/2,tensor_dim_1(desc_input),
+                               desc_input,desc_kernel,desc_output,
+                               input,kernel,stride,padding,output);
     __aa_barrier__();
     #ifdef SW
         fprintf(stderr,"Block-1 done.\n");
@@ -174,9 +176,9 @@ void convTransposeC()
         fprintf(stderr,"Block-2 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__((input.descriptor.descriptor.dimensions[0]/2),
-                               input.descriptor.descriptor.dimensions[0],0,
-                               (input.descriptor.descriptor.dimensions[1]/2),
+    __ConvTransposeOptimized__(tensor_dim_0(desc_input)/2,tensor_dim_0(desc_input),
+                               0,tensor_dim_1(desc_input)/2,
+                               desc_input,desc_kernel,desc_output,
                                input,kernel,stride,padding,output);
     __aa_barrier__();
     #ifdef SW
@@ -192,10 +194,9 @@ void convTransposeD()
         fprintf(stderr,"Block-3 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__((input.descriptor.descriptor.dimensions[0]/2),
-                               input.descriptor.descriptor.dimensions[0],
-                               (input.descriptor.descriptor.dimensions[1]/2),
-                               input.descriptor.descriptor.dimensions[1],
+    __ConvTransposeOptimized__(tensor_dim_0(desc_input)/2,tensor_dim_0(desc_input),
+                               tensor_dim_1(desc_input)/2,tensor_dim_1(desc_input),
+                               desc_input,desc_kernel,desc_output,
                                input,kernel,stride,padding,output);
     __aa_barrier__();    
     #ifdef SW
@@ -208,6 +209,7 @@ void convTranspose()
 {
     uint16_t rv = testConfigure();
     __aa_barrier__();
+
     #ifndef SW
 	    uint64_t start_time = timer();
     #endif

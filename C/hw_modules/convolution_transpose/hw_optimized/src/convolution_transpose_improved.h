@@ -24,9 +24,9 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 
 #define __dt__ int16_t
 #define __dt_size__ 4
-#define tensor_dim_0(tensor) (tensor.descriptor.descriptor.dimensions[0])
-#define tensor_dim_1(tensor) (tensor.descriptor.descriptor.dimensions[1])
-#define tensor_dim_2(tensor) (tensor.descriptor.descriptor.dimensions[2])
+#define tensor_dim_0(td) (td.dimensions[0])
+#define tensor_dim_1(td) (td.dimensions[1])
+#define tensor_dim_2(td) (td.dimensions[2])
 
 /*#define __ConvTransposeOptimized__(row_low,row_high,col_low,col_high,input,kernel,stride,padding,output) ({\
     __dt__ row,col,channel,add_src,add_dest_dim0,add_dest_dim1,add_out;\
@@ -46,16 +46,17 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
         }\
     }\
 })*/
-#define __CheckEndOfWhile__(dim0,dim1,dim2,dim0_high,dim1_high) ({\
+
+#define __CheckEndOfWhile__(dim0,dim1,dim2,dim1_low,dim0_high,dim1_high,dim2_high) ({\
     __dt__ end_flag = 0;\
-    if((dim2 + 4) < tensor_dim_2(input))\
+    if((dim2 + 4) < dim2_high)\
 	        dim2+=4;\
 	else {\
 	    dim2=0;\
         dim1++;\
 	    if(dim1 == dim1_high) {\
 	        dim0++;\
-            dim1=0;\
+            dim1=dim1_low;\
         }\
         if(dim0 == dim0_high)\
             end_flag = 1;\
@@ -63,18 +64,19 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
     end_flag;\
 })
 
-#define __ConvTransposeOptimized__(row_low,row_high,col_low,col_high,input,kernel,stride,padding,output) ({\
+#define __ConvTransposeOptimized__(row_low,row_high,col_low,col_high,td_in,td_ker,td_out,input,kernel,stride,padding,output) ({\
     __dt__ input_dim0=row_low,input_dim1=col_low,input_dim2=0,add_dest_dim0,add_src_0,\
             add_dest_dim1,add_dest_dim2,add_out_0,flag;\
     while(1) {\
-        add_src_0 = input_dim2 + tensor_dim_2(input)*(input_dim1 + tensor_dim_1(input)*input_dim0);\
-        add_dest_dim0 = input_dim0*stride[0] + tensor_dim_1(kernel) - padding - 1;\
-        add_dest_dim1 = input_dim1*stride[1] + tensor_dim_2(kernel) - padding - 1;\
-        add_out_0 = input_dim2 + tensor_dim_2(output)*(add_dest_dim1 + tensor_dim_1(output)*add_dest_dim0);\
+        add_src_0 = input_dim2 + tensor_dim_2(td_in)*(input_dim1 + tensor_dim_1(td_in)*input_dim0);\
+        add_dest_dim0 = input_dim0*stride[0] + tensor_dim_1(td_ker) - padding - 1;\
+        add_dest_dim1 = input_dim1*stride[1] + tensor_dim_2(td_ker) - padding - 1;\
+        add_out_0 = input_dim2 + tensor_dim_2(td_out)*(add_dest_dim1 + tensor_dim_1(td_out)*add_dest_dim0);\
         output.data_array[add_out_0 >> 2] = input.data_array[add_src_0 >> 2];\
-        flag = __CheckEndOfWhile__(input_dim0,input_dim1,input_dim2,row_high,col_high);\
+        flag = __CheckEndOfWhile__(input_dim0,input_dim1,input_dim2,col_low,row_high,col_high,tensor_dim_2(td_in));\
         if(flag == 1)\
             break;\
     }\
 })
+
 #endif

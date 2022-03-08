@@ -26,6 +26,7 @@ DEFINE_THREAD(maxPoolCore4);
 #endif
 
 SizedTensor_16K T,B;
+TensorDescriptor desc_T,desc_B;
 
 int main(int argc, char**argv){
 
@@ -73,51 +74,51 @@ int main(int argc, char**argv){
 	fscanf(file,"%hhd",&rand_data);
 
 	#ifdef __U8
-		T.descriptor.descriptor.data_type = u8;
+		desc_T.data_type = u8;
 		fprintf(octaveInFile,"0\n");
 	#endif
 	#ifdef __U16
-		T.descriptor.descriptor.data_type = u16;
+		desc_T.data_type = u16;
 		fprintf(octaveInFile,"1\n");
 	#endif
 	#ifdef __U32
-		T.descriptor.descriptor.data_type = u32;
+		desc_T.data_type = u32;
 		fprintf(octaveInFile,"2\n");
 	#endif
 	#ifdef __U64
-		T.descriptor.descriptor.data_type = u64;
+		desc_T.data_type = u64;
 		fprintf(octaveInFile,"3\n");
 	#endif
 	#ifdef __I8
-		T.descriptor.descriptor.data_type = i8;
+		desc_T.data_type = i8;
 		fprintf(octaveInFile,"4\n");
 	#endif
 	#ifdef __I16
-		T.descriptor.descriptor.data_type = i16;
+		desc_T.data_type = i16;
 		fprintf(octaveInFile,"5\n");
 	#endif
 	#ifdef __I32
-		T.descriptor.descriptor.data_type = i32;
+		desc_T.data_type = i32;
 		fprintf(octaveInFile,"6\n");
 	#endif
 	#ifdef __I64
-		T.descriptor.descriptor.data_type = i64;
+		desc_T.data_type = i64;
 		fprintf(octaveInFile,"7\n");
 	#endif
 	#ifdef __F8
-		T.descriptor.descriptor.data_type = float8;
+		desc_T.data_type = float8;
 		fprintf(octaveInFile,"8\n");
 	#endif
 	#ifdef __F16
-		T.descriptor.descriptor.data_type = float16;
+		desc_T.data_type = float16;
 		fprintf(octaveInFile,"9\n");
 	#endif
 	#ifdef __F32
-		T.descriptor.descriptor.data_type = float32;
+		desc_T.data_type = float32;
 		fprintf(octaveInFile,"10\n");
 	#endif
 	#ifdef __F64
-		T.descriptor.descriptor.data_type = float64;
+		desc_T.data_type = float64;
 		fprintf(octaveInFile,"11\n");
 	#endif
 
@@ -125,24 +126,23 @@ int main(int argc, char**argv){
 	uint16_t length,stride;
 	fscanf(file,"%hu%hu",&length,&stride);
 	fprintf(octaveInFile,"%hu\n%hu\n",length,stride);
-	write_uint16("maxpool_input_pipe",length);
 	write_uint16("maxpool_input_pipe",stride);
 
-	T.descriptor.descriptor.number_of_dimensions = 3;
-	B.descriptor.descriptor.number_of_dimensions = T.descriptor.descriptor.number_of_dimensions;
+	desc_T.number_of_dimensions = 3;
+	desc_B.number_of_dimensions = desc_T.number_of_dimensions;
 	int i;
-	for (i = 0;i < T.descriptor.descriptor.number_of_dimensions;i++){
-		fscanf(file,"%d",&T.descriptor.descriptor.dimensions[i]);
-		fprintf(octaveInFile,"%d\n",T.descriptor.descriptor.dimensions[i]);
-		write_uint16("maxpool_input_pipe",T.descriptor.descriptor.dimensions[i]);
+	for (i = 0;i < desc_T.number_of_dimensions;i++){
+		fscanf(file,"%d",&desc_T.dimensions[i]);
+		fprintf(octaveInFile,"%d\n",desc_T.dimensions[i]);
+		write_uint16("maxpool_input_pipe",desc_T.dimensions[i]);
 	
-		if (i==2) B.descriptor.descriptor.dimensions[i] = T.descriptor.descriptor.dimensions[i];
-		else B.descriptor.descriptor.dimensions[i] = 1 + (T.descriptor.descriptor.dimensions[i]-length)/stride;
-		write_uint16("maxpool_input_pipe",B.descriptor.descriptor.dimensions[i]);
+		if (i==2) desc_B.dimensions[i] = desc_T.dimensions[i];
+		else desc_B.dimensions[i] = 1 + (desc_T.dimensions[i]-length)/stride;
+		write_uint16("maxpool_input_pipe",desc_B.dimensions[i]);
 	}
 	
 
-	uint64_t size = __NumberOfElementsInSizedTensor__(T);
+	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
 
 	int16_t temp[4];
 	for (i = 0; i < size; i++)
@@ -160,12 +160,12 @@ int main(int argc, char**argv){
 	fprintf(stderr,"Checkpoint\n");
 	
 	fprintf(outFile,"Size of output is ");
-	for (i =0; i<B.descriptor.descriptor.number_of_dimensions;i++)
+	for (i =0; i<desc_B.number_of_dimensions;i++)
 	{
-		fprintf(outFile,"%hu ",B.descriptor.descriptor.dimensions[i]);
+		fprintf(outFile,"%hu ",desc_B.dimensions[i]);
 	}
 	fprintf(outFile,"\n");
-	size = __NumberOfElementsInSizedTensor__(B);
+	size = __NumberOfElementsInSizedTensor__(desc_B);
 	fprintf(stderr,"Size of output is %d\n",size );
 	fprintf(stderr,"Reading back the values from hardware\n");
 	

@@ -14,10 +14,10 @@ void maxPoolCore3();
 void maxPoolCore4();
 
 #define __I16 1
-#define __dim0__(A) ({A.descriptor.descriptor.dimensions[0];})
-#define __dim1__(A) ({A.descriptor.descriptor.dimensions[1];})
-#define __dim2__(A) ({A.descriptor.descriptor.dimensions[2];})
-#define __dim22__(A) ({A.descriptor.descriptor.dimensions[2]>>2;})
+#define __dim0__(A) ({A.dimensions[0];})
+#define __dim1__(A) ({A.dimensions[1];})
+#define __dim2__(A) ({A.dimensions[2];})
+#define __dim22__(A) ({A.dimensions[2]>>2;})
 
 #define __dt__ int16_t
 #define __dt_min_val__ 0x8000
@@ -99,8 +99,12 @@ void __aa_barrier__();
 		int64_t element3 = min_val10;\
 		int64_t element4 = min_val9;\
 		element1 <<= 48;\
+		element1 &= 0xFFFF000000000000;\
 		element2 <<= 32;\
+		element2 &= 0xFFFF00000000;\
 		element3 <<= 16;\
+		element3 &= 0xFFFF0000;\
+		element4 &= 0xFFFF;\
 		int64_t element = element1 + element2 + element3 + element4;\
 		element;\
 	})
@@ -122,10 +126,8 @@ void __aa_barrier__();
 	}\
 })
 
-#define __maxPoolOfTensors3D_div__(src, dst, stride, rs, cs, re, ce) ({\
+#define __maxPoolOfTensors3D_div__(src, dst, stride, rs, cs, re, ce, dim1d, dim1, offset1, offset2) ({\
 	uint32_t address, add_src;\
-	uint16_t dim1d = __dim1__(src), dim1 = __dim1__(dst);\
-	uint32_t offset1 = __dim22__(dst), offset2 = dim1d*offset1;\
 	uint16_t row=rs,col=cs,chl=0;\
 	while(1)\
 	{\

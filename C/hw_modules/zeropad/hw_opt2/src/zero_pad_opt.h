@@ -29,7 +29,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 
 #define __zero_pad_opt__(row_low,row_high,col_low,col_high,T,pad,R) ({\
 	int k = 0;\
-	int j = col_low;\
+	int j1 = col_low,j;\
 	int i = row_low;\
 	int dim2T = __dim2__(T);\
 	int dim1T = __dim1__(T);\
@@ -37,10 +37,13 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int dim2R = __dim2__(R);\
 	int dim1R = __dim1__(R);\
 	int dim0R = __dim0__(R);\
+	int dim21T = dim2T*dim1T;\
+	int dim21R = dim2R*dim1R;\
+	j = j1;\
 	while (i < row_high)\
 	{\
-		int img_data_array_idx = k + dim2T*j + dim2T*dim1T*i;\
-		int dest_data_array_idx = k + dim2R*(j+pad) + dim2R*dim1R*(i+pad);\
+		int img_data_array_idx = k + dim2T*j + dim21T*i;\
+		int dest_data_array_idx = k + dim2R*(j+pad) + dim21R*(i+pad);\
 		uint64_t img_data = T.data_array[img_data_array_idx >> 2];\
 		uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
 		int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
@@ -53,7 +56,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 			j++;\
 			if (j == col_high)\
 			{\
-				j = 0;\
+				j = j1;\
 				i++;\
 			}\
 		}\

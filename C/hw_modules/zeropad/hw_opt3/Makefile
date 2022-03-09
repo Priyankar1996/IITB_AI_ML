@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T convTranspose -T convTransposeA -T convTransposeB -T convTransposeC -T convTransposeD -T timerDaemon
+TOPMODULES=-T zeropad3D -T zeropad3D_A -T zeropad3D_B -T zeropad3D_C -T zeropad3D_D  -T timerDaemon
 
 
 # compile with SW defined.
@@ -31,11 +31,11 @@ SW: src/prog.c testbench.c
 
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
-C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
+
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c src/convolution_transpose_improved.h
+c2llvmbc: src/prog.c src/zero_pad_opt.h
 	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o

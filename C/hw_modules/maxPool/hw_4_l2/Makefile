@@ -31,7 +31,7 @@ SW: src/prog.c testbench.c
 
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
-
+C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.

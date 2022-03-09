@@ -149,8 +149,8 @@ int main(int argc, char* argv[])
 	PTHREAD_CANCEL(zeropad3D);
 	PTHREAD_CANCEL(zeropad3D_A);
 	PTHREAD_CANCEL(zeropad3D_B);
-	// PTHREAD_CANCEL(zeropad3D_C);
-	// PTHREAD_CANCEL(zeropad3D_D);
+	PTHREAD_CANCEL(zeropad3D_C);
+	PTHREAD_CANCEL(zeropad3D_D);
 	close_pipe_handler();
 #endif
 return 0;

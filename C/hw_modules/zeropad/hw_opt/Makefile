@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T conv2D -T timerDaemon
+TOPMODULES=-T zeropad3D -T timerDaemon
 
 
 # compile with SW defined.
@@ -35,7 +35,7 @@ HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c src/convolveTensors.h
+c2llvmbc: src/prog.c src/zero_pad.h
 	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o

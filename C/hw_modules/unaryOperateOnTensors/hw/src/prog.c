@@ -6,12 +6,7 @@
 #include <Pipes.h>
 #include "pipeHandler.h"
 #include "sized_tensor.h"
-#include "convolution_transpose_improved.h"
-
-SizedTensor_16K input,output;
-SizedTensor_1024 kernel;
-TensorDescriptor desc_input,desc_output,desc_kernel;
-uint16_t stride[2],padding;
+#include "unaryfn.h"
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
@@ -22,13 +17,16 @@ void __aa_barrier__();
 	#define __aa_barrier__() {;}
 #endif
 
+SizedTensor_16K input,output;
+TensorDescriptor desc_input,desc_output;
+
 #define __dt__ int16_t
 
 #define __get4xi16__(element) ({\
-	element = read_uint16 ("ConvTranspose_input_pipe");\
-	element = (element << 16) + read_uint16 ("ConvTranspose_input_pipe");\
-	element = (element << 16) + read_uint16 ("ConvTranspose_input_pipe");\
-	element = (element << 16) + read_uint16 ("ConvTranspose_input_pipe");\
+	element = read_uint16 ("UnaryOperate_input_pipe");\
+	element = (element << 16) + read_uint16 ("UnaryOperate_input_pipe");\
+	element = (element << 16) + read_uint16 ("UnaryOperate_input_pipe");\
+	element = (element << 16) + read_uint16 ("UnaryOperate_input_pipe");\
 })
 
 #define __set4xi16__(addr) ({\
@@ -41,16 +39,16 @@ void __aa_barrier__();
 	out_data[1]= element & 0xFFFF;\
 	element>>=16;\
 	out_data[0] = element & 0xFFFF;\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[0]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[1]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[2]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[3]);\
+	write_uint16 ("UnaryOperate_output_pipe",out_data[0]);\
+	write_uint16 ("UnaryOperate_output_pipe",out_data[1]);\
+	write_uint16 ("UnaryOperate_output_pipe",out_data[2]);\
+	write_uint16 ("UnaryOperate_output_pipe",out_data[3]);\
 })
 
 uint64_t getRemainingElements(uint16_t ne){
 	uint64_t element = 0;uint16_t n;
 	for (n = 0 ; n < ne; n++){
-		element += read_uint16 ("ConvTranspose_input_pipe");
+		element += read_uint16 ("UnaryOperate_input_pipe");
 		element <<= 16;
 	}
 	element <<= 16*(3-ne);
@@ -67,37 +65,25 @@ void sendRemainingElements(int addr, uint16_t ne){
 	element>>=16;\
 	out_data[0] = element & 0xFFFF;\
 	for (n = 0; n < ne; n++)
-		write_uint16 ("ConvTranspose_output_pipe",out_data[n]);
+		write_uint16 ("UnaryOperate_output_pipe",out_data[n]);
 }
 
 uint16_t testConfigure()
 {
     desc_input.data_type = i16;
-    desc_input.row_major_form = read_uint16 ("ConvTranspose_input_pipe");;
-    desc_input.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
+    desc_input.row_major_form = read_uint16 ("UnaryOperate_input_pipe");;
+    desc_input.number_of_dimensions = read_uint16 ("UnaryOperate_input_pipe");
     int i;
     for(i = 0;i < desc_input.number_of_dimensions;i++){
-        desc_input.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
+        desc_input.dimensions[i] = read_uint16 ("UnaryOperate_input_pipe");
     }
-
-    desc_kernel.data_type = i16;
-    desc_kernel.row_major_form = read_uint16 ("ConvTranspose_input_pipe");
-    desc_kernel.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
-    for(i = 0;i < desc_kernel.number_of_dimensions;i++){
-        desc_kernel.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
-    }
-
-    for(i=0; i<2; i++)
-        stride[i] = read_uint16 ("ConvTranspose_input_pipe");
-
-    padding = read_uint16 ("ConvTranspose_input_pipe");
     
-	desc_output.dimensions[0] = read_uint16 ("ConvTranspose_input_pipe");
-    desc_output.dimensions[1] = read_uint16 ("ConvTranspose_input_pipe");
-    desc_output.dimensions[2] = read_uint16 ("ConvTranspose_input_pipe");
+	desc_output.dimensions[0] = read_uint16 ("UnaryOperate_input_pipe");
+    desc_output.dimensions[1] = read_uint16 ("UnaryOperate_input_pipe");
+    desc_output.dimensions[2] = read_uint16 ("UnaryOperate_input_pipe");
     
 	uint64_t input_size = desc_input.dimensions[0]*desc_input.dimensions[1]*desc_input.dimensions[2];
-    uint64_t kernel_size = desc_kernel.dimensions[0]*desc_kernel.dimensions[1]*desc_kernel.dimensions[2]*desc_kernel.dimensions[3];
+
     for(i = 0; i < (input_size >> 2); i ++)
     {
         uint64_t element;
@@ -109,17 +95,6 @@ uint16_t testConfigure()
         input.data_array[i] = element;
     }
     if (input_size&3) input.data_array[i] = getRemainingElements(input_size&3);
-    for(i = 0; i < (kernel_size >> 2); i ++)
-    {
-        uint64_t element;
-        __get4xi16__(element);
-        kernel.data_array[i] = element;
-    }
-    if (kernel_size&3) kernel.data_array[i] = getRemainingElements(kernel_size&3);
-    /*uint64_t output_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
-    for(i = 0; i < output_size>>2; i++)
-        output.data_array[i] = 0;*/
-
     return(input_size);
 }
 
@@ -133,17 +108,14 @@ void sendOutput()
     if (size&3) sendRemainingElements(i,size&3);
 }
 
-void convTransposeA()
+void unaryOperateA()
 {
-    uint16_t s0 = read_uint16("Block0_start"); 
+    uint16_t s0 = read_uint16("Block0_start");
     #ifdef SW
         fprintf(stderr,"Block-0 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__(0,tensor_dim_0(desc_input)/2, 
-                               0,tensor_dim_1(desc_input)/2, 
-                               desc_input,desc_kernel,desc_output,
-                               input,kernel,stride,padding,output);
+    __UnaryOperate__(input,0,0,desc_input.dimensions[0]/2,desc_input.dimensions[1]/2,desc_input,desc_output,output);
     __aa_barrier__();
     #ifdef SW
 	    fprintf(stderr,"Block-0 done.\n");
@@ -151,17 +123,14 @@ void convTransposeA()
 	write_uint16 ("Block0_done", s0);
 }
 
-void convTransposeB()
+void unaryOperateB()
 {
     uint16_t s1 = read_uint16("Block1_start");
     #ifdef SW
         fprintf(stderr,"Block-1 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__(0,tensor_dim_0(desc_input)/2,
-                               tensor_dim_1(desc_input)/2,tensor_dim_1(desc_input),
-                               desc_input,desc_kernel,desc_output,
-                               input,kernel,stride,padding,output);
+    __UnaryOperate__(input,0,desc_input.dimensions[1]/2,desc_input.dimensions[0]/2,desc_input.dimensions[1],desc_input,desc_output,output);
     __aa_barrier__();
     #ifdef SW
         fprintf(stderr,"Block-1 done.\n");
@@ -169,17 +138,14 @@ void convTransposeB()
     write_uint16 ("Block1_done", s1);
 }
 
-void convTransposeC()
+void unaryOperateC()
 {
     uint16_t s2 = read_uint16("Block2_start");
     #ifdef SW
         fprintf(stderr,"Block-2 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__(tensor_dim_0(desc_input)/2,tensor_dim_0(desc_input),
-                               0,tensor_dim_1(desc_input)/2,
-                               desc_input,desc_kernel,desc_output,
-                               input,kernel,stride,padding,output);
+    __UnaryOperate__(input,desc_input.dimensions[0]/2,0,desc_input.dimensions[0],desc_input.dimensions[1]/2,desc_input,desc_output,output);
     __aa_barrier__();
     #ifdef SW
         fprintf(stderr,"Block-2 done.\n");
@@ -187,17 +153,14 @@ void convTransposeC()
     write_uint16 ("Block2_done", s2);
 }
 
-void convTransposeD()
+void unaryOperateD()
 {
     uint16_t s3 = read_uint16("Block3_start");
     #ifdef SW
         fprintf(stderr,"Block-3 started.\n");
     #endif
     __aa_barrier__();
-    __ConvTransposeOptimized__(tensor_dim_0(desc_input)/2,tensor_dim_0(desc_input),
-                               tensor_dim_1(desc_input)/2,tensor_dim_1(desc_input),
-                               desc_input,desc_kernel,desc_output,
-                               input,kernel,stride,padding,output);
+    __UnaryOperate__(input,desc_input.dimensions[0]/2,desc_input.dimensions[1]/2,desc_input.dimensions[0],desc_input.dimensions[1],desc_input,desc_output,output);
     __aa_barrier__();    
     #ifdef SW
         fprintf(stderr,"Block-3 done.\n");
@@ -205,11 +168,10 @@ void convTransposeD()
     write_uint16 ("Block3_done", s3);
 }
 
-void convTranspose()
+void unaryOperate()
 {
     uint16_t rv = testConfigure();
     __aa_barrier__();
-
     #ifndef SW
 	    uint64_t start_time = timer();
     #endif
@@ -229,6 +191,5 @@ void convTranspose()
 	    write_uint64("elapsed_time_pipe", elapsed_time);
     #endif
     __aa_barrier__();
-
     sendOutput();
 }

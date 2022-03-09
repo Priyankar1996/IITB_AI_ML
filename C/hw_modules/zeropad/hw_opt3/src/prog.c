@@ -8,6 +8,11 @@
 #include "sized_tensor.h"
 #include "zero_pad_opt.h"
 
+
+SizedTensor_16K T,R;
+TensorDescriptor des_inp,des_out;
+uint16_t pad;
+
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
@@ -16,9 +21,6 @@ void __aa_barrier__();
 	#define __loop_pipeline_var__ {;}
 	#define __aa_barrier__() {;}
 #endif
-
-SizedTensor_16K T,R;
-uint16_t pad;
 
 #define __dt__ int16_t
 
@@ -70,21 +72,23 @@ void sendRemainingElements(int addr, uint16_t ne){
 
 uint16_t testConfigure()
 {
-    T.descriptor.descriptor.data_type = i16;
-    T.descriptor.descriptor.row_major_form = read_uint16 ("zeropad_input_pipe");;
-    T.descriptor.descriptor.number_of_dimensions = read_uint16 ("zeropad_input_pipe");
+    des_inp.data_type = i16;
+    des_inp.row_major_form = read_uint16 ("zeropad_input_pipe");;
+    des_inp.number_of_dimensions = read_uint16 ("zeropad_input_pipe");
     int i;
-    for(i = 0;i < T.descriptor.descriptor.number_of_dimensions;i++){
-        T.descriptor.descriptor.dimensions[i] = read_uint16 ("zeropad_input_pipe");
+    for(i = 0;i < des_inp.number_of_dimensions;i++){
+        des_inp.dimensions[i] = read_uint16 ("zeropad_input_pipe");
     }
 
     pad = read_uint16 ("zeropad_input_pipe");
     
-	R.descriptor.descriptor.dimensions[0] = read_uint16 ("zeropad_input_pipe");
-    R.descriptor.descriptor.dimensions[1] = read_uint16 ("zeropad_input_pipe");
-    R.descriptor.descriptor.dimensions[2] = read_uint16 ("zeropad_input_pipe");
+	des_out.dimensions[0] = read_uint16 ("zeropad_input_pipe");
+    des_out.dimensions[1] = read_uint16 ("zeropad_input_pipe");
+    des_out.dimensions[2] = read_uint16 ("zeropad_input_pipe");
     
-	uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
+	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
+    uint64_t input_size = des_inp.dimensions[0]*des_inp.dimensions[1]*des_inp.dimensions[2];
+    
     for(i = 0; i < (input_size >> 2); i ++)
     {
         uint64_t element;
@@ -101,7 +105,7 @@ uint16_t testConfigure()
 
 void sendOutput()
 {
-    uint64_t size = R.descriptor.descriptor.dimensions[0] * R.descriptor.descriptor.dimensions[1] * R.descriptor.descriptor.dimensions[2];
+    uint64_t size = des_out.dimensions[0] * des_out.dimensions[1] * des_out.dimensions[2];
     int i;
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
@@ -116,8 +120,8 @@ void zeropad3D_A()
         fprintf(stderr,"Block-0 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__(0,(T.descriptor.descriptor.dimensions[0]/2),
-                               0,(T.descriptor.descriptor.dimensions[1]/2),
+    __zero_pad_opt__(0,(des_inp.dimensions[0]/2),
+                               0,(des_inp.dimensions[1]/2),des_inp,des_out,
                                T,pad,R);
     __aa_barrier__();
     #ifdef SW
@@ -133,9 +137,9 @@ void zeropad3D_B()
         fprintf(stderr,"Block-1 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__(0,(T.descriptor.descriptor.dimensions[0]/2),
-                            (T.descriptor.descriptor.dimensions[1]/2),
-                            T.descriptor.descriptor.dimensions[1],
+    __zero_pad_opt__(0,(des_inp.dimensions[0]/2),
+                            (des_inp.dimensions[1]/2),
+                            des_inp.dimensions[1],des_inp,des_out,
                             T,pad,R);
     __aa_barrier__();
     #ifdef SW
@@ -151,9 +155,9 @@ void zeropad3D_C()
         fprintf(stderr,"Block-2 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((T.descriptor.descriptor.dimensions[0]/2),
-                               T.descriptor.descriptor.dimensions[0],0,
-                               (T.descriptor.descriptor.dimensions[1]/2),
+    __zero_pad_opt__((des_inp.dimensions[0]/2),
+                               des_inp.dimensions[0],0,
+                               (des_inp.dimensions[1]/2),des_inp,des_out,
                                T,pad,R);
     __aa_barrier__();
     #ifdef SW
@@ -169,10 +173,10 @@ void zeropad3D_D()
         fprintf(stderr,"Block-3 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((T.descriptor.descriptor.dimensions[0]/2),
-                               T.descriptor.descriptor.dimensions[0],
-                               (T.descriptor.descriptor.dimensions[1]/2),
-                               T.descriptor.descriptor.dimensions[1],
+    __zero_pad_opt__((des_inp.dimensions[0]/2),
+                               des_inp.dimensions[0],
+                               (des_inp.dimensions[1]/2),
+                               des_inp.dimensions[1],des_inp,des_out,
                                T,pad,R);
     __aa_barrier__();    
     #ifdef SW
@@ -185,6 +189,7 @@ void zeropad3D()
 {
     uint16_t rv = testConfigure();
     __aa_barrier__();
+
     #ifndef SW
 	    uint64_t start_time = timer();
     #endif

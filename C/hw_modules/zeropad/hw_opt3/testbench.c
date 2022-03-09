@@ -20,14 +20,13 @@
 
 #define __UpdateOutputDescriptorZeropadTensors__(T,pad,R) ({\
 	fprintf(stderr,"Updating output descriptor and writing inputs.\n");\
-    R.descriptor.descriptor.data_type = T.descriptor.descriptor.data_type;\
-    R.descriptor.descriptor.number_of_dimensions = T.descriptor.descriptor.number_of_dimensions;\
+    des_out.data_type = T.data_type;\
+    des_out.number_of_dimensions = T.number_of_dimensions;\
 	int ji;\
-    R.descriptor.descriptor.row_major_form = T.descriptor.descriptor.row_major_form;\
-    R.descriptor.descriptor.dimensions[0] = T.descriptor.descriptor.dimensions[0] + 2*pad;\
-    R.descriptor.descriptor.dimensions[1] = T.descriptor.descriptor.dimensions[1] + 2*pad;\
-	R.descriptor.descriptor.dimensions[R.descriptor.descriptor.number_of_dimensions-1] = T.descriptor.descriptor.dimensions[T.descriptor.descriptor.number_of_dimensions-1];\
-	R.descriptor.tensor_size = R.descriptor.descriptor.dimensions[0] * R.descriptor.descriptor.dimensions[1] * R.descriptor.descriptor.dimensions[2];\
+    des_out.row_major_form = T.row_major_form;\
+    des_out.dimensions[0] = T.dimensions[0] + 2*pad;\
+    des_out.dimensions[1] = T.dimensions[1] + 2*pad;\
+	des_out.dimensions[des_out.number_of_dimensions-1] = T.dimensions[T.number_of_dimensions-1];\
 })
 
 #define __dt__ int16_t
@@ -42,6 +41,7 @@ DEFINE_THREAD(zeropad3D_D);
 
 SizedTensor_16K T,R;
 uint16_t pad;
+TensorDescriptor des_inp,des_out;
 
 int main(int argc,char **argv)
 {
@@ -99,67 +99,67 @@ int main(int argc,char **argv)
     
     //Take datatype as input
     #ifdef __U8
-		T.descriptor.descriptor.data_type = u8;
+		des_inp.data_type = u8;
 	#endif
 	#ifdef __U16
-		T.descriptor.descriptor.data_type = u16;
+		des_inp.data_type = u16;
 	#endif
 	#ifdef __U32
-		T.descriptor.descriptor.data_type = u32;
+		des_inp.data_type = u32;
 	#endif
 	#ifdef __U64
-		T.descriptor.descriptor.data_type = u64;
+		des_inp.data_type = u64;
 	#endif
 	#ifdef __I8
-		T.descriptor.descriptor.data_type = i8;
+		des_inp.data_type = i8;
 	#endif
 	#ifdef __I16
-		T.descriptor.descriptor.data_type = i16;
+		des_inp.data_type = i16;
 	#endif
 	#ifdef __I32
-		T.descriptor.descriptor.data_type = i32;
+		des_inp.data_type = i32;
 	#endif
 	#ifdef __I64
-		T.descriptor.descriptor.data_type = i64;
+		des_inp.data_type = i64;
 	#endif
 	#ifdef __F8
-		T.descriptor.descriptor.data_type = float8;
+		des_inp.data_type = float8;
 	#endif
 	#ifdef __F16
-        T.descriptor.descriptor.data_type = float16;
+        des_inp.data_type = float16;
 	#endif
 	#ifdef __F32
-		T.descriptor.descriptor.data_type = float32;
+		des_inp.data_type = float32;
 	#endif
 	#ifdef __F64
-		T.descriptor.descriptor.data_type = float64;
+		des_inp.data_type = float64;
 	#endif
 
-    fscanf(input_file,"%hhd",&T.descriptor.descriptor.row_major_form);
-	write_uint16("zeropad_input_pipe",T.descriptor.descriptor.row_major_form);
-    fscanf(input_file,"%d",&T.descriptor.descriptor.number_of_dimensions);
-	write_uint16("zeropad_input_pipe",T.descriptor.descriptor.number_of_dimensions);
+    fscanf(input_file,"%hhd",&des_inp.row_major_form);
+	write_uint16("zeropad_input_pipe",des_inp.row_major_form);
+    fscanf(input_file,"%d",&des_inp.number_of_dimensions);
+	write_uint16("zeropad_input_pipe",des_inp.number_of_dimensions);
 	int ii;
-	for (ii = 0;ii < T.descriptor.descriptor.number_of_dimensions;ii++){
-		fscanf(input_file,"%d",&T.descriptor.descriptor.dimensions[ii]);
-        write_uint16("zeropad_input_pipe",T.descriptor.descriptor.dimensions[ii]);
+	for (ii = 0;ii < des_inp.number_of_dimensions;ii++){
+		fscanf(input_file,"%d",&des_inp.dimensions[ii]);
+        write_uint16("zeropad_input_pipe",des_inp.dimensions[ii]);
 	}
-	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",T.descriptor.descriptor.dimensions[0],T.descriptor.descriptor.dimensions[1],T.descriptor.descriptor.dimensions[2]);
-	T.descriptor.tensor_size = __NumberOfElementsInSizedTensor__(T);
+	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",des_inp.dimensions[0],des_inp.dimensions[1],des_inp.dimensions[2]);
 
 	fscanf(param_file,"%d",&pad);
 	write_uint16("zeropad_input_pipe",pad);
 	
 	fprintf(stderr,"Read pad value:%d\n",pad);
-	__UpdateOutputDescriptorZeropadTensors__(T,pad,R);
-    fprintf(stderr,"Read output descriptor %d,%d,%d.\n",R.descriptor.descriptor.dimensions[0],R.descriptor.descriptor.dimensions[1],R.descriptor.descriptor.dimensions[2]);
+	__UpdateOutputDescriptorZeropadTensors__(des_inp,pad,des_out);
+    fprintf(stderr,"Read output descriptor %d,%d,%d.\n",des_out.dimensions[0],des_out.dimensions[1],des_out.dimensions[2]);
 	for(ii = 0;ii < 3;ii++){
-		write_uint16("zeropad_input_pipe",R.descriptor.descriptor.dimensions[ii]);
+		write_uint16("zeropad_input_pipe",des_out.dimensions[ii]);
 	}
 
-	uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
+	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
+	uint64_t input_size = des_inp.dimensions[0]*des_inp.dimensions[1]*des_inp.dimensions[2];
 
-    if (T.descriptor.descriptor.data_type == i16){
+    if (des_inp.data_type == i16){
 		__dt__ temp[4];
 		for (ii = 0; ii < input_size; ii++)
 		{
@@ -178,10 +178,10 @@ int main(int argc,char **argv)
 	
     fprintf(stderr,"Reading the output values from hardware\n");
 	fprintf(out_file,"\n");
-	int size = __NumberOfElementsInSizedTensor__(R);
-	fprintf(stderr,"Size of output is %d,%d,%d\n",R.descriptor.descriptor.dimensions[0],R.descriptor.descriptor.dimensions[1],R.descriptor.descriptor.dimensions[2]);
+	int size = des_out.dimensions[0]*des_out.dimensions[1]*des_out.dimensions[2];
+	fprintf(stderr,"Size of output is %d,%d,%d\n",des_out.dimensions[0],des_out.dimensions[1],des_out.dimensions[2]);
 
-	if (R.descriptor.descriptor.data_type == i16){
+	if (des_out.data_type == i16){
 		__dt__ val;
 		for (ii = 0; ii < (size); ii++)
 		{

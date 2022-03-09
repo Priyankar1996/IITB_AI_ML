@@ -23,20 +23,20 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	#define __loop_pipeline_var__ {;}
 #endif
 
-#define __dim0__(T) ({T.descriptor.descriptor.dimensions[0];})
-#define __dim1__(T) ({T.descriptor.descriptor.dimensions[1];})
-#define __dim2__(T) ({T.descriptor.descriptor.dimensions[2];})
+#define __dim0__(td) ({td.dimensions[0];})
+#define __dim1__(td) ({td.dimensions[1];})
+#define __dim2__(td) ({td.dimensions[2];})
 
-#define __zero_pad_opt__(row_low,row_high,col_low,col_high,T,pad,R) ({\
+#define __zero_pad_opt__(row_low,row_high,col_low,col_high,td_in,td_out,T,pad,R) ({\
 	int k = 0;\
 	int j1 = col_low,j;\
 	int i = row_low;\
-	int dim2T = __dim2__(T);\
-	int dim1T = __dim1__(T);\
-	int dim0T = __dim0__(T);\
-	int dim2R = __dim2__(R);\
-	int dim1R = __dim1__(R);\
-	int dim0R = __dim0__(R);\
+	int dim2T = __dim2__(td_in);\
+	int dim1T = __dim1__(td_in);\
+	int dim0T = __dim0__(td_in);\
+	int dim2R = __dim2__(td_out);\
+	int dim1R = __dim1__(td_out);\
+	int dim0R = __dim0__(td_out);\
 	int dim21T = dim2T*dim1T;\
 	int dim21R = dim2R*dim1R;\
 	j = j1;\

@@ -115,7 +115,7 @@ void unaryOperateA()
         fprintf(stderr,"Block-0 started.\n");
     #endif
     __aa_barrier__();
-    __UnaryOperate__(input,0,0,desc_input.dimensions[0]/2,desc_input.dimensions[1]/2,desc_input,desc_output,output);
+    __UnaryOperate__(input,0,0,desc_input.dimensions[0]/4,desc_input.dimensions[1],desc_input,desc_output,output);
     __aa_barrier__();
     #ifdef SW
 	    fprintf(stderr,"Block-0 done.\n");
@@ -130,7 +130,7 @@ void unaryOperateB()
         fprintf(stderr,"Block-1 started.\n");
     #endif
     __aa_barrier__();
-    __UnaryOperate__(input,0,desc_input.dimensions[1]/2,desc_input.dimensions[0]/2,desc_input.dimensions[1],desc_input,desc_output,output);
+    __UnaryOperate__(input,desc_input.dimensions[0]/4,0,desc_input.dimensions[0]/2,desc_input.dimensions[1],desc_input,desc_output,output);
     __aa_barrier__();
     #ifdef SW
         fprintf(stderr,"Block-1 done.\n");
@@ -145,7 +145,7 @@ void unaryOperateC()
         fprintf(stderr,"Block-2 started.\n");
     #endif
     __aa_barrier__();
-    __UnaryOperate__(input,desc_input.dimensions[0]/2,0,desc_input.dimensions[0],desc_input.dimensions[1]/2,desc_input,desc_output,output);
+    __UnaryOperate__(input,desc_input.dimensions[0]/2,0,3*desc_input.dimensions[0]/4,desc_input.dimensions[1],desc_input,desc_output,output);
     __aa_barrier__();
     #ifdef SW
         fprintf(stderr,"Block-2 done.\n");
@@ -160,7 +160,7 @@ void unaryOperateD()
         fprintf(stderr,"Block-3 started.\n");
     #endif
     __aa_barrier__();
-    __UnaryOperate__(input,desc_input.dimensions[0]/2,desc_input.dimensions[1]/2,desc_input.dimensions[0],desc_input.dimensions[1],desc_input,desc_output,output);
+    __UnaryOperate__(input,3*desc_input.dimensions[0]/4,0,desc_input.dimensions[0],desc_input.dimensions[1],desc_input,desc_output,output);
     __aa_barrier__();    
     #ifdef SW
         fprintf(stderr,"Block-3 done.\n");

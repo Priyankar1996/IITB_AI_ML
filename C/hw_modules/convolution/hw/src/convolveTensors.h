@@ -1,5 +1,3 @@
-//Assumptions : 3D tensor, row_major, int16 data type
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -30,43 +28,61 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	out.descriptor.descriptor.dimensions[1] = 1 + __udiv16__(__dim1__(inp) - __dim2__(ker),stride);\
 	out.descriptor.descriptor.dimensions[2] = __dim0__(ker);\
 	out.descriptor.tensor_size = __dim0__(out) * __dim1__(out) * __dim2__(out);\
-	int16_t result_temp,temp;\
+	int16_t result_temp;\
 	int p=0,q=0,r=0,i=0,j=0,k=0;\
 	int count = 0;\
+	/*store dimensions in local variables to reduce memory accesses*/\
+	int dim0_inp = __dim0__(inp);\
+	int dim1_inp = __dim1__(inp);\
+	int dim2_inp = __dim2__(inp);\
+	int dim0_ker = __dim0__(ker);\
+	int dim1_ker = __dim1__(ker);\
+	int dim2_ker = __dim2__(ker);\
+	int dim3_ker = __dim3__(ker);\
+	int dim0_out = __dim0__(out);\
+	int dim1_out = __dim1__(out);\
+	int dim2_out = __dim2__(out);\
 	uint64_t img_data;\
 	uint64_t ker_data;\
-	for (p = 0; p < __dim0__(out); p++)\
+	/*p,q,r are for indexing output tensor data*/\
+	for(p = 0; p < dim0_out; p++)\
 	{\
-		for(q = 0; q < __dim1__(out); q++)\
+		int pxstride = p*stride;\
+		for(q = 0; q < dim0_out; q++)\
 		{\
-			for(r = 0; r < __dim2__(out); r++)\
+			int qxstride = q*stride;\
+			for(r = 0; r < dim2_out; r++)\
 			{\
 				result_temp = 0;\
-				while(i < __dim1__(ker))\
+				/*Operate over one convolution window*/\
+				while(i < dim1_ker)\
 				{\
-					int x_idx_img = p*stride+i;\
-					int y_idx_img = q*stride+j;\
+					int x_idx_img = pxstride+i;\
+					int y_idx_img = qxstride+j;\
 					int img_data_array_idx;\
-					__GetImgEntryIndexOffset__(inp,img_data_array_idx,x_idx_img,y_idx_img,k);\
+					__GetImgEntryIndexOffset__(img_data_array_idx,x_idx_img,y_idx_img,k);\
 					int ker_data_array_idx;\
-					__GetKerEntryIndexOffset__(ker,ker_data_array_idx,r,i,j,k);\
-					fprintf(stderr,"img indx %d ker indx %d\n",img_data_array_idx,ker_data_array_idx);\
+					__GetKerEntryIndexOffset__(ker_data_array_idx,r,i,j,k);\
+					/*read one 64 bit block after four 16 bit values have been read*/\
 					if((count - 4*(count >> 2)) == 0)\
 					{\
 						__getOneTensorBlock__(inp,img_data,img_data_array_idx);\
 						__getOneTensorBlock__(ker,ker_data,ker_data_array_idx);\
 					}\
+					/*get the offset of one 16 bit block from one 64 bit block*/\
 					uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
 					uint8_t temp_ker_rem = ker_data_array_idx - 4*(ker_data_array_idx >> 2);\
+					/*get one 16 bit value*/\
 					int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 					int16_t ker_one_block = __getOneBlock__(ker_data,temp_ker_rem);\
 					result_temp += (img_one_block * ker_one_block);\
-					__checkIncrementCondition__(i,j,k,ker);\
+					__checkIncrementCondition1__(i,j,k);\
 					count++;\
 				}\
 				i = 0;j = 0;k = 0;\
 				int out_data_array_idx;\
-				__GetImgEntryIndexOffset__(out,out_data_array_idx,p,q,r);\
+				/*pack four 16 bit value into one 64 bit tensor block*/\
+				__GetOutEntryIndexOffset__(out_data_array_idx,p,q,r);\
 				uint8_t temp_out_rem = out_data_array_idx - 4*(out_data_array_idx >> 2);\
 				__putOneBlock__(out.data_array[out_data_array_idx >> 2],temp_out_rem,result_temp);\
 			}\
@@ -74,13 +90,13 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	}\
 })
 
-#define __checkIncrementCondition__(i,j,k,ker)({\
+#define __checkIncrementCondition1__(i,j,k)({\
 	k++;\
-	if(k == __dim3__(ker))\
+	if(k == dim3_ker)\
 	{\
 		k = 0;\
 		j++;\
-		if(j == __dim2__(ker))\
+		if(j == dim2_ker)\
 		{\
 			j = 0;\
 			i++;\
@@ -88,12 +104,16 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	}\
 })
 
-#define __GetImgEntryIndexOffset__(st,ret_val,x,y,z)({\
-	ret_val = z + st.descriptor.descriptor.dimensions[2]*y + st.descriptor.descriptor.dimensions[2]*st.descriptor.descriptor.dimensions[1]*x;\
+#define __GetImgEntryIndexOffset__(ret_val,x,y,z)({\
+	ret_val = z + dim2_inp*y + dim2_inp*dim1_inp*x;\
 })
 
-#define __GetKerEntryIndexOffset__(st,ret_val,w,x,y,z)({\
-	ret_val = z + st.descriptor.descriptor.dimensions[3]*y + st.descriptor.descriptor.dimensions[3]*st.descriptor.descriptor.dimensions[2]*x + st.descriptor.descriptor.dimensions[3]*st.descriptor.descriptor.dimensions[2]*st.descriptor.descriptor.dimensions[1]*w;\
+#define __GetKerEntryIndexOffset__(ret_val,w,x,y,z)({\
+	ret_val = z + dim3_ker*y + dim3_ker*dim2_ker*x + dim3_ker*dim2_ker*dim1_ker*w;\
+})
+
+#define __GetOutEntryIndexOffset__(ret_val,x,y,z)({\
+	ret_val = z + dim2_out*y + dim2_out*dim1_out*x;\
 })
 
 #define __getOneTensorBlock__(tnsr,data,index)({\

@@ -31,6 +31,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int16_t result_temp;\
 	int p=0,q=0,r=0,i=0,j=0,k=0;\
 	int count = 0;\
+	/*store dimensions in local variables to reduce memory accesses*/\
 	int dim0_inp = __dim0__(inp);\
 	int dim1_inp = __dim1__(inp);\
 	int dim2_inp = __dim2__(inp);\
@@ -43,6 +44,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int dim2_out = __dim2__(out);\
 	uint64_t img_data;\
 	uint64_t ker_data;\
+	/*p,q,r are for indexing output tensor data*/\
 	for(p = 0; p < dim0_out; p++)\
 	{\
 		int pxstride = p*stride;\
@@ -52,6 +54,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 			for(r = 0; r < dim2_out; r++)\
 			{\
 				result_temp = 0;\
+				/*Operate over one convolution window*/\
 				while(i < dim1_ker)\
 				{\
 					int x_idx_img = pxstride+i;\
@@ -60,13 +63,16 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 					__GetImgEntryIndexOffset__(img_data_array_idx,x_idx_img,y_idx_img,k);\
 					int ker_data_array_idx;\
 					__GetKerEntryIndexOffset__(ker_data_array_idx,r,i,j,k);\
+					/*read one 64 bit block after four 16 bit values have been read*/\
 					if((count - 4*(count >> 2)) == 0)\
 					{\
 						__getOneTensorBlock__(inp,img_data,img_data_array_idx);\
 						__getOneTensorBlock__(ker,ker_data,ker_data_array_idx);\
 					}\
+					/*get the offset of one 16 bit block from one 64 bit block*/\
 					uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
 					uint8_t temp_ker_rem = ker_data_array_idx - 4*(ker_data_array_idx >> 2);\
+					/*get one 16 bit value*/\
 					int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 					int16_t ker_one_block = __getOneBlock__(ker_data,temp_ker_rem);\
 					result_temp += (img_one_block * ker_one_block);\
@@ -75,6 +81,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 				}\
 				i = 0;j = 0;k = 0;\
 				int out_data_array_idx;\
+				/*pack four 16 bit value into one 64 bit tensor block*/\
 				__GetOutEntryIndexOffset__(out_data_array_idx,p,q,r);\
 				uint8_t temp_out_rem = out_data_array_idx - 4*(out_data_array_idx >> 2);\
 				__putOneBlock__(out.data_array[out_data_array_idx >> 2],temp_out_rem,result_temp);\

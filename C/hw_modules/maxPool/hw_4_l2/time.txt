@@ -1,1 +1,28 @@
+IPC = #inputs elements per clock cycle
+Ideal upper bound on IPC under current implementation = 16/5 per core (4 loads + 1 store, which take 5 clock cycle and can process 16 inputs)
+For 4-core, max IPC = 64/5 = 12.8
+Can get upto 64 if all loads and store take place simultaneously!! Would like to move in that direction.
+
+------------------------------------------------------------------------------------
+
 Time for 64 inputs & 2x2 pool = 637
+Time for 512 inputs & 2x2 pool = 2562
+
+2 March, 2022
+Time for 64 inputs & 2x2 pool = 80
+
+8 March, 2022
+Time for 64 inputs & 2x2 pool = 26
+Time for 512 inputs & 2x2 pool = 96
+Time for 2048 inputs & 2x2 pool = 336
+Time for 16384 inputs & 2x2 pool = 2576 
+// Took at least 50,000ns = 5000 cc to simulate. Error in timer fn??
+Observed IPC = 6.36 -- assuming half based on waveforms, then actual observed IPC = 3.18
+Roughly 25% performance compared to ideal IPC computation.
+
+---------------------------------------------------------------------------------------
+
+11 March, 2022
+Ideas to improve:
+    1. Current implementation has load/store bandwidth of 256 bits, yet there is sequentiality and dependence as each core has a memory BW of 64 bits. Would like that each core can access 256 bits at a time, giving minimal compute latency.
+    2. The overall implementation satisfies the fetch - execute - writeback pattern, and hence has the characteristic to be pipelined. Would like to exploit that.

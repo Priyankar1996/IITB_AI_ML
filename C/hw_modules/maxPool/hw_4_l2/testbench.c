@@ -126,7 +126,6 @@ int main(int argc, char**argv){
 	uint16_t length,stride;
 	fscanf(file,"%hu%hu",&length,&stride);
 	fprintf(octaveInFile,"%hu\n%hu\n",length,stride);
-	write_uint16("maxpool_input_pipe",stride);
 
 	desc_T.number_of_dimensions = 3;
 	desc_B.number_of_dimensions = desc_T.number_of_dimensions;

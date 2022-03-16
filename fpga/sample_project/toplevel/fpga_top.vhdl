@@ -78,7 +78,7 @@ begin
 	end process;
 
 	------------------------------------------------------------
-	-- RT clock generation
+	-- Generate 80MHz from differential 200MHz clock.
 	------------------------------------------------------------
 	clocking : clk_wiz_0
    		port map ( 
@@ -105,7 +105,7 @@ begin
 	uart_inst:
 		configurable_self_tuning_uart
 			port map (
-					CLK => CLK, RESET => RESET,
+					CLK => CLK, RESET => RESET_SYNC,
 					rt_1Hz(0) => RT_1HZ,
 					BAUD_RATE => BAUD_RATE,
 					UART_RX(0) => Rx,

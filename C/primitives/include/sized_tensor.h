@@ -42,7 +42,6 @@ typedef struct __SizedTensor_4K {
 	uint64_t data_array[4096];
 } SizedTensor_4096;
 typedef struct __SizedTensor_16K {
-	SizedTensorDescriptor descriptor;
 	uint64_t data_array[4096 * 4];
 } SizedTensor_16K;
 typedef struct __SizedTensor_256K {
@@ -65,10 +64,10 @@ typedef struct __SizedTensor_8M {
 #define __SizedTensorDescriptor__(st) 	(st.descriptor.descriptor)
 #define __SizedTensorSize__(st) 	(st.descriptor.tensor_size)
 
-#define __NumberOfElementsInSizedTensor__(st) ({\
+#define __NumberOfElementsInSizedTensor__(desc) ({\
 	int i, num_elems=1;\
-	for (i=0;i<st.descriptor.descriptor.number_of_dimensions;i++)\
-		num_elems *= st.descriptor.descriptor.dimensions[i];\
+	for (i=0;i<desc.number_of_dimensions;i++)\
+		num_elems *= desc.dimensions[i];\
 	num_elems;\
 })
 

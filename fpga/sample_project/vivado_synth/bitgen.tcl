@@ -1,5 +1,4 @@
 set AHIR_RELEASE $::env(AHIR_RELEASE)
-set AJIT_PROJECT_HOME $::env(AJIT_PROJECT_HOME)
 
 read_vhdl -library ahir_ieee_proposed $AHIR_RELEASE/vhdl/aHiR_ieee_proposed.vhdl
 read_vhdl -library ahir $AHIR_RELEASE/vhdl/ahirXilinx.vhdl

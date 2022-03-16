@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <inttypes.h>
-#include "prog.h"
 
 #include "sized_tensor.h"
 #include "convolveTensors.h"
@@ -16,7 +15,6 @@
 #include <pipeHandler.h>
 #include <Pipes.h>
 #include <pthreadUtils.h>
-#include "prog.h"
 #else
 #include "vhdlCStubs.h"
 #endif
@@ -24,29 +22,33 @@
 //
 //
 SizedTensor_16K T,K,R;
-//SizedTensor_1024 K;
+TensorDescriptor desc_T,desc_K,desc_R;
 uint8_t stride;
 
 #ifdef SW
 DEFINE_THREAD(conv2D);
+DEFINE_THREAD(convCore1);
+DEFINE_THREAD(convCore2);
+DEFINE_THREAD(convCore3);
+DEFINE_THREAD(convCore4);
 #endif
 
 void wr_input()
 {
 	int i;
-	for(i = 0; i < T.descriptor.descriptor.number_of_dimensions; i++)
+	for(i = 0; i < desc_T.number_of_dimensions; i++)
 	{
-		write_uint64("conv_input_pipe",T.descriptor.descriptor.dimensions[i]);
+		write_uint64("conv_input_pipe",desc_T.dimensions[i]);
 	}
-	for(i = 0; i < (__NumberOfElementsInSizedTensor__(T) >> 2)+1; i++)
+	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_T) >> 2)+1; i++)
 	{
 		write_uint64("conv_input_pipe",T.data_array[i]);
 	}
-	for(i = 0; i < K.descriptor.descriptor.number_of_dimensions; i++)
+	for(i = 0; i < desc_K.number_of_dimensions; i++)
 	{
-		write_uint64("conv_input_pipe",K.descriptor.descriptor.dimensions[i]);
+		write_uint64("conv_input_pipe",desc_K.dimensions[i]);
 	}
-	for(i = 0; i < (__NumberOfElementsInSizedTensor__(K) >> 2)+1; i++)
+	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_K) >> 2)+1; i++)
 	{
 		write_uint64("conv_input_pipe",K.data_array[i]);
 	}
@@ -57,11 +59,11 @@ void wr_input()
 void rd_output()
 {
 	int i;
-        for(i = 0; i < R.descriptor.descriptor.number_of_dimensions; i++)
+        for(i = 0; i < desc_R.number_of_dimensions; i++)
 	{
-		R.descriptor.descriptor.dimensions[i] = read_uint64("conv_output_pipe");
+		desc_R.dimensions[i] = read_uint64("conv_output_pipe");
 	}
-	for(i = 0; i < (__NumberOfElementsInSizedTensor__(R) >> 2)+1; i++)
+	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_R) >> 2)+1; i++)
 	{
 		R.data_array[i] = read_uint64("conv_output_pipe");
 	}
@@ -76,28 +78,28 @@ int main(int argc, char* argv[])
 
         srand(100);
 
-	T.descriptor.descriptor.data_type = i16;
-	K.descriptor.descriptor.data_type = i16;
-	T.descriptor.descriptor.row_major_form = 1;
-	K.descriptor.descriptor.row_major_form = 1;
-	T.descriptor.descriptor.number_of_dimensions = 3;
-	K.descriptor.descriptor.number_of_dimensions = 4;
+	desc_T.data_type = i16;
+	desc_K.data_type = i16;
+	desc_T.row_major_form = 1;
+	desc_K.row_major_form = 1;
+	desc_T.number_of_dimensions = 3;
+	desc_K.number_of_dimensions = 4;
 
-	R.descriptor.descriptor.number_of_dimensions = 3;
+	desc_R.number_of_dimensions = 3;
 
-	T.descriptor.descriptor.dimensions[0] = 4;
-	T.descriptor.descriptor.dimensions[1] = 4;
-	T.descriptor.descriptor.dimensions[2] = 3;
-	K.descriptor.descriptor.dimensions[0] = 1;
-	K.descriptor.descriptor.dimensions[1] = 1;
-	K.descriptor.descriptor.dimensions[2] = 1;
-	K.descriptor.descriptor.dimensions[3] = 3;
+	desc_T.dimensions[0] = 6;
+	desc_T.dimensions[1] = 6;
+	desc_T.dimensions[2] = 3;
+	desc_K.dimensions[0] = 1;
+	desc_K.dimensions[1] = 3;
+	desc_K.dimensions[2] = 3;
+	desc_K.dimensions[3] = 3;
 
-        for(i = 0; i < (__NumberOfElementsInSizedTensor__(T) >> 2)+1; i++)
+        for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_T) >> 2)+1; i++)
 	{
 		T.data_array[i] = 0x0005000500050005;
 	}
-        for(i = 0; i < (__NumberOfElementsInSizedTensor__(K) >> 2)+1; i++)
+        for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_K) >> 2)+1; i++)
 	{
 		K.data_array[i] = 0x0001000100010001;
 	}
@@ -107,17 +109,33 @@ int main(int argc, char* argv[])
 	init_pipe_handler();
 	register_pipe ("conv_input_pipe", 2, 64, PIPE_FIFO_MODE);
 	register_pipe ("conv_output_pipe", 2, 64, PIPE_FIFO_MODE);
+	register_pipe ("core1_req_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core2_req_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core3_req_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core4_req_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core1_ack_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core2_ack_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core3_ack_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core4_ack_pipe", 1, 16, PIPE_FIFO_MODE);
 
 	PTHREAD_DECL(conv2D);
+	PTHREAD_DECL(convCore1);
+	PTHREAD_DECL(convCore2);
+	PTHREAD_DECL(convCore3);
+	PTHREAD_DECL(convCore4);
 
 	PTHREAD_CREATE(conv2D);
+	PTHREAD_CREATE(convCore1);
+	PTHREAD_CREATE(convCore2);
+	PTHREAD_CREATE(convCore3);
+	PTHREAD_CREATE(convCore4);
 #endif
 
 	wr_input();
 	rd_output();
 
 	fprintf(stdout,"Done.\n");
-	for(i = 0; i < (__NumberOfElementsInSizedTensor__(R) >> 2) + 1; i++)
+	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_R) >> 2) + 1; i++)
 	{
 		fprintf(stderr,"Value is %llx\n",R.data_array[i]);
 	}
@@ -129,6 +147,10 @@ int main(int argc, char* argv[])
 
 #ifdef SW
 	PTHREAD_CANCEL(conv2D);
+	PTHREAD_CANCEL(convCore1);
+	PTHREAD_CANCEL(convCore2);
+	PTHREAD_CANCEL(convCore3);
+	PTHREAD_CANCEL(convCore4);
 	close_pipe_handler();
 #endif
 return 0;

@@ -1,2 +1,10 @@
 conv_input_pipe 2
 conv_output_pipe 2
+core1_req_pipe 1
+core2_req_pipe 1
+core3_req_pipe 1
+core4_req_pipe 1
+core1_ack_pipe 1
+core2_ack_pipe 1
+core3_ack_pipe 1
+core4_ack_pipe 1

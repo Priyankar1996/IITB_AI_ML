@@ -31,18 +31,6 @@ void __aa_barrier__();
 	#define __aa_barrier__() {;}
 #endif
 
-#define __increment__(row,col,chl,max_col,max_chl) ({\
-	chl++;\
-	if (chl == max_chl){\
-		chl = 0;\
-		col++;\
-	}\
-	if (col == max_col){\
-		col = 0;\
-		row++;\
-	}\
-})
-
 #define __increment_mm__(row,col,chl,min_col,max_col,max_chl) ({\
 	chl++;\
 	if (chl == max_chl){\
@@ -55,29 +43,22 @@ void __aa_barrier__();
 	}\
 })
 
-#define __maxOperation4__(src,add_src, offset1 ,offset2) ({\
+#define __maxOperation4__(src,add_src,data_array1,data_array2,data_array3,data_array4) ({\
 		__dt__ min_val1 , min_val2, min_val3, min_val4,\
 		min_val5, min_val6, min_val7, min_val8,\
 		min_val9, min_val10, min_val11, min_val12;\
-		uint32_t add_1 = add_src + offset1;\
-		uint32_t add_2 = add_src + offset2;\
-		uint32_t add_3 = add_src + offset1 + offset2;\
-		int64_t data_array1 = src.data_array[add_src];\
 		__dt__ cmp_val11 = data_array1;\
 		__dt__ cmp_val12 = data_array1 >> 16;\
 		__dt__ cmp_val13 = data_array1 >> 32;\
 		__dt__ cmp_val14 = data_array1 >> 48;\
-		int64_t data_array2 = src.data_array[add_1];\
 		__dt__ cmp_val21 = data_array2;\
 		__dt__ cmp_val22 = data_array2 >> 16;\
 		__dt__ cmp_val23 = data_array2 >> 32;\
 		__dt__ cmp_val24 = data_array2 >> 48;\
-		int64_t data_array3 = src.data_array[add_2];\
 		__dt__ cmp_val31 = data_array3;\
 		__dt__ cmp_val32 = data_array3 >> 16;\
 		__dt__ cmp_val33 = data_array3 >> 32;\
 		__dt__ cmp_val34 = data_array3 >> 48;\
-		int64_t data_array4 = src.data_array[add_3];\
 		__dt__ cmp_val41 = data_array4;\
 		__dt__ cmp_val42 = data_array4 >> 16;\
 		__dt__ cmp_val43 = data_array4 >> 32;\
@@ -109,32 +90,21 @@ void __aa_barrier__();
 		element;\
 	})
 
-#define __maxPoolOfTensors3D__(src, dst, stride) ({\
-	uint32_t address = 0, add_src;\
-	uint16_t dim1 = __dim1__(dst), dim1d = __dim1__(src);\
-	uint32_t offset1 = __dim22__(src), offset2 = dim1d*offset1;\
-	uint16_t row=0,col=0,chl=0;\
-	uint32_t dim0 = __dim0__(dst);\
-	while(1)\
-	{\
-		__loop_pipeline_var__\
-		add_src = chl+offset1*stride*(col+dim1d*row);\
-		dst.data_array[address] = __maxOperation4__(src,add_src,offset1,offset2);\
-		address++;\
-		__increment__(row,col,chl,dim1,offset1);\
-		if (row == dim0) break;\
-	}\
-})
-
-#define __maxPoolOfTensors3D_div__(src, dst, stride, rs, cs, re, ce, dim1d, dim1, offset1, offset2) ({\
+#define __maxPoolOfTensors3D_div__(src, dst, rs, cs, re, ce, dim1d, dim1, offset1, offset2) ({\
 	uint32_t address, add_src;\
 	uint16_t row=rs,col=cs,chl=0;\
+	uint32_t offset3 = offset1 + offset2;\
+	int64_t data_array1,data_array2,data_array3,data_array4;\
 	while(1)\
 	{\
 		__loop_pipeline_var__\
 		address = chl+offset1*(col+dim1*row);\
-		add_src = chl+offset1*stride*(col+dim1d*row);\
-		dst.data_array[address] = __maxOperation4__(src,add_src,offset1,offset2);\
+		add_src = chl+((offset1*(col+dim1d*row))<<1);\
+		data_array1 = src.data_array[add_src];\
+		data_array2 = src.data_array[add_src + offset1];\
+		data_array3 = src.data_array[add_src + offset2];\
+		data_array4 = src.data_array[add_src + offset3];\
+		dst.data_array[address] = __maxOperation4__(src,add_src,data_array1,data_array2,data_array3,data_array4);\
 		__increment_mm__(row,col,chl,cs,ce,offset1);\
 		if (row == re) break;\
 	}\

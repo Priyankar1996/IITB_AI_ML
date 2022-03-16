@@ -8,9 +8,8 @@
 #include "sized_tensor.h"
 #include "maxPoolOfTensors.h"
 
-SizedTensor_16K T,B;
+SizedTensor_4096 T,B;
 TensorDescriptor desc_T,desc_B;
-uint16_t stride;
 
 #define __get4xi16__(element) ({\
 	element = read_uint16 ("maxpool_input_pipe");\
@@ -37,7 +36,6 @@ uint16_t stride;
 
 void testConfigure()
 {
-	stride = read_uint16 ("maxpool_input_pipe");
 
 	// configure the tensor T
 	desc_T.data_type = u16;
@@ -82,7 +80,7 @@ void maxPoolCore1(){
 	uint16_t offset1 = read_uint16("core1_req_pipe");
 	uint16_t offset2 = read_uint16("core1_req_pipe");
 	__aa_barrier__();
-	__maxPoolOfTensors3D_div__(T, B, stride, 0, 0, re>>1,ce>>1,dim1d,ce,offset1,offset2);
+	__maxPoolOfTensors3D_div__(T, B, 0, 0, re>>1,ce>>1,dim1d,ce,offset1,offset2);
 	__aa_barrier__();
 	write_uint8("core1_ack_pipe",1);
 }
@@ -94,7 +92,7 @@ void maxPoolCore2(){
 	uint16_t offset1 = read_uint16("core2_req_pipe");
 	uint16_t offset2 = read_uint16("core2_req_pipe");
 	__aa_barrier__();
-	__maxPoolOfTensors3D_div__(T, B, stride, 0, ce>>1, re,ce,dim1d,ce,offset1,offset2);
+	__maxPoolOfTensors3D_div__(T, B, 0, ce>>1, re,ce,dim1d,ce,offset1,offset2);
 	__aa_barrier__();
 	write_uint8("core2_ack_pipe",1);
 }
@@ -106,7 +104,7 @@ void maxPoolCore3(){
 	uint16_t offset1 = read_uint16("core3_req_pipe");
 	uint16_t offset2 = read_uint16("core3_req_pipe");
 	__aa_barrier__();
-	__maxPoolOfTensors3D_div__(T, B, stride, re>>1, 0, re,ce>>1,dim1d,ce,offset1,offset2);
+	__maxPoolOfTensors3D_div__(T, B, re>>1, 0, re,ce>>1,dim1d,ce,offset1,offset2);
 	__aa_barrier__();
 	write_uint8("core3_ack_pipe",1);
 }
@@ -118,7 +116,7 @@ void maxPoolCore4(){
 	uint16_t offset1 = read_uint16("core4_req_pipe");
 	uint16_t offset2 = read_uint16("core4_req_pipe");
 	__aa_barrier__();
-	__maxPoolOfTensors3D_div__(T, B, stride, re>>1,ce>>1,re,ce,dim1d,ce,offset1,offset2);
+	__maxPoolOfTensors3D_div__(T, B, re>>1,ce>>1,re,ce,dim1d,ce,offset1,offset2);
 	__aa_barrier__();
 	write_uint8("core4_ack_pipe",1);
 }

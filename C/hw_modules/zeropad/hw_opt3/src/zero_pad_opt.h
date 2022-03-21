@@ -42,14 +42,19 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	j = j1;\
 	while (i < row_high)\
 	{\
-		int img_data_array_idx = k + dim2T*j + dim21T*i;\
-		int dest_data_array_idx = k + dim2R*(j+pad) + dim21R*(i+pad);\
-		uint64_t img_data = T.data_array[img_data_array_idx >> 2];\
-		uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
-		int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
-		uint8_t temp_out_rem = dest_data_array_idx - 4*(dest_data_array_idx >> 2);\
-		__putOneBlock__(R.data_array[dest_data_array_idx >> 2],temp_out_rem,img_one_block);\
-		k++;\
+		int img_data_array_idx = (k + dim2T*j + dim21T*i);\
+		int dest_data_array_idx = (k + dim2R*(j+pad) + dim21R*(i+pad));\
+		int img_data_array_idx_1 = img_data_array_idx + 1;\
+		int img_data_array_idx_2 = img_data_array_idx + 2;\
+		int img_data_array_idx_3 = img_data_array_idx + 3;\
+		int dest_data_array_idx_1 = dest_data_array_idx + 1;\
+		int dest_data_array_idx_2 = dest_data_array_idx + 2;\
+		int dest_data_array_idx_3 = dest_data_array_idx + 3;\
+		R.data_array[dest_data_array_idx >> 2] = T.data_array[img_data_array_idx >> 2];\
+		R.data_array[dest_data_array_idx_1 >> 2] = T.data_array[img_data_array_idx_1 >> 2];\
+		R.data_array[dest_data_array_idx_2 >> 2] = T.data_array[img_data_array_idx_2 >> 2];\
+		R.data_array[dest_data_array_idx_3 >> 2] = T.data_array[img_data_array_idx_3 >> 2];\
+		k+=4;\
 		if (k == dim2T)\
 		{\
 			k = 0;\

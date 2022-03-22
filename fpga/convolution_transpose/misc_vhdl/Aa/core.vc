@@ -1,0 +1,1804 @@
+// Virtual circuit produced from Aa description by Aa2VC 
+// $pipe  BAUD_CONTROL_WORD_SIG : $uint<32>  $depth 1  $signal 
+// can point into 
+// in scope  top-level
+$pipe [BAUD_CONTROL_WORD_SIG] 32 $depth 1 $signal 
+// $pipe  BAUD_CONTROL_WORD_VALID : $uint<1>  $depth 1  $signal 
+// can point into 
+// in scope  top-level
+$pipe [BAUD_CONTROL_WORD_VALID] 1 $depth 1 $signal 
+// $pipe  BAUD_RATE_SIG : $uint<32>  $depth 1  $signal 
+// can point into 
+// in scope  top-level
+$pipe [BAUD_RATE_SIG] 32 $depth 1 $signal 
+// $pipe  CLK_FREQUENCY_SIG : $uint<32>  $depth 1  $signal 
+// can point into 
+// in scope  top-level
+$pipe [CLK_FREQUENCY_SIG] 32 $depth 1 $signal 
+// $pipe  CLOCK_FREQUENCY_VALID : $uint<1>  $depth 1  $signal 
+// can point into 
+// in scope  top-level
+$pipe [CLOCK_FREQUENCY_VALID] 1 $depth 1 $signal 
+$module [my_gcd] 
+{
+  $in A:$int<32>
+  // can point into 
+  B:$int<32>
+  // can point into 
+  $out GCD:$int<32>
+  // can point into 
+  // pipe-declarations for block %my_gcd
+  //  file core.linked.opt.aa, line 11
+  // pipe-declarations for block %my_gcd%loop
+  //  file core.linked.opt.aa, line 16
+  // pipe-declarations for block %my_gcd%loop%
+  //  file core.linked.opt.aa, line 18
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    <>[branch_block_stmt_11] // Branch Block  file core.linked.opt.aa, line 16
+    {
+      $P [branch_block_stmt_11__entry__]
+      branch_block_stmt_11__entry__ <-| ($entry)
+      $P [branch_block_stmt_11__exit__]
+      branch_block_stmt_11__exit__ |-> ($exit)
+      $P [merge_stmt_12__entry__] 
+      $P [merge_stmt_12__exit__] 
+      $P [assign_stmt_34_to_assign_stmt_72__entry__] 
+      $P [assign_stmt_34_to_assign_stmt_72__exit__] 
+      $P [if_stmt_73__entry__] 
+      $P [if_stmt_73__exit__] 
+      ::[assign_stmt_34_to_assign_stmt_72] 
+      {
+        // start:  		continue_flag := (((tA > 1 ) & (tB > 1 )) & (tA != tB)) $buffering 1// bits of buffering = 1. 
+        //  file core.linked.opt.aa, line 24
+        // Source expression
+        // (((tA > 1 ) & (tB > 1 )) & (tA != tB))
+        $T[AND_u1_u1_33_sample_start_] 
+        $T[AND_u1_u1_33_sample_completed_] 
+        $T[AND_u1_u1_33_update_start_] 
+        $T[AND_u1_u1_33_update_completed_] 
+        // ((tA > 1 ) & (tB > 1 ))
+        // (tA > 1 )
+        // tA
+        // (tB > 1 )
+        // tB
+        // (tA != tB)
+        // tA
+        // tB
+        // start: Forward dependencies from ((tA > 1 ) & (tB > 1 )) to transition AND_u1_u1_33_sample_start_
+        // done: Forward dependencies from ((tA > 1 ) & (tB > 1 )) to transition AND_u1_u1_33_sample_start_
+        // start: Forward dependencies from (tA != tB) to transition AND_u1_u1_33_sample_start_
+        // done: Forward dependencies from (tA != tB) to transition AND_u1_u1_33_sample_start_
+        ;;[AND_u1_u1_33_Sample] 
+        {
+          // binary expression 
+          $T [rr] $T [ra]  // (split) binary operation 
+        }
+        ;;[AND_u1_u1_33_Update] 
+        {
+          // binary expression 
+          $T [cr] $T [ca] // (split) binary operation 
+        }
+        AND_u1_u1_33_sample_start_ &-> (AND_u1_u1_33_Sample)
+        AND_u1_u1_33_sample_completed_ <-& (AND_u1_u1_33_Sample)
+        AND_u1_u1_33_sample_completed_ &-> ($null)
+        AND_u1_u1_33_update_start_ &-> (AND_u1_u1_33_Update)
+        AND_u1_u1_33_update_completed_ <-& (AND_u1_u1_33_Update)
+        // Target expression
+        // (as target) continue_flag
+        // start: WAR dependencies for continue_flag
+        // done: WAR dependencies for continue_flag
+        // end:  		continue_flag := (((tA > 1 ) & (tB > 1 )) & (tA != tB)) $buffering 1// bits of buffering = 1. 
+        // start:  		GCD := ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  )  $buffering 1// bits of buffering = 32. 
+        //  file core.linked.opt.aa, line 25
+        // Source expression
+        // ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  ) 
+        $T[MUX_51_sample_start_] 
+        $T[MUX_51_sample_completed_] 
+        $T[MUX_51_update_start_] 
+        $T[MUX_51_update_completed_] 
+        // (tA == tB)
+        // tA
+        // tB
+        // tA
+        // ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) ) 
+        // ((tA == 1 ) | (tB == 1 ))
+        // (tA == 1 )
+        // tA
+        // (tB == 1 )
+        // tB
+        // start: Forward dependencies from (tA == tB) to transition MUX_51_sample_start_
+        // done: Forward dependencies from (tA == tB) to transition MUX_51_sample_start_
+        // start: Forward dependencies from tA to transition MUX_51_sample_start_
+        // done: Forward dependencies from tA to transition MUX_51_sample_start_
+        // start: Forward dependencies from ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  to transition MUX_51_sample_start_
+        // done: Forward dependencies from ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  to transition MUX_51_sample_start_
+        ;;[MUX_51_start] 
+        {
+          // ternary expression: 
+          $T [req] $T [ack] // sample req/ack
+        }
+        ;;[MUX_51_complete] 
+        {
+          // ternary expression: 
+          $T [req] $T [ack] // update req/ack
+        }
+        MUX_51_sample_start_ &-> (MUX_51_start)
+        MUX_51_sample_completed_ <-& (MUX_51_start)
+        MUX_51_sample_completed_ &-> ($null)
+        MUX_51_update_start_ &-> (MUX_51_complete)
+        MUX_51_update_completed_ <-& (MUX_51_complete)
+        // Target expression
+        // (as target) GCD
+        // GCD
+        // write to interface object
+        // start: WAR dependencies for GCD
+        // done: WAR dependencies for GCD
+        // GCD
+        // write to interface object
+        // end:  		GCD := ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  )  $buffering 1// bits of buffering = 32. 
+        // start: WAR dependencies for ntA
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+        // type of target is $uint<32>
+        // done: WAR dependencies for ntA
+        // start:  		$volatile ntA := ( $mux (tA > tB) (tA - tB)  tA )  $buffering 1
+        //  file core.linked.opt.aa, line 26
+        // volatile! 
+        // Source expression
+        // ( $mux (tA > tB) (tA - tB)  tA ) 
+        // (tA > tB)
+        // tA
+        // tB
+        // (tA - tB)
+        // tA
+        // tB
+        // tA
+        // Target expression
+        // (as target) ntA
+        // start: WAR dependencies for ntA
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+        // type of target is $uint<32>
+        // done: WAR dependencies for ntA
+        // end:  		$volatile ntA := ( $mux (tA > tB) (tA - tB)  tA )  $buffering 1
+        // start: WAR dependencies for ntB
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+        // type of target is $uint<32>
+        // done: WAR dependencies for ntB
+        // start:  		$volatile ntB := ( $mux (tB > tA) (tB - tA)  tB )  $buffering 1
+        //  file core.linked.opt.aa, line 27
+        // volatile! 
+        // Source expression
+        // ( $mux (tB > tA) (tB - tA)  tB ) 
+        // (tB > tA)
+        // tB
+        // tA
+        // (tB - tA)
+        // tB
+        // tA
+        // tB
+        // Target expression
+        // (as target) ntB
+        // start: WAR dependencies for ntB
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+        // type of target is $uint<32>
+        // done: WAR dependencies for ntB
+        // end:  		$volatile ntB := ( $mux (tB > tA) (tB - tA)  tB )  $buffering 1
+        // load-store dependencies..
+      }
+      assign_stmt_34_to_assign_stmt_72__entry__ |-> (assign_stmt_34_to_assign_stmt_72)
+      assign_stmt_34_to_assign_stmt_72__exit__ <-| (assign_stmt_34_to_assign_stmt_72)
+      // if-statement  
+      //  file core.linked.opt.aa, line 0
+      ;;[if_stmt_73_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      if_stmt_73__entry__ |-> (if_stmt_73_dead_link)
+      if_stmt_73__exit__ <-| (if_stmt_73_dead_link)
+      ;;[if_stmt_73_eval_test] 
+      {
+        // test expression evaluate and trigger branch 
+        $T [branch_req] 
+      }
+      if_stmt_73__entry__ |-> (if_stmt_73_eval_test)
+      $P [R_continue_flag_74_place]
+      R_continue_flag_74_place <-| (if_stmt_73_eval_test)
+      ;;[if_stmt_73_if_link] 
+      {
+        $T [if_choice_transition] 
+      }
+      ;;[if_stmt_73_else_link] 
+      {
+        $T [else_choice_transition] 
+      }
+      R_continue_flag_74_place |-> (if_stmt_73_if_link if_stmt_73_else_link)
+      $P [loopback]
+      loopback <-| (if_stmt_73_if_link)
+      if_stmt_73__exit__ <-| (if_stmt_73_else_link)
+      // control-path for merge  
+      //  file core.linked.opt.aa, line 18
+      ;;[merge_stmt_12_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      merge_stmt_12__entry__ |-> (merge_stmt_12_dead_link)
+      merge_stmt_12__exit__ <-| (merge_stmt_12_dead_link)
+      //---------------------   merge statement  file core.linked.opt.aa, line 18  --------------------------
+      ||[merge_stmt_12__entry___PhiReq] 
+      {
+        ;;[phi_stmt_13] 
+        {
+          ||[phi_stmt_13_sources] 
+          {
+            // sources for 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+            // type of target is $uint<32>
+            // trivial non-constant source .... interlock-buffer introduced 
+            || [Interlock] 
+            {
+              ;;[Sample] 
+              {
+                $T [req] $T [ack]
+              }
+              ;;[Update] 
+              {
+                $T [req] $T [ack]
+              }
+            }
+          }
+          $T [phi_stmt_13_req] 
+        }
+        ;;[phi_stmt_17] 
+        {
+          ||[phi_stmt_17_sources] 
+          {
+            // sources for 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+            // type of target is $uint<32>
+            // trivial non-constant source .... interlock-buffer introduced 
+            || [Interlock] 
+            {
+              ;;[Sample] 
+              {
+                $T [req] $T [ack]
+              }
+              ;;[Update] 
+              {
+                $T [req] $T [ack]
+              }
+            }
+          }
+          $T [phi_stmt_17_req] 
+        }
+      }
+      merge_stmt_12__entry__ |-> (merge_stmt_12__entry___PhiReq)
+      ||[loopback_PhiReq] 
+      {
+        ;;[phi_stmt_13] 
+        {
+          ||[phi_stmt_13_sources] 
+          {
+            // sources for 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+            // type of target is $uint<32>
+            // trivial non-constant source .... interlock-buffer introduced 
+            || [Interlock] 
+            {
+              ;;[Sample] 
+              {
+                $T [req] $T [ack]
+              }
+              ;;[Update] 
+              {
+                $T [req] $T [ack]
+              }
+            }
+          }
+          $T [phi_stmt_13_req] 
+        }
+        ;;[phi_stmt_17] 
+        {
+          ||[phi_stmt_17_sources] 
+          {
+            // sources for 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+            // type of target is $uint<32>
+            // trivial non-constant source .... interlock-buffer introduced 
+            || [Interlock] 
+            {
+              ;;[Sample] 
+              {
+                $T [req] $T [ack]
+              }
+              ;;[Update] 
+              {
+                $T [req] $T [ack]
+              }
+            }
+          }
+          $T [phi_stmt_17_req] 
+        }
+      }
+      loopback |-> (loopback_PhiReq)
+      $P [merge_stmt_12_PhiReqMerge] 
+      merge_stmt_12_PhiReqMerge <-| ( merge_stmt_12__entry___PhiReq  loopback_PhiReq )
+      ||[merge_stmt_12_PhiAck] 
+      {
+        $T [phi_stmt_13_ack] 
+        $T [phi_stmt_17_ack] 
+      }
+      merge_stmt_12_PhiReqMerge |-> (merge_stmt_12_PhiAck)
+      merge_stmt_12__exit__  <-| (merge_stmt_12_PhiAck)
+      //---------------------  end of merge statement  file core.linked.opt.aa, line 18  --------------------------
+      merge_stmt_12__entry__ <-| (branch_block_stmt_11__entry__)
+      assign_stmt_34_to_assign_stmt_72__entry__ <-| (merge_stmt_12__exit__)
+      if_stmt_73__entry__ <-| (assign_stmt_34_to_assign_stmt_72__exit__)
+      if_stmt_73__exit__ |-> (branch_block_stmt_11__exit__)
+    }
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %my_gcd%loop%
+    //  file core.linked.opt.aa, line 18
+    // constant-object-declarations for block %my_gcd%loop
+    //  file core.linked.opt.aa, line 16
+    // constant-object-declarations for block %my_gcd
+    //  file core.linked.opt.aa, line 11
+    // constant-declarations for block %my_gcd%loop
+    //  file core.linked.opt.aa, line 16
+    // constant-declarations for block %my_gcd%loop%
+    //  file core.linked.opt.aa, line 18
+    // constant-declarations for phi:  			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 19
+    // constant-declarations for phi:  			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 21
+    // 1 
+    $constant $W[konst_24_wire_constant] : $int<32> := _b00000000000000000000000000000001// 1
+    // 1 
+    $constant $W[konst_27_wire_constant] : $int<32> := _b00000000000000000000000000000001// 1
+    // ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  ) 
+    // ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) ) 
+    // 1 
+    $constant $W[konst_41_wire_constant] : $int<32> := _b00000000000000000000000000000001// 1
+    // 1 
+    $constant $W[konst_44_wire_constant] : $int<32> := _b00000000000000000000000000000001// 1
+    // 1 
+    $constant $W[konst_47_wire_constant] : $int<32> := _b00000000000000000000000000000001// 1
+    // ($bitcast ($uint<32>) _b0  )
+    $constant $W[type_cast_49_wire_constant] : $int<32> := _b00000000000000000000000000000000// 0
+    // ( $mux (tA > tB) (tA - tB)  tA ) 
+    // ( $mux (tB > tA) (tB - tA)  tB ) 
+    // if-statement  
+    //  file core.linked.opt.aa, line 0
+    // block %my_gcd%loop
+    //  file core.linked.opt.aa, line 16
+    // merge-statement  
+    //  file core.linked.opt.aa, line 18
+    // 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 19
+    $W[A_15_buffered] : $int<32>
+    $W[ntA_62_16_buffered] : $int<32>
+    // tA
+    $W[tA_13] : $int<32>
+    // 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 21
+    $W[B_19_buffered] : $int<32>
+    $W[ntB_72_20_buffered] : $int<32>
+    // tB
+    $W[tB_17] : $int<32>
+    // 		continue_flag := (((tA > 1 ) & (tB > 1 )) & (tA != tB)) $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 24
+    // (tA > 1 )
+    $intermediate $W[UGT_u32_u1_25_wire] : $int<1>
+    // (tB > 1 )
+    $intermediate $W[UGT_u32_u1_28_wire] : $int<1>
+    // ((tA > 1 ) & (tB > 1 ))
+    $intermediate $W[AND_u1_u1_29_wire] : $int<1>
+    // (tA != tB)
+    $intermediate $W[NEQ_u32_u1_32_wire] : $int<1>
+    // continue_flag
+    $W[continue_flag_34] : $int<1>
+    // 		GCD := ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  )  $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 25
+    // (tA == tB)
+    $intermediate $W[EQ_u32_u1_38_wire] : $int<1>
+    // (tA == 1 )
+    $intermediate $W[EQ_u32_u1_42_wire] : $int<1>
+    // (tB == 1 )
+    $intermediate $W[EQ_u32_u1_45_wire] : $int<1>
+    // ((tA == 1 ) | (tB == 1 ))
+    $intermediate $W[OR_u1_u1_46_wire] : $int<1>
+    // ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) ) 
+    $intermediate $W[MUX_50_wire] : $int<32>
+    // GCD
+    // 		$volatile ntA := ( $mux (tA > tB) (tA - tB)  tA )  $buffering 1
+    //  file core.linked.opt.aa, line 26
+    // (tA > tB)
+    $intermediate $W[UGT_u32_u1_56_wire] : $int<1>
+    // (tA - tB)
+    $intermediate $W[SUB_u32_u32_59_wire] : $int<32>
+    // ntA
+    $W[ntA_62] : $int<32>
+    // 		$volatile ntB := ( $mux (tB > tA) (tB - tA)  tB )  $buffering 1
+    //  file core.linked.opt.aa, line 27
+    // (tB > tA)
+    $intermediate $W[UGT_u32_u1_66_wire] : $int<1>
+    // (tB - tA)
+    $intermediate $W[SUB_u32_u32_69_wire] : $int<32>
+    // ntB
+    $W[ntB_72] : $int<32>
+    // if statement  
+    //  file core.linked.opt.aa, line 0
+    // datapath-instances for block %my_gcd%loop
+    //  file core.linked.opt.aa, line 16
+    // data-path instances for merge  
+    //  file core.linked.opt.aa, line 18
+    // 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 19
+    # := [A_15_buf] (A) (A_15_buffered)    
+    # := [ntA_62_16_buf] (ntA_62) (ntA_62_16_buffered)    
+    $phi [phi_stmt_13] (A_15_buffered ntA_62_16_buffered) ( tA_13 ) 
+    // 			$phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 21
+    # := [B_19_buf] (B) (B_19_buffered)    
+    # := [ntB_72_20_buf] (ntB_72) (ntB_72_20_buffered)    
+    $phi [phi_stmt_17] (B_19_buffered ntB_72_20_buffered) ( tB_17 ) 
+    // 		continue_flag := (((tA > 1 ) & (tB > 1 )) & (tA != tB)) $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 24
+    // (tA > 1 )
+    >[UGT_u32_u1_25_inst] (tA_13 konst_24_wire_constant) (UGT_u32_u1_25_wire)   $flowthrough 
+    $delay UGT_u32_u1_25_inst 0
+    // (tB > 1 )
+    >[UGT_u32_u1_28_inst] (tB_17 konst_27_wire_constant) (UGT_u32_u1_28_wire)   $flowthrough 
+    $delay UGT_u32_u1_28_inst 0
+    // ((tA > 1 ) & (tB > 1 ))
+    &[AND_u1_u1_29_inst] (UGT_u32_u1_25_wire UGT_u32_u1_28_wire) (AND_u1_u1_29_wire)   $flowthrough 
+    $delay AND_u1_u1_29_inst 0
+    // (tA != tB)
+    !=[NEQ_u32_u1_32_inst] (tA_13 tB_17) (NEQ_u32_u1_32_wire)   $flowthrough 
+    $delay NEQ_u32_u1_32_inst 0
+    // (((tA > 1 ) & (tB > 1 )) & (tA != tB))
+    &[AND_u1_u1_33_inst] (AND_u1_u1_29_wire NEQ_u32_u1_32_wire) (continue_flag_34)   
+    $buffering  $out AND_u1_u1_33_inst continue_flag_34 1
+    $delay AND_u1_u1_33_inst 1
+    // 		GCD := ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  )  $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 25
+    // (tA == tB)
+    ==[EQ_u32_u1_38_inst] (tA_13 tB_17) (EQ_u32_u1_38_wire)   $flowthrough 
+    $delay EQ_u32_u1_38_inst 0
+    // (tA == 1 )
+    ==[EQ_u32_u1_42_inst] (tA_13 konst_41_wire_constant) (EQ_u32_u1_42_wire)   $flowthrough 
+    $delay EQ_u32_u1_42_inst 0
+    // (tB == 1 )
+    ==[EQ_u32_u1_45_inst] (tB_17 konst_44_wire_constant) (EQ_u32_u1_45_wire)   $flowthrough 
+    $delay EQ_u32_u1_45_inst 0
+    // ((tA == 1 ) | (tB == 1 ))
+    |[OR_u1_u1_46_inst] (EQ_u32_u1_42_wire EQ_u32_u1_45_wire) (OR_u1_u1_46_wire)   $flowthrough 
+    $delay OR_u1_u1_46_inst 0
+    // ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) ) 
+    ? [MUX_50_inst] (OR_u1_u1_46_wire konst_47_wire_constant type_cast_49_wire_constant) (MUX_50_wire)  $flowthrough
+    // ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  ) 
+    ? [MUX_51_inst] (EQ_u32_u1_38_wire tA_13 MUX_50_wire) (GCD) 
+    $buffering  $out MUX_51_inst GCD 1
+    // 		$volatile ntA := ( $mux (tA > tB) (tA - tB)  tA )  $buffering 1
+    //  file core.linked.opt.aa, line 26
+    // (tA > tB)
+    >[UGT_u32_u1_56_inst] (tA_13 tB_17) (UGT_u32_u1_56_wire)   $flowthrough 
+    $delay UGT_u32_u1_56_inst 0
+    // (tA - tB)
+    -[SUB_u32_u32_59_inst] (tA_13 tB_17) (SUB_u32_u32_59_wire)   $flowthrough 
+    $delay SUB_u32_u32_59_inst 0
+    // ( $mux (tA > tB) (tA - tB)  tA ) 
+    ? [MUX_61_inst] (UGT_u32_u1_56_wire SUB_u32_u32_59_wire tA_13) (ntA_62)  $flowthrough
+    // 		$volatile ntB := ( $mux (tB > tA) (tB - tA)  tB )  $buffering 1
+    //  file core.linked.opt.aa, line 27
+    // (tB > tA)
+    >[UGT_u32_u1_66_inst] (tB_17 tA_13) (UGT_u32_u1_66_wire)   $flowthrough 
+    $delay UGT_u32_u1_66_inst 0
+    // (tB - tA)
+    -[SUB_u32_u32_69_inst] (tB_17 tA_13) (SUB_u32_u32_69_wire)   $flowthrough 
+    $delay SUB_u32_u32_69_inst 0
+    // ( $mux (tB > tA) (tB - tA)  tB ) 
+    ? [MUX_71_inst] (UGT_u32_u1_66_wire SUB_u32_u32_69_wire tB_17) (ntB_72)  $flowthrough
+    // datapath-instances for if  
+    //  file core.linked.opt.aa, line 0
+    ==0? [if_stmt_73_branch] (continue_flag_34)
+  }
+  // end data-path
+  // CP-DP links for merge  
+  //  file core.linked.opt.aa, line 18
+  A_15_buf <=> (branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Sample/req branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Update/req) (branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Sample/ack branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Update/ack)
+  ntA_62_16_buf <=> (branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Sample/req branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Update/req) (branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Sample/ack branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Update/ack)
+  phi_stmt_13 <=> (branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_13/phi_stmt_13_req branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_req) (branch_block_stmt_11/merge_stmt_12_PhiAck/phi_stmt_13_ack)
+  B_19_buf <=> (branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Sample/req branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Update/req) (branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Sample/ack branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Update/ack)
+  ntB_72_20_buf <=> (branch_block_stmt_11/loopback_PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Sample/req branch_block_stmt_11/loopback_PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Update/req) (branch_block_stmt_11/loopback_PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Sample/ack branch_block_stmt_11/loopback_PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Update/ack)
+  phi_stmt_17 <=> (branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_17/phi_stmt_17_req branch_block_stmt_11/loopback_PhiReq/phi_stmt_17/phi_stmt_17_req) (branch_block_stmt_11/merge_stmt_12_PhiAck/phi_stmt_17_ack)
+  // 		continue_flag := (((tA > 1 ) & (tB > 1 )) & (tA != tB)) $buffering 1// bits of buffering = 1. 
+  //  file core.linked.opt.aa, line 24
+  // (((tA > 1 ) & (tB > 1 )) & (tA != tB))
+  // ((tA > 1 ) & (tB > 1 ))
+  // (tA > 1 )
+  // tA
+  // (tB > 1 )
+  // tB
+  // (tA != tB)
+  // tA
+  // tB
+  AND_u1_u1_33_inst <=> (branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Sample/rr branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Update/cr) (branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Sample/ra branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Update/ca)
+  // 		GCD := ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  )  $buffering 1// bits of buffering = 32. 
+  //  file core.linked.opt.aa, line 25
+  // (tA == tB)
+  // tA
+  // tB
+  // tA
+  // ((tA == 1 ) | (tB == 1 ))
+  // (tA == 1 )
+  // tA
+  // (tB == 1 )
+  // tB
+  // ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) ) 
+  // ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  ) 
+  MUX_51_inst <=> (branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_start/req branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_complete/req) (branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_start/ack branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_complete/ack)
+  // 		$volatile ntA := ( $mux (tA > tB) (tA - tB)  tA )  $buffering 1
+  //  file core.linked.opt.aa, line 26
+  // (tA > tB)
+  // tA
+  // tB
+  // (tA - tB)
+  // tA
+  // tB
+  // tA
+  // ( $mux (tA > tB) (tA - tB)  tA ) 
+  // 		$volatile ntB := ( $mux (tB > tA) (tB - tA)  tB )  $buffering 1
+  //  file core.linked.opt.aa, line 27
+  // (tB > tA)
+  // tB
+  // tA
+  // (tB - tA)
+  // tB
+  // tA
+  // tB
+  // ( $mux (tB > tA) (tB - tA)  tB ) 
+  // CP-DP links for if  
+  //  file core.linked.opt.aa, line 0
+  if_stmt_73_branch <=> (branch_block_stmt_11/if_stmt_73_eval_test/branch_req) (branch_block_stmt_11/if_stmt_73_else_link/else_choice_transition branch_block_stmt_11/if_stmt_73_if_link/if_choice_transition)
+}
+$module [my_div] 
+{
+  $in A:$int<32>
+  // can point into 
+  B:$int<32>
+  // can point into 
+  $out Q:$int<32>
+  // can point into 
+  // pipe-declarations for block %my_div
+  //  file core.linked.opt.aa, line 33
+  // pipe-declarations for block %my_div%loop
+  //  file core.linked.opt.aa, line 38
+  // pipe-declarations for block %my_div%loop%
+  //  file core.linked.opt.aa, line 40
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    <>[branch_block_stmt_83] // Branch Block  file core.linked.opt.aa, line 38
+    {
+      $P [branch_block_stmt_83__entry__]
+      branch_block_stmt_83__entry__ <-| ($entry)
+      $P [branch_block_stmt_83__exit__]
+      branch_block_stmt_83__exit__ |-> ($exit)
+      $P [merge_stmt_84__entry__] 
+      $P [merge_stmt_84__exit__] 
+      $P [assign_stmt_103_to_assign_stmt_119__entry__] 
+      $P [assign_stmt_103_to_assign_stmt_119__exit__] 
+      $P [if_stmt_120__entry__] 
+      $P [if_stmt_120__exit__] 
+      ::[assign_stmt_103_to_assign_stmt_119] 
+      {
+        // start: WAR dependencies for continue_flag
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root  B : $uint<32> 
+        // done: WAR dependencies for continue_flag
+        // start:  		$volatile continue_flag := ((tA != 0 ) & (tA >= B)) $buffering 1
+        //  file core.linked.opt.aa, line 46
+        // volatile! 
+        // Source expression
+        // ((tA != 0 ) & (tA >= B))
+        // (tA != 0 )
+        // tA
+        // (tA >= B)
+        // tA
+        // B
+        // Target expression
+        // (as target) continue_flag
+        // start: WAR dependencies for continue_flag
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root  B : $uint<32> 
+        // done: WAR dependencies for continue_flag
+        // end:  		$volatile continue_flag := ((tA != 0 ) & (tA >= B)) $buffering 1
+        // start: WAR dependencies for ntA
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root  B : $uint<32> 
+        // done: WAR dependencies for ntA
+        // start:  		$volatile ntA := ( $mux continue_flag (tA - B)  tA )  $buffering 1
+        //  file core.linked.opt.aa, line 47
+        // volatile! 
+        // Source expression
+        // ( $mux continue_flag (tA - B)  tA ) 
+        // continue_flag
+        // (tA - B)
+        // tA
+        // B
+        // tA
+        // Target expression
+        // (as target) ntA
+        // start: WAR dependencies for ntA
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root  B : $uint<32> 
+        // done: WAR dependencies for ntA
+        // end:  		$volatile ntA := ( $mux continue_flag (tA - B)  tA )  $buffering 1
+        // start: WAR dependencies for ntQ
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root  B : $uint<32> 
+        // ignored out-of-scope w_root 			$phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+        // type of target is $uint<32>
+        // done: WAR dependencies for ntQ
+        // start:  		$volatile ntQ := ( $mux continue_flag (tQ + 1 )  tQ )  $buffering 1
+        //  file core.linked.opt.aa, line 48
+        // volatile! 
+        // Source expression
+        // ( $mux continue_flag (tQ + 1 )  tQ ) 
+        // continue_flag
+        // (tQ + 1 )
+        // tQ
+        // tQ
+        // Target expression
+        // (as target) ntQ
+        // start: WAR dependencies for ntQ
+        // ignored out-of-scope w_root 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+        // type of target is $uint<32>
+        // ignored out-of-scope w_root  B : $uint<32> 
+        // ignored out-of-scope w_root 			$phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+        // type of target is $uint<32>
+        // done: WAR dependencies for ntQ
+        // end:  		$volatile ntQ := ( $mux continue_flag (tQ + 1 )  tQ )  $buffering 1
+        // load-store dependencies..
+      }
+      assign_stmt_103_to_assign_stmt_119__entry__ |-> (assign_stmt_103_to_assign_stmt_119)
+      assign_stmt_103_to_assign_stmt_119__exit__ <-| (assign_stmt_103_to_assign_stmt_119)
+      // if-statement  
+      //  file core.linked.opt.aa, line 0
+      ;;[if_stmt_120_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      if_stmt_120__entry__ |-> (if_stmt_120_dead_link)
+      if_stmt_120__exit__ <-| (if_stmt_120_dead_link)
+      ;;[if_stmt_120_eval_test] 
+      {
+        // test expression evaluate and trigger branch 
+        $T [branch_req] 
+      }
+      if_stmt_120__entry__ |-> (if_stmt_120_eval_test)
+      $P [R_continue_flag_121_place]
+      R_continue_flag_121_place <-| (if_stmt_120_eval_test)
+      ;;[if_stmt_120_if_link] 
+      {
+        $T [if_choice_transition] 
+      }
+      ;;[if_stmt_120_else_link] 
+      {
+        $T [else_choice_transition] 
+      }
+      R_continue_flag_121_place |-> (if_stmt_120_if_link if_stmt_120_else_link)
+      $P [loopback]
+      loopback <-| (if_stmt_120_if_link)
+      if_stmt_120__exit__ <-| (if_stmt_120_else_link)
+      // control-path for merge  
+      //  file core.linked.opt.aa, line 40
+      ;;[merge_stmt_84_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      merge_stmt_84__entry__ |-> (merge_stmt_84_dead_link)
+      merge_stmt_84__exit__ <-| (merge_stmt_84_dead_link)
+      //---------------------   merge statement  file core.linked.opt.aa, line 40  --------------------------
+      ||[merge_stmt_84__entry___PhiReq] 
+      {
+        ;;[phi_stmt_85] 
+        {
+          ||[phi_stmt_85_sources] 
+          {
+            // sources for 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+            // type of target is $uint<32>
+            // trivial non-constant source .... interlock-buffer introduced 
+            || [Interlock] 
+            {
+              ;;[Sample] 
+              {
+                $T [req] $T [ack]
+              }
+              ;;[Update] 
+              {
+                $T [req] $T [ack]
+              }
+            }
+          }
+          $T [phi_stmt_85_req] 
+        }
+        ;;[phi_stmt_89] 
+        {
+          ||[phi_stmt_89_sources] 
+          {
+            // sources for 			$phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+            // type of target is $uint<32>
+            // constant source .... delay transition 
+            $T [type_cast_92_konst_delay_trans] $delay
+          }
+          $T [phi_stmt_89_req] 
+        }
+      }
+      merge_stmt_84__entry__ |-> (merge_stmt_84__entry___PhiReq)
+      ||[loopback_PhiReq] 
+      {
+        ;;[phi_stmt_85] 
+        {
+          ||[phi_stmt_85_sources] 
+          {
+            // sources for 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+            // type of target is $uint<32>
+            // trivial non-constant source .... interlock-buffer introduced 
+            || [Interlock] 
+            {
+              ;;[Sample] 
+              {
+                $T [req] $T [ack]
+              }
+              ;;[Update] 
+              {
+                $T [req] $T [ack]
+              }
+            }
+          }
+          $T [phi_stmt_85_req] 
+        }
+        ;;[phi_stmt_89] 
+        {
+          ||[phi_stmt_89_sources] 
+          {
+            // sources for 			$phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+            // type of target is $uint<32>
+            // trivial non-constant source .... interlock-buffer introduced 
+            || [Interlock] 
+            {
+              ;;[Sample] 
+              {
+                $T [req] $T [ack]
+              }
+              ;;[Update] 
+              {
+                $T [req] $T [ack]
+              }
+            }
+          }
+          $T [phi_stmt_89_req] 
+        }
+      }
+      loopback |-> (loopback_PhiReq)
+      $P [merge_stmt_84_PhiReqMerge] 
+      merge_stmt_84_PhiReqMerge <-| ( merge_stmt_84__entry___PhiReq  loopback_PhiReq )
+      ||[merge_stmt_84_PhiAck] 
+      {
+        $T [phi_stmt_85_ack] 
+        $T [phi_stmt_89_ack] 
+      }
+      merge_stmt_84_PhiReqMerge |-> (merge_stmt_84_PhiAck)
+      merge_stmt_84__exit__  <-| (merge_stmt_84_PhiAck)
+      //---------------------  end of merge statement  file core.linked.opt.aa, line 40  --------------------------
+      merge_stmt_84__entry__ <-| (branch_block_stmt_83__entry__)
+      assign_stmt_103_to_assign_stmt_119__entry__ <-| (merge_stmt_84__exit__)
+      if_stmt_120__entry__ <-| (assign_stmt_103_to_assign_stmt_119__exit__)
+      if_stmt_120__exit__ |-> (branch_block_stmt_83__exit__)
+    }
+    ::[assign_stmt_127] 
+    {
+      // start:  	Q := tQ $buffering 1// bits of buffering = 32. 
+      //  file core.linked.opt.aa, line 54
+      $T[assign_stmt_127_sample_start_] 
+      $T[assign_stmt_127_sample_completed_] 
+      $T[assign_stmt_127_update_start_] 
+      $T[assign_stmt_127_update_completed_] 
+      // Source expression
+      // tQ
+      // Target expression
+      // (as target) Q
+      // Q
+      // write to interface object
+      // both source and target are implicit: use interlock 
+      // Interlock 
+      ;;[assign_stmt_127_Sample] 
+      {
+        $T [req] $T [ack] // interlock-sample.
+      }
+      ;;[assign_stmt_127_Update] 
+      {
+        $T [req] $T [ack] // interlock-update.
+      }
+      assign_stmt_127_sample_start_ &-> (assign_stmt_127_Sample)
+      assign_stmt_127_sample_completed_ <-& (assign_stmt_127_Sample)
+      assign_stmt_127_sample_completed_ &-> ($null)
+      assign_stmt_127_update_start_ &-> (assign_stmt_127_Update)
+      assign_stmt_127_update_completed_ <-& (assign_stmt_127_Update)
+      // start: Forward dependencies from tQ to transition assign_stmt_127_sample_start_
+      // done: Forward dependencies from tQ to transition assign_stmt_127_sample_start_
+      // start: WAR dependencies for Q
+      // done: WAR dependencies for Q
+      // Q
+      // write to interface object
+      // end:  	Q := tQ $buffering 1// bits of buffering = 32. 
+      // load-store dependencies..
+    }
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %my_div%loop%
+    //  file core.linked.opt.aa, line 40
+    // constant-object-declarations for block %my_div%loop
+    //  file core.linked.opt.aa, line 38
+    // constant-object-declarations for block %my_div
+    //  file core.linked.opt.aa, line 33
+    // constant-declarations for block %my_div%loop
+    //  file core.linked.opt.aa, line 38
+    // constant-declarations for block %my_div%loop%
+    //  file core.linked.opt.aa, line 40
+    // constant-declarations for phi:  			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 41
+    // constant-declarations for phi:  			$phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 43
+    // ($bitcast ($uint<32>) _b0  )
+    $constant $W[type_cast_92_wire_constant] : $int<32> := _b00000000000000000000000000000000// 0
+    // 0 
+    $constant $W[konst_97_wire_constant] : $int<32> := _b00000000000000000000000000000000// 0
+    // ( $mux continue_flag (tA - B)  tA ) 
+    // ( $mux continue_flag (tQ + 1 )  tQ ) 
+    // 1 
+    $constant $W[konst_115_wire_constant] : $int<32> := _b00000000000000000000000000000001// 1
+    // if-statement  
+    //  file core.linked.opt.aa, line 0
+    // block %my_div%loop
+    //  file core.linked.opt.aa, line 38
+    // merge-statement  
+    //  file core.linked.opt.aa, line 40
+    // 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 41
+    $W[A_87_buffered] : $int<32>
+    $W[ntA_111_88_buffered] : $int<32>
+    // tA
+    $W[tA_85] : $int<32>
+    // 			$phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 43
+    $W[ntQ_119_93_buffered] : $int<32>
+    // tQ
+    $W[tQ_89] : $int<32>
+    // 		$volatile continue_flag := ((tA != 0 ) & (tA >= B)) $buffering 1
+    //  file core.linked.opt.aa, line 46
+    // (tA != 0 )
+    $intermediate $W[NEQ_u32_u1_98_wire] : $int<1>
+    // (tA >= B)
+    $intermediate $W[UGE_u32_u1_101_wire] : $int<1>
+    // continue_flag
+    $W[continue_flag_103] : $int<1>
+    // 		$volatile ntA := ( $mux continue_flag (tA - B)  tA )  $buffering 1
+    //  file core.linked.opt.aa, line 47
+    // (tA - B)
+    $intermediate $W[SUB_u32_u32_108_wire] : $int<32>
+    // ntA
+    $W[ntA_111] : $int<32>
+    // 		$volatile ntQ := ( $mux continue_flag (tQ + 1 )  tQ )  $buffering 1
+    //  file core.linked.opt.aa, line 48
+    // (tQ + 1 )
+    $intermediate $W[ADD_u32_u32_116_wire] : $int<32>
+    // ntQ
+    $W[ntQ_119] : $int<32>
+    // if statement  
+    //  file core.linked.opt.aa, line 0
+    // 	Q := tQ $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 54
+    // Q
+    // datapath-instances for block %my_div%loop
+    //  file core.linked.opt.aa, line 38
+    // data-path instances for merge  
+    //  file core.linked.opt.aa, line 40
+    // 			$phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 41
+    # := [A_87_buf] (A) (A_87_buffered)    
+    # := [ntA_111_88_buf] (ntA_111) (ntA_111_88_buffered)    
+    $phi [phi_stmt_85] (A_87_buffered ntA_111_88_buffered) ( tA_85 ) 
+    // 			$phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+    // type of target is $uint<32>
+    //  file core.linked.opt.aa, line 43
+    # := [ntQ_119_93_buf] (ntQ_119) (ntQ_119_93_buffered)    
+    $phi [phi_stmt_89] (type_cast_92_wire_constant ntQ_119_93_buffered) ( tQ_89 ) 
+    // 		$volatile continue_flag := ((tA != 0 ) & (tA >= B)) $buffering 1
+    //  file core.linked.opt.aa, line 46
+    // (tA != 0 )
+    !=[NEQ_u32_u1_98_inst] (tA_85 konst_97_wire_constant) (NEQ_u32_u1_98_wire)   $flowthrough 
+    $delay NEQ_u32_u1_98_inst 0
+    // (tA >= B)
+    >=[UGE_u32_u1_101_inst] (tA_85 B) (UGE_u32_u1_101_wire)   $flowthrough 
+    $delay UGE_u32_u1_101_inst 0
+    // ((tA != 0 ) & (tA >= B))
+    &[AND_u1_u1_102_inst] (NEQ_u32_u1_98_wire UGE_u32_u1_101_wire) (continue_flag_103)   $flowthrough 
+    $delay AND_u1_u1_102_inst 0
+    // 		$volatile ntA := ( $mux continue_flag (tA - B)  tA )  $buffering 1
+    //  file core.linked.opt.aa, line 47
+    // (tA - B)
+    -[SUB_u32_u32_108_inst] (tA_85 B) (SUB_u32_u32_108_wire)   $flowthrough 
+    $delay SUB_u32_u32_108_inst 0
+    // ( $mux continue_flag (tA - B)  tA ) 
+    ? [MUX_110_inst] (continue_flag_103 SUB_u32_u32_108_wire tA_85) (ntA_111)  $flowthrough
+    // 		$volatile ntQ := ( $mux continue_flag (tQ + 1 )  tQ )  $buffering 1
+    //  file core.linked.opt.aa, line 48
+    // (tQ + 1 )
+    +[ADD_u32_u32_116_inst] (tQ_89 konst_115_wire_constant) (ADD_u32_u32_116_wire)   $flowthrough 
+    $delay ADD_u32_u32_116_inst 0
+    // ( $mux continue_flag (tQ + 1 )  tQ ) 
+    ? [MUX_118_inst] (continue_flag_103 ADD_u32_u32_116_wire tQ_89) (ntQ_119)  $flowthrough
+    // datapath-instances for if  
+    //  file core.linked.opt.aa, line 0
+    ==0? [if_stmt_120_branch] (continue_flag_103)
+    // 	Q := tQ $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 54
+    # := [W_Q_125_inst] (tQ_89) (Q)    
+  }
+  // end data-path
+  // CP-DP links for merge  
+  //  file core.linked.opt.aa, line 40
+  A_87_buf <=> (branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Sample/req branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Update/req) (branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Sample/ack branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Update/ack)
+  ntA_111_88_buf <=> (branch_block_stmt_83/loopback_PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Sample/req branch_block_stmt_83/loopback_PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Update/req) (branch_block_stmt_83/loopback_PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Sample/ack branch_block_stmt_83/loopback_PhiReq/phi_stmt_85/phi_stmt_85_sources/Interlock/Update/ack)
+  phi_stmt_85 <=> (branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_85/phi_stmt_85_req branch_block_stmt_83/loopback_PhiReq/phi_stmt_85/phi_stmt_85_req) (branch_block_stmt_83/merge_stmt_84_PhiAck/phi_stmt_85_ack)
+  ntQ_119_93_buf <=> (branch_block_stmt_83/loopback_PhiReq/phi_stmt_89/phi_stmt_89_sources/Interlock/Sample/req branch_block_stmt_83/loopback_PhiReq/phi_stmt_89/phi_stmt_89_sources/Interlock/Update/req) (branch_block_stmt_83/loopback_PhiReq/phi_stmt_89/phi_stmt_89_sources/Interlock/Sample/ack branch_block_stmt_83/loopback_PhiReq/phi_stmt_89/phi_stmt_89_sources/Interlock/Update/ack)
+  phi_stmt_89 <=> (branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_89/phi_stmt_89_req branch_block_stmt_83/loopback_PhiReq/phi_stmt_89/phi_stmt_89_req) (branch_block_stmt_83/merge_stmt_84_PhiAck/phi_stmt_89_ack)
+  // 		$volatile continue_flag := ((tA != 0 ) & (tA >= B)) $buffering 1
+  //  file core.linked.opt.aa, line 46
+  // ((tA != 0 ) & (tA >= B))
+  // (tA != 0 )
+  // tA
+  // (tA >= B)
+  // tA
+  // B
+  // 		$volatile ntA := ( $mux continue_flag (tA - B)  tA )  $buffering 1
+  //  file core.linked.opt.aa, line 47
+  // continue_flag
+  // (tA - B)
+  // tA
+  // B
+  // tA
+  // ( $mux continue_flag (tA - B)  tA ) 
+  // 		$volatile ntQ := ( $mux continue_flag (tQ + 1 )  tQ )  $buffering 1
+  //  file core.linked.opt.aa, line 48
+  // continue_flag
+  // (tQ + 1 )
+  // tQ
+  // tQ
+  // ( $mux continue_flag (tQ + 1 )  tQ ) 
+  // CP-DP links for if  
+  //  file core.linked.opt.aa, line 0
+  if_stmt_120_branch <=> (branch_block_stmt_83/if_stmt_120_eval_test/branch_req) (branch_block_stmt_83/if_stmt_120_else_link/else_choice_transition branch_block_stmt_83/if_stmt_120_if_link/if_choice_transition)
+  // 	Q := tQ $buffering 1// bits of buffering = 32. 
+  //  file core.linked.opt.aa, line 54
+  // tQ
+  W_Q_125_inst <=> (assign_stmt_127/assign_stmt_127_Sample/req assign_stmt_127/assign_stmt_127_Update/req) (assign_stmt_127/assign_stmt_127_Sample/ack assign_stmt_127/assign_stmt_127_Update/ack)
+}
+$module [baudControlCalculatorDaemon] 
+{
+  // pipe-declarations for block %baudControlCalculatorDaemon
+  //  file core.linked.opt.aa, line 56
+  // pipe-declarations for block %baudControlCalculatorDaemon%loop
+  //  file core.linked.opt.aa, line 62
+  // pipe-declarations for block %baudControlCalculatorDaemon%loop%
+  //  file core.linked.opt.aa, line 64
+  // pipe-declarations for block %baudControlCalculatorDaemon%loop%
+  //  file core.linked.opt.aa, line 70
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    ::[assign_stmt_132] 
+    {
+      // start:  	BAUD_CONTROL_WORD_VALID := 0  $buffering 1// bits of buffering = 1. 
+      //  file core.linked.opt.aa, line 61
+      // Target expression
+      // (as target) BAUD_CONTROL_WORD_VALID
+      $T[WPIPE_BAUD_CONTROL_WORD_VALID_130_sample_start_] 
+      $T[WPIPE_BAUD_CONTROL_WORD_VALID_130_sample_completed_] 
+      $T[WPIPE_BAUD_CONTROL_WORD_VALID_130_update_start_] 
+      $T[WPIPE_BAUD_CONTROL_WORD_VALID_130_update_completed_] 
+      ;;[WPIPE_BAUD_CONTROL_WORD_VALID_130_Sample] 
+      {
+        // pipe write sample-start BAUD_CONTROL_WORD_VALID
+        $T [req] $T [ack] 
+      }
+      ;;[WPIPE_BAUD_CONTROL_WORD_VALID_130_Update] 
+      {
+        // pipe write update (complete) BAUD_CONTROL_WORD_VALID
+        $T [req] $T [ack] 
+      }
+      WPIPE_BAUD_CONTROL_WORD_VALID_130_sample_start_ &-> (WPIPE_BAUD_CONTROL_WORD_VALID_130_Sample)
+      WPIPE_BAUD_CONTROL_WORD_VALID_130_sample_completed_ <-& (WPIPE_BAUD_CONTROL_WORD_VALID_130_Sample)
+      WPIPE_BAUD_CONTROL_WORD_VALID_130_update_start_ <-& (WPIPE_BAUD_CONTROL_WORD_VALID_130_sample_completed_)
+      WPIPE_BAUD_CONTROL_WORD_VALID_130_update_start_ &-> (WPIPE_BAUD_CONTROL_WORD_VALID_130_Update)
+      WPIPE_BAUD_CONTROL_WORD_VALID_130_update_completed_ <-& (WPIPE_BAUD_CONTROL_WORD_VALID_130_Update)
+      // end:  	BAUD_CONTROL_WORD_VALID := 0  $buffering 1// bits of buffering = 1. 
+      // load-store dependencies..
+      // pipe read/write dependencies for pipe BAUD_CONTROL_WORD_VALID
+      // read-dependencies for pipe BAUD_CONTROL_WORD_VALID
+      // write-dependencies for pipe BAUD_CONTROL_WORD_VALID
+      // signal write dependencies for BAUD_CONTROL_WORD_VALID
+    }
+    <>[branch_block_stmt_133] // Branch Block  file core.linked.opt.aa, line 62
+    {
+      $P [branch_block_stmt_133__entry__]
+      branch_block_stmt_133__entry__ <-| ($entry)
+      $P [branch_block_stmt_133__exit__]
+      branch_block_stmt_133__exit__ |-> ($exit)
+      $P [merge_stmt_134__entry__] 
+      $P [merge_stmt_134__exit__] 
+      $P [assign_stmt_137__entry__] 
+      $P [assign_stmt_137__exit__] 
+      $P [if_stmt_138__entry__] 
+      $P [if_stmt_138__exit__] 
+      $P [merge_stmt_143__entry__] 
+      $P [merge_stmt_143__exit__] 
+      $P [assign_stmt_151_to_assign_stmt_189__entry__] 
+      $P [assign_stmt_151_to_assign_stmt_189__exit__] 
+      $P [assign_stmt_193__entry__] 
+      $P [assign_stmt_193__exit__] 
+      $P [loopback]
+      ::[assign_stmt_137] 
+      {
+        // start:  		clock_valid := CLOCK_FREQUENCY_VALID $buffering 1// bits of buffering = 1. 
+        //  file core.linked.opt.aa, line 66
+        $T[assign_stmt_137_sample_start_] 
+        $T[assign_stmt_137_sample_completed_] 
+        $T[assign_stmt_137_update_start_] 
+        $T[assign_stmt_137_update_completed_] 
+        // Source expression
+        // CLOCK_FREQUENCY_VALID
+        // Target expression
+        // (as target) clock_valid
+        // both source and target are implicit: use interlock 
+        // Interlock 
+        ;;[assign_stmt_137_Sample] 
+        {
+          $T [req] $T [ack] // interlock-sample.
+        }
+        ;;[assign_stmt_137_Update] 
+        {
+          $T [req] $T [ack] // interlock-update.
+        }
+        assign_stmt_137_sample_start_ &-> (assign_stmt_137_Sample)
+        assign_stmt_137_sample_completed_ <-& (assign_stmt_137_Sample)
+        assign_stmt_137_sample_completed_ &-> ($null)
+        assign_stmt_137_update_start_ &-> (assign_stmt_137_Update)
+        assign_stmt_137_update_completed_ <-& (assign_stmt_137_Update)
+        // start: Forward dependencies from CLOCK_FREQUENCY_VALID to transition assign_stmt_137_sample_start_
+        // special case... expr is signal read, which does not involve control..
+        // start: WAR dependencies for clock_valid
+        // done: WAR dependencies for clock_valid
+        // end:  		clock_valid := CLOCK_FREQUENCY_VALID $buffering 1// bits of buffering = 1. 
+        // load-store dependencies..
+      }
+      assign_stmt_137__entry__ |-> (assign_stmt_137)
+      assign_stmt_137__exit__ <-| (assign_stmt_137)
+      // if-statement  
+      //  file core.linked.opt.aa, line -977200264
+      ;;[if_stmt_138_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      if_stmt_138__entry__ |-> (if_stmt_138_dead_link)
+      if_stmt_138__exit__ <-| (if_stmt_138_dead_link)
+      ;;[if_stmt_138_eval_test] 
+      {
+        // test expression evaluate and trigger branch 
+        // ( ~ clock_valid )
+        ;;[NOT_u1_u1_140] 
+        {
+          // unary expression 
+          // flow-through
+          ;;[SplitProtocol] 
+          {
+            ;;[Sample] 
+            {
+              $T [rr] $T [ra]
+            }
+            ;;[Update] 
+            {
+              $T [cr] $T [ca]
+            }
+          }
+        }
+        $T [branch_req] 
+      }
+      if_stmt_138__entry__ |-> (if_stmt_138_eval_test)
+      $P [NOT_u1_u1_140_place]
+      NOT_u1_u1_140_place <-| (if_stmt_138_eval_test)
+      ;;[if_stmt_138_if_link] 
+      {
+        $T [if_choice_transition] 
+      }
+      ;;[if_stmt_138_else_link] 
+      {
+        $T [else_choice_transition] 
+      }
+      NOT_u1_u1_140_place |-> (if_stmt_138_if_link if_stmt_138_else_link)
+      $P [wait_on_clock]
+      wait_on_clock <-| (if_stmt_138_if_link)
+      if_stmt_138__exit__ <-| (if_stmt_138_else_link)
+      ::[assign_stmt_151_to_assign_stmt_189] 
+      {
+        // start:  		SS := (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  )) $buffering 1// bits of buffering = 32. 
+        //  file core.linked.opt.aa, line 72
+        // Source expression
+        // (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  ))
+        $T[CONCAT_u16_u32_150_sample_start_] 
+        $T[CONCAT_u16_u32_150_sample_completed_] 
+        $T[CONCAT_u16_u32_150_update_start_] 
+        $T[CONCAT_u16_u32_150_update_completed_] 
+        // ( $slice CLK_FREQUENCY_SIG 31 16 ) 
+        // CLK_FREQUENCY_SIG
+        // start: Forward dependencies from ( $slice CLK_FREQUENCY_SIG 31 16 )  to transition CONCAT_u16_u32_150_sample_start_
+        // non-constant expression which depends only on signals/constants?
+        // done: Forward dependencies from ( $slice CLK_FREQUENCY_SIG 31 16 )  to transition CONCAT_u16_u32_150_sample_start_
+        ;;[CONCAT_u16_u32_150_Sample] 
+        {
+          // binary expression 
+          $T [rr] $T [ra]  // (split) binary operation 
+        }
+        ;;[CONCAT_u16_u32_150_Update] 
+        {
+          // binary expression 
+          $T [cr] $T [ca] // (split) binary operation 
+        }
+        CONCAT_u16_u32_150_sample_start_ &-> (CONCAT_u16_u32_150_Sample)
+        CONCAT_u16_u32_150_sample_completed_ <-& (CONCAT_u16_u32_150_Sample)
+        CONCAT_u16_u32_150_sample_completed_ &-> ($null)
+        CONCAT_u16_u32_150_update_start_ &-> (CONCAT_u16_u32_150_Update)
+        CONCAT_u16_u32_150_update_completed_ <-& (CONCAT_u16_u32_150_Update)
+        // Target expression
+        // (as target) SS
+        // start: WAR dependencies for SS
+        // done: WAR dependencies for SS
+        // end:  		SS := (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  )) $buffering 1// bits of buffering = 32. 
+        // start:  		BRx16 := (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  )) $buffering 1// bits of buffering = 32. 
+        //  file core.linked.opt.aa, line 73
+        // Source expression
+        // (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  ))
+        $T[CONCAT_u28_u32_159_sample_start_] 
+        $T[CONCAT_u28_u32_159_sample_completed_] 
+        $T[CONCAT_u28_u32_159_update_start_] 
+        $T[CONCAT_u28_u32_159_update_completed_] 
+        // ( $slice BAUD_RATE_SIG 27 0 ) 
+        // BAUD_RATE_SIG
+        // start: Forward dependencies from ( $slice BAUD_RATE_SIG 27 0 )  to transition CONCAT_u28_u32_159_sample_start_
+        // non-constant expression which depends only on signals/constants?
+        // done: Forward dependencies from ( $slice BAUD_RATE_SIG 27 0 )  to transition CONCAT_u28_u32_159_sample_start_
+        ;;[CONCAT_u28_u32_159_Sample] 
+        {
+          // binary expression 
+          $T [rr] $T [ra]  // (split) binary operation 
+        }
+        ;;[CONCAT_u28_u32_159_Update] 
+        {
+          // binary expression 
+          $T [cr] $T [ca] // (split) binary operation 
+        }
+        CONCAT_u28_u32_159_sample_start_ &-> (CONCAT_u28_u32_159_Sample)
+        CONCAT_u28_u32_159_sample_completed_ <-& (CONCAT_u28_u32_159_Sample)
+        CONCAT_u28_u32_159_sample_completed_ &-> ($null)
+        CONCAT_u28_u32_159_update_start_ &-> (CONCAT_u28_u32_159_Update)
+        CONCAT_u28_u32_159_update_completed_ <-& (CONCAT_u28_u32_159_Update)
+        // Target expression
+        // (as target) BRx16
+        // start: WAR dependencies for BRx16
+        // done: WAR dependencies for BRx16
+        // end:  		BRx16 := (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  )) $buffering 1// bits of buffering = 32. 
+        // start: 		$call my_gcd (SS BRx16 ) (GCD ) 
+        //  file core.linked.opt.aa, line 74
+        $T[call_stmt_164_sample_start_] 
+        $T[call_stmt_164_sample_completed_] 
+        $T[call_stmt_164_update_start_] 
+        $T[call_stmt_164_update_completed_] 
+        // Call input argument 0
+        // SS
+        // Call input argument 1
+        // BRx16
+        // start: Forward dependencies from SS to transition call_stmt_164_sample_start_
+        call_stmt_164_sample_start_ <-& (CONCAT_u16_u32_150_update_completed_)
+        // done: Forward dependencies from SS to transition call_stmt_164_sample_start_
+        // start: Forward dependencies from BRx16 to transition call_stmt_164_sample_start_
+        call_stmt_164_sample_start_ <-& (CONCAT_u28_u32_159_update_completed_)
+        // done: Forward dependencies from BRx16 to transition call_stmt_164_sample_start_
+        ;;[call_stmt_164_Sample] 
+        {
+          $T [crr] $T [cra] 
+        }
+        ;;[call_stmt_164_Update] 
+        {
+          $T [ccr] $T [cca] 
+        }
+        call_stmt_164_sample_start_ &-> (call_stmt_164_Sample)
+        call_stmt_164_sample_completed_ <-& (call_stmt_164_Sample)
+        call_stmt_164_sample_completed_ &-> ($null)
+        call_stmt_164_update_start_ &-> (call_stmt_164_Update)
+        call_stmt_164_update_completed_ <-& (call_stmt_164_Update)
+        // Call output argument 0
+        // (as target) GCD
+        // start: WAR dependencies for GCD
+        // done: WAR dependencies for GCD
+        // end: 		$call my_gcd (SS BRx16 ) (GCD ) 
+        // start: 		$call my_div (BRx16 GCD ) (BF ) 
+        //  file core.linked.opt.aa, line 75
+        $T[call_stmt_168_sample_start_] 
+        $T[call_stmt_168_sample_completed_] 
+        $T[call_stmt_168_update_start_] 
+        $T[call_stmt_168_update_completed_] 
+        // Call input argument 0
+        // BRx16
+        // Call input argument 1
+        // GCD
+        // start: Forward dependencies from BRx16 to transition call_stmt_168_sample_start_
+        call_stmt_168_sample_start_ <-& (CONCAT_u28_u32_159_update_completed_)
+        // done: Forward dependencies from BRx16 to transition call_stmt_168_sample_start_
+        // start: Forward dependencies from GCD to transition call_stmt_168_sample_start_
+        call_stmt_168_sample_start_ <-& (call_stmt_164_update_completed_)
+        // done: Forward dependencies from GCD to transition call_stmt_168_sample_start_
+        ;;[call_stmt_168_Sample] 
+        {
+          $T [crr] $T [cra] 
+        }
+        ;;[call_stmt_168_Update] 
+        {
+          $T [ccr] $T [cca] 
+        }
+        call_stmt_168_sample_start_ &-> (call_stmt_168_Sample)
+        call_stmt_168_sample_completed_ <-& (call_stmt_168_Sample)
+        call_stmt_168_sample_completed_ &-> ($null)
+        call_stmt_168_update_start_ &-> (call_stmt_168_Update)
+        call_stmt_168_update_completed_ <-& (call_stmt_168_Update)
+        // Call output argument 0
+        // (as target) BF
+        // start: WAR dependencies for BF
+        // done: WAR dependencies for BF
+        // end: 		$call my_div (BRx16 GCD ) (BF ) 
+        // start: 		$call my_div (SS GCD ) (BLx ) 
+        //  file core.linked.opt.aa, line 76
+        $T[call_stmt_172_sample_start_] 
+        $T[call_stmt_172_sample_completed_] 
+        $T[call_stmt_172_update_start_] 
+        $T[call_stmt_172_update_completed_] 
+        // Call input argument 0
+        // SS
+        // Call input argument 1
+        // GCD
+        // start: Forward dependencies from SS to transition call_stmt_172_sample_start_
+        call_stmt_172_sample_start_ <-& (CONCAT_u16_u32_150_update_completed_)
+        // done: Forward dependencies from SS to transition call_stmt_172_sample_start_
+        // start: Forward dependencies from GCD to transition call_stmt_172_sample_start_
+        call_stmt_172_sample_start_ <-& (call_stmt_164_update_completed_)
+        // done: Forward dependencies from GCD to transition call_stmt_172_sample_start_
+        ;;[call_stmt_172_Sample] 
+        {
+          $T [crr] $T [cra] 
+        }
+        ;;[call_stmt_172_Update] 
+        {
+          $T [ccr] $T [cca] 
+        }
+        call_stmt_172_sample_start_ &-> (call_stmt_172_Sample)
+        call_stmt_172_sample_completed_ <-& (call_stmt_172_Sample)
+        call_stmt_172_sample_completed_ &-> ($null)
+        call_stmt_172_update_start_ &-> (call_stmt_172_Update)
+        call_stmt_172_update_completed_ <-& (call_stmt_172_Update)
+        // Call output argument 0
+        // (as target) BLx
+        // start: WAR dependencies for BLx
+        // done: WAR dependencies for BLx
+        // end: 		$call my_div (SS GCD ) (BLx ) 
+        // start:  		BL := (BLx - BF) $buffering 1// bits of buffering = 32. 
+        //  file core.linked.opt.aa, line 77
+        // Source expression
+        // (BLx - BF)
+        $T[SUB_u32_u32_176_sample_start_] 
+        $T[SUB_u32_u32_176_sample_completed_] 
+        $T[SUB_u32_u32_176_update_start_] 
+        $T[SUB_u32_u32_176_update_completed_] 
+        // BLx
+        // BF
+        // start: Forward dependencies from BLx to transition SUB_u32_u32_176_sample_start_
+        SUB_u32_u32_176_sample_start_ <-& (call_stmt_172_update_completed_)
+        // done: Forward dependencies from BLx to transition SUB_u32_u32_176_sample_start_
+        // start: Forward dependencies from BF to transition SUB_u32_u32_176_sample_start_
+        SUB_u32_u32_176_sample_start_ <-& (call_stmt_168_update_completed_)
+        // done: Forward dependencies from BF to transition SUB_u32_u32_176_sample_start_
+        ;;[SUB_u32_u32_176_Sample] 
+        {
+          // binary expression 
+          $T [rr] $T [ra]  // (split) binary operation 
+        }
+        ;;[SUB_u32_u32_176_Update] 
+        {
+          // binary expression 
+          $T [cr] $T [ca] // (split) binary operation 
+        }
+        SUB_u32_u32_176_sample_start_ &-> (SUB_u32_u32_176_Sample)
+        SUB_u32_u32_176_sample_completed_ <-& (SUB_u32_u32_176_Sample)
+        SUB_u32_u32_176_sample_completed_ &-> ($null)
+        SUB_u32_u32_176_update_start_ &-> (SUB_u32_u32_176_Update)
+        SUB_u32_u32_176_update_completed_ <-& (SUB_u32_u32_176_Update)
+        // Target expression
+        // (as target) BL
+        // start: WAR dependencies for BL
+        // done: WAR dependencies for BL
+        // end:  		BL := (BLx - BF) $buffering 1// bits of buffering = 32. 
+        // start:  		BAUD_CONTROL_WORD_SIG := ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) $buffering 1// bits of buffering = 32. 
+        //  file core.linked.opt.aa, line 78
+        // Source expression
+        // ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) )
+        $T[CONCAT_u20_u32_188_sample_start_] 
+        $T[CONCAT_u20_u32_188_sample_completed_] 
+        $T[CONCAT_u20_u32_188_update_start_] 
+        $T[CONCAT_u20_u32_188_update_completed_] 
+        // (( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  ))
+        // ( $slice BL 15 0 ) 
+        // BL
+        // ( $slice BF 11 0 ) 
+        // BF
+        // start: Forward dependencies from (( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) to transition CONCAT_u20_u32_188_sample_start_
+        CONCAT_u20_u32_188_sample_start_ <-& (SUB_u32_u32_176_update_completed_)
+        // done: Forward dependencies from (( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) to transition CONCAT_u20_u32_188_sample_start_
+        // start: Forward dependencies from ( $slice BF 11 0 )  to transition CONCAT_u20_u32_188_sample_start_
+        CONCAT_u20_u32_188_sample_start_ <-& (call_stmt_168_update_completed_)
+        // done: Forward dependencies from ( $slice BF 11 0 )  to transition CONCAT_u20_u32_188_sample_start_
+        ;;[CONCAT_u20_u32_188_Sample] 
+        {
+          // binary expression 
+          $T [rr] $T [ra]  // (split) binary operation 
+        }
+        ;;[CONCAT_u20_u32_188_Update] 
+        {
+          // binary expression 
+          $T [cr] $T [ca] // (split) binary operation 
+        }
+        CONCAT_u20_u32_188_sample_start_ &-> (CONCAT_u20_u32_188_Sample)
+        CONCAT_u20_u32_188_sample_completed_ <-& (CONCAT_u20_u32_188_Sample)
+        CONCAT_u20_u32_188_sample_completed_ &-> ($null)
+        CONCAT_u20_u32_188_update_start_ &-> (CONCAT_u20_u32_188_Update)
+        CONCAT_u20_u32_188_update_completed_ <-& (CONCAT_u20_u32_188_Update)
+        // Target expression
+        // (as target) BAUD_CONTROL_WORD_SIG
+        $T[WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_start_] 
+        $T[WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_completed_] 
+        $T[WPIPE_BAUD_CONTROL_WORD_SIG_178_update_start_] 
+        $T[WPIPE_BAUD_CONTROL_WORD_SIG_178_update_completed_] 
+        ;;[WPIPE_BAUD_CONTROL_WORD_SIG_178_Sample] 
+        {
+          // pipe write sample-start BAUD_CONTROL_WORD_SIG
+          $T [req] $T [ack] 
+        }
+        ;;[WPIPE_BAUD_CONTROL_WORD_SIG_178_Update] 
+        {
+          // pipe write update (complete) BAUD_CONTROL_WORD_SIG
+          $T [req] $T [ack] 
+        }
+        WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_start_ &-> (WPIPE_BAUD_CONTROL_WORD_SIG_178_Sample)
+        WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_completed_ <-& (WPIPE_BAUD_CONTROL_WORD_SIG_178_Sample)
+        WPIPE_BAUD_CONTROL_WORD_SIG_178_update_start_ <-& (WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_completed_)
+        WPIPE_BAUD_CONTROL_WORD_SIG_178_update_start_ &-> (WPIPE_BAUD_CONTROL_WORD_SIG_178_Update)
+        WPIPE_BAUD_CONTROL_WORD_SIG_178_update_completed_ <-& (WPIPE_BAUD_CONTROL_WORD_SIG_178_Update)
+        // start: Forward dependencies from ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) to transition WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_start_
+        WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_start_ <-& (CONCAT_u20_u32_188_update_completed_)
+        // done: Forward dependencies from ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) to transition WPIPE_BAUD_CONTROL_WORD_SIG_178_sample_start_
+        // end:  		BAUD_CONTROL_WORD_SIG := ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) $buffering 1// bits of buffering = 32. 
+        // load-store dependencies..
+        // pipe read/write dependencies for pipe BAUD_CONTROL_WORD_SIG
+        // read-dependencies for pipe BAUD_CONTROL_WORD_SIG
+        // write-dependencies for pipe BAUD_CONTROL_WORD_SIG
+        // signal write dependencies for BAUD_CONTROL_WORD_SIG
+      }
+      assign_stmt_151_to_assign_stmt_189__entry__ |-> (assign_stmt_151_to_assign_stmt_189)
+      assign_stmt_151_to_assign_stmt_189__exit__ <-| (assign_stmt_151_to_assign_stmt_189)
+      ::[assign_stmt_193] 
+      {
+        // start:  		BAUD_CONTROL_WORD_VALID := 1  $buffering 1// bits of buffering = 1. 
+        //  file core.linked.opt.aa, line 80
+        // Target expression
+        // (as target) BAUD_CONTROL_WORD_VALID
+        $T[WPIPE_BAUD_CONTROL_WORD_VALID_191_sample_start_] 
+        $T[WPIPE_BAUD_CONTROL_WORD_VALID_191_sample_completed_] 
+        $T[WPIPE_BAUD_CONTROL_WORD_VALID_191_update_start_] 
+        $T[WPIPE_BAUD_CONTROL_WORD_VALID_191_update_completed_] 
+        ;;[WPIPE_BAUD_CONTROL_WORD_VALID_191_Sample] 
+        {
+          // pipe write sample-start BAUD_CONTROL_WORD_VALID
+          $T [req] $T [ack] 
+        }
+        ;;[WPIPE_BAUD_CONTROL_WORD_VALID_191_Update] 
+        {
+          // pipe write update (complete) BAUD_CONTROL_WORD_VALID
+          $T [req] $T [ack] 
+        }
+        WPIPE_BAUD_CONTROL_WORD_VALID_191_sample_start_ &-> (WPIPE_BAUD_CONTROL_WORD_VALID_191_Sample)
+        WPIPE_BAUD_CONTROL_WORD_VALID_191_sample_completed_ <-& (WPIPE_BAUD_CONTROL_WORD_VALID_191_Sample)
+        WPIPE_BAUD_CONTROL_WORD_VALID_191_update_start_ <-& (WPIPE_BAUD_CONTROL_WORD_VALID_191_sample_completed_)
+        WPIPE_BAUD_CONTROL_WORD_VALID_191_update_start_ &-> (WPIPE_BAUD_CONTROL_WORD_VALID_191_Update)
+        WPIPE_BAUD_CONTROL_WORD_VALID_191_update_completed_ <-& (WPIPE_BAUD_CONTROL_WORD_VALID_191_Update)
+        // end:  		BAUD_CONTROL_WORD_VALID := 1  $buffering 1// bits of buffering = 1. 
+        // load-store dependencies..
+        // pipe read/write dependencies for pipe BAUD_CONTROL_WORD_VALID
+        // read-dependencies for pipe BAUD_CONTROL_WORD_VALID
+        // write-dependencies for pipe BAUD_CONTROL_WORD_VALID
+        // signal write dependencies for BAUD_CONTROL_WORD_VALID
+      }
+      assign_stmt_193__entry__ |-> (assign_stmt_193)
+      assign_stmt_193__exit__ <-| (assign_stmt_193)
+      // control-path for merge  
+      //  file core.linked.opt.aa, line 64
+      ;;[merge_stmt_134_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      merge_stmt_134__entry__ |-> (merge_stmt_134_dead_link)
+      merge_stmt_134__exit__ <-| (merge_stmt_134_dead_link)
+      //---------------------   merge statement  file core.linked.opt.aa, line 64  --------------------------
+      ||[merge_stmt_134__entry___PhiReq] 
+      {
+        // no phi statements in merge..
+      }
+      merge_stmt_134__entry__ |-> (merge_stmt_134__entry___PhiReq)
+      ||[wait_on_clock_PhiReq] 
+      {
+        // no phi statements in merge..
+      }
+      wait_on_clock |-> (wait_on_clock_PhiReq)
+      $P [merge_stmt_134_PhiReqMerge] 
+      merge_stmt_134_PhiReqMerge <-| ( merge_stmt_134__entry___PhiReq  wait_on_clock_PhiReq )
+      ||[merge_stmt_134_PhiAck] 
+      {
+        $T [dummy] 
+      }
+      merge_stmt_134_PhiReqMerge |-> (merge_stmt_134_PhiAck)
+      merge_stmt_134__exit__  <-| (merge_stmt_134_PhiAck)
+      //---------------------  end of merge statement  file core.linked.opt.aa, line 64  --------------------------
+      // control-path for merge  
+      //  file core.linked.opt.aa, line 70
+      ;;[merge_stmt_143_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      merge_stmt_143__entry__ |-> (merge_stmt_143_dead_link)
+      merge_stmt_143__exit__ <-| (merge_stmt_143_dead_link)
+      //---------------------   merge statement  file core.linked.opt.aa, line 70  --------------------------
+      ||[merge_stmt_143__entry___PhiReq] 
+      {
+        // no phi statements in merge..
+      }
+      merge_stmt_143__entry__ |-> (merge_stmt_143__entry___PhiReq)
+      ||[loopback_PhiReq] 
+      {
+        // no phi statements in merge..
+      }
+      loopback |-> (loopback_PhiReq)
+      $P [merge_stmt_143_PhiReqMerge] 
+      merge_stmt_143_PhiReqMerge <-| ( merge_stmt_143__entry___PhiReq  loopback_PhiReq )
+      ||[merge_stmt_143_PhiAck] 
+      {
+        $T [dummy] 
+      }
+      merge_stmt_143_PhiReqMerge |-> (merge_stmt_143_PhiAck)
+      merge_stmt_143__exit__  <-| (merge_stmt_143_PhiAck)
+      //---------------------  end of merge statement  file core.linked.opt.aa, line 70  --------------------------
+      merge_stmt_134__entry__ <-| (branch_block_stmt_133__entry__)
+      assign_stmt_137__entry__ <-| (merge_stmt_134__exit__)
+      if_stmt_138__entry__ <-| (assign_stmt_137__exit__)
+      merge_stmt_143__entry__ <-| (if_stmt_138__exit__)
+      assign_stmt_151_to_assign_stmt_189__entry__ <-| (merge_stmt_143__exit__)
+      assign_stmt_193__entry__ <-| (assign_stmt_151_to_assign_stmt_189__exit__)
+      loopback <-| (assign_stmt_193__exit__)
+    }
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %baudControlCalculatorDaemon%loop%
+    //  file core.linked.opt.aa, line 64
+    // constant-object-declarations for block %baudControlCalculatorDaemon%loop%
+    //  file core.linked.opt.aa, line 70
+    // constant-object-declarations for block %baudControlCalculatorDaemon%loop
+    //  file core.linked.opt.aa, line 62
+    // constant-object-declarations for block %baudControlCalculatorDaemon
+    //  file core.linked.opt.aa, line 56
+    // 0 
+    $constant $W[konst_131_wire_constant] : $int<1> := _b0// 0
+    // constant-declarations for block %baudControlCalculatorDaemon%loop
+    //  file core.linked.opt.aa, line 62
+    // constant-declarations for block %baudControlCalculatorDaemon%loop%
+    //  file core.linked.opt.aa, line 64
+    // if-statement  
+    //  file core.linked.opt.aa, line -977200264
+    // constant-declarations for block %baudControlCalculatorDaemon%loop%
+    //  file core.linked.opt.aa, line 70
+    // ($bitcast ($uint<16>) _b0  )
+    $constant $W[type_cast_149_wire_constant] : $int<16> := _b0000000000000000// 0
+    // ($bitcast ($uint<4>) _b0  )
+    $constant $W[type_cast_158_wire_constant] : $int<4> := _b0000// 0
+    // 		$call my_gcd (SS BRx16 ) (GCD ) 
+    //  file core.linked.opt.aa, line 74
+    // 		$call my_div (BRx16 GCD ) (BF ) 
+    //  file core.linked.opt.aa, line 75
+    // 		$call my_div (SS GCD ) (BLx ) 
+    //  file core.linked.opt.aa, line 76
+    // ($bitcast ($uint<4>) _b0  )
+    $constant $W[type_cast_182_wire_constant] : $int<4> := _b0000// 0
+    // 1 
+    $constant $W[konst_192_wire_constant] : $int<1> := _b1// 1
+    // 	BAUD_CONTROL_WORD_VALID := 0  $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 61
+    // BAUD_CONTROL_WORD_VALID
+    // block %baudControlCalculatorDaemon%loop
+    //  file core.linked.opt.aa, line 62
+    // 		clock_valid := CLOCK_FREQUENCY_VALID $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 66
+    // CLOCK_FREQUENCY_VALID
+    $W[RPIPE_CLOCK_FREQUENCY_VALID_136_wire] : $int<1>
+    // clock_valid
+    $W[clock_valid_137] : $int<1>
+    // if statement  
+    //  file core.linked.opt.aa, line -977200264
+    // ( ~ clock_valid )
+    $intermediate $W[NOT_u1_u1_140_wire] : $int<1>
+    // 		SS := (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  )) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 72
+    // CLK_FREQUENCY_SIG
+    $W[RPIPE_CLK_FREQUENCY_SIG_145_wire] : $int<32>
+    // ( $slice CLK_FREQUENCY_SIG 31 16 ) 
+    $intermediate $W[slice_147_wire] : $int<16>
+    // SS
+    $W[SS_151] : $int<32>
+    // 		BRx16 := (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  )) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 73
+    // BAUD_RATE_SIG
+    $W[RPIPE_BAUD_RATE_SIG_153_wire] : $int<32>
+    // ( $slice BAUD_RATE_SIG 27 0 ) 
+    $intermediate $W[slice_155_wire] : $int<28>
+    // BRx16
+    $W[BRx16_160] : $int<32>
+    // 		$call my_gcd (SS BRx16 ) (GCD ) 
+    //  file core.linked.opt.aa, line 74
+    // GCD
+    $W[GCD_164] : $int<32>
+    // 		$call my_div (BRx16 GCD ) (BF ) 
+    //  file core.linked.opt.aa, line 75
+    // BF
+    $W[BF_168] : $int<32>
+    // 		$call my_div (SS GCD ) (BLx ) 
+    //  file core.linked.opt.aa, line 76
+    // BLx
+    $W[BLx_172] : $int<32>
+    // 		BL := (BLx - BF) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 77
+    // BL
+    $W[BL_177] : $int<32>
+    // 		BAUD_CONTROL_WORD_SIG := ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 78
+    // ( $slice BL 15 0 ) 
+    $intermediate $W[slice_180_wire] : $int<16>
+    // (( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  ))
+    $intermediate $W[CONCAT_u16_u20_183_wire] : $int<20>
+    // ( $slice BF 11 0 ) 
+    $intermediate $W[slice_187_wire] : $int<12>
+    // ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) )
+    $intermediate $W[CONCAT_u20_u32_188_wire] : $int<32>
+    // BAUD_CONTROL_WORD_SIG
+    // 		BAUD_CONTROL_WORD_VALID := 1  $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 80
+    // BAUD_CONTROL_WORD_VALID
+    // 	BAUD_CONTROL_WORD_VALID := 0  $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 61
+    // BAUD_CONTROL_WORD_VALID
+    $ioport $out [WPIPE_BAUD_CONTROL_WORD_VALID_130_inst]  (konst_131_wire_constant) (BAUD_CONTROL_WORD_VALID) 
+    // datapath-instances for block %baudControlCalculatorDaemon%loop
+    //  file core.linked.opt.aa, line 62
+    // 		clock_valid := CLOCK_FREQUENCY_VALID $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 66
+    # := [W_clock_valid_135_inst] (RPIPE_CLOCK_FREQUENCY_VALID_136_wire) (clock_valid_137)    
+    // CLOCK_FREQUENCY_VALID
+    $ioport $in [RPIPE_CLOCK_FREQUENCY_VALID_136_inst] (CLOCK_FREQUENCY_VALID) (RPIPE_CLOCK_FREQUENCY_VALID_136_wire) 
+    $buffering $out RPIPE_CLOCK_FREQUENCY_VALID_136_inst RPIPE_CLOCK_FREQUENCY_VALID_136_wire 1
+    // datapath-instances for if  
+    //  file core.linked.opt.aa, line -977200264
+    // ( ~ clock_valid )
+    ~ [NOT_u1_u1_140_inst] (clock_valid_137) (NOT_u1_u1_140_wire)   $flowthrough
+    $delay NOT_u1_u1_140_inst 0
+    ==0? [if_stmt_138_branch] (NOT_u1_u1_140_wire)
+    // 		SS := (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  )) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 72
+    // CLK_FREQUENCY_SIG
+    $ioport $in [RPIPE_CLK_FREQUENCY_SIG_145_inst] (CLK_FREQUENCY_SIG) (RPIPE_CLK_FREQUENCY_SIG_145_wire) 
+    $buffering $out RPIPE_CLK_FREQUENCY_SIG_145_inst RPIPE_CLK_FREQUENCY_SIG_145_wire 1
+    // ( $slice CLK_FREQUENCY_SIG 31 16 ) 
+    [:] [slice_147_inst] (RPIPE_CLK_FREQUENCY_SIG_145_wire 31 16) (slice_147_wire)  $flowthrough
+    $delay slice_147_inst 0
+    // (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  ))
+    &&[CONCAT_u16_u32_150_inst] (slice_147_wire type_cast_149_wire_constant) (SS_151)   
+    $buffering  $out CONCAT_u16_u32_150_inst SS_151 1
+    $delay CONCAT_u16_u32_150_inst 1
+    // 		BRx16 := (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  )) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 73
+    // BAUD_RATE_SIG
+    $ioport $in [RPIPE_BAUD_RATE_SIG_153_inst] (BAUD_RATE_SIG) (RPIPE_BAUD_RATE_SIG_153_wire) 
+    $buffering $out RPIPE_BAUD_RATE_SIG_153_inst RPIPE_BAUD_RATE_SIG_153_wire 1
+    // ( $slice BAUD_RATE_SIG 27 0 ) 
+    [:] [slice_155_inst] (RPIPE_BAUD_RATE_SIG_153_wire 27 0) (slice_155_wire)  $flowthrough
+    $delay slice_155_inst 0
+    // (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  ))
+    &&[CONCAT_u28_u32_159_inst] (slice_155_wire type_cast_158_wire_constant) (BRx16_160)   
+    $buffering  $out CONCAT_u28_u32_159_inst BRx16_160 1
+    $delay CONCAT_u28_u32_159_inst 1
+    // 		$call my_gcd (SS BRx16 ) (GCD ) 
+    //  file core.linked.opt.aa, line 74
+    $call [call_stmt_164_call] $module my_gcd(SS_151 BRx16_160) (GCD_164)  
+    $delay call_stmt_164_call 4
+    $buffering  $in call_stmt_164_call SS_151 1
+    $buffering  $in call_stmt_164_call BRx16_160 1
+    $buffering  $out call_stmt_164_call GCD_164 1
+    // 		$call my_div (BRx16 GCD ) (BF ) 
+    //  file core.linked.opt.aa, line 75
+    $call [call_stmt_168_call] $module my_div(BRx16_160 GCD_164) (BF_168)  
+    $delay call_stmt_168_call 4
+    $buffering  $in call_stmt_168_call BRx16_160 1
+    $buffering  $in call_stmt_168_call GCD_164 1
+    $buffering  $out call_stmt_168_call BF_168 1
+    // 		$call my_div (SS GCD ) (BLx ) 
+    //  file core.linked.opt.aa, line 76
+    $call [call_stmt_172_call] $module my_div(SS_151 GCD_164) (BLx_172)  
+    $delay call_stmt_172_call 4
+    $buffering  $in call_stmt_172_call SS_151 1
+    $buffering  $in call_stmt_172_call GCD_164 1
+    $buffering  $out call_stmt_172_call BLx_172 1
+    // 		BL := (BLx - BF) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 77
+    // (BLx - BF)
+    -[SUB_u32_u32_176_inst] (BLx_172 BF_168) (BL_177)   
+    $buffering  $out SUB_u32_u32_176_inst BL_177 1
+    $delay SUB_u32_u32_176_inst 1
+    // 		BAUD_CONTROL_WORD_SIG := ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) $buffering 1// bits of buffering = 32. 
+    //  file core.linked.opt.aa, line 78
+    // ( $slice BL 15 0 ) 
+    [:] [slice_180_inst] (BL_177 15 0) (slice_180_wire)  $flowthrough
+    $delay slice_180_inst 0
+    // (( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  ))
+    &&[CONCAT_u16_u20_183_inst] (slice_180_wire type_cast_182_wire_constant) (CONCAT_u16_u20_183_wire)   $flowthrough 
+    $delay CONCAT_u16_u20_183_inst 0
+    // ( $slice BF 11 0 ) 
+    [:] [slice_187_inst] (BF_168 11 0) (slice_187_wire)  $flowthrough
+    $delay slice_187_inst 0
+    // ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) )
+    &&[CONCAT_u20_u32_188_inst] (CONCAT_u16_u20_183_wire slice_187_wire) (CONCAT_u20_u32_188_wire)   
+    $buffering  $out CONCAT_u20_u32_188_inst CONCAT_u20_u32_188_wire 1
+    $delay CONCAT_u20_u32_188_inst 1
+    // BAUD_CONTROL_WORD_SIG
+    $ioport $out [WPIPE_BAUD_CONTROL_WORD_SIG_178_inst]  (CONCAT_u20_u32_188_wire) (BAUD_CONTROL_WORD_SIG) 
+    // 		BAUD_CONTROL_WORD_VALID := 1  $buffering 1// bits of buffering = 1. 
+    //  file core.linked.opt.aa, line 80
+    // BAUD_CONTROL_WORD_VALID
+    $ioport $out [WPIPE_BAUD_CONTROL_WORD_VALID_191_inst]  (konst_192_wire_constant) (BAUD_CONTROL_WORD_VALID) 
+  }
+  // end data-path
+  // 	BAUD_CONTROL_WORD_VALID := 0  $buffering 1// bits of buffering = 1. 
+  //  file core.linked.opt.aa, line 61
+  // BAUD_CONTROL_WORD_VALID
+  WPIPE_BAUD_CONTROL_WORD_VALID_130_inst <=> (assign_stmt_132/WPIPE_BAUD_CONTROL_WORD_VALID_130_Sample/req assign_stmt_132/WPIPE_BAUD_CONTROL_WORD_VALID_130_Update/req) (assign_stmt_132/WPIPE_BAUD_CONTROL_WORD_VALID_130_Sample/ack assign_stmt_132/WPIPE_BAUD_CONTROL_WORD_VALID_130_Update/ack)
+  // CP-DP links for merge  
+  //  file core.linked.opt.aa, line 64
+  // 		clock_valid := CLOCK_FREQUENCY_VALID $buffering 1// bits of buffering = 1. 
+  //  file core.linked.opt.aa, line 66
+  // CLOCK_FREQUENCY_VALID
+  W_clock_valid_135_inst <=> (branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Sample/req branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Update/req) (branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Sample/ack branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Update/ack)
+  // CP-DP links for if  
+  //  file core.linked.opt.aa, line -977200264
+  // ( ~ clock_valid )
+  if_stmt_138_branch <=> (branch_block_stmt_133/if_stmt_138_eval_test/branch_req) (branch_block_stmt_133/if_stmt_138_else_link/else_choice_transition branch_block_stmt_133/if_stmt_138_if_link/if_choice_transition)
+  // CP-DP links for merge  
+  //  file core.linked.opt.aa, line 70
+  // 		SS := (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  )) $buffering 1// bits of buffering = 32. 
+  //  file core.linked.opt.aa, line 72
+  // (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  ))
+  // CLK_FREQUENCY_SIG
+  CONCAT_u16_u32_150_inst <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u16_u32_150_Sample/rr branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u16_u32_150_Update/cr) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u16_u32_150_Sample/ra branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u16_u32_150_Update/ca)
+  // 		BRx16 := (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  )) $buffering 1// bits of buffering = 32. 
+  //  file core.linked.opt.aa, line 73
+  // (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  ))
+  // BAUD_RATE_SIG
+  CONCAT_u28_u32_159_inst <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u28_u32_159_Sample/rr branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u28_u32_159_Update/cr) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u28_u32_159_Sample/ra branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u28_u32_159_Update/ca)
+  // 		$call my_gcd (SS BRx16 ) (GCD ) 
+  //  file core.linked.opt.aa, line 74
+  // SS
+  // BRx16
+  call_stmt_164_call <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_164_Sample/crr branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_164_Update/ccr) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_164_Sample/cra branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_164_Update/cca)
+  // 		$call my_div (BRx16 GCD ) (BF ) 
+  //  file core.linked.opt.aa, line 75
+  // BRx16
+  // GCD
+  call_stmt_168_call <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_168_Sample/crr branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_168_Update/ccr) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_168_Sample/cra branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_168_Update/cca)
+  // 		$call my_div (SS GCD ) (BLx ) 
+  //  file core.linked.opt.aa, line 76
+  // SS
+  // GCD
+  call_stmt_172_call <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_172_Sample/crr branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_172_Update/ccr) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_172_Sample/cra branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_172_Update/cca)
+  // 		BL := (BLx - BF) $buffering 1// bits of buffering = 32. 
+  //  file core.linked.opt.aa, line 77
+  // (BLx - BF)
+  // BLx
+  // BF
+  SUB_u32_u32_176_inst <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/SUB_u32_u32_176_Sample/rr branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/SUB_u32_u32_176_Update/cr) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/SUB_u32_u32_176_Sample/ra branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/SUB_u32_u32_176_Update/ca)
+  // 		BAUD_CONTROL_WORD_SIG := ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) $buffering 1// bits of buffering = 32. 
+  //  file core.linked.opt.aa, line 78
+  // ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) )
+  // (( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  ))
+  // BL
+  // BF
+  CONCAT_u20_u32_188_inst <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u20_u32_188_Sample/rr branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u20_u32_188_Update/cr) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u20_u32_188_Sample/ra branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u20_u32_188_Update/ca)
+  // BAUD_CONTROL_WORD_SIG
+  WPIPE_BAUD_CONTROL_WORD_SIG_178_inst <=> (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/WPIPE_BAUD_CONTROL_WORD_SIG_178_Sample/req branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/WPIPE_BAUD_CONTROL_WORD_SIG_178_Update/req) (branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/WPIPE_BAUD_CONTROL_WORD_SIG_178_Sample/ack branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/WPIPE_BAUD_CONTROL_WORD_SIG_178_Update/ack)
+  // 		BAUD_CONTROL_WORD_VALID := 1  $buffering 1// bits of buffering = 1. 
+  //  file core.linked.opt.aa, line 80
+  // BAUD_CONTROL_WORD_VALID
+  WPIPE_BAUD_CONTROL_WORD_VALID_191_inst <=> (branch_block_stmt_133/assign_stmt_193/WPIPE_BAUD_CONTROL_WORD_VALID_191_Sample/req branch_block_stmt_133/assign_stmt_193/WPIPE_BAUD_CONTROL_WORD_VALID_191_Update/req) (branch_block_stmt_133/assign_stmt_193/WPIPE_BAUD_CONTROL_WORD_VALID_191_Sample/ack branch_block_stmt_133/assign_stmt_193/WPIPE_BAUD_CONTROL_WORD_VALID_191_Update/ack)
+}
+$module [global_storage_initializer_] 
+{
+  // pipe-declarations for block %global_storage_initializer_
+  //  file core.linked.opt.aa, line 84
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %global_storage_initializer_
+    //  file core.linked.opt.aa, line 84
+  }
+  // end data-path
+}

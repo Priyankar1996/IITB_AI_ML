@@ -1,9 +1,12 @@
-$module [memFetch256] $in (addr1 addr2 addr3 addr4 : $uint<32>) $out (output : $uint<64>) $is
+
+
+
+$pipeline $depth 15  $buffering 1 $fullrate
+$module [maxPool4]
+$in (addr1 addr2 addr3 addr4 : $uint<32>)
+$out (output : $uint<64>)
+$is
 {
-    $volatile var1 :=  ( $bitcast ($uint<64> ) addr1 )
-    $volatile var2 :=  ( $bitcast ($uint<64> ) addr2 )
-    $volatile var3 :=  ( $bitcast ($uint<64> ) addr3 )
-    $volatile var4 :=  ( $bitcast ($uint<64> ) addr4 )
     arrayidx1 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][addr1])
     arrayidx2 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][addr2])
     arrayidx3 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][addr3])

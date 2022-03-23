@@ -8,8 +8,27 @@
 #include "sized_tensor.h"
 #include "maxPoolOfTensors.h"
 
-SizedTensor_16K T,B;
 TensorDescriptor desc_T,desc_B;
+SizedTensor_16K B;
+
+#ifndef SW
+uint8_t fill_T(uint64_t i);
+#else
+SizedTensor_16K T;
+#define fill_T(i) ({\
+	uint64_t element;\
+	uint8_t x;\
+	__get4xi16__(element);\
+	T.data_array[4*i] = element;\
+	__get4xi16__(element);\
+	T.data_array[4*i+1] = element;\
+	__get4xi16__(element);\
+	T.data_array[4*i+2] = element;\
+	__get4xi16__(element);\
+	T.data_array[4*i+3] = element;\
+	x;\
+})
+#endif
 
 #define __get4xi16__(element) ({\
 	element = read_uint16 ("maxpool_input_pipe");\
@@ -50,15 +69,9 @@ void testConfigure()
 
 	// size = number of 16-bit values in data array..
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
-	for (i = 0; i < (size >> 2); i++)
+	for (i = 0; i < (size >> 4); i++)
 	{
-		uint64_t element;
-		// __get4xi16__ reads 4 16-bit numbers from
-		// maxpool_input_pipe, and packs them into 
-		// a 64 bit number
- 		__get4xi16__(element);
-
-		T.data_array[i] = element;
+		uint8_t done = fill_T(i);
 	}
 }
 
@@ -80,7 +93,7 @@ void maxPoolCore1(){
 	uint16_t offset1 = read_uint16("core1_req_pipe");
 	uint16_t offset2 = read_uint16("core1_req_pipe");
 	__aa_barrier__();
-	__maxPoolOfTensors3D_div__(T, B, 0, 0, re,ce,dim1d,ce,offset1,offset2);
+	__maxPoolOfTensors3D_div__(B, 0, 0, re,ce,dim1d,ce,offset1,offset2);
 	__aa_barrier__();
 	write_uint8("core1_ack_pipe",1);
 }
@@ -128,7 +141,7 @@ void maxPool3D()
 	uint16_t ce = __dim1__(desc_B);
 	uint16_t re = __dim0__(desc_B);
 	uint16_t dim1d = __dim1__(desc_T);
-	uint16_t offset1 = __dim22__(desc_B), offset2 = dim1d*offset1;
+	uint16_t offset1 = __dim24__(desc_B), offset2 = dim1d*offset1;
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();

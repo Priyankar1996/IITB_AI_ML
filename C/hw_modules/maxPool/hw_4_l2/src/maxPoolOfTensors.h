@@ -26,6 +26,7 @@ void maxPoolCore4();
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
 void __aa_barrier__();
+uint64_t memFetch256(uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4);
 #else
 	#define __loop_pipeline_var__ {;}
 	#define __aa_barrier__() {;}
@@ -43,7 +44,7 @@ void __aa_barrier__();
 	}\
 })
 
-#define __maxOperation4__(src,add_src,data_array1,data_array2,data_array3,data_array4) ({\
+#define __maxOperation4__(data_array1,data_array2,data_array3,data_array4) ({\
 		__dt__ min_val1 , min_val2, min_val3, min_val4,\
 		min_val5, min_val6, min_val7, min_val8,\
 		min_val9, min_val10, min_val11, min_val12;\
@@ -100,11 +101,7 @@ void __aa_barrier__();
 		__loop_pipeline_var__\
 		address = chl+offset1*(col+dim1*row);\
 		add_src = chl+((offset1*(col+dim1d*row))<<1);\
-		data_array1 = src.data_array[add_src];\
-		data_array2 = src.data_array[add_src + offset1];\
-		data_array3 = src.data_array[add_src + offset2];\
-		data_array4 = src.data_array[add_src + offset3];\
-		dst.data_array[address] = __maxOperation4__(src,add_src,data_array1,data_array2,data_array3,data_array4);\
+		dst.data_array[address] = memFetch256(add_src,add_src+offset1,add_src+offset2,add_src+offset3);\
 		__increment_mm__(row,col,chl,cs,ce,offset1);\
 		if (row == re) break;\
 	}\

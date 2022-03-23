@@ -1,13 +1,13 @@
-commit d837ae7ac62ff3edc80e1dcb18e2156fcfe93885
+commit 3414cde8be3973ef907b46874e09b9b8905089e3
 Author: Madhav Pandurang Desai <madhav@ee.iitb.ac.in>
-Date:   Sat Mar 6 19:37:51 2021 +0530
+Date:   Mon Nov 29 01:53:48 2021 +0530
 
-    Added an example for switches...  these are rarely used, but useful
+    Clock gating support added.
 ----------------------------------------------------------------------------
-Thu Mar 11 18:48:43 IST 2021
-commit d837ae7ac62ff3edc80e1dcb18e2156fcfe93885
+Sun Dec 5 23:59:52 IST 2021
+commit 3414cde8be3973ef907b46874e09b9b8905089e3
 Author: Madhav Pandurang Desai <madhav@ee.iitb.ac.in>
-Date:   Sat Mar 6 19:37:51 2021 +0530
+Date:   Mon Nov 29 01:53:48 2021 +0530
 
-    Added an example for switches...  these are rarely used, but useful
+    Clock gating support added.
 ----------------------------------------------------------------------------

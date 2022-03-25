@@ -117,29 +117,29 @@ void zeropad3D()
 	uint16_t p_start1 = 0;
 	uint16_t q_start1 = 0;
 	// uint16_t r_start1 = 0;
-	uint16_t p_end1 = 0;
+	uint16_t p_end1 = 3;
 	uint16_t q_end1 = 3;
 	// uint16_t r_end1 = 0;
 
-	uint16_t p_start2 = 1;
-	uint16_t q_start2 = 0;
+	uint16_t p_start2 = 0;
+	uint16_t q_start2 = 3;
 	// uint16_t r_start2 = 0;
-	uint16_t p_end2 = 1;
-	uint16_t q_end2 = 3;
+	uint16_t p_end2 = 3;
+	uint16_t q_end2 = 6;
 	// uint16_t r_end2 = 0;
 	
-	uint16_t p_start3 = 2;
+	uint16_t p_start3 = 3;
 	uint16_t q_start3 = 0;
 	// uint16_t r_start3 = 0;
-	uint16_t p_end3 = 2;
+	uint16_t p_end3 = 6;
 	uint16_t q_end3 = 3;
 	// uint16_t r_end3 = 0;
 	
 	uint16_t p_start4 = 3;
-	uint16_t q_start4 = 0;
+	uint16_t q_start4 = 3;
 	// uint16_t r_start4 = 0;
-	uint16_t p_end4 = 3;
-	uint16_t q_end4 = 3;
+	uint16_t p_end4 = 6;
+	uint16_t q_end4 = 6;
 	// uint16_t r_end4 = 0;
 	__aa_barrier__();
 #ifndef SW

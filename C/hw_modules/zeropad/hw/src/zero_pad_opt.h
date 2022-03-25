@@ -40,6 +40,32 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int dim21T = dim2T*dim1T;\
 	int dim21R = dim2R*dim1R;\
 	j = j1;\
+	uint64_t z = 0;\
+	while (i == (row_high+pad))\
+	{\
+		int img_data_array_idx_z = (k + dim2R*j + dim21R*i);\
+		int img_data_array_idx_z_1 = img_data_array_idx_z + 1;\
+		int img_data_array_idx_z_2 = img_data_array_idx_z + 2;\
+		int img_data_array_idx_z_3 = img_data_array_idx_z + 3;\
+		R.data_array[img_data_array_idx_z >> 2] = z;\
+		R.data_array[img_data_array_idx_z_1 >> 2] = z;\
+		R.data_array[img_data_array_idx_z_2 >> 2] = z;\
+		R.data_array[img_data_array_idx_z_3 >> 2] = z;\
+		k+=4;\
+		if (k == dim2R)\
+		{\
+			k = 0;\
+			j++;\
+			if (j == (col_high + pad))\
+			{\
+				j = 0;\
+				i++;\
+			}\
+		}\
+	}\
+	i = row_low;\
+	j = j1;\
+	k = 0;\
 	while (i < row_high)\
 	{\
 		int img_data_array_idx = (k + dim2T*j + dim21T*i);\

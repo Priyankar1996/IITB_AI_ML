@@ -42,8 +42,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int dim21R = dim2R*dim1R;\
 	j = j1;\
 	uint64_t img_data;\
-	/*Loop for Zero initialization*/\
-	while (i < p_end + pad)\
+	while (i == (p_end + pad))\
 	{\
 		int out_data_array_idx = k + dim2R*j + dim21R*i;\
 		out.data_array[out_data_array_idx >> 2] = 0;\
@@ -52,7 +51,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 		{\
 			k = 0;\
 			j++;\
-			if(j == q_end + pad)\
+			if(j == (q_end + pad))\
 			{\
 				j = j1;\
 				i++;\
@@ -62,24 +61,20 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	k = 0;\
 	i = p_start;\
 	j = j1;\
-	/*Loop for element transfer*/\
 	while (i < p_end)\
 	{\
 		int img_data_array_idx = k + dim2T*j + dim21T*i;;\
-		/*read one 64 bit block after four 16 bit values have been read*/\
 		if((count - 4*(count >> 2)) == 0)\
 		{\
-			__getOneTensorBlock__(inp,img_data,img_data_array_idx);\
+			img_data = inp.data_array[img_data_array_idx >> 2];\
 		}\
-		/*get the offset of one 16 bit block from one 64 bit block*/\
+		img_data = inp.data_array[img_data_array_idx >> 2];\
 		uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
-		/*get one 16 bit value*/\
 		int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 		count++;\
-		/*pack four 16 bit value into one 64 bit tensor block*/\
-		int out_data_array_idx = k + dim2R*(j+pad) + dim21R*(i+pad);\;\
+		int out_data_array_idx = k + dim2R*(j+pad) + dim21R*(i+pad);\
 		uint8_t temp_out_rem = out_data_array_idx - 4*(out_data_array_idx >> 2);\
-		out.data_array[out_data_array_idx >> 2] = 0;\
+		out.data_array[out_data_array_idx >> 2] = __putOneBlock__(out.data_array[out_data_array_idx >> 2],temp_out_rem,img_one_block);\
 		k++;\
 		if(k == dim2T)\
 		{\
@@ -92,11 +87,6 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 			}\
 		}\
 	}\
-})
-
-
-#define __getOneTensorBlock__(tnsr,data,index)({\
-	data = tnsr.data_array[index >> 2];\
 })
 
 #define __getOneBlock__(array64bit,position)({\

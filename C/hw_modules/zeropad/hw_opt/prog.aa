@@ -262,105 +262,140 @@ $is
     conv15 := ($cast ($uint<32>) call1)
     conv19 := ($cast ($uint<32>) call)
     conv44 := ($cast ($uint<32>) call2)
-    conv128 := ($cast ($uint<32>) call3)
-    tmp8 := ($cast ($uint<32>) tmp4)
-    tmp9 := (tmp8 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
-    tmp11 := (tmp5 + tmp9)
-    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    add47 := (conv + conv44)
+    conv69 := ($cast ($uint<32>) call3)
+    add72 := (conv + conv69)
+    tmp22 := ($cast ($uint<32>) tmp4)
+    tmp23 := (tmp22 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp24 := (tmp5 + tmp23)
     $place [entry_whilex_xcondx_xouter]
     //begin: basic-block whilex_xcondx_xouter
     $merge entry_whilex_xcondx_xouter whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter
-    $phi indvar :=  ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) indvarx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $phi jx_x0x_xph :=  ( $cast ($uint<32>) conv15) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) jx_x0x_xphx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc134x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi img_datax_x1x_xph :=  ( $cast ($uint<64>) ( $bitcast ($uint<64> ) _b0 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<64>) img_datax_x0x_xlcssa) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
+    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc78x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $endmerge
-    tmp3 := (tmp10 * indvar)
     // compare instruction
-    cmp := ( ($bitcast ( $int<32>) ix_x0x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    cmp := (ix_x0x_xph == add47 )
     $if cmp $then  $place [whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge] $else $place [whilex_xcondx_xouter_whilex_xendx_xsplit] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $merge whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $endmerge
-    tmp159 := (tmp5 * ix_x0x_xph)
-    tmp160 := (jx_x0x_xph + tmp159)
-    tmp163 := (tmp10 * tmp160)
-    tmp12 := (tmp11 * ix_x0x_xph)
-    tmp13 := (jx_x0x_xph + tmp12)
-    tmp14 := (tmp10 * tmp13)
-    tmp15 := (tmp9 + tmp14)
-    tmp19 := (tmp18 * tmp160)
-    tmp21 := (tmp15 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp25 := (tmp24 * ix_x0x_xph)
+    tmp26 := (jx_x0x_xph + tmp25)
+    tmp27 := (tmp10 * tmp26)
     $place [whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody]
     //begin: basic-block whilex_xbody
-    $merge ifx_xend_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
-    $phi kx_x0 :=  ( $cast ($uint<32>) inc118) $on ifx_xend_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
-    $phi img_datax_x1 :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_whilex_xbody ( $cast ($uint<64>) img_datax_x1x_xph) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
+    $merge whilex_xbody_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
+    $phi kx_x0 :=  ( $cast ($uint<32>) inc) $on whilex_xbody_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
     $endmerge
-    countx_x0 := (tmp3 + kx_x0)
-    add55 := (tmp163 + kx_x0)
-    add96 := (tmp15 + kx_x0)
-    tmp17 := (kx_x0 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
-    sub69 := (tmp19 + tmp17)
-    sub102 := (tmp21 + tmp17)
-    inc118 := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    sub := (countx_x0 & ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
+    add58 := (tmp27 + kx_x0)
+    inc := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add58) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr])
+    ->(arrayidx) := ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) 
     // compare instruction
-    cmp59 := (sub == ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  )
-    $if cmp59 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_ifx_xend] $endif 
+    exitcond21 := (inc == tmp10 )
+    $if exitcond21 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_whilex_xbody] $endif 
     //begin: basic-block ifx_xthen
     $merge whilex_xbody_ifx_xthen
     $endmerge
-    shr62 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add55) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr62])
-    // load 
-    tmp63 := ->(arrayidx) 
-    $place [ifx_xthen_ifx_xend]
-    //begin: basic-block ifx_xend
-    $merge ifx_xthen_ifx_xend whilex_xbody_ifx_xend
-    $phi img_datax_x0 :=  ( $cast ($uint<64>) tmp63) $on ifx_xthen_ifx_xend ( $cast ($uint<64>) img_datax_x1) $on whilex_xbody_ifx_xend 
-    $endmerge
-    mul76 := (sub69 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom := ($cast ($uint<64>) mul76)
-    shr77 := (img_datax_x0 >> sh_prom)
-    shr105 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add96) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx106 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr105])
-    // load 
-    tmp107 := ->(arrayidx106) 
-    sext := (shr77 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
-    conv109 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
-    mul112 := (sub102 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom113 := ($cast ($uint<64>) mul112)
-    shl := (conv109 << sh_prom113)
-    or := (shl | tmp107)
-    ->(arrayidx106) := or
+    inc66 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     // compare instruction
-    exitcond := (inc118 == tmp10 )
-    $if exitcond $then  $place [ifx_xend_ifx_xthen123] $else $place [ifx_xend_whilex_xbody] $endif 
-    //begin: basic-block ifx_xthen123
-    $merge ifx_xend_ifx_xthen123
-    $phi img_datax_x0x_xlcssa :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_ifx_xthen123 
-    $endmerge
-    inc125 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    // compare instruction
-    cmp129 := (inc125 == conv128 )
-    inc134 := ($cast ($uint<32>) cmp129)
-    inc134x_xix_x0 := (inc134 + ix_x0x_xph)
-    indvarx_xnext2 := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $if cmp129 $then  $place [ifx_xthen123_ifx_xthen131] $else $place [ifx_xthen123_whilex_xcondx_xouterx_xbackedge] $endif 
+    cmp73 := (inc66 == add72 )
+    inc78 := ($cast ($uint<32>) cmp73)
+    inc78x_xix_x0 := (inc78 + ix_x0x_xph)
+    $if cmp73 $then  $place [ifx_xthen_ifx_xthen75] $else $place [ifx_xthen_whilex_xcondx_xouterx_xbackedge] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xbackedge
-    $merge ifx_xthen123_whilex_xcondx_xouterx_xbackedge ifx_xthen131_whilex_xcondx_xouterx_xbackedge
-    $phi indvarx_xbe :=  ( $cast ($uint<32>) indvarx_xnext) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) indvarx_xnext2) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
-    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc125) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
+    $merge ifx_xthen_whilex_xcondx_xouterx_xbackedge ifx_xthen75_whilex_xcondx_xouterx_xbackedge
+    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen75_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc66) $on ifx_xthen_whilex_xcondx_xouterx_xbackedge 
     $endmerge
     $place [whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter]
-    //begin: basic-block ifx_xthen131
-    $merge ifx_xthen123_ifx_xthen131
+    //begin: basic-block ifx_xthen75
+    $merge ifx_xthen_ifx_xthen75
     $endmerge
-    indvarx_xnext := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $place [ifx_xthen131_whilex_xcondx_xouterx_xbackedge]
+    $place [ifx_xthen75_whilex_xcondx_xouterx_xbackedge]
     //begin: basic-block whilex_xendx_xsplit
     $merge whilex_xcondx_xouter_whilex_xendx_xsplit
+    $endmerge
+    tmp2 := ($cast ($uint<32>) tmp4)
+    tmp6 := (tmp2 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp7 := (tmp5 + tmp6)
+    tmp15 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    $place [whilex_xendx_xsplit_whilex_xcond83x_xouter]
+    //begin: basic-block whilex_xcond83x_xouter
+    $merge whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter whilex_xendx_xsplit_whilex_xcond83x_xouter
+    $phi jx_x1x_xph :=  ( $cast ($uint<32>) conv15) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) jx_x1x_xphx_xbe) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $phi ix_x1x_xph :=  ( $cast ($uint<32>) conv19) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) inc191x_xix_x1) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $endmerge
+    // compare instruction
+    cmp87 := ( ($bitcast ( $int<32>) ix_x1x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    $if cmp87 $then  $place [whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge] $else $place [whilex_xcond83x_xouter_whilex_xend194x_xsplit] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $merge whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $endmerge
+    tmp215 := (tmp5 * ix_x1x_xph)
+    tmp216 := (jx_x1x_xph + tmp215)
+    tmp219 := (tmp10 * tmp216)
+    tmp3 := (tmp2 + jx_x1x_xph)
+    tmp8 := (tmp2 + ix_x1x_xph)
+    tmp9 := (tmp7 * tmp8)
+    tmp11 := (tmp3 + tmp9)
+    tmp12 := (tmp10 * tmp11)
+    tmp16 := (tmp15 * tmp11)
+    tmp19 := (tmp18 * tmp216)
+    $place [whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89]
+    //begin: basic-block whilex_xbody89
+    $merge whilex_xbody89_whilex_xbody89 whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89
+    $phi kx_x1 :=  ( $cast ($uint<32>) inc175) $on whilex_xbody89_whilex_xbody89 ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89 
+    $endmerge
+    add99 := (tmp219 + kx_x1)
+    add150 := (tmp12 + kx_x1)
+    tmp14 := (kx_x1 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    sub156 := (tmp16 + tmp14)
+    sub121 := (tmp19 + tmp14)
+    inc175 := (kx_x1 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr113 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add99) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx114 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr113])
+    // load 
+    tmp115 := ->(arrayidx114) 
+    mul128 := (sub121 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom := ($cast ($uint<64>) mul128)
+    shr129 := (tmp115 >> sh_prom)
+    shr159 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add150) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx160 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr159])
+    // load 
+    tmp161 := ->(arrayidx160) 
+    sext := (shr129 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
+    conv163 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
+    mul166 := (sub156 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom167 := ($cast ($uint<64>) mul166)
+    shl := (conv163 << sh_prom167)
+    or := (shl | tmp161)
+    ->(arrayidx160) := or
+    // compare instruction
+    exitcond := (inc175 == tmp10 )
+    $if exitcond $then  $place [whilex_xbody89_ifx_xthen180] $else $place [whilex_xbody89_whilex_xbody89] $endif 
+    //begin: basic-block ifx_xthen180
+    $merge whilex_xbody89_ifx_xthen180
+    $endmerge
+    inc182 := (jx_x1x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    // compare instruction
+    cmp186 := (inc182 == conv69 )
+    inc191 := ($cast ($uint<32>) cmp186)
+    inc191x_xix_x1 := (inc191 + ix_x1x_xph)
+    $if cmp186 $then  $place [ifx_xthen180_ifx_xthen188] $else $place [ifx_xthen180_whilex_xcond83x_xouterx_xbackedge] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xbackedge
+    $merge ifx_xthen180_whilex_xcond83x_xouterx_xbackedge ifx_xthen188_whilex_xcond83x_xouterx_xbackedge
+    $phi jx_x1x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen188_whilex_xcond83x_xouterx_xbackedge ( $cast ($uint<32>) inc182) $on ifx_xthen180_whilex_xcond83x_xouterx_xbackedge 
+    $endmerge
+    $place [whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter]
+    //begin: basic-block ifx_xthen188
+    $merge ifx_xthen180_ifx_xthen188
+    $endmerge
+    $place [ifx_xthen188_whilex_xcond83x_xouterx_xbackedge]
+    //begin: basic-block whilex_xend194x_xsplit
+    $merge whilex_xcond83x_xouter_whilex_xend194x_xsplit
     $endmerge
     $barrier 
     zeropad3D_A_ack_pipe := ( $bitcast ($uint<16> ) _b0000000000000001 ) 
@@ -411,105 +446,140 @@ $is
     conv15 := ($cast ($uint<32>) call1)
     conv19 := ($cast ($uint<32>) call)
     conv44 := ($cast ($uint<32>) call2)
-    conv128 := ($cast ($uint<32>) call3)
-    tmp8 := ($cast ($uint<32>) tmp4)
-    tmp9 := (tmp8 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
-    tmp11 := (tmp5 + tmp9)
-    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    add47 := (conv + conv44)
+    conv69 := ($cast ($uint<32>) call3)
+    add72 := (conv + conv69)
+    tmp22 := ($cast ($uint<32>) tmp4)
+    tmp23 := (tmp22 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp24 := (tmp5 + tmp23)
     $place [entry_whilex_xcondx_xouter]
     //begin: basic-block whilex_xcondx_xouter
     $merge entry_whilex_xcondx_xouter whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter
-    $phi indvar :=  ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) indvarx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $phi jx_x0x_xph :=  ( $cast ($uint<32>) conv15) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) jx_x0x_xphx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc134x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi img_datax_x1x_xph :=  ( $cast ($uint<64>) ( $bitcast ($uint<64> ) _b0 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<64>) img_datax_x0x_xlcssa) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
+    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc78x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $endmerge
-    tmp3 := (tmp10 * indvar)
     // compare instruction
-    cmp := ( ($bitcast ( $int<32>) ix_x0x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    cmp := (ix_x0x_xph == add47 )
     $if cmp $then  $place [whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge] $else $place [whilex_xcondx_xouter_whilex_xendx_xsplit] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $merge whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $endmerge
-    tmp159 := (tmp5 * ix_x0x_xph)
-    tmp160 := (jx_x0x_xph + tmp159)
-    tmp163 := (tmp10 * tmp160)
-    tmp12 := (tmp11 * ix_x0x_xph)
-    tmp13 := (jx_x0x_xph + tmp12)
-    tmp14 := (tmp10 * tmp13)
-    tmp15 := (tmp9 + tmp14)
-    tmp19 := (tmp18 * tmp160)
-    tmp21 := (tmp15 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp25 := (tmp24 * ix_x0x_xph)
+    tmp26 := (jx_x0x_xph + tmp25)
+    tmp27 := (tmp10 * tmp26)
     $place [whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody]
     //begin: basic-block whilex_xbody
-    $merge ifx_xend_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
-    $phi kx_x0 :=  ( $cast ($uint<32>) inc118) $on ifx_xend_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
-    $phi img_datax_x1 :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_whilex_xbody ( $cast ($uint<64>) img_datax_x1x_xph) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
+    $merge whilex_xbody_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
+    $phi kx_x0 :=  ( $cast ($uint<32>) inc) $on whilex_xbody_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
     $endmerge
-    countx_x0 := (tmp3 + kx_x0)
-    add55 := (tmp163 + kx_x0)
-    add96 := (tmp15 + kx_x0)
-    tmp17 := (kx_x0 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
-    sub69 := (tmp19 + tmp17)
-    sub102 := (tmp21 + tmp17)
-    inc118 := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    sub := (countx_x0 & ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
+    add58 := (tmp27 + kx_x0)
+    inc := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add58) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr])
+    ->(arrayidx) := ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) 
     // compare instruction
-    cmp59 := (sub == ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  )
-    $if cmp59 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_ifx_xend] $endif 
+    exitcond21 := (inc == tmp10 )
+    $if exitcond21 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_whilex_xbody] $endif 
     //begin: basic-block ifx_xthen
     $merge whilex_xbody_ifx_xthen
     $endmerge
-    shr62 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add55) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr62])
-    // load 
-    tmp63 := ->(arrayidx) 
-    $place [ifx_xthen_ifx_xend]
-    //begin: basic-block ifx_xend
-    $merge ifx_xthen_ifx_xend whilex_xbody_ifx_xend
-    $phi img_datax_x0 :=  ( $cast ($uint<64>) tmp63) $on ifx_xthen_ifx_xend ( $cast ($uint<64>) img_datax_x1) $on whilex_xbody_ifx_xend 
-    $endmerge
-    mul76 := (sub69 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom := ($cast ($uint<64>) mul76)
-    shr77 := (img_datax_x0 >> sh_prom)
-    shr105 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add96) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx106 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr105])
-    // load 
-    tmp107 := ->(arrayidx106) 
-    sext := (shr77 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
-    conv109 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
-    mul112 := (sub102 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom113 := ($cast ($uint<64>) mul112)
-    shl := (conv109 << sh_prom113)
-    or := (shl | tmp107)
-    ->(arrayidx106) := or
+    inc66 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     // compare instruction
-    exitcond := (inc118 == tmp10 )
-    $if exitcond $then  $place [ifx_xend_ifx_xthen123] $else $place [ifx_xend_whilex_xbody] $endif 
-    //begin: basic-block ifx_xthen123
-    $merge ifx_xend_ifx_xthen123
-    $phi img_datax_x0x_xlcssa :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_ifx_xthen123 
-    $endmerge
-    inc125 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    // compare instruction
-    cmp129 := (inc125 == conv128 )
-    inc134 := ($cast ($uint<32>) cmp129)
-    inc134x_xix_x0 := (inc134 + ix_x0x_xph)
-    indvarx_xnext2 := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $if cmp129 $then  $place [ifx_xthen123_ifx_xthen131] $else $place [ifx_xthen123_whilex_xcondx_xouterx_xbackedge] $endif 
+    cmp73 := (inc66 == add72 )
+    inc78 := ($cast ($uint<32>) cmp73)
+    inc78x_xix_x0 := (inc78 + ix_x0x_xph)
+    $if cmp73 $then  $place [ifx_xthen_ifx_xthen75] $else $place [ifx_xthen_whilex_xcondx_xouterx_xbackedge] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xbackedge
-    $merge ifx_xthen123_whilex_xcondx_xouterx_xbackedge ifx_xthen131_whilex_xcondx_xouterx_xbackedge
-    $phi indvarx_xbe :=  ( $cast ($uint<32>) indvarx_xnext) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) indvarx_xnext2) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
-    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc125) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
+    $merge ifx_xthen_whilex_xcondx_xouterx_xbackedge ifx_xthen75_whilex_xcondx_xouterx_xbackedge
+    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen75_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc66) $on ifx_xthen_whilex_xcondx_xouterx_xbackedge 
     $endmerge
     $place [whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter]
-    //begin: basic-block ifx_xthen131
-    $merge ifx_xthen123_ifx_xthen131
+    //begin: basic-block ifx_xthen75
+    $merge ifx_xthen_ifx_xthen75
     $endmerge
-    indvarx_xnext := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $place [ifx_xthen131_whilex_xcondx_xouterx_xbackedge]
+    $place [ifx_xthen75_whilex_xcondx_xouterx_xbackedge]
     //begin: basic-block whilex_xendx_xsplit
     $merge whilex_xcondx_xouter_whilex_xendx_xsplit
+    $endmerge
+    tmp2 := ($cast ($uint<32>) tmp4)
+    tmp6 := (tmp2 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp7 := (tmp5 + tmp6)
+    tmp15 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    $place [whilex_xendx_xsplit_whilex_xcond83x_xouter]
+    //begin: basic-block whilex_xcond83x_xouter
+    $merge whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter whilex_xendx_xsplit_whilex_xcond83x_xouter
+    $phi jx_x1x_xph :=  ( $cast ($uint<32>) conv15) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) jx_x1x_xphx_xbe) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $phi ix_x1x_xph :=  ( $cast ($uint<32>) conv19) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) inc191x_xix_x1) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $endmerge
+    // compare instruction
+    cmp87 := ( ($bitcast ( $int<32>) ix_x1x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    $if cmp87 $then  $place [whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge] $else $place [whilex_xcond83x_xouter_whilex_xend194x_xsplit] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $merge whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $endmerge
+    tmp215 := (tmp5 * ix_x1x_xph)
+    tmp216 := (jx_x1x_xph + tmp215)
+    tmp219 := (tmp10 * tmp216)
+    tmp3 := (tmp2 + jx_x1x_xph)
+    tmp8 := (tmp2 + ix_x1x_xph)
+    tmp9 := (tmp7 * tmp8)
+    tmp11 := (tmp3 + tmp9)
+    tmp12 := (tmp10 * tmp11)
+    tmp16 := (tmp15 * tmp11)
+    tmp19 := (tmp18 * tmp216)
+    $place [whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89]
+    //begin: basic-block whilex_xbody89
+    $merge whilex_xbody89_whilex_xbody89 whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89
+    $phi kx_x1 :=  ( $cast ($uint<32>) inc175) $on whilex_xbody89_whilex_xbody89 ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89 
+    $endmerge
+    add99 := (tmp219 + kx_x1)
+    add150 := (tmp12 + kx_x1)
+    tmp14 := (kx_x1 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    sub156 := (tmp16 + tmp14)
+    sub121 := (tmp19 + tmp14)
+    inc175 := (kx_x1 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr113 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add99) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx114 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr113])
+    // load 
+    tmp115 := ->(arrayidx114) 
+    mul128 := (sub121 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom := ($cast ($uint<64>) mul128)
+    shr129 := (tmp115 >> sh_prom)
+    shr159 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add150) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx160 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr159])
+    // load 
+    tmp161 := ->(arrayidx160) 
+    sext := (shr129 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
+    conv163 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
+    mul166 := (sub156 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom167 := ($cast ($uint<64>) mul166)
+    shl := (conv163 << sh_prom167)
+    or := (shl | tmp161)
+    ->(arrayidx160) := or
+    // compare instruction
+    exitcond := (inc175 == tmp10 )
+    $if exitcond $then  $place [whilex_xbody89_ifx_xthen180] $else $place [whilex_xbody89_whilex_xbody89] $endif 
+    //begin: basic-block ifx_xthen180
+    $merge whilex_xbody89_ifx_xthen180
+    $endmerge
+    inc182 := (jx_x1x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    // compare instruction
+    cmp186 := (inc182 == conv69 )
+    inc191 := ($cast ($uint<32>) cmp186)
+    inc191x_xix_x1 := (inc191 + ix_x1x_xph)
+    $if cmp186 $then  $place [ifx_xthen180_ifx_xthen188] $else $place [ifx_xthen180_whilex_xcond83x_xouterx_xbackedge] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xbackedge
+    $merge ifx_xthen180_whilex_xcond83x_xouterx_xbackedge ifx_xthen188_whilex_xcond83x_xouterx_xbackedge
+    $phi jx_x1x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen188_whilex_xcond83x_xouterx_xbackedge ( $cast ($uint<32>) inc182) $on ifx_xthen180_whilex_xcond83x_xouterx_xbackedge 
+    $endmerge
+    $place [whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter]
+    //begin: basic-block ifx_xthen188
+    $merge ifx_xthen180_ifx_xthen188
+    $endmerge
+    $place [ifx_xthen188_whilex_xcond83x_xouterx_xbackedge]
+    //begin: basic-block whilex_xend194x_xsplit
+    $merge whilex_xcond83x_xouter_whilex_xend194x_xsplit
     $endmerge
     $barrier 
     zeropad3D_B_ack_pipe := ( $bitcast ($uint<16> ) _b0000000000000001 ) 
@@ -560,105 +630,140 @@ $is
     conv15 := ($cast ($uint<32>) call1)
     conv19 := ($cast ($uint<32>) call)
     conv44 := ($cast ($uint<32>) call2)
-    conv128 := ($cast ($uint<32>) call3)
-    tmp8 := ($cast ($uint<32>) tmp4)
-    tmp9 := (tmp8 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
-    tmp11 := (tmp5 + tmp9)
-    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    add47 := (conv + conv44)
+    conv69 := ($cast ($uint<32>) call3)
+    add72 := (conv + conv69)
+    tmp22 := ($cast ($uint<32>) tmp4)
+    tmp23 := (tmp22 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp24 := (tmp5 + tmp23)
     $place [entry_whilex_xcondx_xouter]
     //begin: basic-block whilex_xcondx_xouter
     $merge entry_whilex_xcondx_xouter whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter
-    $phi indvar :=  ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) indvarx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $phi jx_x0x_xph :=  ( $cast ($uint<32>) conv15) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) jx_x0x_xphx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc134x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi img_datax_x1x_xph :=  ( $cast ($uint<64>) ( $bitcast ($uint<64> ) _b0 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<64>) img_datax_x0x_xlcssa) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
+    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc78x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $endmerge
-    tmp3 := (tmp10 * indvar)
     // compare instruction
-    cmp := ( ($bitcast ( $int<32>) ix_x0x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    cmp := (ix_x0x_xph == add47 )
     $if cmp $then  $place [whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge] $else $place [whilex_xcondx_xouter_whilex_xendx_xsplit] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $merge whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $endmerge
-    tmp159 := (tmp5 * ix_x0x_xph)
-    tmp160 := (jx_x0x_xph + tmp159)
-    tmp163 := (tmp10 * tmp160)
-    tmp12 := (tmp11 * ix_x0x_xph)
-    tmp13 := (jx_x0x_xph + tmp12)
-    tmp14 := (tmp10 * tmp13)
-    tmp15 := (tmp9 + tmp14)
-    tmp19 := (tmp18 * tmp160)
-    tmp21 := (tmp15 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp25 := (tmp24 * ix_x0x_xph)
+    tmp26 := (jx_x0x_xph + tmp25)
+    tmp27 := (tmp10 * tmp26)
     $place [whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody]
     //begin: basic-block whilex_xbody
-    $merge ifx_xend_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
-    $phi kx_x0 :=  ( $cast ($uint<32>) inc118) $on ifx_xend_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
-    $phi img_datax_x1 :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_whilex_xbody ( $cast ($uint<64>) img_datax_x1x_xph) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
+    $merge whilex_xbody_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
+    $phi kx_x0 :=  ( $cast ($uint<32>) inc) $on whilex_xbody_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
     $endmerge
-    countx_x0 := (tmp3 + kx_x0)
-    add55 := (tmp163 + kx_x0)
-    add96 := (tmp15 + kx_x0)
-    tmp17 := (kx_x0 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
-    sub69 := (tmp19 + tmp17)
-    sub102 := (tmp21 + tmp17)
-    inc118 := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    sub := (countx_x0 & ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
+    add58 := (tmp27 + kx_x0)
+    inc := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add58) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr])
+    ->(arrayidx) := ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) 
     // compare instruction
-    cmp59 := (sub == ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  )
-    $if cmp59 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_ifx_xend] $endif 
+    exitcond21 := (inc == tmp10 )
+    $if exitcond21 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_whilex_xbody] $endif 
     //begin: basic-block ifx_xthen
     $merge whilex_xbody_ifx_xthen
     $endmerge
-    shr62 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add55) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr62])
-    // load 
-    tmp63 := ->(arrayidx) 
-    $place [ifx_xthen_ifx_xend]
-    //begin: basic-block ifx_xend
-    $merge ifx_xthen_ifx_xend whilex_xbody_ifx_xend
-    $phi img_datax_x0 :=  ( $cast ($uint<64>) tmp63) $on ifx_xthen_ifx_xend ( $cast ($uint<64>) img_datax_x1) $on whilex_xbody_ifx_xend 
-    $endmerge
-    mul76 := (sub69 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom := ($cast ($uint<64>) mul76)
-    shr77 := (img_datax_x0 >> sh_prom)
-    shr105 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add96) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx106 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr105])
-    // load 
-    tmp107 := ->(arrayidx106) 
-    sext := (shr77 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
-    conv109 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
-    mul112 := (sub102 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom113 := ($cast ($uint<64>) mul112)
-    shl := (conv109 << sh_prom113)
-    or := (shl | tmp107)
-    ->(arrayidx106) := or
+    inc66 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     // compare instruction
-    exitcond := (inc118 == tmp10 )
-    $if exitcond $then  $place [ifx_xend_ifx_xthen123] $else $place [ifx_xend_whilex_xbody] $endif 
-    //begin: basic-block ifx_xthen123
-    $merge ifx_xend_ifx_xthen123
-    $phi img_datax_x0x_xlcssa :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_ifx_xthen123 
-    $endmerge
-    inc125 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    // compare instruction
-    cmp129 := (inc125 == conv128 )
-    inc134 := ($cast ($uint<32>) cmp129)
-    inc134x_xix_x0 := (inc134 + ix_x0x_xph)
-    indvarx_xnext2 := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $if cmp129 $then  $place [ifx_xthen123_ifx_xthen131] $else $place [ifx_xthen123_whilex_xcondx_xouterx_xbackedge] $endif 
+    cmp73 := (inc66 == add72 )
+    inc78 := ($cast ($uint<32>) cmp73)
+    inc78x_xix_x0 := (inc78 + ix_x0x_xph)
+    $if cmp73 $then  $place [ifx_xthen_ifx_xthen75] $else $place [ifx_xthen_whilex_xcondx_xouterx_xbackedge] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xbackedge
-    $merge ifx_xthen123_whilex_xcondx_xouterx_xbackedge ifx_xthen131_whilex_xcondx_xouterx_xbackedge
-    $phi indvarx_xbe :=  ( $cast ($uint<32>) indvarx_xnext) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) indvarx_xnext2) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
-    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc125) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
+    $merge ifx_xthen_whilex_xcondx_xouterx_xbackedge ifx_xthen75_whilex_xcondx_xouterx_xbackedge
+    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen75_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc66) $on ifx_xthen_whilex_xcondx_xouterx_xbackedge 
     $endmerge
     $place [whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter]
-    //begin: basic-block ifx_xthen131
-    $merge ifx_xthen123_ifx_xthen131
+    //begin: basic-block ifx_xthen75
+    $merge ifx_xthen_ifx_xthen75
     $endmerge
-    indvarx_xnext := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $place [ifx_xthen131_whilex_xcondx_xouterx_xbackedge]
+    $place [ifx_xthen75_whilex_xcondx_xouterx_xbackedge]
     //begin: basic-block whilex_xendx_xsplit
     $merge whilex_xcondx_xouter_whilex_xendx_xsplit
+    $endmerge
+    tmp2 := ($cast ($uint<32>) tmp4)
+    tmp6 := (tmp2 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp7 := (tmp5 + tmp6)
+    tmp15 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    $place [whilex_xendx_xsplit_whilex_xcond83x_xouter]
+    //begin: basic-block whilex_xcond83x_xouter
+    $merge whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter whilex_xendx_xsplit_whilex_xcond83x_xouter
+    $phi jx_x1x_xph :=  ( $cast ($uint<32>) conv15) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) jx_x1x_xphx_xbe) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $phi ix_x1x_xph :=  ( $cast ($uint<32>) conv19) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) inc191x_xix_x1) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $endmerge
+    // compare instruction
+    cmp87 := ( ($bitcast ( $int<32>) ix_x1x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    $if cmp87 $then  $place [whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge] $else $place [whilex_xcond83x_xouter_whilex_xend194x_xsplit] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $merge whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $endmerge
+    tmp215 := (tmp5 * ix_x1x_xph)
+    tmp216 := (jx_x1x_xph + tmp215)
+    tmp219 := (tmp10 * tmp216)
+    tmp3 := (tmp2 + jx_x1x_xph)
+    tmp8 := (tmp2 + ix_x1x_xph)
+    tmp9 := (tmp7 * tmp8)
+    tmp11 := (tmp3 + tmp9)
+    tmp12 := (tmp10 * tmp11)
+    tmp16 := (tmp15 * tmp11)
+    tmp19 := (tmp18 * tmp216)
+    $place [whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89]
+    //begin: basic-block whilex_xbody89
+    $merge whilex_xbody89_whilex_xbody89 whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89
+    $phi kx_x1 :=  ( $cast ($uint<32>) inc175) $on whilex_xbody89_whilex_xbody89 ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89 
+    $endmerge
+    add99 := (tmp219 + kx_x1)
+    add150 := (tmp12 + kx_x1)
+    tmp14 := (kx_x1 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    sub156 := (tmp16 + tmp14)
+    sub121 := (tmp19 + tmp14)
+    inc175 := (kx_x1 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr113 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add99) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx114 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr113])
+    // load 
+    tmp115 := ->(arrayidx114) 
+    mul128 := (sub121 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom := ($cast ($uint<64>) mul128)
+    shr129 := (tmp115 >> sh_prom)
+    shr159 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add150) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx160 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr159])
+    // load 
+    tmp161 := ->(arrayidx160) 
+    sext := (shr129 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
+    conv163 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
+    mul166 := (sub156 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom167 := ($cast ($uint<64>) mul166)
+    shl := (conv163 << sh_prom167)
+    or := (shl | tmp161)
+    ->(arrayidx160) := or
+    // compare instruction
+    exitcond := (inc175 == tmp10 )
+    $if exitcond $then  $place [whilex_xbody89_ifx_xthen180] $else $place [whilex_xbody89_whilex_xbody89] $endif 
+    //begin: basic-block ifx_xthen180
+    $merge whilex_xbody89_ifx_xthen180
+    $endmerge
+    inc182 := (jx_x1x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    // compare instruction
+    cmp186 := (inc182 == conv69 )
+    inc191 := ($cast ($uint<32>) cmp186)
+    inc191x_xix_x1 := (inc191 + ix_x1x_xph)
+    $if cmp186 $then  $place [ifx_xthen180_ifx_xthen188] $else $place [ifx_xthen180_whilex_xcond83x_xouterx_xbackedge] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xbackedge
+    $merge ifx_xthen180_whilex_xcond83x_xouterx_xbackedge ifx_xthen188_whilex_xcond83x_xouterx_xbackedge
+    $phi jx_x1x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen188_whilex_xcond83x_xouterx_xbackedge ( $cast ($uint<32>) inc182) $on ifx_xthen180_whilex_xcond83x_xouterx_xbackedge 
+    $endmerge
+    $place [whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter]
+    //begin: basic-block ifx_xthen188
+    $merge ifx_xthen180_ifx_xthen188
+    $endmerge
+    $place [ifx_xthen188_whilex_xcond83x_xouterx_xbackedge]
+    //begin: basic-block whilex_xend194x_xsplit
+    $merge whilex_xcond83x_xouter_whilex_xend194x_xsplit
     $endmerge
     $barrier 
     zeropad3D_C_ack_pipe := ( $bitcast ($uint<16> ) _b0000000000000001 ) 
@@ -709,105 +814,140 @@ $is
     conv15 := ($cast ($uint<32>) call1)
     conv19 := ($cast ($uint<32>) call)
     conv44 := ($cast ($uint<32>) call2)
-    conv128 := ($cast ($uint<32>) call3)
-    tmp8 := ($cast ($uint<32>) tmp4)
-    tmp9 := (tmp8 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
-    tmp11 := (tmp5 + tmp9)
-    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    add47 := (conv + conv44)
+    conv69 := ($cast ($uint<32>) call3)
+    add72 := (conv + conv69)
+    tmp22 := ($cast ($uint<32>) tmp4)
+    tmp23 := (tmp22 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp24 := (tmp5 + tmp23)
     $place [entry_whilex_xcondx_xouter]
     //begin: basic-block whilex_xcondx_xouter
     $merge entry_whilex_xcondx_xouter whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter
-    $phi indvar :=  ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) indvarx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $phi jx_x0x_xph :=  ( $cast ($uint<32>) conv15) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) jx_x0x_xphx_xbe) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc134x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
-    $phi img_datax_x1x_xph :=  ( $cast ($uint<64>) ( $bitcast ($uint<64> ) _b0 ) ) $on entry_whilex_xcondx_xouter ( $cast ($uint<64>) img_datax_x0x_xlcssa) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
+    $phi ix_x0x_xph :=  ( $cast ($uint<32>) conv19) $on entry_whilex_xcondx_xouter ( $cast ($uint<32>) inc78x_xix_x0) $on whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter 
     $endmerge
-    tmp3 := (tmp10 * indvar)
     // compare instruction
-    cmp := ( ($bitcast ( $int<32>) ix_x0x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    cmp := (ix_x0x_xph == add47 )
     $if cmp $then  $place [whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge] $else $place [whilex_xcondx_xouter_whilex_xendx_xsplit] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $merge whilex_xcondx_xouter_whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge
     $endmerge
-    tmp159 := (tmp5 * ix_x0x_xph)
-    tmp160 := (jx_x0x_xph + tmp159)
-    tmp163 := (tmp10 * tmp160)
-    tmp12 := (tmp11 * ix_x0x_xph)
-    tmp13 := (jx_x0x_xph + tmp12)
-    tmp14 := (tmp10 * tmp13)
-    tmp15 := (tmp9 + tmp14)
-    tmp19 := (tmp18 * tmp160)
-    tmp21 := (tmp15 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp25 := (tmp24 * ix_x0x_xph)
+    tmp26 := (jx_x0x_xph + tmp25)
+    tmp27 := (tmp10 * tmp26)
     $place [whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody]
     //begin: basic-block whilex_xbody
-    $merge ifx_xend_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
-    $phi kx_x0 :=  ( $cast ($uint<32>) inc118) $on ifx_xend_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
-    $phi img_datax_x1 :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_whilex_xbody ( $cast ($uint<64>) img_datax_x1x_xph) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
+    $merge whilex_xbody_whilex_xbody whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody
+    $phi kx_x0 :=  ( $cast ($uint<32>) inc) $on whilex_xbody_whilex_xbody ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcondx_xouterx_xwhilex_xcondx_xouterx_xsplit_crit_edge_whilex_xbody 
     $endmerge
-    countx_x0 := (tmp3 + kx_x0)
-    add55 := (tmp163 + kx_x0)
-    add96 := (tmp15 + kx_x0)
-    tmp17 := (kx_x0 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
-    sub69 := (tmp19 + tmp17)
-    sub102 := (tmp21 + tmp17)
-    inc118 := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    sub := (countx_x0 & ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
+    add58 := (tmp27 + kx_x0)
+    inc := (kx_x0 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add58) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr])
+    ->(arrayidx) := ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) 
     // compare instruction
-    cmp59 := (sub == ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  )
-    $if cmp59 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_ifx_xend] $endif 
+    exitcond21 := (inc == tmp10 )
+    $if exitcond21 $then  $place [whilex_xbody_ifx_xthen] $else $place [whilex_xbody_whilex_xbody] $endif 
     //begin: basic-block ifx_xthen
     $merge whilex_xbody_ifx_xthen
     $endmerge
-    shr62 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add55) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr62])
-    // load 
-    tmp63 := ->(arrayidx) 
-    $place [ifx_xthen_ifx_xend]
-    //begin: basic-block ifx_xend
-    $merge ifx_xthen_ifx_xend whilex_xbody_ifx_xend
-    $phi img_datax_x0 :=  ( $cast ($uint<64>) tmp63) $on ifx_xthen_ifx_xend ( $cast ($uint<64>) img_datax_x1) $on whilex_xbody_ifx_xend 
-    $endmerge
-    mul76 := (sub69 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom := ($cast ($uint<64>) mul76)
-    shr77 := (img_datax_x0 >> sh_prom)
-    shr105 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add96) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
-    arrayidx106 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr105])
-    // load 
-    tmp107 := ->(arrayidx106) 
-    sext := (shr77 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
-    conv109 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
-    mul112 := (sub102 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
-    sh_prom113 := ($cast ($uint<64>) mul112)
-    shl := (conv109 << sh_prom113)
-    or := (shl | tmp107)
-    ->(arrayidx106) := or
+    inc66 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     // compare instruction
-    exitcond := (inc118 == tmp10 )
-    $if exitcond $then  $place [ifx_xend_ifx_xthen123] $else $place [ifx_xend_whilex_xbody] $endif 
-    //begin: basic-block ifx_xthen123
-    $merge ifx_xend_ifx_xthen123
-    $phi img_datax_x0x_xlcssa :=  ( $cast ($uint<64>) img_datax_x0) $on ifx_xend_ifx_xthen123 
-    $endmerge
-    inc125 := (jx_x0x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    // compare instruction
-    cmp129 := (inc125 == conv128 )
-    inc134 := ($cast ($uint<32>) cmp129)
-    inc134x_xix_x0 := (inc134 + ix_x0x_xph)
-    indvarx_xnext2 := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $if cmp129 $then  $place [ifx_xthen123_ifx_xthen131] $else $place [ifx_xthen123_whilex_xcondx_xouterx_xbackedge] $endif 
+    cmp73 := (inc66 == add72 )
+    inc78 := ($cast ($uint<32>) cmp73)
+    inc78x_xix_x0 := (inc78 + ix_x0x_xph)
+    $if cmp73 $then  $place [ifx_xthen_ifx_xthen75] $else $place [ifx_xthen_whilex_xcondx_xouterx_xbackedge] $endif 
     //begin: basic-block whilex_xcondx_xouterx_xbackedge
-    $merge ifx_xthen123_whilex_xcondx_xouterx_xbackedge ifx_xthen131_whilex_xcondx_xouterx_xbackedge
-    $phi indvarx_xbe :=  ( $cast ($uint<32>) indvarx_xnext) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) indvarx_xnext2) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
-    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen131_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc125) $on ifx_xthen123_whilex_xcondx_xouterx_xbackedge 
+    $merge ifx_xthen_whilex_xcondx_xouterx_xbackedge ifx_xthen75_whilex_xcondx_xouterx_xbackedge
+    $phi jx_x0x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen75_whilex_xcondx_xouterx_xbackedge ( $cast ($uint<32>) inc66) $on ifx_xthen_whilex_xcondx_xouterx_xbackedge 
     $endmerge
     $place [whilex_xcondx_xouterx_xbackedge_whilex_xcondx_xouter]
-    //begin: basic-block ifx_xthen131
-    $merge ifx_xthen123_ifx_xthen131
+    //begin: basic-block ifx_xthen75
+    $merge ifx_xthen_ifx_xthen75
     $endmerge
-    indvarx_xnext := (indvar + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    $place [ifx_xthen131_whilex_xcondx_xouterx_xbackedge]
+    $place [ifx_xthen75_whilex_xcondx_xouterx_xbackedge]
     //begin: basic-block whilex_xendx_xsplit
     $merge whilex_xcondx_xouter_whilex_xendx_xsplit
+    $endmerge
+    tmp2 := ($cast ($uint<32>) tmp4)
+    tmp6 := (tmp2 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
+    tmp7 := (tmp5 + tmp6)
+    tmp15 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    tmp18 := (tmp10 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    $place [whilex_xendx_xsplit_whilex_xcond83x_xouter]
+    //begin: basic-block whilex_xcond83x_xouter
+    $merge whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter whilex_xendx_xsplit_whilex_xcond83x_xouter
+    $phi jx_x1x_xph :=  ( $cast ($uint<32>) conv15) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) jx_x1x_xphx_xbe) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $phi ix_x1x_xph :=  ( $cast ($uint<32>) conv19) $on whilex_xendx_xsplit_whilex_xcond83x_xouter ( $cast ($uint<32>) inc191x_xix_x1) $on whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter 
+    $endmerge
+    // compare instruction
+    cmp87 := ( ($bitcast ( $int<32>) ix_x1x_xph) <   ($bitcast ( $int<32>) conv44 ) )
+    $if cmp87 $then  $place [whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge] $else $place [whilex_xcond83x_xouter_whilex_xend194x_xsplit] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $merge whilex_xcond83x_xouter_whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge
+    $endmerge
+    tmp215 := (tmp5 * ix_x1x_xph)
+    tmp216 := (jx_x1x_xph + tmp215)
+    tmp219 := (tmp10 * tmp216)
+    tmp3 := (tmp2 + jx_x1x_xph)
+    tmp8 := (tmp2 + ix_x1x_xph)
+    tmp9 := (tmp7 * tmp8)
+    tmp11 := (tmp3 + tmp9)
+    tmp12 := (tmp10 * tmp11)
+    tmp16 := (tmp15 * tmp11)
+    tmp19 := (tmp18 * tmp216)
+    $place [whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89]
+    //begin: basic-block whilex_xbody89
+    $merge whilex_xbody89_whilex_xbody89 whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89
+    $phi kx_x1 :=  ( $cast ($uint<32>) inc175) $on whilex_xbody89_whilex_xbody89 ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on whilex_xcond83x_xouterx_xwhilex_xcond83x_xouterx_xsplit_crit_edge_whilex_xbody89 
+    $endmerge
+    add99 := (tmp219 + kx_x1)
+    add150 := (tmp12 + kx_x1)
+    tmp14 := (kx_x1 * ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    sub156 := (tmp16 + tmp14)
+    sub121 := (tmp19 + tmp14)
+    inc175 := (kx_x1 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    shr113 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add99) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx114 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr113])
+    // load 
+    tmp115 := ->(arrayidx114) 
+    mul128 := (sub121 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom := ($cast ($uint<64>) mul128)
+    shr129 := (tmp115 >> sh_prom)
+    shr159 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) add150) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 )  )))
+    arrayidx160 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][shr159])
+    // load 
+    tmp161 := ->(arrayidx160) 
+    sext := (shr129 << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
+    conv163 :=  ($bitcast ($uint<64>) ( ($bitcast ( $int<64>) sext) >>  ($bitcast ( $int<64>) ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 )  )))
+    mul166 := (sub156 & ( $bitcast ($uint<32> ) _b00000000000000000000000000110000 ) )
+    sh_prom167 := ($cast ($uint<64>) mul166)
+    shl := (conv163 << sh_prom167)
+    or := (shl | tmp161)
+    ->(arrayidx160) := or
+    // compare instruction
+    exitcond := (inc175 == tmp10 )
+    $if exitcond $then  $place [whilex_xbody89_ifx_xthen180] $else $place [whilex_xbody89_whilex_xbody89] $endif 
+    //begin: basic-block ifx_xthen180
+    $merge whilex_xbody89_ifx_xthen180
+    $endmerge
+    inc182 := (jx_x1x_xph + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    // compare instruction
+    cmp186 := (inc182 == conv69 )
+    inc191 := ($cast ($uint<32>) cmp186)
+    inc191x_xix_x1 := (inc191 + ix_x1x_xph)
+    $if cmp186 $then  $place [ifx_xthen180_ifx_xthen188] $else $place [ifx_xthen180_whilex_xcond83x_xouterx_xbackedge] $endif 
+    //begin: basic-block whilex_xcond83x_xouterx_xbackedge
+    $merge ifx_xthen180_whilex_xcond83x_xouterx_xbackedge ifx_xthen188_whilex_xcond83x_xouterx_xbackedge
+    $phi jx_x1x_xphx_xbe :=  ( $cast ($uint<32>) conv15) $on ifx_xthen188_whilex_xcond83x_xouterx_xbackedge ( $cast ($uint<32>) inc182) $on ifx_xthen180_whilex_xcond83x_xouterx_xbackedge 
+    $endmerge
+    $place [whilex_xcond83x_xouterx_xbackedge_whilex_xcond83x_xouter]
+    //begin: basic-block ifx_xthen188
+    $merge ifx_xthen180_ifx_xthen188
+    $endmerge
+    $place [ifx_xthen188_whilex_xcond83x_xouterx_xbackedge]
+    //begin: basic-block whilex_xend194x_xsplit
+    $merge whilex_xcond83x_xouter_whilex_xend194x_xsplit
     $endmerge
     $barrier 
     zeropad3D_D_ack_pipe := ( $bitcast ($uint<16> ) _b0000000000000001 ) 
@@ -916,20 +1056,20 @@ $is
     conv :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) call) )
     zeropad3D_A_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000000 ) 
     zeropad3D_A_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000000 ) 
-    zeropad3D_A_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000000 ) 
     zeropad3D_A_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
-    zeropad3D_B_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000001 ) 
+    zeropad3D_A_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
     zeropad3D_B_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000000 ) 
-    zeropad3D_B_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000001 ) 
     zeropad3D_B_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
-    zeropad3D_C_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000010 ) 
+    zeropad3D_B_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
+    zeropad3D_B_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000110 ) 
+    zeropad3D_C_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
     zeropad3D_C_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000000 ) 
-    zeropad3D_C_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000010 ) 
+    zeropad3D_C_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000110 ) 
     zeropad3D_C_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
     zeropad3D_D_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
-    zeropad3D_D_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000000 ) 
     zeropad3D_D_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
-    zeropad3D_D_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000011 ) 
+    zeropad3D_D_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000110 ) 
+    zeropad3D_D_req_pipe := ( $bitcast ($uint<16> ) _b0000000000000110 ) 
     $barrier 
     call17 := zeropad3D_A_ack_pipe
     call20 := zeropad3D_B_ack_pipe

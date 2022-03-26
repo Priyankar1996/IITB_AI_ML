@@ -1,0 +1,10 @@
+zeropad_input_pipe 2
+zeropad_output_pipe 2
+zeropad3D_A_req_pipe 1
+zeropad3D_B_req_pipe 1
+zeropad3D_C_req_pipe 1
+zeropad3D_D_req_pipe 1
+zeropad3D_A_ack_pipe 1
+zeropad3D_B_ack_pipe 1
+zeropad3D_C_ack_pipe 1
+zeropad3D_D_ack_pipe 1

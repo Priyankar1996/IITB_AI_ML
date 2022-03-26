@@ -1,0 +1,186 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <stdint.h>
+#include <Pipes.h>
+#include "pipeHandler.h"
+#include "sized_tensor.h"
+#include "zero_pad_opt.h"
+
+#ifndef SW
+void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
+	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
+void __aa_barrier__();
+#else
+	#define __loop_pipeline_var__ {;}
+	#define __aa_barrier__() {;}
+#endif
+
+SizedTensor_16K T,R;
+TensorDescriptor desc_T,desc_R;
+uint8_t pad;
+
+void getInput()
+{
+	int i;
+	desc_T.data_type = i16;
+	desc_T.row_major_form = 1;
+	desc_T.number_of_dimensions = 3;
+	for(i = 0; i < desc_T.number_of_dimensions; i++)
+	{
+		desc_T.dimensions[i] = read_uint64("zeropad_input_pipe");
+	}
+	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_T) >> 2)+1; i++)
+	{
+		T.data_array[i] = read_uint64("zeropad_input_pipe");
+	}
+	pad = read_uint64("zeropad_input_pipe");
+}
+
+void sendOutput()
+{
+	int i;
+	desc_R.data_type = i16;
+    	desc_R.number_of_dimensions = 3;
+    	desc_R.row_major_form = 1;
+	for(i = 0; i < desc_R.number_of_dimensions; i++)
+	{
+		write_uint64("zeropad_output_pipe",desc_R.dimensions[i]);
+	}
+	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_R) >> 2)+1; i++)
+	{
+		write_uint64("zeropad_output_pipe",R.data_array[i]);
+	}
+}
+
+void zeropad3D_A()
+{
+	uint16_t p_start = read_uint16("zeropad3D_A_req_pipe");
+	uint16_t q_start = read_uint16("zeropad3D_A_req_pipe");
+	// uint16_t r_start = read_uint16("zeropad3D_A_req_pipe");
+	uint16_t p_end = read_uint16("zeropad3D_A_req_pipe");
+	uint16_t q_end = read_uint16("zeropad3D_A_req_pipe");
+	// uint16_t r_end = read_uint16("zeropad3D_A_req_pipe");
+	__aa_barrier__();	
+	__zero_pad_opt__(T,R,desc_T,desc_R,p_start,q_start,p_end,q_end,pad);
+	__aa_barrier__();
+	write_uint16("zeropad3D_A_ack_pipe",1);
+}
+
+void zeropad3D_B()
+{
+	uint16_t p_start = read_uint16("zeropad3D_B_req_pipe");
+	uint16_t q_start = read_uint16("zeropad3D_B_req_pipe");
+	// uint16_t r_start = read_uint16("zeropad3D_B_req_pipe");
+	uint16_t p_end = read_uint16("zeropad3D_B_req_pipe");
+	uint16_t q_end = read_uint16("zeropad3D_B_req_pipe");
+	// uint16_t r_end = read_uint16("zeropad3D_B_req_pipe");
+	__aa_barrier__();	
+	__zero_pad_opt__(T,R,desc_T,desc_R,p_start,q_start,p_end,q_end,pad);
+	__aa_barrier__();
+	write_uint16("zeropad3D_B_ack_pipe",1);
+}
+
+void zeropad3D_C()
+{
+	uint16_t p_start = read_uint16("zeropad3D_C_req_pipe");
+	uint16_t q_start = read_uint16("zeropad3D_C_req_pipe");
+	// uint16_t r_start = read_uint16("zeropad3D_C_req_pipe");
+	uint16_t p_end = read_uint16("zeropad3D_C_req_pipe");
+	uint16_t q_end = read_uint16("zeropad3D_C_req_pipe");
+	// uint16_t r_end = read_uint16("zeropad3D_C_req_pipe");
+	__aa_barrier__();	
+	__zero_pad_opt__(T,R,desc_T,desc_R,p_start,q_start,p_end,q_end,pad);
+	__aa_barrier__();
+	write_uint16("zeropad3D_C_ack_pipe",1);
+}
+
+void zeropad3D_D()
+{
+	uint16_t p_start = read_uint16("zeropad3D_D_req_pipe");
+	uint16_t q_start = read_uint16("zeropad3D_D_req_pipe");
+	// uint16_t r_start = read_uint16("zeropad3D_D_req_pipe");
+	uint16_t p_end = read_uint16("zeropad3D_D_req_pipe");
+	uint16_t q_end = read_uint16("zeropad3D_D_req_pipe");
+	// uint16_t r_end = read_uint16("zeropad3D_D_req_pipe");
+	__aa_barrier__();	
+	__zero_pad_opt__(T,R,desc_T,desc_R,p_start,q_start,p_end,q_end,pad);
+	__aa_barrier__();
+	write_uint16("zeropad3D_D_ack_pipe",1);
+}
+
+void zeropad3D()
+{
+    getInput();
+	__aa_barrier__();
+	uint16_t p_start1 = 0;
+	uint16_t q_start1 = 0;
+	// uint16_t r_start1 = 0;
+	uint16_t p_end1 = 3;
+	uint16_t q_end1 = 3;
+	// uint16_t r_end1 = 0;
+
+	uint16_t p_start2 = 0;
+	uint16_t q_start2 = 3;
+	// uint16_t r_start2 = 0;
+	uint16_t p_end2 = 3;
+	uint16_t q_end2 = 6;
+	// uint16_t r_end2 = 0;
+	
+	uint16_t p_start3 = 3;
+	uint16_t q_start3 = 0;
+	// uint16_t r_start3 = 0;
+	uint16_t p_end3 = 6;
+	uint16_t q_end3 = 3;
+	// uint16_t r_end3 = 0;
+	
+	uint16_t p_start4 = 3;
+	uint16_t q_start4 = 3;
+	// uint16_t r_start4 = 0;
+	uint16_t p_end4 = 6;
+	uint16_t q_end4 = 6;
+	// uint16_t r_end4 = 0;
+	__aa_barrier__();
+#ifndef SW
+	uint64_t start_time = timer();
+#endif
+	write_uint16("zeropad3D_A_req_pipe",p_start1);
+	write_uint16("zeropad3D_A_req_pipe",q_start1);
+	// write_uint16("zeropad3D_A_req_pipe",r_start1);
+	write_uint16("zeropad3D_A_req_pipe",p_end1);
+	write_uint16("zeropad3D_A_req_pipe",q_end1);
+	// write_uint16("zeropad3D_A_req_pipe",r_end1);
+	write_uint16("zeropad3D_B_req_pipe",p_start2);
+	write_uint16("zeropad3D_B_req_pipe",q_start2);
+	// write_uint16("zeropad3D_B_req_pipe",r_start2);
+	write_uint16("zeropad3D_B_req_pipe",p_end2);
+	write_uint16("zeropad3D_B_req_pipe",q_end2);
+	// write_uint16("zeropad3D_B_req_pipe",r_end2);
+	write_uint16("zeropad3D_C_req_pipe",p_start3);
+	write_uint16("zeropad3D_C_req_pipe",q_start3);
+	// write_uint16("zeropad3D_C_req_pipe",r_start3);
+	write_uint16("zeropad3D_C_req_pipe",p_end3);
+	write_uint16("zeropad3D_C_req_pipe",q_end3);
+	// write_uint16("zeropad3D_C_req_pipe",r_end3);
+	write_uint16("zeropad3D_D_req_pipe",p_start4);
+	write_uint16("zeropad3D_D_req_pipe",q_start4);
+	// write_uint16("zeropad3D_D_req_pipe",r_start4);
+	write_uint16("zeropad3D_D_req_pipe",p_end4);
+	write_uint16("zeropad3D_D_req_pipe",q_end4);
+	// write_uint16("zeropad3D_D_req_pipe",r_end4);
+	
+	__aa_barrier__();
+	uint8_t done1 = read_uint16("zeropad3D_A_ack_pipe");
+	uint8_t done2 = read_uint16("zeropad3D_B_ack_pipe");
+	uint8_t done3 = read_uint16("zeropad3D_C_ack_pipe");
+	uint8_t done4 = read_uint16("zeropad3D_D_ack_pipe");
+	__aa_barrier__();
+#ifndef SW
+	uint64_t stop_time = timer();
+	uint64_t elapsed_time = stop_time - start_time;
+	write_uint64("elapsed_time_pipe", elapsed_time);
+#endif
+	__aa_barrier__();
+    sendOutput();
+}

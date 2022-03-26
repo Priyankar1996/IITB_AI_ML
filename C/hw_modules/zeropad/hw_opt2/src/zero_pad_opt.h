@@ -54,9 +54,18 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
                 }\
                 else\
 				{\
-					int out_data_array_idx = k + dim2R*j + dim21R*i;\
-					int inp_data_array_idx = k + dim2T*(j-pad_reg) + dim21T*(i-pad_reg);\
-					out.data_array[out_data_array_idx >> 2] = inp.data_array[inp_data_array_idx >> 2];\
+					int img_data_array_idx = k + dim2T*(j-pad_reg) + dim21T*(i-pad_reg);\
+					if((count - 4*(count >> 2)) == 0)\
+					{\
+						img_data = inp.data_array[img_data_array_idx >> 2];\
+					}\
+					img_data = inp.data_array[img_data_array_idx >> 2];\
+					uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
+					int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
+					count++;\
+					int out_data_array_idx = k + dim2R*(j) + dim21R*(i);\
+					uint8_t temp_out_rem = out_data_array_idx - 4*(out_data_array_idx >> 2);\
+					out.data_array[out_data_array_idx >> 2] = __putOneBlock__(out.data_array[out_data_array_idx >> 2],temp_out_rem,img_one_block);\
 				}\
 			}\
 })

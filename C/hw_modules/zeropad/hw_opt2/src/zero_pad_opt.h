@@ -21,7 +21,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 #define __dim1__(desc) ({desc.dimensions[1];})
 #define __dim2__(desc) ({desc.dimensions[2];})
 
-#define __zero_pad_opt__(inp,out,desc_inp,desc_out,p_start,q_start,p_end,q_end,pad) ({\
+#define __zero_pad_opt__(inp,out,desc_inp,desc_out,row_low,col_low,row_high,col_high,pad) ({\
     desc_out.data_type = i16;\
     desc_out.number_of_dimensions = 3;\
     desc_out.row_major_form = 1;\
@@ -31,8 +31,8 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int count = 0;\
 	int pad_reg = pad;\
 	int k = 0;\
-	int j1 = q_start,j;\
-	int i = p_start;\
+	int j1 = col_low,j;\
+	int i = row_low;\
 	int dim2T = __dim2__(desc_inp);\
 	int dim1T = __dim1__(desc_inp);\
 	int dim0T = __dim0__(desc_inp);\
@@ -43,9 +43,10 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int dim21R = dim2R*dim1R;\
 	j = j1;\
 	uint64_t img_data;\
-    for(i = q_start ;i < (q_end+(2*pad_reg)); i++)\
+    /*for(i = q_start ;i < (q_end+(2*pad_reg)); i++)\
         for(j = p_start ;j< (p_end+(2*pad_reg)); j++)\
-			for(k=0;k<dim2R;k++)\
+			for(k=0;k<dim2R;k++)\*/\
+	while (i < (row_high + 2*pad_reg))\
             {\
                 if((i <= (pad_reg-1)) || (i > (q_end+pad_reg-1)) || (j <= (pad_reg-1)) || (j > (p_end+pad_reg-1)))\
 				{\
@@ -62,12 +63,23 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 					img_data = inp.data_array[img_data_array_idx >> 2];\
 					uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
 					int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
-					count++;\
 					int out_data_array_idx = k + dim2R*(j) + dim21R*(i);\
 					uint8_t temp_out_rem = out_data_array_idx - 4*(out_data_array_idx >> 2);\
 					out.data_array[out_data_array_idx >> 2] = __putOneBlock__(out.data_array[out_data_array_idx >> 2],temp_out_rem,img_one_block);\
 				}\
+				count++;\
+			k++;\
+		if ((k) == dim2T)\
+		{\
+			k = 0;\
+			j++;\
+			if (j == (col_high + 2*pad_reg))\
+			{\
+				j = j1;\
+				i++;\
 			}\
+		}\
+	}\
 })
 
 #define __getOneBlock__(array64bit,position)({\

@@ -46,31 +46,31 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 		if((i <= (pad_reg-1)) || (i > (row_high+pad_reg-1)) || (j <= (pad_reg-1)) || (j > (col_high+pad_reg-1)))\
 				{\
 					int dest_data_array_idx = k + dim2R*j + dim21R*i;\
-					/*int dest_data_array_idx_1 = dest_data_array_idx + 1;\
+					int dest_data_array_idx_1 = dest_data_array_idx + 1;\
 					int dest_data_array_idx_2 = dest_data_array_idx + 2;\
-					int dest_data_array_idx_3 = dest_data_array_idx + 3;\*/\
+					int dest_data_array_idx_3 = dest_data_array_idx + 3;\
                     R.data_array[dest_data_array_idx >> 2] = 0 ;\
-					/*R.data_array[dest_data_array_idx_1 >> 2] = 0 ;\
+					R.data_array[dest_data_array_idx_1 >> 2] = 0 ;\
 					R.data_array[dest_data_array_idx_2 >> 2] = 0 ;\
-					R.data_array[dest_data_array_idx_3 >> 2] = 0 ;\*/\
+					R.data_array[dest_data_array_idx_3 >> 2] = 0 ;\
                 }\
                 else\
 				{\
 				int img_data_array_idx = (k + dim2T*(j-pad_reg) + dim21T*(i-pad_reg));\
 				int dest_data_array_idx = (k + dim2R*(j) + dim21R*(i));\
-				/*int img_data_array_idx_1 = img_data_array_idx + 1;\
+				int img_data_array_idx_1 = img_data_array_idx + 1;\
 				int img_data_array_idx_2 = img_data_array_idx + 2;\
 				int img_data_array_idx_3 = img_data_array_idx + 3;\
 				int dest_data_array_idx_1 = dest_data_array_idx + 1;\
 				int dest_data_array_idx_2 = dest_data_array_idx + 2;\
-				int dest_data_array_idx_3 = dest_data_array_idx + 3;\*/\
+				int dest_data_array_idx_3 = dest_data_array_idx + 3;\
 				R.data_array[dest_data_array_idx >> 2] = T.data_array[img_data_array_idx >> 2];\
-				/*R.data_array[dest_data_array_idx_1 >> 2] = T.data_array[img_data_array_idx_1 >> 2];\
+				R.data_array[dest_data_array_idx_1 >> 2] = T.data_array[img_data_array_idx_1 >> 2];\
 				R.data_array[dest_data_array_idx_2 >> 2] = T.data_array[img_data_array_idx_2 >> 2];\
-				R.data_array[dest_data_array_idx_3 >> 2] = T.data_array[img_data_array_idx_3 >> 2];\*/\
+				R.data_array[dest_data_array_idx_3 >> 2] = T.data_array[img_data_array_idx_3 >> 2];\
 				}\
-				k++;\
-		if ((k) == dim2T)\
+				k+=4;\
+		if ((k) >= dim2T)\
 		{\
 			k = 0;\
 			j++;\

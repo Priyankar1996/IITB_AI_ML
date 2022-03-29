@@ -43,9 +43,6 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int dim21R = dim2R*dim1R;\
 	j = j1;\
 	uint64_t img_data;\
-    /*for(i = q_start ;i < (q_end+(2*pad_reg)); i++)\
-        for(j = p_start ;j< (p_end+(2*pad_reg)); j++)\
-			for(k=0;k<dim2R;k++)\*/\
 	while (i < (row_high + 2*pad_reg))\
             {\
                 if((i <= (pad_reg-1)) || (i > (q_end+pad_reg-1)) || (j <= (pad_reg-1)) || (j > (p_end+pad_reg-1)))\

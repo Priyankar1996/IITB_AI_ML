@@ -31,6 +31,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int k = 0;\
 	int j1 = col_low,j;\
 	int i = row_low;\
+	int pad_reg = pad;\
 	int dim2T = __dim2__(td_in);\
 	int dim1T = __dim1__(td_in);\
 	int dim0T = __dim0__(td_in);\
@@ -39,66 +40,46 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	int dim0R = __dim0__(td_out);\
 	int dim21T = dim2T*dim1T;\
 	int dim21R = dim2R*dim1R;\
-	int pad_reg = pad;\
-	uint64_t z = 0;\
 	j = j1;\
-	while (i == (row_high+pad_reg))\
+	while (i < (row_high + 2*pad_reg))\
 	{\
-		int img_data_array_idx_z = (k + dim2R*j + dim21R*i);\
-		int img_data_array_idx_z_1 = img_data_array_idx_z + 1;\
-		int img_data_array_idx_z_2 = img_data_array_idx_z + 2;\
-		int img_data_array_idx_z_3 = img_data_array_idx_z + 3;\
-		R.data_array[img_data_array_idx_z >> 2] = z;\
-		R.data_array[img_data_array_idx_z_1 >> 2] = z;\
-		R.data_array[img_data_array_idx_z_2 >> 2] = z;\
-		R.data_array[img_data_array_idx_z_3 >> 2] = z;\
-		k+=4;\
-		if (k >= dim2R)\
+		if((i <= (pad_reg-1)) || (i > (row_high+pad_reg-1)) || (j <= (pad_reg-1)) || (j > (col_high+pad_reg-1)))\
+				{\
+					int dest_data_array_idx = k + dim2R*j + dim21R*i;\
+					int dest_data_array_idx_1 = dest_data_array_idx + 1;\
+					int dest_data_array_idx_2 = dest_data_array_idx + 2;\
+					int dest_data_array_idx_3 = dest_data_array_idx + 3;\
+                    R.data_array[dest_data_array_idx >> 2] = 0 ;\
+					R.data_array[dest_data_array_idx_1 >> 2] = 0 ;\
+					R.data_array[dest_data_array_idx_2 >> 2] = 0 ;\
+					R.data_array[dest_data_array_idx_3 >> 2] = 0 ;\
+                }\
+                else\
+				{\
+				int img_data_array_idx = (k + dim2T*(j-pad_reg) + dim21T*(i-pad_reg));\
+				int dest_data_array_idx = (k + dim2R*(j) + dim21R*(i));\
+				int img_data_array_idx_1 = img_data_array_idx + 1;\
+				int img_data_array_idx_2 = img_data_array_idx + 2;\
+				int img_data_array_idx_3 = img_data_array_idx + 3;\
+				int dest_data_array_idx_1 = dest_data_array_idx + 1;\
+				int dest_data_array_idx_2 = dest_data_array_idx + 2;\
+				int dest_data_array_idx_3 = dest_data_array_idx + 3;\
+				R.data_array[dest_data_array_idx >> 2] = T.data_array[img_data_array_idx >> 2];\
+				R.data_array[dest_data_array_idx_1 >> 2] = T.data_array[img_data_array_idx_1 >> 2];\
+				R.data_array[dest_data_array_idx_2 >> 2] = T.data_array[img_data_array_idx_2 >> 2];\
+				R.data_array[dest_data_array_idx_3 >> 2] = T.data_array[img_data_array_idx_3 >> 2];\
+				}\
+				k+=4;\
+		if ((k) >= dim2T)\
 		{\
 			k = 0;\
 			j++;\
-			if (j == (col_high + pad_reg))\
+			if (j == (col_high + 2*pad_reg))\
 			{\
 				j = j1;\
 				i++;\
 			}\
 		}\
 	}\
-	i = row_low;\
-	j = j1;\
-	k = 0;\
-	while (i < row_high)\
-	{\
-		int img_data_array_idx = (k + dim2T*j + dim21T*i);\
-		int dest_data_array_idx = (k + dim2R*(j+pad_reg) + dim21R*(i+pad_reg));\
-		int img_data_array_idx_1 = img_data_array_idx + 1;\
-		int img_data_array_idx_2 = img_data_array_idx + 2;\
-		int img_data_array_idx_3 = img_data_array_idx + 3;\
-		int dest_data_array_idx_1 = dest_data_array_idx + 1;\
-		int dest_data_array_idx_2 = dest_data_array_idx + 2;\
-		int dest_data_array_idx_3 = dest_data_array_idx + 3;\
-		R.data_array[dest_data_array_idx >> 2] = T.data_array[img_data_array_idx >> 2];\
-		R.data_array[dest_data_array_idx_1 >> 2] = T.data_array[img_data_array_idx_1 >> 2];\
-		R.data_array[dest_data_array_idx_2 >> 2] = T.data_array[img_data_array_idx_2 >> 2];\
-		R.data_array[dest_data_array_idx_3 >> 2] = T.data_array[img_data_array_idx_3 >> 2];\
-		k+=4;\
-		if (k >= dim2T)\
-		{\
-			k = 0;\
-			j++;\
-			if (j == col_high)\
-			{\
-				j = j1;\
-				i++;\
-			}\
-		}\
-	}\
-})
-#define __getOneBlock__(array64bit,position)({\
-	int16_t result = (int16_t)((array64bit >> (position*16)) & 0x000000000000FFFF);\
-	result;\
-})
-#define __putOneBlock__(array64bit,position,result)({\
-	array64bit = array64bit | (((uint64_t)result) << (position*16));\
 })
 #endif

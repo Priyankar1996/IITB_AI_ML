@@ -31,6 +31,7 @@ DEFINE_THREAD(convCore1);
 DEFINE_THREAD(convCore2);
 DEFINE_THREAD(convCore3);
 DEFINE_THREAD(convCore4);
+DEFINE_THREAD(convCore5);
 #endif
 
 void wr_input()
@@ -87,8 +88,8 @@ int main(int argc, char* argv[])
 
 	desc_R.number_of_dimensions = 3;
 
-	desc_T.dimensions[0] = 6;
-	desc_T.dimensions[1] = 6;
+	desc_T.dimensions[0] = 7;
+	desc_T.dimensions[1] = 7;
 	desc_T.dimensions[2] = 3;
 	desc_K.dimensions[0] = 1;
 	desc_K.dimensions[1] = 3;
@@ -117,18 +118,22 @@ int main(int argc, char* argv[])
 	register_pipe ("core2_ack_pipe", 1, 16, PIPE_FIFO_MODE);
 	register_pipe ("core3_ack_pipe", 1, 16, PIPE_FIFO_MODE);
 	register_pipe ("core4_ack_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core5_req_pipe", 1, 16, PIPE_FIFO_MODE);
+	register_pipe ("core5_ack_pipe", 1, 16, PIPE_FIFO_MODE);
 
 	PTHREAD_DECL(conv2D);
 	PTHREAD_DECL(convCore1);
 	PTHREAD_DECL(convCore2);
 	PTHREAD_DECL(convCore3);
 	PTHREAD_DECL(convCore4);
+	PTHREAD_DECL(convCore5);
 
 	PTHREAD_CREATE(conv2D);
 	PTHREAD_CREATE(convCore1);
 	PTHREAD_CREATE(convCore2);
 	PTHREAD_CREATE(convCore3);
 	PTHREAD_CREATE(convCore4);
+	PTHREAD_CREATE(convCore5);
 #endif
 
 	wr_input();
@@ -151,6 +156,7 @@ int main(int argc, char* argv[])
 	PTHREAD_CANCEL(convCore2);
 	PTHREAD_CANCEL(convCore3);
 	PTHREAD_CANCEL(convCore4);
+	PTHREAD_CANCEL(convCore5);
 	close_pipe_handler();
 #endif
 return 0;

@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T maxPool3D -T maxPoolCore1 -T maxPoolCore2 -T maxPoolCore3 -T maxPoolCore4
+TOPMODULES=-T timerDaemon -T maxPool3D
 
 
 # compile with SW defined.

@@ -12,12 +12,11 @@ TensorDescriptor desc_T,desc_B;
 SizedTensor_16K B;
 
 #ifndef SW
-uint8_t fill_T(uint64_t i);
+void fill_T(uint64_t i);
 #else
 SizedTensor_16K T;
 #define fill_T(i) ({\
 	uint64_t element;\
-	uint8_t x;\
 	__get4xi16__(element);\
 	T.data_array[4*i] = element;\
 	__get4xi16__(element);\
@@ -26,7 +25,6 @@ SizedTensor_16K T;
 	T.data_array[4*i+2] = element;\
 	__get4xi16__(element);\
 	T.data_array[4*i+3] = element;\
-	x;\
 })
 #endif
 
@@ -71,7 +69,7 @@ void testConfigure()
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
 	for (i = 0; i < (size >> 4); i++)
 	{
-		uint8_t done = fill_T(i);
+		fill_T(i);
 	}
 }
 
@@ -86,54 +84,6 @@ void sendB()
 	}
 }
 
-void maxPoolCore1(){
-	uint16_t ce = read_uint16("core1_req_pipe");
-	uint16_t re = read_uint16("core1_req_pipe");
-	uint16_t dim1d = read_uint16("core1_req_pipe");
-	uint16_t offset1 = read_uint16("core1_req_pipe");
-	uint16_t offset2 = read_uint16("core1_req_pipe");
-	__aa_barrier__();
-	__maxPoolOfTensors3D_div__(B, 0, 0, re,ce,dim1d,ce,offset1,offset2);
-	__aa_barrier__();
-	write_uint8("core1_ack_pipe",1);
-}
-
-void maxPoolCore2(){
-	uint16_t ce = read_uint16("core2_req_pipe");
-	uint16_t re = read_uint16("core2_req_pipe");
-	uint16_t dim1d = read_uint16("core2_req_pipe");
-	uint16_t offset1 = read_uint16("core2_req_pipe");
-	uint16_t offset2 = read_uint16("core2_req_pipe");
-	__aa_barrier__();
-	// __maxPoolOfTensors3D_div__(T, B, 0, ce>>1, re,ce,dim1d,ce,offset1,offset2);
-	__aa_barrier__();
-	write_uint8("core2_ack_pipe",1);
-}
-
-void maxPoolCore3(){
-	uint16_t ce = read_uint16("core3_req_pipe");
-	uint16_t re = read_uint16("core3_req_pipe");
-	uint16_t dim1d = read_uint16("core3_req_pipe");
-	uint16_t offset1 = read_uint16("core3_req_pipe");
-	uint16_t offset2 = read_uint16("core3_req_pipe");
-	__aa_barrier__();
-	// __maxPoolOfTensors3D_div__(T, B, re>>1, 0, re,ce>>1,dim1d,ce,offset1,offset2);
-	__aa_barrier__();
-	write_uint8("core3_ack_pipe",1);
-}
-
-void maxPoolCore4(){
-	uint16_t ce = read_uint16("core4_req_pipe");
-	uint16_t re = read_uint16("core4_req_pipe");
-	uint16_t dim1d = read_uint16("core4_req_pipe");
-	uint16_t offset1 = read_uint16("core4_req_pipe");
-	uint16_t offset2 = read_uint16("core4_req_pipe");
-	__aa_barrier__();
-	// __maxPoolOfTensors3D_div__(T, B, re>>1,ce>>1,re,ce,dim1d,ce,offset1,offset2);
-	__aa_barrier__();
-	write_uint8("core4_ack_pipe",1);
-}
-
 void maxPool3D()
 {
 	testConfigure();
@@ -146,31 +96,8 @@ void maxPool3D()
 #ifndef SW
 	uint64_t start_time = timer();
 #endif
-	write_uint16("core1_req_pipe",ce);
-	write_uint16("core1_req_pipe",re);
-	write_uint16("core1_req_pipe",dim1d);
-	write_uint16("core1_req_pipe",offset1);
-	write_uint16("core1_req_pipe",offset2);
-	write_uint16("core2_req_pipe",ce);
-	write_uint16("core2_req_pipe",re);
-	write_uint16("core2_req_pipe",dim1d);
-	write_uint16("core2_req_pipe",offset1);
-	write_uint16("core2_req_pipe",offset2);
-	write_uint16("core3_req_pipe",ce);
-	write_uint16("core3_req_pipe",re);
-	write_uint16("core3_req_pipe",dim1d);
-	write_uint16("core3_req_pipe",offset1);
-	write_uint16("core3_req_pipe",offset2);
-	write_uint16("core4_req_pipe",ce);
-	write_uint16("core4_req_pipe",re);
-	write_uint16("core4_req_pipe",dim1d);
-	write_uint16("core4_req_pipe",offset1);
-	write_uint16("core4_req_pipe",offset2);
 	__aa_barrier__();
-	uint8_t done1 = read_uint8("core1_ack_pipe");
-	uint8_t done2 = read_uint8("core2_ack_pipe");
-	uint8_t done3 = read_uint8("core3_ack_pipe");
-	uint8_t done4 = read_uint8("core4_ack_pipe");
+	__maxPoolOfTensors3D_div__(B, 0, 0, re,ce,dim1d,ce,offset1,offset2);
 	__aa_barrier__();
 #ifndef SW
 	uint64_t stop_time = timer();

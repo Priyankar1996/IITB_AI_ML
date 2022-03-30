@@ -1,31 +1,26 @@
 $record [structx_x__SizedTensor] < $array [16384] $of $uint<256> > 
 $storage T:structx_x__SizedTensor
 
-$pipeline $depth 15  $buffering 1 $fullrate
 $module [fill_T]
 $in (addr : $uint<64>)
-$out (done : $uint<8>)
+$out ()
 $is
 {
-    e1 := maxpool_input_pipe
-    e2 := maxpool_input_pipe
-    e3 := maxpool_input_pipe
-    e4 := maxpool_input_pipe
-    e5 := maxpool_input_pipe
-    e6 := maxpool_input_pipe
-    e7 := maxpool_input_pipe
-    e8 := maxpool_input_pipe
-    e9 := maxpool_input_pipe
-    e10 := maxpool_input_pipe
-    e11 := maxpool_input_pipe
-    e12 := maxpool_input_pipe
-    e13 := maxpool_input_pipe
-    e14 := maxpool_input_pipe
-    e15 := maxpool_input_pipe
-    e16 := maxpool_input_pipe
-    ptr := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][addr])
-    ->(ptr) := ($concat e1 e2 e3 e4 e5 e6 e7 e8 e9 e10 e11 e12 e13 e14 e15 e16)
-    done := ($bitcast ($uint<8>) e1)
+    $branchblock [no_block_name]
+    {
+        $merge $entry loopback
+        $phi mycount := ($bitcast ($uint<4>) 0) $on $entry nmycount $on loopback
+        $phi input_word := ($bitcast ($uint<256>) 0) $on $entry ninput_word $on loopback
+        $endmerge
+        $volatile nmycount := (mycount + 1)
+        val := maxpool_input_pipe
+        ninput_word := ($concat ($slice input_word 239 0) val)
+        $if (mycount < 15) $then
+            $place[loopback]
+        $endif
+    }(ninput_word => input_word)
+        ptr := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][addr])
+        ->(ptr) := input_word
 }
 
 $pipeline $depth 15  $buffering 1 $fullrate
@@ -46,70 +41,70 @@ $is
     $split (c2 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16) (sliced_v21 sliced_v22 sliced_v23 sliced_v24 sliced_v25 sliced_v26 sliced_v27 sliced_v28 sliced_v29 sliced_v210 sliced_v211 sliced_v212 sliced_v213 sliced_v214 sliced_v215 sliced_v216)
     $split (c3 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16) (sliced_v31 sliced_v32 sliced_v33 sliced_v34 sliced_v35 sliced_v36 sliced_v37 sliced_v38 sliced_v39 sliced_v310 sliced_v311 sliced_v312 sliced_v313 sliced_v314 sliced_v315 sliced_v316)
     $split (c4 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16 16) (sliced_v41 sliced_v42 sliced_v43 sliced_v44 sliced_v45 sliced_v46 sliced_v47 sliced_v48 sliced_v49 sliced_v410 sliced_v411 sliced_v412 sliced_v413 sliced_v414 sliced_v415 sliced_v416)
-    a11 := ($cast ($int<16>) sliced_v11)
-    a12 := ($cast ($int<16>) sliced_v12)
-    a13 := ($cast ($int<16>) sliced_v13)
-    a14 := ($cast ($int<16>) sliced_v14)
-    a15 := ($cast ($int<16>) sliced_v15)
-    a16 := ($cast ($int<16>) sliced_v16)
-    a17 := ($cast ($int<16>) sliced_v17)
-    a18 := ($cast ($int<16>) sliced_v18)
-    a19 := ($cast ($int<16>) sliced_v19)
-    a110 := ($cast ($int<16>) sliced_v110)
-    a111 := ($cast ($int<16>) sliced_v111)
-    a112 := ($cast ($int<16>) sliced_v112)
-    a113 := ($cast ($int<16>) sliced_v113)
-    a114 := ($cast ($int<16>) sliced_v114)
-    a115 := ($cast ($int<16>) sliced_v115)
-    a116 := ($cast ($int<16>) sliced_v116)
-    a21 := ($cast ($int<16>) sliced_v21)
-    a22 := ($cast ($int<16>) sliced_v22)
-    a23 := ($cast ($int<16>) sliced_v23)
-    a24 := ($cast ($int<16>) sliced_v24)
-    a25 := ($cast ($int<16>) sliced_v25)
-    a26 := ($cast ($int<16>) sliced_v26)
-    a27 := ($cast ($int<16>) sliced_v27)
-    a28 := ($cast ($int<16>) sliced_v28)
-    a29 := ($cast ($int<16>) sliced_v29)
-    a210 := ($cast ($int<16>) sliced_v210)
-    a211 := ($cast ($int<16>) sliced_v211)
-    a212 := ($cast ($int<16>) sliced_v212)
-    a213 := ($cast ($int<16>) sliced_v213)
-    a214 := ($cast ($int<16>) sliced_v214)
-    a215 := ($cast ($int<16>) sliced_v215)
-    a216 := ($cast ($int<16>) sliced_v216)
-    a31 := ($cast ($int<16>) sliced_v31)
-    a32 := ($cast ($int<16>) sliced_v32)
-    a33 := ($cast ($int<16>) sliced_v33)
-    a34 := ($cast ($int<16>) sliced_v34)
-    a35 := ($cast ($int<16>) sliced_v35)
-    a36 := ($cast ($int<16>) sliced_v36)
-    a37 := ($cast ($int<16>) sliced_v37)
-    a38 := ($cast ($int<16>) sliced_v38)
-    a39 := ($cast ($int<16>) sliced_v39)
-    a310 := ($cast ($int<16>) sliced_v310)
-    a311 := ($cast ($int<16>) sliced_v311)
-    a312 := ($cast ($int<16>) sliced_v312)
-    a313 := ($cast ($int<16>) sliced_v313)
-    a314 := ($cast ($int<16>) sliced_v314)
-    a315 := ($cast ($int<16>) sliced_v315)
-    a316 := ($cast ($int<16>) sliced_v316)
-    a41 := ($cast ($int<16>) sliced_v41)
-    a42 := ($cast ($int<16>) sliced_v42)
-    a43 := ($cast ($int<16>) sliced_v43)
-    a44 := ($cast ($int<16>) sliced_v44)
-    a45 := ($cast ($int<16>) sliced_v45)
-    a46 := ($cast ($int<16>) sliced_v46)
-    a47 := ($cast ($int<16>) sliced_v47)
-    a48 := ($cast ($int<16>) sliced_v48)
-    a49 := ($cast ($int<16>) sliced_v49)
-    a410 := ($cast ($int<16>) sliced_v410)
-    a411 := ($cast ($int<16>) sliced_v411)
-    a412 := ($cast ($int<16>) sliced_v412)
-    a413 := ($cast ($int<16>) sliced_v413)
-    a414 := ($cast ($int<16>) sliced_v414)
-    a415 := ($cast ($int<16>) sliced_v415)
-    a416 := ($cast ($int<16>) sliced_v416)
+    a11 := ($bitcast ($int<16>) sliced_v11)
+    a12 := ($bitcast ($int<16>) sliced_v12)
+    a13 := ($bitcast ($int<16>) sliced_v13)
+    a14 := ($bitcast ($int<16>) sliced_v14)
+    a15 := ($bitcast ($int<16>) sliced_v15)
+    a16 := ($bitcast ($int<16>) sliced_v16)
+    a17 := ($bitcast ($int<16>) sliced_v17)
+    a18 := ($bitcast ($int<16>) sliced_v18)
+    a19 := ($bitcast ($int<16>) sliced_v19)
+    a110 := ($bitcast ($int<16>) sliced_v110)
+    a111 := ($bitcast ($int<16>) sliced_v111)
+    a112 := ($bitcast ($int<16>) sliced_v112)
+    a113 := ($bitcast ($int<16>) sliced_v113)
+    a114 := ($bitcast ($int<16>) sliced_v114)
+    a115 := ($bitcast ($int<16>) sliced_v115)
+    a116 := ($bitcast ($int<16>) sliced_v116)
+    a21 := ($bitcast ($int<16>) sliced_v21)
+    a22 := ($bitcast ($int<16>) sliced_v22)
+    a23 := ($bitcast ($int<16>) sliced_v23)
+    a24 := ($bitcast ($int<16>) sliced_v24)
+    a25 := ($bitcast ($int<16>) sliced_v25)
+    a26 := ($bitcast ($int<16>) sliced_v26)
+    a27 := ($bitcast ($int<16>) sliced_v27)
+    a28 := ($bitcast ($int<16>) sliced_v28)
+    a29 := ($bitcast ($int<16>) sliced_v29)
+    a210 := ($bitcast ($int<16>) sliced_v210)
+    a211 := ($bitcast ($int<16>) sliced_v211)
+    a212 := ($bitcast ($int<16>) sliced_v212)
+    a213 := ($bitcast ($int<16>) sliced_v213)
+    a214 := ($bitcast ($int<16>) sliced_v214)
+    a215 := ($bitcast ($int<16>) sliced_v215)
+    a216 := ($bitcast ($int<16>) sliced_v216)
+    a31 := ($bitcast ($int<16>) sliced_v31)
+    a32 := ($bitcast ($int<16>) sliced_v32)
+    a33 := ($bitcast ($int<16>) sliced_v33)
+    a34 := ($bitcast ($int<16>) sliced_v34)
+    a35 := ($bitcast ($int<16>) sliced_v35)
+    a36 := ($bitcast ($int<16>) sliced_v36)
+    a37 := ($bitcast ($int<16>) sliced_v37)
+    a38 := ($bitcast ($int<16>) sliced_v38)
+    a39 := ($bitcast ($int<16>) sliced_v39)
+    a310 := ($bitcast ($int<16>) sliced_v310)
+    a311 := ($bitcast ($int<16>) sliced_v311)
+    a312 := ($bitcast ($int<16>) sliced_v312)
+    a313 := ($bitcast ($int<16>) sliced_v313)
+    a314 := ($bitcast ($int<16>) sliced_v314)
+    a315 := ($bitcast ($int<16>) sliced_v315)
+    a316 := ($bitcast ($int<16>) sliced_v316)
+    a41 := ($bitcast ($int<16>) sliced_v41)
+    a42 := ($bitcast ($int<16>) sliced_v42)
+    a43 := ($bitcast ($int<16>) sliced_v43)
+    a44 := ($bitcast ($int<16>) sliced_v44)
+    a45 := ($bitcast ($int<16>) sliced_v45)
+    a46 := ($bitcast ($int<16>) sliced_v46)
+    a47 := ($bitcast ($int<16>) sliced_v47)
+    a48 := ($bitcast ($int<16>) sliced_v48)
+    a49 := ($bitcast ($int<16>) sliced_v49)
+    a410 := ($bitcast ($int<16>) sliced_v410)
+    a411 := ($bitcast ($int<16>) sliced_v411)
+    a412 := ($bitcast ($int<16>) sliced_v412)
+    a413 := ($bitcast ($int<16>) sliced_v413)
+    a414 := ($bitcast ($int<16>) sliced_v414)
+    a415 := ($bitcast ($int<16>) sliced_v415)
+    a416 := ($bitcast ($int<16>) sliced_v416)
 
 
     $volatile t11 := ($mux (a11 > a21) a11 a21)

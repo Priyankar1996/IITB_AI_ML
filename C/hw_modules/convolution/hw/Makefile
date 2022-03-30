@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T conv2D -T convCore1 -T convCore2 -T convCore3 -T convCore4
+TOPMODULES=-T timerDaemon -T conv2D -T convCore1 -T convCore2 -T convCore3 -T convCore4 -T convCore5
 
 
 # compile with SW defined.

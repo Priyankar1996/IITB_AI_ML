@@ -121,6 +121,20 @@ void convCore4()
 	write_uint16("core4_ack_pipe",1);
 }
 
+void convCore5()
+{
+	uint16_t p_start = read_uint16("core5_req_pipe");
+	uint16_t q_start = read_uint16("core5_req_pipe");
+	uint16_t r_start = read_uint16("core5_req_pipe");
+	uint16_t p_end = read_uint16("core5_req_pipe");
+	uint16_t q_end = read_uint16("core5_req_pipe");
+	uint16_t r_end = read_uint16("core5_req_pipe");
+	__aa_barrier__();	
+	__convolveTensors__(T,K,R,stride,desc_T,desc_K,desc_R,p_start,q_start,r_start,p_end,q_end,r_end);
+	__aa_barrier__();
+	write_uint16("core5_ack_pipe",1);
+}
+
 void conv2D()
 {
     getInput();
@@ -129,29 +143,36 @@ void conv2D()
 	uint16_t q_start1 = 0;
 	uint16_t r_start1 = 0;
 	uint16_t p_end1 = 0;
-	uint16_t q_end1 = 3;
+	uint16_t q_end1 = 4;
 	uint16_t r_end1 = 0;
 
 	uint16_t p_start2 = 1;
 	uint16_t q_start2 = 0;
 	uint16_t r_start2 = 0;
 	uint16_t p_end2 = 1;
-	uint16_t q_end2 = 3;
+	uint16_t q_end2 = 4;
 	uint16_t r_end2 = 0;
 	
 	uint16_t p_start3 = 2;
 	uint16_t q_start3 = 0;
 	uint16_t r_start3 = 0;
 	uint16_t p_end3 = 2;
-	uint16_t q_end3 = 3;
+	uint16_t q_end3 = 4;
 	uint16_t r_end3 = 0;
 	
 	uint16_t p_start4 = 3;
 	uint16_t q_start4 = 0;
 	uint16_t r_start4 = 0;
 	uint16_t p_end4 = 3;
-	uint16_t q_end4 = 3;
+	uint16_t q_end4 = 4;
 	uint16_t r_end4 = 0;
+
+	uint16_t p_start5 = 4;
+	uint16_t q_start5 = 0;
+	uint16_t r_start5 = 0;
+	uint16_t p_end5 = 4;
+	uint16_t q_end5 = 4;
+	uint16_t r_end5 = 0;
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();
@@ -180,12 +201,19 @@ void conv2D()
 	write_uint16("core4_req_pipe",p_end4);
 	write_uint16("core4_req_pipe",q_end4);
 	write_uint16("core4_req_pipe",r_end4);
+	write_uint16("core5_req_pipe",p_start5);
+	write_uint16("core5_req_pipe",q_start5);
+	write_uint16("core5_req_pipe",r_start5);
+	write_uint16("core5_req_pipe",p_end5);
+	write_uint16("core5_req_pipe",q_end5);
+	write_uint16("core5_req_pipe",r_end5);
 	
 	__aa_barrier__();
 	uint8_t done1 = read_uint16("core1_ack_pipe");
 	uint8_t done2 = read_uint16("core2_ack_pipe");
 	uint8_t done3 = read_uint16("core3_ack_pipe");
 	uint8_t done4 = read_uint16("core4_ack_pipe");
+	uint8_t done5 = read_uint16("core5_ack_pipe");
 	__aa_barrier__();
 #ifndef SW
 	uint64_t stop_time = timer();

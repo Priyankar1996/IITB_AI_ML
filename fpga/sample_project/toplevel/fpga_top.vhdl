@@ -6,7 +6,7 @@ library unisim;
 use unisim.vcomponents.all; -- for 7-series FPGA's
 
 library RtUart;
-use RtUart.all;
+use RtUart.RtUartComponents.all;
 
 
 entity fpga_top is

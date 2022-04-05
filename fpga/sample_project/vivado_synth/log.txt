@@ -30,21 +30,20 @@ WARNING: [IP_Flow 19-2162] IP 'clk_wiz_0' is locked:
 Please select 'Report IP Status' from the 'Tools/Report' menu or run Tcl command 'report_ip_status' for more information.
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7k325t-ffg900'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7k325t-ffg900'
-INFO: [Common 17-1223] The version limit for your license is '2017.07' and will expire in -1702 days. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+INFO: [Common 17-1223] The version limit for your license is '2017.07' and will expire in -1709 days. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
 INFO: Launching helper process for spawning children vivado processes
-INFO: Helper process launched with PID 16734 
+INFO: Helper process launched with PID 4335 
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1212.742 ; gain = 68.000 ; free physical = 3324 ; free virtual = 21431
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1212.750 ; gain = 68.000 ; free physical = 4119 ; free virtual = 21313
 ---------------------------------------------------------------------------------
-ERROR: [Synth 8-4169] error in use clause: package 'baud_control_calculator_global_package' not found in library 'ajitcustom' [/home/kamran/Desktop/priyankar/IITB_AI_ML-master/fpga/sample_project/misc_vhdl/lib/RtUart.vhdl:162]
 ERROR: [Synth 8-4169] error in use clause: package 'utility_package' not found in library 'ghdllink' [/home/kamran/Desktop/priyankar/IITB_AI_ML-master/fpga/sample_project/misc_vhdl/lib/RtUart.vhdl:164]
 ERROR: [Synth 8-4169] error in use clause: package 'vhpi_foreign' not found in library 'ghdllink' [/home/kamran/Desktop/priyankar/IITB_AI_ML-master/fpga/sample_project/misc_vhdl/lib/RtUart.vhdl:165]
 INFO: [Synth 8-2810] unit baud_control_calculator_test_bench ignored due to previous errors [/home/kamran/Desktop/priyankar/IITB_AI_ML-master/fpga/sample_project/misc_vhdl/lib/RtUart.vhdl:166]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1266.242 ; gain = 121.500 ; free physical = 3332 ; free virtual = 21439
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1266.250 ; gain = 121.500 ; free physical = 4126 ; free virtual = 21322
 ---------------------------------------------------------------------------------
 RTL Elaboration failed
-3 Infos, 2 Warnings, 0 Critical Warnings and 4 Errors encountered.
+3 Infos, 2 Warnings, 0 Critical Warnings and 3 Errors encountered.
 synth_design failed
 ERROR: [Common 17-69] Command failed: Synthesis failed - please see the console or run log file for details
-INFO: [Common 17-206] Exiting Vivado at Tue Mar 29 16:58:26 2022...
+INFO: [Common 17-206] Exiting Vivado at Tue Apr  5 17:41:54 2022...

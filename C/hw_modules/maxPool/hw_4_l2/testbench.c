@@ -19,10 +19,6 @@
 
 #ifdef SW
 DEFINE_THREAD(maxPool3D);
-DEFINE_THREAD(maxPoolCore1);
-DEFINE_THREAD(maxPoolCore2);
-DEFINE_THREAD(maxPoolCore3);
-DEFINE_THREAD(maxPoolCore4);
 #endif
 
 SizedTensor_16K T,B;
@@ -56,16 +52,9 @@ int main(int argc, char**argv){
 	register_pipe ("maxpool_output_pipe", 2, 16, PIPE_FIFO_MODE);
 
 	PTHREAD_DECL(maxPool3D);
-	PTHREAD_DECL(maxPoolCore1);
-	PTHREAD_DECL(maxPoolCore2);
-	PTHREAD_DECL(maxPoolCore3);
-	PTHREAD_DECL(maxPoolCore4);
 
 	PTHREAD_CREATE(maxPool3D);
-	PTHREAD_CREATE(maxPoolCore1);
-	PTHREAD_CREATE(maxPoolCore2);
-	PTHREAD_CREATE(maxPoolCore3);
-	PTHREAD_CREATE(maxPoolCore4);
+
 #endif
 
 	fprintf(stderr,"Reading files\n");
@@ -197,10 +186,6 @@ int main(int argc, char**argv){
 
 #ifdef SW
 	PTHREAD_CANCEL(maxPool3D);
-	PTHREAD_CANCEL(maxPoolCore1);
-	PTHREAD_CANCEL(maxPoolCore2);
-	PTHREAD_CANCEL(maxPoolCore3);
-	PTHREAD_CANCEL(maxPoolCore4);
 	close_pipe_handler();
 #endif
 return 0;

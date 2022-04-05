@@ -30,7 +30,6 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	desc_out.dimensions[1] = 1 + __udiv16__(__dim1__(desc_inp) - __dim2__(desc_ker),stride);\
 	desc_out.dimensions[2] = __dim0__(desc_ker);\
 	/*desc_out.tensor_size = __dim0__(desc_out) * __dim1__(desc_out) * __dim2__(desc_out);*/\
-	int16_t result_temp;\
 	int p=p_start,q=q_start,r=r_start,i=0,j=0,k=0;\
 	int count = 0;\
 	/*store dimensions in local variables to reduce memory accesses*/\
@@ -59,6 +58,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 			int qxstride = q*stride;\
 			for(r = r_start; r < r_end+1; r++)\
 			{\
+				int16_t result_temp = 0;\
 				/*Operate over one convolution window*/\
 				while(i < dim1_ker)\
 				{\
@@ -68,15 +68,15 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 					__GetImgEntryIndexOffset__(img_data_array_idx,x_idx_img,y_idx_img,k);\
 					int ker_data_array_idx;\
 					__GetKerEntryIndexOffset__(ker_data_array_idx,r,i,j,k);\
+					/*get the offset of one 16 bit block from one 64 bit block*/\
+					uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
+					uint8_t temp_ker_rem = ker_data_array_idx - 4*(ker_data_array_idx >> 2);\
 					/*read one 64 bit block after four 16 bit values have been read*/\
 					if((count - 4*(count >> 2)) == 0)\
 					{\
 						__getOneTensorBlock__(inp,img_data,img_data_array_idx);\
 						__getOneTensorBlock__(ker,ker_data,ker_data_array_idx);\
 					}\
-					/*get the offset of one 16 bit block from one 64 bit block*/\
-					uint8_t temp_img_rem = img_data_array_idx - 4*(img_data_array_idx >> 2);\
-					uint8_t temp_ker_rem = ker_data_array_idx - 4*(ker_data_array_idx >> 2);\
 					/*get one 16 bit value*/\
 					int16_t img_one_block = __getOneBlock__(img_data,temp_img_rem);\
 					int16_t ker_one_block = __getOneBlock__(ker_data,temp_ker_rem);\

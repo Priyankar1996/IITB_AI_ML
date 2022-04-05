@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-package RtLibComponents is
+package RtUartComponents is
   component rt_clock_counter is
 	port (
 			clk, reset: in std_logic;
@@ -158,8 +158,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 library GhdlLink;
 use GhdlLink.Utility_Package.all;
 use GhdlLink.Vhpi_Foreign.all;
@@ -407,8 +407,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity baudControlCalculatorDaemon is -- 
   generic (tag_length : integer); 
   port ( -- 
@@ -826,8 +826,8 @@ begin --
     -- CP-element group 9: predecessors 
     -- CP-element group 9: 	32 
     -- CP-element group 9: successors 
-    -- CP-element group 9: 	12 
     -- CP-element group 9: 	18 
+    -- CP-element group 9: 	12 
     -- CP-element group 9:  members (3) 
       -- CP-element group 9: 	 branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u16_u32_150_update_completed_
       -- CP-element group 9: 	 branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/CONCAT_u16_u32_150_Update/$exit
@@ -864,8 +864,8 @@ begin --
       port map(clk => clk, reset => reset, req => CONCAT_u28_u32_159_inst_ack_1, ack => baudControlCalculatorDaemon_CP_295_elements(11)); -- 
     -- CP-element group 12:  join  transition  output  bypass 
     -- CP-element group 12: predecessors 
-    -- CP-element group 12: 	11 
     -- CP-element group 12: 	9 
+    -- CP-element group 12: 	11 
     -- CP-element group 12: successors 
     -- CP-element group 12: 	13 
     -- CP-element group 12:  members (3) 
@@ -883,7 +883,7 @@ begin --
       constant joinName: string(1 to 47) := "baudControlCalculatorDaemon_cp_element_group_12"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= baudControlCalculatorDaemon_CP_295_elements(11) & baudControlCalculatorDaemon_CP_295_elements(9);
+      preds <= baudControlCalculatorDaemon_CP_295_elements(9) & baudControlCalculatorDaemon_CP_295_elements(11);
       gj_baudControlCalculatorDaemon_cp_element_group_12 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => baudControlCalculatorDaemon_CP_295_elements(12), clk => clk, reset => reset); --
     end block;
@@ -903,8 +903,8 @@ begin --
     -- CP-element group 14: predecessors 
     -- CP-element group 14: 	32 
     -- CP-element group 14: successors 
-    -- CP-element group 14: 	15 
     -- CP-element group 14: 	18 
+    -- CP-element group 14: 	15 
     -- CP-element group 14:  members (3) 
       -- CP-element group 14: 	 branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_164_update_completed_
       -- CP-element group 14: 	 branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189/call_stmt_164_Update/$exit
@@ -966,8 +966,8 @@ begin --
       port map(clk => clk, reset => reset, req => call_stmt_168_call_ack_1, ack => baudControlCalculatorDaemon_CP_295_elements(17)); -- 
     -- CP-element group 18:  join  transition  output  bypass 
     -- CP-element group 18: predecessors 
-    -- CP-element group 18: 	14 
     -- CP-element group 18: 	9 
+    -- CP-element group 18: 	14 
     -- CP-element group 18: successors 
     -- CP-element group 18: 	19 
     -- CP-element group 18:  members (3) 
@@ -985,7 +985,7 @@ begin --
       constant joinName: string(1 to 47) := "baudControlCalculatorDaemon_cp_element_group_18"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= baudControlCalculatorDaemon_CP_295_elements(14) & baudControlCalculatorDaemon_CP_295_elements(9);
+      preds <= baudControlCalculatorDaemon_CP_295_elements(9) & baudControlCalculatorDaemon_CP_295_elements(14);
       gj_baudControlCalculatorDaemon_cp_element_group_18 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => baudControlCalculatorDaemon_CP_295_elements(18), clk => clk, reset => reset); --
     end block;
@@ -1016,8 +1016,8 @@ begin --
       port map(clk => clk, reset => reset, req => call_stmt_172_call_ack_1, ack => baudControlCalculatorDaemon_CP_295_elements(20)); -- 
     -- CP-element group 21:  join  transition  output  bypass 
     -- CP-element group 21: predecessors 
-    -- CP-element group 21: 	20 
     -- CP-element group 21: 	17 
+    -- CP-element group 21: 	20 
     -- CP-element group 21: successors 
     -- CP-element group 21: 	22 
     -- CP-element group 21:  members (3) 
@@ -1035,7 +1035,7 @@ begin --
       constant joinName: string(1 to 47) := "baudControlCalculatorDaemon_cp_element_group_21"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= baudControlCalculatorDaemon_CP_295_elements(20) & baudControlCalculatorDaemon_CP_295_elements(17);
+      preds <= baudControlCalculatorDaemon_CP_295_elements(17) & baudControlCalculatorDaemon_CP_295_elements(20);
       gj_baudControlCalculatorDaemon_cp_element_group_21 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => baudControlCalculatorDaemon_CP_295_elements(21), clk => clk, reset => reset); --
     end block;
@@ -1066,8 +1066,8 @@ begin --
       port map(clk => clk, reset => reset, req => SUB_u32_u32_176_inst_ack_1, ack => baudControlCalculatorDaemon_CP_295_elements(23)); -- 
     -- CP-element group 24:  join  transition  output  bypass 
     -- CP-element group 24: predecessors 
-    -- CP-element group 24: 	23 
     -- CP-element group 24: 	17 
+    -- CP-element group 24: 	23 
     -- CP-element group 24: successors 
     -- CP-element group 24: 	25 
     -- CP-element group 24:  members (3) 
@@ -1085,7 +1085,7 @@ begin --
       constant joinName: string(1 to 47) := "baudControlCalculatorDaemon_cp_element_group_24"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= baudControlCalculatorDaemon_CP_295_elements(23) & baudControlCalculatorDaemon_CP_295_elements(17);
+      preds <= baudControlCalculatorDaemon_CP_295_elements(17) & baudControlCalculatorDaemon_CP_295_elements(23);
       gj_baudControlCalculatorDaemon_cp_element_group_24 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => baudControlCalculatorDaemon_CP_295_elements(24), clk => clk, reset => reset); --
     end block;
@@ -1233,15 +1233,15 @@ begin --
     -- CP-element group 32: 	30 
     -- CP-element group 32: 	7 
     -- CP-element group 32: successors 
-    -- CP-element group 32: 	14 
-    -- CP-element group 32: 	11 
-    -- CP-element group 32: 	23 
-    -- CP-element group 32: 	20 
-    -- CP-element group 32: 	10 
     -- CP-element group 32: 	17 
+    -- CP-element group 32: 	23 
+    -- CP-element group 32: 	10 
+    -- CP-element group 32: 	26 
     -- CP-element group 32: 	9 
     -- CP-element group 32: 	8 
-    -- CP-element group 32: 	26 
+    -- CP-element group 32: 	14 
+    -- CP-element group 32: 	11 
+    -- CP-element group 32: 	20 
     -- CP-element group 32:  members (34) 
       -- CP-element group 32: 	 branch_block_stmt_133/merge_stmt_143__exit__
       -- CP-element group 32: 	 branch_block_stmt_133/assign_stmt_151_to_assign_stmt_189__entry__
@@ -1971,8 +1971,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity my_div is -- 
   generic (tag_length : integer); 
   port ( -- 
@@ -2203,9 +2203,9 @@ begin --
     -- CP-element group 2: predecessors 
     -- CP-element group 2: 	1 
     -- CP-element group 2: successors 
-    -- CP-element group 2: 	10 
     -- CP-element group 2: 	11 
     -- CP-element group 2: 	14 
+    -- CP-element group 2: 	10 
     -- CP-element group 2: 	13 
     -- CP-element group 2:  members (18) 
       -- CP-element group 2: 	 branch_block_stmt_83/if_stmt_120_if_link/$exit
@@ -2276,8 +2276,8 @@ begin --
     -- CP-element group 4: 	0 
     -- CP-element group 4: successors 
     -- CP-element group 4: 	6 
-    -- CP-element group 4: 	8 
     -- CP-element group 4: 	5 
+    -- CP-element group 4: 	8 
     -- CP-element group 4:  members (10) 
       -- CP-element group 4: 	 branch_block_stmt_83/merge_stmt_84__entry___PhiReq/$entry
       -- CP-element group 4: 	 branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_85/$entry
@@ -2409,8 +2409,8 @@ begin --
       port map(clk => clk, reset => reset, req => ntA_111_88_buf_ack_1, ack => my_div_CP_159_elements(11)); -- 
     -- CP-element group 12:  join  transition  output  bypass 
     -- CP-element group 12: predecessors 
-    -- CP-element group 12: 	10 
     -- CP-element group 12: 	11 
+    -- CP-element group 12: 	10 
     -- CP-element group 12: successors 
     -- CP-element group 12: 	16 
     -- CP-element group 12:  members (4) 
@@ -2429,7 +2429,7 @@ begin --
       constant joinName: string(1 to 26) := "my_div_cp_element_group_12"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_div_CP_159_elements(10) & my_div_CP_159_elements(11);
+      preds <= my_div_CP_159_elements(11) & my_div_CP_159_elements(10);
       gj_my_div_cp_element_group_12 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_div_CP_159_elements(12), clk => clk, reset => reset); --
     end block;
@@ -2508,8 +2508,8 @@ begin --
     -- CP-element group 17: 	9 
     -- CP-element group 17: 	16 
     -- CP-element group 17: successors 
-    -- CP-element group 17: 	19 
     -- CP-element group 17: 	18 
+    -- CP-element group 17: 	19 
     -- CP-element group 17:  members (2) 
       -- CP-element group 17: 	 branch_block_stmt_83/merge_stmt_84_PhiReqMerge
       -- CP-element group 17: 	 branch_block_stmt_83/merge_stmt_84_PhiAck/$entry
@@ -2539,8 +2539,8 @@ begin --
       port map(clk => clk, reset => reset, req => phi_stmt_89_ack_0, ack => my_div_CP_159_elements(19)); -- 
     -- CP-element group 20:  join  transition  bypass 
     -- CP-element group 20: predecessors 
-    -- CP-element group 20: 	19 
     -- CP-element group 20: 	18 
+    -- CP-element group 20: 	19 
     -- CP-element group 20: successors 
     -- CP-element group 20: 	1 
     -- CP-element group 20:  members (1) 
@@ -2553,7 +2553,7 @@ begin --
       constant joinName: string(1 to 26) := "my_div_cp_element_group_20"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_div_CP_159_elements(19) & my_div_CP_159_elements(18);
+      preds <= my_div_CP_159_elements(18) & my_div_CP_159_elements(19);
       gj_my_div_cp_element_group_20 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_div_CP_159_elements(20), clk => clk, reset => reset); --
     end block;
@@ -2841,8 +2841,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity my_gcd is -- 
   generic (tag_length : integer); 
   port ( -- 
@@ -3056,10 +3056,10 @@ begin --
     -- CP-element group 1: predecessors 
     -- CP-element group 1: 	27 
     -- CP-element group 1: successors 
-    -- CP-element group 1: 	4 
-    -- CP-element group 1: 	5 
     -- CP-element group 1: 	2 
     -- CP-element group 1: 	3 
+    -- CP-element group 1: 	4 
+    -- CP-element group 1: 	5 
     -- CP-element group 1:  members (15) 
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_update_start_
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_sample_start_
@@ -3068,6 +3068,7 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_11/merge_stmt_12__exit__
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72__entry__
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/$entry
+      -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_sample_start_
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_update_start_
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_start/$entry
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_start/req
@@ -3075,7 +3076,6 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_complete/req
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Update/$entry
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Update/cr
-      -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_sample_start_
       -- 
     rr_24_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_24_symbol_delay",delay_value => 0)
@@ -3142,11 +3142,11 @@ begin --
       port map(clk => clk, reset => reset, req => MUX_51_inst_ack_1, ack => my_gcd_CP_0_elements(5)); -- 
     -- CP-element group 6:  branch  join  transition  place  output  bypass 
     -- CP-element group 6: predecessors 
-    -- CP-element group 6: 	5 
     -- CP-element group 6: 	3 
+    -- CP-element group 6: 	5 
     -- CP-element group 6: successors 
-    -- CP-element group 6: 	7 
     -- CP-element group 6: 	8 
+    -- CP-element group 6: 	7 
     -- CP-element group 6:  members (10) 
       -- CP-element group 6: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72__exit__
       -- CP-element group 6: 	 branch_block_stmt_11/if_stmt_73__entry__
@@ -3169,7 +3169,7 @@ begin --
       constant joinName: string(1 to 25) := "my_gcd_cp_element_group_6"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_gcd_CP_0_elements(5) & my_gcd_CP_0_elements(3);
+      preds <= my_gcd_CP_0_elements(3) & my_gcd_CP_0_elements(5);
       gj_my_gcd_cp_element_group_6 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_gcd_CP_0_elements(6), clk => clk, reset => reset); --
     end block;
@@ -3177,10 +3177,10 @@ begin --
     -- CP-element group 7: predecessors 
     -- CP-element group 7: 	6 
     -- CP-element group 7: successors 
-    -- CP-element group 7: 	18 
-    -- CP-element group 7: 	21 
-    -- CP-element group 7: 	17 
     -- CP-element group 7: 	20 
+    -- CP-element group 7: 	18 
+    -- CP-element group 7: 	17 
+    -- CP-element group 7: 	21 
     -- CP-element group 7:  members (18) 
       -- CP-element group 7: 	 branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Sample/req
       -- CP-element group 7: 	 branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Update/$entry
@@ -3235,9 +3235,9 @@ begin --
     -- CP-element group 9: predecessors 
     -- CP-element group 9: 	0 
     -- CP-element group 9: successors 
+    -- CP-element group 9: 	11 
     -- CP-element group 9: 	10 
     -- CP-element group 9: 	14 
-    -- CP-element group 9: 	11 
     -- CP-element group 9: 	13 
     -- CP-element group 9:  members (15) 
       -- CP-element group 9: 	 branch_block_stmt_11/merge_stmt_12__entry___PhiReq/$entry
@@ -3256,18 +3256,18 @@ begin --
       -- CP-element group 9: 	 branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Update/$entry
       -- CP-element group 9: 	 branch_block_stmt_11/merge_stmt_12__entry___PhiReq/phi_stmt_17/phi_stmt_17_sources/Interlock/Update/req
       -- 
-    req_107_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_107_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => my_gcd_CP_0_elements(9), ack => B_19_buf_req_1); -- 
     req_102_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_102_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => my_gcd_CP_0_elements(9), ack => B_19_buf_req_0); -- 
-    req_87_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_87_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => my_gcd_CP_0_elements(9), ack => A_15_buf_req_1); -- 
+    req_107_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_107_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => my_gcd_CP_0_elements(9), ack => B_19_buf_req_1); -- 
     req_82_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_82_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => my_gcd_CP_0_elements(9), ack => A_15_buf_req_0); -- 
+    req_87_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_87_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => my_gcd_CP_0_elements(9), ack => A_15_buf_req_1); -- 
     my_gcd_CP_0_elements(9) <= my_gcd_CP_0_elements(0);
     -- CP-element group 10:  transition  input  bypass 
     -- CP-element group 10: predecessors 
@@ -3295,8 +3295,8 @@ begin --
       port map(clk => clk, reset => reset, req => A_15_buf_ack_1, ack => my_gcd_CP_0_elements(11)); -- 
     -- CP-element group 12:  join  transition  output  bypass 
     -- CP-element group 12: predecessors 
-    -- CP-element group 12: 	10 
     -- CP-element group 12: 	11 
+    -- CP-element group 12: 	10 
     -- CP-element group 12: successors 
     -- CP-element group 12: 	16 
     -- CP-element group 12:  members (4) 
@@ -3315,7 +3315,7 @@ begin --
       constant joinName: string(1 to 26) := "my_gcd_cp_element_group_12"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_gcd_CP_0_elements(10) & my_gcd_CP_0_elements(11);
+      preds <= my_gcd_CP_0_elements(11) & my_gcd_CP_0_elements(10);
       gj_my_gcd_cp_element_group_12 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_gcd_CP_0_elements(12), clk => clk, reset => reset); --
     end block;
@@ -3465,8 +3465,8 @@ begin --
       port map(clk => clk, reset => reset, req => ntB_72_20_buf_ack_1, ack => my_gcd_CP_0_elements(21)); -- 
     -- CP-element group 22:  join  transition  output  bypass 
     -- CP-element group 22: predecessors 
-    -- CP-element group 22: 	21 
     -- CP-element group 22: 	20 
+    -- CP-element group 22: 	21 
     -- CP-element group 22: successors 
     -- CP-element group 22: 	23 
     -- CP-element group 22:  members (4) 
@@ -3485,7 +3485,7 @@ begin --
       constant joinName: string(1 to 26) := "my_gcd_cp_element_group_22"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_gcd_CP_0_elements(21) & my_gcd_CP_0_elements(20);
+      preds <= my_gcd_CP_0_elements(20) & my_gcd_CP_0_elements(21);
       gj_my_gcd_cp_element_group_22 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_gcd_CP_0_elements(22), clk => clk, reset => reset); --
     end block;
@@ -3511,8 +3511,8 @@ begin --
     end block;
     -- CP-element group 24:  merge  fork  transition  place  bypass 
     -- CP-element group 24: predecessors 
-    -- CP-element group 24: 	23 
     -- CP-element group 24: 	16 
+    -- CP-element group 24: 	23 
     -- CP-element group 24: successors 
     -- CP-element group 24: 	25 
     -- CP-element group 24: 	26 
@@ -3520,7 +3520,7 @@ begin --
       -- CP-element group 24: 	 branch_block_stmt_11/merge_stmt_12_PhiReqMerge
       -- CP-element group 24: 	 branch_block_stmt_11/merge_stmt_12_PhiAck/$entry
       -- 
-    my_gcd_CP_0_elements(24) <= OrReduce(my_gcd_CP_0_elements(23) & my_gcd_CP_0_elements(16));
+    my_gcd_CP_0_elements(24) <= OrReduce(my_gcd_CP_0_elements(16) & my_gcd_CP_0_elements(23));
     -- CP-element group 25:  transition  input  bypass 
     -- CP-element group 25: predecessors 
     -- CP-element group 25: 	24 
@@ -3967,8 +3967,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity baud_control_calculator is  -- system 
   port (-- 
     clk : in std_logic;
@@ -4114,6 +4114,7 @@ architecture baud_control_calculator_arch  of baud_control_calculator is -- syst
   signal BAUD_CONTROL_WORD_VALID_pipe_write_data: std_logic_vector(0 downto 0);
   signal BAUD_CONTROL_WORD_VALID_pipe_write_req: std_logic_vector(0 downto 0);
   signal BAUD_CONTROL_WORD_VALID_pipe_write_ack: std_logic_vector(0 downto 0);
+  -- gated clock signal declarations.
   -- 
 begin -- 
   -- module baudControlCalculatorDaemon
@@ -4284,14 +4285,15 @@ begin --
   -- input signal-pipe BAUD_RATE_SIG accessed directly. 
   -- input signal-pipe CLK_FREQUENCY_SIG accessed directly. 
   -- input signal-pipe CLOCK_FREQUENCY_VALID accessed directly. 
+  -- gated clock generators 
   -- 
 end baud_control_calculator_arch;
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library AjitCustom;
-use AjitCustom.AjitCustomComponents.all;
+library RtUart;
+use RtUart.RtUartComponents.all;
 
 library simpleUartLib;
 use simpleUartLib.uartPackage.all;

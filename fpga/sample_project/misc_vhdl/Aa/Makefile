@@ -29,13 +29,13 @@ aa2vc: core.linked.opt.aa
 
 # vC to VHDL
 vc2vhdl: core.vc
-	vc2vhdl -H -O -S 4 -I 2 -a -C -e baud_control_calculator -W AjitCustom -w -s ghdl $(TOPMODULES) -f core.vc 
+	vc2vhdl -H -O -S 4 -I 2 -a -C -e baud_control_calculator -W RtUart -w -s ghdl $(TOPMODULES) -f core.vc 
 	rm -rf vhdl
 	mkdir vhdl
-	mkdir vhdl/AjitCustom
-	vhdlFormat < baud_control_calculator_global_package.unformatted_vhdl > vhdl/AjitCustom/baud_control_calculator_global_package.vhdl
-	vhdlFormat < baud_control_calculator.unformatted_vhdl > vhdl/AjitCustom/baud_control_calculator.vhdl
-	vhdlFormat < baud_control_calculator_test_bench.unformatted_vhdl > vhdl/AjitCustom/baud_control_calculator_test_bench.vhdl
+	mkdir vhdl/RtUart
+	vhdlFormat < baud_control_calculator_global_package.unformatted_vhdl > vhdl/RtUart/baud_control_calculator_global_package.vhdl
+	vhdlFormat < baud_control_calculator.unformatted_vhdl > vhdl/RtUart/baud_control_calculator.vhdl
+	vhdlFormat < baud_control_calculator_test_bench.unformatted_vhdl > vhdl/RtUart/baud_control_calculator_test_bench.vhdl
 	rm *.unformatted_vhdl
 
 clean:

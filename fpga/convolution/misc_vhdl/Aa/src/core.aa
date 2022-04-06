@@ -1,0 +1,87 @@
+$pipe CLK_FREQUENCY_SIG: $uint<32> $signal
+$pipe BAUD_RATE_SIG: $uint<32> $signal
+$pipe BAUD_CONTROL_WORD_SIG: $uint<32> $signal
+
+$pipe BAUD_CONTROL_WORD_VALID: $uint<1> $signal
+$pipe CLOCK_FREQUENCY_VALID: $uint<1> $signal
+
+$module [my_gcd] $in (A B: $uint<32>) $out (GCD: $uint<32>) $is
+{
+	$branchblock[loop] {
+		$merge $entry loopback 
+			$phi tA := A $on $entry ntA $on loopback
+			$phi tB := B $on $entry ntB $on loopback
+		$endmerge
+		
+
+		continue_flag := ($reduce & 
+					(tA > 1)
+					(tB > 1)
+					(tA != tB))
+		GCD := ($prioritymux
+				(tA == tB) 		tA
+				((tA  == 1) | (tB == 1))  1
+				$default $zero<32>)
+
+		$volatile ntA := ($mux (tA > tB) (tA - tB) tA)
+		$volatile ntB := ($mux (tB > tA) (tB - tA) tB)
+
+		$if continue_flag $then
+			$place [loopback]
+		$endif
+	}
+}
+
+$module [my_div] $in (A B: $uint<32>) $out (Q: $uint<32>) $is
+{
+	$branchblock[loop] {
+		$merge $entry loopback 
+			$phi tA := A $on $entry ntA $on loopback
+			$phi tQ  := $zero<32> $on $entry ntQ $on loopback
+		$endmerge
+
+		$volatile continue_flag := ((tA != 0) & (tA >= B))
+
+		$volatile ntA  := ($mux continue_flag (tA - B) tA)
+		$volatile ntQ  := ($mux continue_flag (tQ+1) tQ)
+
+		$if continue_flag $then
+			$place [loopback]
+		$endif
+	} (tQ => tQ)
+
+	Q := tQ
+}
+	
+
+$module [baudControlCalculatorDaemon] $in () $out () $is
+{
+	BAUD_CONTROL_WORD_VALID := 0
+
+	$branchblock[loop] {
+		$merge $entry wait_on_clock $endmerge
+			clock_valid := CLOCK_FREQUENCY_VALID
+			$if  (~ clock_valid) $then
+				$place [wait_on_clock]
+			$endif
+
+		$merge $entry loopback $endmerge
+			SS := ($concat ($slice CLK_FREQUENCY_SIG 31 16) $zero<16>)
+			// SS :=  CLK_FREQUENCY_SIG
+			BRx16 := ($concat ($slice BAUD_RATE_SIG 27 0) $zero<4>)
+
+			$call my_gcd (SS BRx16)  (GCD)
+			$call my_div (BRx16 GCD) (BF)
+			$call my_div (SS GCD)    (BLx)
+
+			BL := (BLx - BF)
+			BAUD_CONTROL_WORD_SIG := ($concat ($slice BL 15 0) $zero<4> ($slice BF 11 0))
+
+			$barrier
+	
+			BAUD_CONTROL_WORD_VALID := 1
+					
+		$place [loopback]	
+	}
+}
+

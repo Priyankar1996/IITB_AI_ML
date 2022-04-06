@@ -1,0 +1,43 @@
+------------------------------------------------------------
+
+1. Implement your design in C
+	Note: your design should read/write from
+	      a pair of 8-bit wide pipes.. lets
+		say data_in and data_out.
+
+2. Convert your design to hardware.
+	The top-level entity ahir_system will have
+	an input pipe interface and an output
+	pipe interface.
+
+------------------------------------------------------------
+
+3. Create the toplevel VHDL file
+
+	Serial Rx, Tx <--> uart <---> ahir_system
+	clock-generator
+	reset synchronizer
+	
+         (this will be one-time for all projects).
+
+4. Create a constraint file
+	(this will be one-time for all projects).
+
+
+
+5. Vivado synthesis script 
+	to generate the bitfile.
+
+	(this will be one-time for all projects).
+
+------------------------------------------------------------
+
+6. Hookup the board... (to the host PC/laptop)
+
+7. Program the board... (using Vivado hardware manager)
+
+8. Reset the board... (push-button)
+
+9. Run the testbench on the host PC/laptop.
+
+------------------------------------------------------------

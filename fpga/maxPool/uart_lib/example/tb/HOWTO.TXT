@@ -1,0 +1,9 @@
+To send data to UART, in one shell
+        		send_data /dev/ttyUSBx
+
+To get data from UART, in another shell
+			./receive_data /dev/ttyUSBx < /dev/ttyUSBx
+
+
+
+	

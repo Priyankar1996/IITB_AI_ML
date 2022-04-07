@@ -10,7 +10,7 @@ PIPEHANDLER_LIB=$(AHIR_LIB)
 PTHREADUTILS_INCLUDE=$(AHIR_INCLUDE)
 VHDL_LIB=$(AHIR_RELEASE)/vhdl
 
-SIZED_TENSOR=../../../primitives/include
+SIZED_TENSOR=../../../../../C/primitives/include
 
 all: SW HW 
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T zeropad3D -T zeropad3D_A -T zeropad3D_B -T zeropad3D_C -T zeropad3D_D  -T timerDaemon
+TOPMODULES=-T zeropad3D -T zeropad3D_A -T zeropad3D_B -T zeropad3D_C -T zeropad3D_D -T zeropad3D_E -T zeropad3D_F -T zeropad3D_G -T zeropad3D_H -T timerDaemon
 
 
 # compile with SW defined.

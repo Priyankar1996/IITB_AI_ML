@@ -21,7 +21,7 @@ architecture structure of fpga_top is
 
 	signal RT_1HZ: std_logic;
 	signal BAUD_RATE : std_logic_vector(31 downto 0);
-
+	signal reset2,reset1,reset_sync,clk,lock : std_logic;
 	component clk_wiz_0
   		port
    			(-- Clock in ports

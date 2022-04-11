@@ -6,7 +6,7 @@ library unisim;
 use unisim.vcomponents.all;
 
 library RtUart;
-use RtUart.all;
+use RtUart.RtUartComponents.all;
 
 entity fpga_top is
 port(
@@ -46,6 +46,7 @@ architecture structure of fpga_top is
 		ConvTranspose_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
     end component;
 
+		signal reset2,reset1,reset_sync,clk,lock: std_logic;
 		signal ConvTranspose_input_pipe_pipe_write_data : std_logic_vector(15 downto 0);
 		signal ConvTranspose_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
 		signal ConvTranspose_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);

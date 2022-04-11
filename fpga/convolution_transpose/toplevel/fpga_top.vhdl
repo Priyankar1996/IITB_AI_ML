@@ -50,9 +50,9 @@ architecture structure of fpga_top is
 		signal ConvTranspose_input_pipe_pipe_write_data : std_logic_vector(15 downto 0);
 		signal ConvTranspose_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
 		signal ConvTranspose_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
-		signal ConvTranspose_output_pipe_pipe_write_data : std_logic_vector(15 downto 0);
-		signal ConvTranspose_output_pipe_pipe_write_req : std_logic_vector(0 downto 0);
-		signal ConvTranspose_output_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
+		signal ConvTranspose_output_pipe_pipe_read_data : std_logic_vector(15 downto 0);
+		signal ConvTranspose_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
+		signal ConvTranspose_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
 
 		signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
@@ -99,9 +99,9 @@ architecture structure of fpga_top is
 				ConvTranspose_input_pipe_pipe_write_data => ConvTranspose_input_pipe_pipe_write_data,
 				ConvTranspose_input_pipe_pipe_write_ack => ConvTranspose_input_pipe_pipe_write_ack,
 				ConvTranspose_input_pipe_pipe_write_req => ConvTranspose_input_pipe_pipe_write_req,
-				ConvTranspose_output_pipe_pipe_write_data => ConvTranspose_output_pipe_pipe_write_data,
-				ConvTranspose_output_pipe_pipe_write_ack => ConvTranspose_output_pipe_pipe_write_ack,
-				ConvTranspose_output_pipe_pipe_write_req => ConvTranspose_output_pipe_pipe_write_req);
+				ConvTranspose_output_pipe_pipe_read_data => ConvTranspose_output_pipe_pipe_read_data,
+				ConvTranspose_output_pipe_pipe_read_ack => ConvTranspose_output_pipe_pipe_read_ack,
+				ConvTranspose_output_pipe_pipe_read_req => ConvTranspose_output_pipe_pipe_read_req);
 
     uart_inst:
 		configurable_self_tuning_uart
@@ -111,12 +111,12 @@ architecture structure of fpga_top is
 					BAUD_RATE => BAUD_RATE,
 					UART_RX(0) => Rx,
 					UART_TX(0) => Tx,
-					TX_to_CONSOLE_pipe_write_data => data_out_pipe_read_data,
-					TX_to_CONSOLE_pipe_write_req => data_out_pipe_read_ack,
-					TX_to_CONSOLE_pipe_write_ack => data_out_pipe_read_req,
-					CONSOLE_to_RX_pipe_read_data  => data_in_pipe_write_data ,
-					CONSOLE_to_RX_pipe_read_req  => data_in_pipe_write_ack ,
-					CONSOLE_to_RX_pipe_read_ack => data_in_pipe_write_req
+					TX_to_CONSOLE_pipe_write_data => ConvTranspose_output_pipe_pipe_read_data,
+					TX_to_CONSOLE_pipe_write_req => ConvTranspose_output_pipe_pipe_read_ack,
+					TX_to_CONSOLE_pipe_write_ack => ConvTranspose_output_pipe_pipe_read_req,
+					CONSOLE_to_RX_pipe_read_data  => ConvTranspose_input_pipe_pipe_write_data ,
+					CONSOLE_to_RX_pipe_read_req  => ConvTranspose_input_pipe_pipe_write_ack ,
+					CONSOLE_to_RX_pipe_read_ack => ConvTranspose_input_pipe_pipe_write_req
 				);
 
 	BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));

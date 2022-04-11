@@ -52,7 +52,7 @@ architecture structure of fpga_top is
     	signal data_in_pipe_write_ack : std_logic_vector(0 downto 0);
     	signal data_out_pipe_read_data: std_logic_vector(7 downto 0);
     	signal data_out_pipe_read_req : std_logic_vector(0 downto 0);
-    	signal data_out_pipe_read_ack : std_logic_vector(0 downto 0)); -- 
+    	signal data_out_pipe_read_ack : std_logic_vector(0 downto 0); -- 
 
 	signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
@@ -94,7 +94,7 @@ begin
 
 	ahir_inst: ahir_system
 		port map (
-    			CLK => CLK, RESET => RESET_SYNC
+    			CLK => CLK, RESET => RESET_SYNC,
     			data_in_pipe_write_data => data_in_pipe_write_data,
     			data_in_pipe_write_req => data_in_pipe_write_req,
     			data_in_pipe_write_ack  => data_in_pipe_write_ack ,

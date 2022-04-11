@@ -88,3 +88,4 @@ $is
 {
   $null
 }
+// use of gated clocks in modules 

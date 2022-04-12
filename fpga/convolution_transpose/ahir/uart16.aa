@@ -1,0 +1,73 @@
+$pipe in_data : $uint<8> $depth 1
+$pipe out_data : $uint<8> $depth 1
+$volatile $module [nibbleToHexChar] $in(b:$uint<4>) $out(x:$uint<8>) $is
+{
+    x := ($excmux (b==0) ($bitcast ($uint<8>)_h30)
+                  (b==1) ($bitcast ($uint<8>)_h31)
+                  (b==2) ($bitcast ($uint<8>)_h32)
+                  (b==3) ($bitcast ($uint<8>)_h33)
+                  (b==4) ($bitcast ($uint<8>)_h34)
+                  (b==5) ($bitcast ($uint<8>)_h35)
+                  (b==6) ($bitcast ($uint<8>)_h36)
+                  (b==7) ($bitcast ($uint<8>)_h37)
+                  (b==8) ($bitcast ($uint<8>)_h38)
+                  (b==9) ($bitcast ($uint<8>)_h39)
+                  (b==10) ($bitcast ($uint<8>)_h61)
+                  (b==11) ($bitcast ($uint<8>)_h62)
+                  (b==12) ($bitcast ($uint<8>)_h63)
+                  (b==13) ($bitcast ($uint<8>)_h64)
+                  (b==14) ($bitcast ($uint<8>)_h65)
+                  (b==15) ($bitcast ($uint<8>)_h66))
+}
+
+$volatile $module [hexCharToNibble] $in(x:$uint<8>) $out(b:$uint<4>) $is
+{
+    $volatile $split (x 4 4) (bH bL)
+    $volatile y := ($excmux (bL == 1) ($bitcast ($uint<4>)_ha)
+                            (bL == 2) ($bitcast ($uint<4>)_hb)
+                            (bL == 3) ($bitcast ($uint<4>)_hc)
+                            (bL == 4) ($bitcast ($uint<4>)_hd)
+                            (bL == 5) ($bitcast ($uint<4>)_he)
+                            (bL == 6) ($bitcast ($uint<4>)_hf))
+    b := ($mux (bH == _h3) bL y)
+}
+
+$module [inHexCharToBinaryDaemon] $in() $out() $is
+{
+    $branchblock [loop]
+    {
+        $merge $entry loopout $endmerge
+        $merge $entry loopback
+            $phi I:= ($bitcast ($uint<3>) 0)$on $entry next_I $on loopback
+            $phi data:= ($bitcast ($uint<16>) 0)$on $entry next_data $on loopback
+        $endmerge
+        $volatile next_I:= (I+1)
+        x_n:= in_data
+        $volatile $call hexCharToNibble (x_n) (b_n)
+        $volatile next_data := ((data << 4) | (($bitcast ($uint<12>) 0) && b_n))
+        $if(next_I < 4) $then
+            $place[loopback]
+        $endif
+        ConvTranspose_input_pipe := next_data
+        $place[loopout]
+    }
+}
+
+$module [outBinaryToHexDaemon] $in() $out() $is
+{
+    $branchblock [loop]
+    {
+        $merge $entry loopback $endmerge
+        b := ConvTranspose_output_pipe
+        $volatile $split (b 4 4 4 4) (b3 b2 b1 b0)
+        $volatile $call nibbleToHexChar (b3) (x3)
+        $volatile $call nibbleToHexChar (b2) (x2)
+        $volatile $call nibbleToHexChar (b1) (x1)
+        $volatile $call nibbleToHexChar (b0) (x0)
+        out_data := x3
+        out_data := x2
+        out_data := x1
+        out_data := x0
+        $place[loopback]
+    }
+}

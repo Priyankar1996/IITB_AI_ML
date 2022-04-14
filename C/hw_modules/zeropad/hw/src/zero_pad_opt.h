@@ -15,6 +15,10 @@ void zeropad3D_A();
 void zeropad3D_B();
 void zeropad3D_C();
 void zeropad3D_D();
+void zeropad3D_E();
+void zeropad3D_F();
+void zeropad3D_G();
+void zeropad3D_H();
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);

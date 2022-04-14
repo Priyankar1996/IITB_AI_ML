@@ -120,7 +120,7 @@ void zeropad3D_A()
         fprintf(stderr,"Block-0 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__(0,(des_inp.dimensions[0]/2),
+    __zero_pad_opt__(0,(des_inp.dimensions[0]/4),
                                0,(des_inp.dimensions[1]/2),des_inp,des_out,
                                T,pad,R);
     __aa_barrier__();
@@ -137,7 +137,7 @@ void zeropad3D_B()
         fprintf(stderr,"Block-1 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__(0,(des_inp.dimensions[0]/2),
+    __zero_pad_opt__(0,(des_inp.dimensions[0]/4),
                             (des_inp.dimensions[1]/2),
                             des_inp.dimensions[1],des_inp,des_out,
                             T,pad,R);
@@ -155,8 +155,8 @@ void zeropad3D_C()
         fprintf(stderr,"Block-2 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((des_inp.dimensions[0]/2),
-                               des_inp.dimensions[0],0,
+    __zero_pad_opt__((des_inp.dimensions[0]/4),
+                               des_inp.dimensions[0]/2,0,
                                (des_inp.dimensions[1]/2),des_inp,des_out,
                                T,pad,R);
     __aa_barrier__();
@@ -173,8 +173,8 @@ void zeropad3D_D()
         fprintf(stderr,"Block-3 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((des_inp.dimensions[0]/2),
-                               des_inp.dimensions[0],
+    __zero_pad_opt__((des_inp.dimensions[0]/4),
+                               des_inp.dimensions[0]/2,
                                (des_inp.dimensions[1]/2),
                                des_inp.dimensions[1],des_inp,des_out,
                                T,pad,R);
@@ -185,21 +185,114 @@ void zeropad3D_D()
     write_uint16 ("Block3_complete", s3);
 }
 
+void zeropad3D_E()
+{
+    uint16_t s4 = read_uint16("Block4_starting");
+    #ifdef SW
+        fprintf(stderr,"Block-4 started.\n");
+    #endif
+    __aa_barrier__();
+    __zero_pad_opt__((des_inp.dimensions[0]/2),
+                               3*(des_inp.dimensions[0])/4,
+                               0,
+                               (des_inp.dimensions[1])/2,des_inp,des_out,
+                               T,pad,R);
+    __aa_barrier__();    
+    #ifdef SW
+        fprintf(stderr,"Block-4 done.\n");
+    #endif
+    write_uint16 ("Block4_complete", s4);
+}
+
+void zeropad3D_F()
+{
+    uint16_t s5 = read_uint16("Block5_starting");
+    #ifdef SW
+        fprintf(stderr,"Block-5 started.\n");
+    #endif
+    __aa_barrier__();
+    __zero_pad_opt__((des_inp.dimensions[0]/2),
+                               3*(des_inp.dimensions[0])/4,
+                               (des_inp.dimensions[1]/2),
+                               des_inp.dimensions[1],des_inp,des_out,
+                               T,pad,R);
+    __aa_barrier__();    
+    #ifdef SW
+        fprintf(stderr,"Block-5 done.\n");
+    #endif
+    write_uint16 ("Block5_complete", s5);
+}
+
+void zeropad3D_G()
+{
+    uint16_t s6 = read_uint16("Block6_starting");
+    #ifdef SW
+        fprintf(stderr,"Block-6 started.\n");
+    #endif
+    __aa_barrier__();
+    __zero_pad_opt__(3*(des_inp.dimensions[0]/4),
+                               des_inp.dimensions[0],
+                               0,
+                               (des_inp.dimensions[1])/2,des_inp,des_out,
+                               T,pad,R);
+    __aa_barrier__();    
+    #ifdef SW
+        fprintf(stderr,"Block-6 done.\n");
+    #endif
+    write_uint16 ("Block6_complete", s6);
+}
+
+void zeropad3D_H()
+{
+    uint16_t s7 = read_uint16("Block7_starting");
+    #ifdef SW
+        fprintf(stderr,"Block-7 started.\n");
+    #endif
+    __aa_barrier__();
+    __zero_pad_opt__((3*(des_inp.dimensions[0])/4),
+                               des_inp.dimensions[0],
+                               (des_inp.dimensions[1]/2),
+                               des_inp.dimensions[1],des_inp,des_out,
+                               T,pad,R);
+    __aa_barrier__();    
+    #ifdef SW
+        fprintf(stderr,"Block-7 done.\n");
+    #endif
+    write_uint16 ("Block7_complete", s7);
+}
+
 void zeropad3D()
 {
     uint16_t rv = testConfigure();
     __aa_barrier__();
 
+    #ifndef SW
+	    uint64_t start_time = timer();
+    #endif
     write_uint16("Block0_starting", rv);
     write_uint16("Block1_starting", rv);
     write_uint16("Block2_starting", rv);
     write_uint16("Block3_starting", rv);
+    write_uint16("Block4_starting", rv);
+    write_uint16("Block5_starting", rv);
+    write_uint16("Block6_starting", rv);
+    write_uint16("Block7_starting", rv);
     uint16_t s0 = read_uint16("Block0_complete");
     uint16_t s1 = read_uint16("Block1_complete");
     uint16_t s2 = read_uint16("Block2_complete");
-    uint16_t s3 = read_uint16("Block3_complete");   
+    uint16_t s3 = read_uint16("Block3_complete");
+    uint16_t s4 = read_uint16("Block4_complete");
+    uint16_t s5 = read_uint16("Block5_complete");
+    uint16_t s6 = read_uint16("Block6_complete");
+    uint16_t s7 = read_uint16("Block7_complete");   
     __aa_barrier__();
     
+    #ifndef SW
+	    uint64_t stop_time = timer();
+	    uint64_t elapsed_time = stop_time - start_time;
+	    write_uint64("elapsed_time_pipe", elapsed_time);
+    #endif
+    __aa_barrier__();
 
     sendOutput();
 }

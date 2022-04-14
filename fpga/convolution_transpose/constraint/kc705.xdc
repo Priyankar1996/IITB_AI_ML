@@ -9,7 +9,7 @@ create_clock -period 5.000 -name clk_p [get_ports clk_p]
 set_property PACKAGE_PIN K24 [get_ports {Tx}]					
 	set_property IOSTANDARD LVCMOS25 [get_ports {Tx}]
 set_property PACKAGE_PIN M19 [get_ports {Rx}]					
-	set_property IOSTANDARD LVCMOS25 [get_ports Rx}]
+	set_property IOSTANDARD LVCMOS25 [get_ports {Rx}]
 	
 #Push Buttons	
 #North button

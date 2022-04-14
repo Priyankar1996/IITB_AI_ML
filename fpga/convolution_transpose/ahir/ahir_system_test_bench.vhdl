@@ -28,10 +28,10 @@ architecture VhpiLink of ahir_system_Test_Bench is --
     port (-- 
       clk : in std_logic;
       reset : in std_logic;
-      ConvTranspose_input_pipe_pipe_write_data: in std_logic_vector(15 downto 0);
+      ConvTranspose_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
       ConvTranspose_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
       ConvTranspose_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-      ConvTranspose_output_pipe_pipe_read_data: out std_logic_vector(15 downto 0);
+      ConvTranspose_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
       ConvTranspose_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
       ConvTranspose_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
     -- 
@@ -69,11 +69,11 @@ architecture VhpiLink of ahir_system_Test_Bench is --
   signal convTransposeD_fin_req   : std_logic := '0';
   signal convTransposeD_fin_ack   : std_logic := '0';
   -- write to pipe ConvTranspose_input_pipe
-  signal ConvTranspose_input_pipe_pipe_write_data: std_logic_vector(15 downto 0);
+  signal ConvTranspose_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
   signal ConvTranspose_input_pipe_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
   signal ConvTranspose_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
   -- read from pipe ConvTranspose_output_pipe
-  signal ConvTranspose_output_pipe_pipe_read_data: std_logic_vector(15 downto 0);
+  signal ConvTranspose_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
   signal ConvTranspose_output_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
   signal ConvTranspose_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
   -- 
@@ -115,8 +115,8 @@ begin --
       Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
       ConvTranspose_input_pipe_pipe_write_req <= Unpack_String(req_val_string,1);
       obj_ref := Pack_String_To_Vhpi_String("ConvTranspose_input_pipe 0");
-      Vhpi_Get_Port_Value(obj_ref,port_val_string,16);
-      ConvTranspose_input_pipe_pipe_write_data <= Unpack_String(port_val_string,16);
+      Vhpi_Get_Port_Value(obj_ref,port_val_string,8);
+      ConvTranspose_input_pipe_pipe_write_data <= Unpack_String(port_val_string,8);
       wait until clk = '1';
       obj_ref := Pack_String_To_Vhpi_String("ConvTranspose_input_pipe ack");
       ack_val_string := Pack_SLV_To_Vhpi_String(ConvTranspose_input_pipe_pipe_write_ack);
@@ -146,7 +146,7 @@ begin --
       Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
       obj_ref := Pack_String_To_Vhpi_String("ConvTranspose_output_pipe 0");
       port_val_string := Pack_SLV_To_Vhpi_String(ConvTranspose_output_pipe_pipe_read_data);
-      Vhpi_Set_Port_Value(obj_ref,port_val_string,16);
+      Vhpi_Set_Port_Value(obj_ref,port_val_string,8);
       -- 
     end loop;
     --

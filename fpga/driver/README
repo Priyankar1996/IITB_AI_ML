@@ -1,0 +1,12 @@
+A uart sender/receiver..
+
+	Run the compile scripts.
+
+	./compile*.sh 
+
+	Start two shells
+		Shell 1
+			./configure_and_send /dev/ttyUSBx < infile
+
+		Shell 2
+			./receive_fits < /dev/ttyUSBx   

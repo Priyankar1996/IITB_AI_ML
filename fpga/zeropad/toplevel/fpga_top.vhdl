@@ -22,6 +22,7 @@ architecture structure of fpga_top is
 	signal RT_1HZ: std_logic;
 	signal BAUD_RATE : std_logic_vector(31 downto 0);
 
+	signal reset2,reset1,reset_sync,clk,lock : std_logic;
 	component clk_wiz_0
   		port
    			(-- Clock in ports
@@ -52,7 +53,7 @@ architecture structure of fpga_top is
     	signal zeropad_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
     	signal zeropad_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
     	signal zeropad_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
-    	signal zeropad_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0)); -- 
+    	signal zeropad_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0); -- 
 
 	signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
@@ -94,7 +95,7 @@ begin
 
 	ahir_inst: ahir_system
 		port map (
-    			CLK => CLK, RESET => RESET_SYNC
+    			CLK => CLK, RESET => RESET_SYNC,
     			zeropad_input_pipe_pipe_write_data => zeropad_input_pipe_pipe_write_data,
     			zeropad_input_pipe_pipe_write_req => zeropad_input_pipe_pipe_write_req,
     			zeropad_input_pipe_pipe_write_ack  => zeropad_input_pipe_pipe_write_ack ,

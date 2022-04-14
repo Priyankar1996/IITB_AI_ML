@@ -25,76 +25,65 @@ void __aa_barrier__();
 #define __dt__ int16_t
 
 #define __get4xi16__(element) ({\
-	element = read_uint16 ("ConvTranspose_input_pipe");\
-	element = (element << 16) + read_uint16 ("ConvTranspose_input_pipe");\
-	element = (element << 16) + read_uint16 ("ConvTranspose_input_pipe");\
-	element = (element << 16) + read_uint16 ("ConvTranspose_input_pipe");\
+	element = read_uint8 ("ConvTranspose_input_pipe");\
+	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
+	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
+	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
+    element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
+	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
+	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
+	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
 })
 
 #define __set4xi16__(addr) ({\
 	uint64_t element = output.data_array[addr];\
-	__dt__ out_data[4];\
-	out_data[3] = element & 0xFFFF;\
-	element>>=16;\
-	out_data[2] = element & 0xFFFF;\
-	element>>=16;\
-	out_data[1]= element & 0xFFFF;\
-	element>>=16;\
+	uint8_t out_data[8];\
+	out_data[7] = element & 0xFF;\
+	element>>=8;\
+	out_data[6] = element & 0xFF;\
+	element>>=8;\
+	out_data[5]= element & 0xFF;\
+	element>>=8;\
+    out_data[4] = element & 0xFF;\
+	element>>=8;\
+	out_data[3] = element & 0xFF;\
+	element>>=8;\
+	out_data[2] = element & 0xFF;\
+	element>>=8;\
+    out_data[1] = element & 0xFF;\
+	element>>=8;\
 	out_data[0] = element & 0xFFFF;\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[0]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[1]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[2]);\
-	write_uint16 ("ConvTranspose_output_pipe",out_data[3]);\
+	write_uint8 ("ConvTranspose_output_pipe",out_data[0]);\
+	write_uint8 ("ConvTranspose_output_pipe",out_data[1]);\
+	write_uint8 ("ConvTranspose_output_pipe",out_data[2]);\
+	write_uint8 ("ConvTranspose_output_pipe",out_data[3]);\
+    write_uint8 ("ConvTranspose_output_pipe",out_data[4]);\
+	write_uint8 ("ConvTranspose_output_pipe",out_data[5]);\
+	write_uint8 ("ConvTranspose_output_pipe",out_data[6]);\
+	write_uint8 ("ConvTranspose_output_pipe",out_data[7]);\
 })
-
-uint64_t getRemainingElements(uint16_t ne){
-	uint64_t element = 0;uint16_t n;
-	for (n = 0 ; n < ne; n++){
-		element += read_uint16 ("ConvTranspose_input_pipe");
-		element <<= 16;
-	}
-	element <<= 16*(3-ne);
-	return element;
-}
-
-void sendRemainingElements(int addr, uint16_t ne){
-	uint64_t element = output.data_array[addr];\
-	__dt__ out_data[3],n;\
-	element>>=16;\
-	out_data[2] = element & 0xFFFF;\
-	element>>=16;\
-	out_data[1]= element & 0xFFFF;\
-	element>>=16;\
-	out_data[0] = element & 0xFFFF;\
-	for (n = 0; n < ne; n++)
-		write_uint16 ("ConvTranspose_output_pipe",out_data[n]);
-}
 
 uint16_t testConfigure()
 {
-    desc_input.data_type = i16;
-    desc_input.row_major_form = read_uint16 ("ConvTranspose_input_pipe");;
-    desc_input.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
+    desc_input.number_of_dimensions = read_uint8 ("ConvTranspose_input_pipe"); 
     int i;
     for(i = 0;i < desc_input.number_of_dimensions;i++){
-        desc_input.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
+        desc_input.dimensions[i] = read_uint8 ("ConvTranspose_input_pipe");
     }
 
-    desc_kernel.data_type = i16;
-    desc_kernel.row_major_form = read_uint16 ("ConvTranspose_input_pipe");
-    desc_kernel.number_of_dimensions = read_uint16 ("ConvTranspose_input_pipe");
+    desc_kernel.number_of_dimensions = read_uint8 ("ConvTranspose_input_pipe");
     for(i = 0;i < desc_kernel.number_of_dimensions;i++){
-        desc_kernel.dimensions[i] = read_uint16 ("ConvTranspose_input_pipe");
+        desc_kernel.dimensions[i] = read_uint8 ("ConvTranspose_input_pipe");
     }
 
     for(i=0; i<2; i++)
-        stride[i] = read_uint16 ("ConvTranspose_input_pipe");
+        stride[i] = read_uint8 ("ConvTranspose_input_pipe");
 
-    padding = read_uint16 ("ConvTranspose_input_pipe");
+    padding = read_uint8 ("ConvTranspose_input_pipe");
     
-	desc_output.dimensions[0] = read_uint16 ("ConvTranspose_input_pipe");
-    desc_output.dimensions[1] = read_uint16 ("ConvTranspose_input_pipe");
-    desc_output.dimensions[2] = read_uint16 ("ConvTranspose_input_pipe");
+	desc_output.dimensions[0] = read_uint8 ("ConvTranspose_input_pipe");
+    desc_output.dimensions[1] = read_uint8 ("ConvTranspose_input_pipe");
+    desc_output.dimensions[2] = read_uint8 ("ConvTranspose_input_pipe");
     
 	uint64_t input_size = desc_input.dimensions[0]*desc_input.dimensions[1]*desc_input.dimensions[2];
     uint64_t kernel_size = desc_kernel.dimensions[0]*desc_kernel.dimensions[1]*desc_kernel.dimensions[2]*desc_kernel.dimensions[3];
@@ -108,14 +97,14 @@ uint16_t testConfigure()
 
         input.data_array[i] = element;
     }
-    if (input_size&3) input.data_array[i] = getRemainingElements(input_size&3);
+
     for(i = 0; i < (kernel_size >> 2); i ++)
     {
         uint64_t element;
         __get4xi16__(element);
         kernel.data_array[i] = element;
     }
-    if (kernel_size&3) kernel.data_array[i] = getRemainingElements(kernel_size&3);
+
     /*uint64_t output_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
     for(i = 0; i < output_size>>2; i++)
         output.data_array[i] = 0;*/
@@ -130,7 +119,6 @@ void sendOutput()
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
     }
-    if (size&3) sendRemainingElements(i,size&3);
 }
 
 void convTransposeA()

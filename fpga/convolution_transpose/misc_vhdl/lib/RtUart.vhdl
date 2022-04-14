@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-package RtLibComponents is
+package RtUartComponents is
   component rt_clock_counter is
 	port (
 			clk, reset: in std_logic;
@@ -141,254 +141,6 @@ package baud_control_calculator_global_package is --
   end component;
   -- 
 end package baud_control_calculator_global_package;
-library std;
-use std.standard.all;
-library ieee;
-use ieee.std_logic_1164.all;
-library aHiR_ieee_proposed;
-use aHiR_ieee_proposed.math_utility_pkg.all;
-use aHiR_ieee_proposed.fixed_pkg.all;
-use aHiR_ieee_proposed.float_pkg.all;
-library ahir;
-use ahir.memory_subsystem_package.all;
-use ahir.types.all;
-use ahir.subprograms.all;
-use ahir.components.all;
-use ahir.basecomponents.all;
-use ahir.operatorpackage.all;
-use ahir.floatoperatorpackage.all;
-use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
-library GhdlLink;
-use GhdlLink.Utility_Package.all;
-use GhdlLink.Vhpi_Foreign.all;
-entity baud_control_calculator_Test_Bench is -- 
-  -- 
-end entity;
-architecture VhpiLink of baud_control_calculator_Test_Bench is -- 
-  signal clk: std_logic := '0';
-  signal reset: std_logic := '1';
-  signal baudControlCalculatorDaemon_tag_in: std_logic_vector(1 downto 0);
-  signal baudControlCalculatorDaemon_tag_out: std_logic_vector(1 downto 0);
-  signal baudControlCalculatorDaemon_start_req : std_logic := '0';
-  signal baudControlCalculatorDaemon_start_ack : std_logic := '0';
-  signal baudControlCalculatorDaemon_fin_req   : std_logic := '0';
-  signal baudControlCalculatorDaemon_fin_ack   : std_logic := '0';
-  -- read from pipe BAUD_CONTROL_WORD_SIG
-  signal BAUD_CONTROL_WORD_SIG_pipe_read_data: std_logic_vector(31 downto 0);
-  signal BAUD_CONTROL_WORD_SIG_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
-  signal BAUD_CONTROL_WORD_SIG_pipe_read_ack : std_logic_vector(0 downto 0);
-  signal BAUD_CONTROL_WORD_SIG: std_logic_vector(31 downto 0);
-  -- read from pipe BAUD_CONTROL_WORD_VALID
-  signal BAUD_CONTROL_WORD_VALID_pipe_read_data: std_logic_vector(0 downto 0);
-  signal BAUD_CONTROL_WORD_VALID_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
-  signal BAUD_CONTROL_WORD_VALID_pipe_read_ack : std_logic_vector(0 downto 0);
-  signal BAUD_CONTROL_WORD_VALID: std_logic_vector(0 downto 0);
-  -- write to pipe BAUD_RATE_SIG
-  signal BAUD_RATE_SIG_pipe_write_data: std_logic_vector(31 downto 0);
-  signal BAUD_RATE_SIG_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
-  signal BAUD_RATE_SIG_pipe_write_ack : std_logic_vector(0 downto 0);
-  signal BAUD_RATE_SIG: std_logic_vector(31 downto 0);
-  -- write to pipe CLK_FREQUENCY_SIG
-  signal CLK_FREQUENCY_SIG_pipe_write_data: std_logic_vector(31 downto 0);
-  signal CLK_FREQUENCY_SIG_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
-  signal CLK_FREQUENCY_SIG_pipe_write_ack : std_logic_vector(0 downto 0);
-  signal CLK_FREQUENCY_SIG: std_logic_vector(31 downto 0);
-  -- write to pipe CLOCK_FREQUENCY_VALID
-  signal CLOCK_FREQUENCY_VALID_pipe_write_data: std_logic_vector(0 downto 0);
-  signal CLOCK_FREQUENCY_VALID_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
-  signal CLOCK_FREQUENCY_VALID_pipe_write_ack : std_logic_vector(0 downto 0);
-  signal CLOCK_FREQUENCY_VALID: std_logic_vector(0 downto 0);
-  -- 
-begin --
-  -- clock/reset generation 
-  clk <= not clk after 5 ns;
-  -- assert reset for four clocks.
-  process
-  begin --
-    Vhpi_Initialize;
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    reset <= '0';
-    while true loop --
-      wait until clk = '0';
-      Vhpi_Listen;
-      Vhpi_Send;
-      --
-    end loop;
-    wait;
-    --
-  end process;
-  -- connect all the top-level modules to Vhpi
-  BAUD_CONTROL_WORD_SIG_pipe_read_ack(0) <= '1';
-  TruncateOrPad(BAUD_CONTROL_WORD_SIG, BAUD_CONTROL_WORD_SIG_pipe_read_data);
-  process
-  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
-  begin --
-    wait until reset = '0';
-    -- let the DUT come out of reset.... give it 4 cycles.
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    while true loop -- 
-      wait until clk = '0';
-      wait for 1 ns; 
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_CONTROL_WORD_SIG req");
-      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
-      BAUD_CONTROL_WORD_SIG_pipe_read_req <= Unpack_String(req_val_string,1);
-      wait until clk = '1';
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_CONTROL_WORD_SIG ack");
-      ack_val_string := Pack_SLV_To_Vhpi_String(BAUD_CONTROL_WORD_SIG_pipe_read_ack);
-      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_CONTROL_WORD_SIG 0");
-      port_val_string := Pack_SLV_To_Vhpi_String(BAUD_CONTROL_WORD_SIG_pipe_read_data);
-      Vhpi_Set_Port_Value(obj_ref,port_val_string,32);
-      -- 
-    end loop;
-    --
-  end process;
-  BAUD_CONTROL_WORD_VALID_pipe_read_ack(0) <= '1';
-  TruncateOrPad(BAUD_CONTROL_WORD_VALID, BAUD_CONTROL_WORD_VALID_pipe_read_data);
-  process
-  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
-  begin --
-    wait until reset = '0';
-    -- let the DUT come out of reset.... give it 4 cycles.
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    while true loop -- 
-      wait until clk = '0';
-      wait for 1 ns; 
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_CONTROL_WORD_VALID req");
-      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
-      BAUD_CONTROL_WORD_VALID_pipe_read_req <= Unpack_String(req_val_string,1);
-      wait until clk = '1';
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_CONTROL_WORD_VALID ack");
-      ack_val_string := Pack_SLV_To_Vhpi_String(BAUD_CONTROL_WORD_VALID_pipe_read_ack);
-      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_CONTROL_WORD_VALID 0");
-      port_val_string := Pack_SLV_To_Vhpi_String(BAUD_CONTROL_WORD_VALID_pipe_read_data);
-      Vhpi_Set_Port_Value(obj_ref,port_val_string,1);
-      -- 
-    end loop;
-    --
-  end process;
-  BAUD_RATE_SIG_pipe_write_ack(0) <= '1';
-  TruncateOrPad(BAUD_RATE_SIG_pipe_write_data,BAUD_RATE_SIG);
-  process
-  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
-  begin --
-    wait until reset = '0';
-    -- let the DUT come out of reset.... give it 4 cycles.
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    while true loop -- 
-      wait until clk = '0';
-      wait for 1 ns; 
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_RATE_SIG req");
-      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
-      BAUD_RATE_SIG_pipe_write_req <= Unpack_String(req_val_string,1);
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_RATE_SIG 0");
-      Vhpi_Get_Port_Value(obj_ref,port_val_string,32);
-      wait for 1 ns;
-      if (BAUD_RATE_SIG_pipe_write_req(0) = '1') then 
-      -- 
-        BAUD_RATE_SIG_pipe_write_data <= Unpack_String(port_val_string,32);
-        -- 
-      end if;
-      wait until clk = '1';
-      obj_ref := Pack_String_To_Vhpi_String("BAUD_RATE_SIG ack");
-      ack_val_string := Pack_SLV_To_Vhpi_String(BAUD_RATE_SIG_pipe_write_ack);
-      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
-      -- 
-    end loop;
-    --
-  end process;
-  CLK_FREQUENCY_SIG_pipe_write_ack(0) <= '1';
-  TruncateOrPad(CLK_FREQUENCY_SIG_pipe_write_data,CLK_FREQUENCY_SIG);
-  process
-  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
-  begin --
-    wait until reset = '0';
-    -- let the DUT come out of reset.... give it 4 cycles.
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    while true loop -- 
-      wait until clk = '0';
-      wait for 1 ns; 
-      obj_ref := Pack_String_To_Vhpi_String("CLK_FREQUENCY_SIG req");
-      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
-      CLK_FREQUENCY_SIG_pipe_write_req <= Unpack_String(req_val_string,1);
-      obj_ref := Pack_String_To_Vhpi_String("CLK_FREQUENCY_SIG 0");
-      Vhpi_Get_Port_Value(obj_ref,port_val_string,32);
-      wait for 1 ns;
-      if (CLK_FREQUENCY_SIG_pipe_write_req(0) = '1') then 
-      -- 
-        CLK_FREQUENCY_SIG_pipe_write_data <= Unpack_String(port_val_string,32);
-        -- 
-      end if;
-      wait until clk = '1';
-      obj_ref := Pack_String_To_Vhpi_String("CLK_FREQUENCY_SIG ack");
-      ack_val_string := Pack_SLV_To_Vhpi_String(CLK_FREQUENCY_SIG_pipe_write_ack);
-      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
-      -- 
-    end loop;
-    --
-  end process;
-  CLOCK_FREQUENCY_VALID_pipe_write_ack(0) <= '1';
-  TruncateOrPad(CLOCK_FREQUENCY_VALID_pipe_write_data,CLOCK_FREQUENCY_VALID);
-  process
-  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
-  begin --
-    wait until reset = '0';
-    -- let the DUT come out of reset.... give it 4 cycles.
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    while true loop -- 
-      wait until clk = '0';
-      wait for 1 ns; 
-      obj_ref := Pack_String_To_Vhpi_String("CLOCK_FREQUENCY_VALID req");
-      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
-      CLOCK_FREQUENCY_VALID_pipe_write_req <= Unpack_String(req_val_string,1);
-      obj_ref := Pack_String_To_Vhpi_String("CLOCK_FREQUENCY_VALID 0");
-      Vhpi_Get_Port_Value(obj_ref,port_val_string,1);
-      wait for 1 ns;
-      if (CLOCK_FREQUENCY_VALID_pipe_write_req(0) = '1') then 
-      -- 
-        CLOCK_FREQUENCY_VALID_pipe_write_data <= Unpack_String(port_val_string,1);
-        -- 
-      end if;
-      wait until clk = '1';
-      obj_ref := Pack_String_To_Vhpi_String("CLOCK_FREQUENCY_VALID ack");
-      ack_val_string := Pack_SLV_To_Vhpi_String(CLOCK_FREQUENCY_VALID_pipe_write_ack);
-      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
-      -- 
-    end loop;
-    --
-  end process;
-  baud_control_calculator_instance: baud_control_calculator -- 
-    port map ( -- 
-      clk => clk,
-      reset => reset,
-      BAUD_CONTROL_WORD_SIG => BAUD_CONTROL_WORD_SIG,
-      BAUD_CONTROL_WORD_VALID => BAUD_CONTROL_WORD_VALID,
-      BAUD_RATE_SIG => BAUD_RATE_SIG,
-      CLK_FREQUENCY_SIG => CLK_FREQUENCY_SIG,
-      CLOCK_FREQUENCY_VALID => CLOCK_FREQUENCY_VALID); -- 
-  -- 
-end VhpiLink;
 -- VHDL produced by vc2vhdl from virtual circuit (vc) description 
 library std;
 use std.standard.all;
@@ -407,8 +159,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity baudControlCalculatorDaemon is -- 
   generic (tag_length : integer); 
   port ( -- 
@@ -1237,8 +989,8 @@ begin --
     -- CP-element group 32: 	11 
     -- CP-element group 32: 	23 
     -- CP-element group 32: 	20 
-    -- CP-element group 32: 	10 
     -- CP-element group 32: 	17 
+    -- CP-element group 32: 	10 
     -- CP-element group 32: 	9 
     -- CP-element group 32: 	8 
     -- CP-element group 32: 	26 
@@ -1971,8 +1723,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity my_div is -- 
   generic (tag_length : integer); 
   port ( -- 
@@ -2178,8 +1930,8 @@ begin --
     -- CP-element group 1: predecessors 
     -- CP-element group 1: 	20 
     -- CP-element group 1: successors 
-    -- CP-element group 1: 	3 
     -- CP-element group 1: 	2 
+    -- CP-element group 1: 	3 
     -- CP-element group 1:  members (13) 
       -- CP-element group 1: 	 branch_block_stmt_83/merge_stmt_84__exit__
       -- CP-element group 1: 	 branch_block_stmt_83/assign_stmt_103_to_assign_stmt_119__entry__
@@ -2203,9 +1955,9 @@ begin --
     -- CP-element group 2: predecessors 
     -- CP-element group 2: 	1 
     -- CP-element group 2: successors 
-    -- CP-element group 2: 	10 
     -- CP-element group 2: 	11 
     -- CP-element group 2: 	14 
+    -- CP-element group 2: 	10 
     -- CP-element group 2: 	13 
     -- CP-element group 2:  members (18) 
       -- CP-element group 2: 	 branch_block_stmt_83/if_stmt_120_if_link/$exit
@@ -2275,9 +2027,9 @@ begin --
     -- CP-element group 4: predecessors 
     -- CP-element group 4: 	0 
     -- CP-element group 4: successors 
-    -- CP-element group 4: 	6 
     -- CP-element group 4: 	8 
     -- CP-element group 4: 	5 
+    -- CP-element group 4: 	6 
     -- CP-element group 4:  members (10) 
       -- CP-element group 4: 	 branch_block_stmt_83/merge_stmt_84__entry___PhiReq/$entry
       -- CP-element group 4: 	 branch_block_stmt_83/merge_stmt_84__entry___PhiReq/phi_stmt_85/$entry
@@ -2323,8 +2075,8 @@ begin --
       port map(clk => clk, reset => reset, req => A_87_buf_ack_1, ack => my_div_CP_159_elements(6)); -- 
     -- CP-element group 7:  join  transition  output  bypass 
     -- CP-element group 7: predecessors 
-    -- CP-element group 7: 	6 
     -- CP-element group 7: 	5 
+    -- CP-element group 7: 	6 
     -- CP-element group 7: successors 
     -- CP-element group 7: 	9 
     -- CP-element group 7:  members (4) 
@@ -2343,7 +2095,7 @@ begin --
       constant joinName: string(1 to 25) := "my_div_cp_element_group_7"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_div_CP_159_elements(6) & my_div_CP_159_elements(5);
+      preds <= my_div_CP_159_elements(5) & my_div_CP_159_elements(6);
       gj_my_div_cp_element_group_7 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_div_CP_159_elements(7), clk => clk, reset => reset); --
     end block;
@@ -2409,8 +2161,8 @@ begin --
       port map(clk => clk, reset => reset, req => ntA_111_88_buf_ack_1, ack => my_div_CP_159_elements(11)); -- 
     -- CP-element group 12:  join  transition  output  bypass 
     -- CP-element group 12: predecessors 
-    -- CP-element group 12: 	10 
     -- CP-element group 12: 	11 
+    -- CP-element group 12: 	10 
     -- CP-element group 12: successors 
     -- CP-element group 12: 	16 
     -- CP-element group 12:  members (4) 
@@ -2429,7 +2181,7 @@ begin --
       constant joinName: string(1 to 26) := "my_div_cp_element_group_12"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_div_CP_159_elements(10) & my_div_CP_159_elements(11);
+      preds <= my_div_CP_159_elements(11) & my_div_CP_159_elements(10);
       gj_my_div_cp_element_group_12 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_div_CP_159_elements(12), clk => clk, reset => reset); --
     end block;
@@ -2841,8 +2593,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity my_gcd is -- 
   generic (tag_length : integer); 
   port ( -- 
@@ -3056,9 +2808,9 @@ begin --
     -- CP-element group 1: predecessors 
     -- CP-element group 1: 	27 
     -- CP-element group 1: successors 
-    -- CP-element group 1: 	4 
     -- CP-element group 1: 	5 
     -- CP-element group 1: 	2 
+    -- CP-element group 1: 	4 
     -- CP-element group 1: 	3 
     -- CP-element group 1:  members (15) 
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_update_start_
@@ -3068,6 +2820,7 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_11/merge_stmt_12__exit__
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72__entry__
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/$entry
+      -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_sample_start_
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_update_start_
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_start/$entry
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_start/req
@@ -3075,7 +2828,6 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_complete/req
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Update/$entry
       -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/AND_u1_u1_33_Update/cr
-      -- CP-element group 1: 	 branch_block_stmt_11/assign_stmt_34_to_assign_stmt_72/MUX_51_sample_start_
       -- 
     rr_24_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_24_symbol_delay",delay_value => 0)
@@ -3177,10 +2929,10 @@ begin --
     -- CP-element group 7: predecessors 
     -- CP-element group 7: 	6 
     -- CP-element group 7: successors 
+    -- CP-element group 7: 	20 
+    -- CP-element group 7: 	17 
     -- CP-element group 7: 	18 
     -- CP-element group 7: 	21 
-    -- CP-element group 7: 	17 
-    -- CP-element group 7: 	20 
     -- CP-element group 7:  members (18) 
       -- CP-element group 7: 	 branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Sample/req
       -- CP-element group 7: 	 branch_block_stmt_11/loopback_PhiReq/phi_stmt_13/phi_stmt_13_sources/Interlock/Update/$entry
@@ -3371,8 +3123,8 @@ begin --
     end block;
     -- CP-element group 16:  join  transition  bypass 
     -- CP-element group 16: predecessors 
-    -- CP-element group 16: 	12 
     -- CP-element group 16: 	15 
+    -- CP-element group 16: 	12 
     -- CP-element group 16: successors 
     -- CP-element group 16: 	24 
     -- CP-element group 16:  members (1) 
@@ -3385,7 +3137,7 @@ begin --
       constant joinName: string(1 to 26) := "my_gcd_cp_element_group_16"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_gcd_CP_0_elements(12) & my_gcd_CP_0_elements(15);
+      preds <= my_gcd_CP_0_elements(15) & my_gcd_CP_0_elements(12);
       gj_my_gcd_cp_element_group_16 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_gcd_CP_0_elements(16), clk => clk, reset => reset); --
     end block;
@@ -3415,8 +3167,8 @@ begin --
       port map(clk => clk, reset => reset, req => ntA_62_16_buf_ack_1, ack => my_gcd_CP_0_elements(18)); -- 
     -- CP-element group 19:  join  transition  output  bypass 
     -- CP-element group 19: predecessors 
-    -- CP-element group 19: 	18 
     -- CP-element group 19: 	17 
+    -- CP-element group 19: 	18 
     -- CP-element group 19: successors 
     -- CP-element group 19: 	23 
     -- CP-element group 19:  members (4) 
@@ -3435,7 +3187,7 @@ begin --
       constant joinName: string(1 to 26) := "my_gcd_cp_element_group_19"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_gcd_CP_0_elements(18) & my_gcd_CP_0_elements(17);
+      preds <= my_gcd_CP_0_elements(17) & my_gcd_CP_0_elements(18);
       gj_my_gcd_cp_element_group_19 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_gcd_CP_0_elements(19), clk => clk, reset => reset); --
     end block;
@@ -3465,8 +3217,8 @@ begin --
       port map(clk => clk, reset => reset, req => ntB_72_20_buf_ack_1, ack => my_gcd_CP_0_elements(21)); -- 
     -- CP-element group 22:  join  transition  output  bypass 
     -- CP-element group 22: predecessors 
-    -- CP-element group 22: 	21 
     -- CP-element group 22: 	20 
+    -- CP-element group 22: 	21 
     -- CP-element group 22: successors 
     -- CP-element group 22: 	23 
     -- CP-element group 22:  members (4) 
@@ -3485,7 +3237,7 @@ begin --
       constant joinName: string(1 to 26) := "my_gcd_cp_element_group_22"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_gcd_CP_0_elements(21) & my_gcd_CP_0_elements(20);
+      preds <= my_gcd_CP_0_elements(20) & my_gcd_CP_0_elements(21);
       gj_my_gcd_cp_element_group_22 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_gcd_CP_0_elements(22), clk => clk, reset => reset); --
     end block;
@@ -3514,8 +3266,8 @@ begin --
     -- CP-element group 24: 	23 
     -- CP-element group 24: 	16 
     -- CP-element group 24: successors 
-    -- CP-element group 24: 	25 
     -- CP-element group 24: 	26 
+    -- CP-element group 24: 	25 
     -- CP-element group 24:  members (2) 
       -- CP-element group 24: 	 branch_block_stmt_11/merge_stmt_12_PhiReqMerge
       -- CP-element group 24: 	 branch_block_stmt_11/merge_stmt_12_PhiAck/$entry
@@ -3545,8 +3297,8 @@ begin --
       port map(clk => clk, reset => reset, req => phi_stmt_17_ack_0, ack => my_gcd_CP_0_elements(26)); -- 
     -- CP-element group 27:  join  transition  bypass 
     -- CP-element group 27: predecessors 
-    -- CP-element group 27: 	25 
     -- CP-element group 27: 	26 
+    -- CP-element group 27: 	25 
     -- CP-element group 27: successors 
     -- CP-element group 27: 	1 
     -- CP-element group 27:  members (1) 
@@ -3559,7 +3311,7 @@ begin --
       constant joinName: string(1 to 26) := "my_gcd_cp_element_group_27"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= my_gcd_CP_0_elements(25) & my_gcd_CP_0_elements(26);
+      preds <= my_gcd_CP_0_elements(26) & my_gcd_CP_0_elements(25);
       gj_my_gcd_cp_element_group_27 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => my_gcd_CP_0_elements(27), clk => clk, reset => reset); --
     end block;
@@ -3967,8 +3719,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library AjitCustom;
-use AjitCustom.baud_control_calculator_global_package.all;
+library RtUart;
+use RtUart.baud_control_calculator_global_package.all;
 entity baud_control_calculator is  -- system 
   port (-- 
     clk : in std_logic;
@@ -4114,6 +3866,7 @@ architecture baud_control_calculator_arch  of baud_control_calculator is -- syst
   signal BAUD_CONTROL_WORD_VALID_pipe_write_data: std_logic_vector(0 downto 0);
   signal BAUD_CONTROL_WORD_VALID_pipe_write_req: std_logic_vector(0 downto 0);
   signal BAUD_CONTROL_WORD_VALID_pipe_write_ack: std_logic_vector(0 downto 0);
+  -- gated clock signal declarations.
   -- 
 begin -- 
   -- module baudControlCalculatorDaemon
@@ -4284,14 +4037,15 @@ begin --
   -- input signal-pipe BAUD_RATE_SIG accessed directly. 
   -- input signal-pipe CLK_FREQUENCY_SIG accessed directly. 
   -- input signal-pipe CLOCK_FREQUENCY_VALID accessed directly. 
+  -- gated clock generators 
   -- 
 end baud_control_calculator_arch;
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library AjitCustom;
-use AjitCustom.AjitCustomComponents.all;
+library RtUart;
+use RtUart.RtUartComponents.all;
 
 library simpleUartLib;
 use simpleUartLib.uartPackage.all;

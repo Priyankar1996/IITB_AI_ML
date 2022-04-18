@@ -33,10 +33,10 @@ architecture VhpiLink of ahir_system_Test_Bench is --
       elapsed_time_pipe_pipe_read_data: out std_logic_vector(63 downto 0);
       elapsed_time_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
       elapsed_time_pipe_pipe_read_ack : out std_logic_vector(0 downto 0);
-      maxpool_input_pipe_pipe_write_data: in std_logic_vector(15 downto 0);
+      maxpool_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
       maxpool_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
       maxpool_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-      maxpool_output_pipe_pipe_read_data: out std_logic_vector(15 downto 0);
+      maxpool_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
       maxpool_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
       maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
     -- 
@@ -60,11 +60,11 @@ architecture VhpiLink of ahir_system_Test_Bench is --
   signal elapsed_time_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
   signal elapsed_time_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
   -- write to pipe maxpool_input_pipe
-  signal maxpool_input_pipe_pipe_write_data: std_logic_vector(15 downto 0);
+  signal maxpool_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
   signal maxpool_input_pipe_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
   signal maxpool_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
   -- read from pipe maxpool_output_pipe
-  signal maxpool_output_pipe_pipe_read_data: std_logic_vector(15 downto 0);
+  signal maxpool_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
   signal maxpool_output_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
   signal maxpool_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
   -- 
@@ -132,8 +132,8 @@ begin --
       Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
       maxpool_input_pipe_pipe_write_req <= Unpack_String(req_val_string,1);
       obj_ref := Pack_String_To_Vhpi_String("maxpool_input_pipe 0");
-      Vhpi_Get_Port_Value(obj_ref,port_val_string,16);
-      maxpool_input_pipe_pipe_write_data <= Unpack_String(port_val_string,16);
+      Vhpi_Get_Port_Value(obj_ref,port_val_string,8);
+      maxpool_input_pipe_pipe_write_data <= Unpack_String(port_val_string,8);
       wait until clk = '1';
       obj_ref := Pack_String_To_Vhpi_String("maxpool_input_pipe ack");
       ack_val_string := Pack_SLV_To_Vhpi_String(maxpool_input_pipe_pipe_write_ack);
@@ -163,7 +163,7 @@ begin --
       Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
       obj_ref := Pack_String_To_Vhpi_String("maxpool_output_pipe 0");
       port_val_string := Pack_SLV_To_Vhpi_String(maxpool_output_pipe_pipe_read_data);
-      Vhpi_Set_Port_Value(obj_ref,port_val_string,16);
+      Vhpi_Set_Port_Value(obj_ref,port_val_string,8);
       -- 
     end loop;
     --

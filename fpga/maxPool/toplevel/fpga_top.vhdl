@@ -6,7 +6,7 @@ library unisim;
 use unisim.vcomponents.all;
 
 library RtUart;
-use RtUart.all;
+use RtUart.RtUartComponents.all;
 
 entity fpga_top is
 port(
@@ -30,28 +30,28 @@ architecture structure of fpga_top is
     				reset             : in     std_logic;
     				locked            : out    std_logic;
     				clk_in1_p         : in     std_logic;
-    				clk_in1_n         : in     std_logic;
-            );
+    				clk_in1_n         : in     std_logic);
     end component;
 
     component ahir_system is
     port (
 		clk : in std_logic;
 		reset : in std_logic;
-		maxpool_input_pipe_pipe_write_data: in std_logic_vector(15 downto 0);
+		maxpool_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
 		maxpool_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
 		maxpool_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-		maxpool_output_pipe_pipe_read_data: out std_logic_vector(15 downto 0);
+		maxpool_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
 		maxpool_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
 		maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
     end component;
 
-		signal maxpool_input_pipe_pipe_write_data : std_logic_vector(15 downto 0);
+		signal reset2,reset1,reset_sync,clk,lock: std_logic;
+		signal maxpool_input_pipe_pipe_write_data : std_logic_vector(7 downto 0);
 		signal maxpool_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
 		signal maxpool_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
-		signal maxpool_output_pipe_pipe_write_data : std_logic_vector(15 downto 0);
-		signal maxpool_output_pipe_pipe_write_req : std_logic_vector(0 downto 0);
-		signal maxpool_output_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
+		signal maxpool_output_pipe_pipe_read_data : std_logic_vector(7 downto 0);
+		signal maxpool_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
+		signal maxpool_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
 
 		signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
@@ -98,9 +98,9 @@ architecture structure of fpga_top is
 				maxpool_input_pipe_pipe_write_data => maxpool_input_pipe_pipe_write_data,
 				maxpool_input_pipe_pipe_write_ack => maxpool_input_pipe_pipe_write_ack,
 				maxpool_input_pipe_pipe_write_req => maxpool_input_pipe_pipe_write_req,
-				maxpool_output_pipe_pipe_write_data => maxpool_output_pipe_pipe_write_data,
-				maxpool_output_pipe_pipe_write_ack => maxpool_output_pipe_pipe_write_ack,
-				maxpool_output_pipe_pipe_write_req => maxpool_output_pipe_pipe_write_req);
+				maxpool_output_pipe_pipe_read_data => maxpool_output_pipe_pipe_read_data,
+				maxpool_output_pipe_pipe_read_ack => maxpool_output_pipe_pipe_read_ack,
+				maxpool_output_pipe_pipe_read_req => maxpool_output_pipe_pipe_read_req);
 
     uart_inst:
 		configurable_self_tuning_uart
@@ -110,12 +110,12 @@ architecture structure of fpga_top is
 					BAUD_RATE => BAUD_RATE,
 					UART_RX(0) => Rx,
 					UART_TX(0) => Tx,
-					TX_to_CONSOLE_pipe_write_data => data_out_pipe_read_data,
-					TX_to_CONSOLE_pipe_write_req => data_out_pipe_read_ack,
-					TX_to_CONSOLE_pipe_write_ack => data_out_pipe_read_req,
-					CONSOLE_to_RX_pipe_read_data  => data_in_pipe_write_data ,
-					CONSOLE_to_RX_pipe_read_req  => data_in_pipe_write_ack ,
-					CONSOLE_to_RX_pipe_read_ack => data_in_pipe_write_req
+					TX_to_CONSOLE_pipe_write_data => maxpool_output_pipe_pipe_read_data,
+					TX_to_CONSOLE_pipe_write_req => maxpool_output_pipe_pipe_read_ack,
+					TX_to_CONSOLE_pipe_write_ack => maxpool_output_pipe_pipe_read_req,
+					CONSOLE_to_RX_pipe_read_data  => maxpool_input_pipe_pipe_write_data ,
+					CONSOLE_to_RX_pipe_read_req  => maxpool_input_pipe_pipe_write_req ,
+					CONSOLE_to_RX_pipe_read_ack => maxpool_input_pipe_pipe_write_ack
 				);
 
 	BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));

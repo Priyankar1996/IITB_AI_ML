@@ -1,12 +1,12 @@
 #-----------------------------------------------------------
-# Vivado v2017.4 (64-bit)
-# SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
-# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
-# Start of session at: Tue Mar 22 21:32:23 2022
-# Process ID: 20588
-# Current directory: /home/priyankar/Documents/IITB_AI_ML/fpga/convolution_transpose/vivado_synth
+# Vivado v2017.1 (64-bit)
+# SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
+# IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+# Start of session at: Mon Apr 18 13:55:01 2022
+# Process ID: 14540
+# Current directory: /home/ai_ml_group/IITB_AI_ML/fpga/convolution_transpose/vivado_synth
 # Command line: vivado -mode batch -source bitgen.tcl
-# Log file: /home/priyankar/Documents/IITB_AI_ML/fpga/convolution_transpose/vivado_synth/vivado.log
-# Journal file: /home/priyankar/Documents/IITB_AI_ML/fpga/convolution_transpose/vivado_synth/vivado.jou
+# Log file: /home/ai_ml_group/IITB_AI_ML/fpga/convolution_transpose/vivado_synth/vivado.log
+# Journal file: /home/ai_ml_group/IITB_AI_ML/fpga/convolution_transpose/vivado_synth/vivado.jou
 #-----------------------------------------------------------
 source bitgen.tcl

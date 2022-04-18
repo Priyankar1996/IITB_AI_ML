@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-package RtLibComponents is
+package RtUartComponents is
   component rt_clock_counter is
 	port (
 			clk, reset: in std_logic;

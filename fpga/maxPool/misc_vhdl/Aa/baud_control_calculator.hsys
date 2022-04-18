@@ -1,4 +1,4 @@
-$system baud_control_calculator $library AjitCustom
+$system baud_control_calculator $library RtUart
    $in 
           $signal  BAUD_RATE_SIG 32 $depth 1
           $signal  CLK_FREQUENCY_SIG 32 $depth 1

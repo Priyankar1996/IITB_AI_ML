@@ -89,7 +89,7 @@ SizedTensor_16K T;
 // }
 
 // this sends B...
-void sendB(uint64_t size)
+void sendB(uint32_t size)
 {
 	int i;
 	for(i=0; i < (size>>2); i++)
@@ -101,9 +101,7 @@ void sendB(uint64_t size)
 void maxPool3D()
 {
 	// testConfigure();
-		// configure the tensor T
 
-	int i;
 	uint16_t rt = read_uint8 ("maxpool_input_pipe");
 	rt = ( rt<<8 ) + read_uint8 ("maxpool_input_pipe");
 	uint16_t rb = read_uint8 ("maxpool_input_pipe");
@@ -117,7 +115,8 @@ void maxPool3D()
 	uint16_t chl_out = read_uint8 ("maxpool_input_pipe");
 	chl_out = ( chl_out<<8 ) + read_uint8 ("maxpool_input_pipe");
 	__aa_barrier__();
-	uint64_t size = rt*ct*chl_in;
+	uint32_t size = rt*ct*chl_in;
+	uint32_t i;
 	for (i = 0; i < (size >> 4); i++)
 	{
 		fill_T(i);

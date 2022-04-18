@@ -28,26 +28,42 @@ SizedTensor_16K T;
 #endif
 
 #define __get4xi16__(element) ({\
-	element = read_uint16 ("maxpool_input_pipe");\
-	element = (element << 16) + read_uint16 ("maxpool_input_pipe");\
-	element = (element << 16) + read_uint16 ("maxpool_input_pipe");\
-	element = (element << 16) + read_uint16 ("maxpool_input_pipe");\
+	element = read_uint8 ("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
 })
 
 #define __set4xi16__(addr) ({\
 	uint64_t element = B.data_array[addr];\
-	uint16_t out_data[4];\
-	out_data[3] = element & 0xFFFF;\
-	element>>=16;\
-	out_data[2] = element & 0xFFFF;\
-	element>>=16;\
-	out_data [1]= element & 0xFFFF;\
-	element>>=16;\
-	out_data[0] = element & 0xFFFF;\
-	write_uint16 ("maxpool_output_pipe",out_data[0]);\
-	write_uint16 ("maxpool_output_pipe",out_data[1]);\
-	write_uint16 ("maxpool_output_pipe",out_data[2]);\
-	write_uint16 ("maxpool_output_pipe",out_data[3]);\
+	uint16_t out_data[8];\
+	out_data[7] = element & 0xFF;\
+	element>>=8;\
+	out_data[6] = element & 0xFF;\
+	element>>=8;\
+	out_data[5] = element & 0xFF;\
+	element>>=8;\
+	out_data[4] = element & 0xFF;\
+	element>>=8;\
+	out_data[3] = element & 0xFF;\
+	element>>=8;\
+	out_data[2] = element & 0xFF;\
+	element>>=8;\
+	out_data[1] = element & 0xFF;\
+	element>>=8;\
+	out_data[0] = element & 0xFF;\
+	write_uint8 ("maxpool_output_pipe",out_data[0]);\
+	write_uint8 ("maxpool_output_pipe",out_data[1]);\
+	write_uint8 ("maxpool_output_pipe",out_data[2]);\
+	write_uint8 ("maxpool_output_pipe",out_data[3]);\
+	write_uint8 ("maxpool_output_pipe",out_data[4]);\
+	write_uint8 ("maxpool_output_pipe",out_data[5]);\
+	write_uint8 ("maxpool_output_pipe",out_data[6]);\
+	write_uint8 ("maxpool_output_pipe",out_data[7]);\
 })
 
 // void testConfigure()
@@ -60,8 +76,8 @@ SizedTensor_16K T;
 // 	desc_B.number_of_dimensions = 3;
 // 	int i;
 // 	for (i = 0;i < desc_T.number_of_dimensions;i++){
-// 		desc_T.dimensions[i] = read_uint16 ("maxpool_input_pipe");
-// 		desc_B.dimensions[i] = read_uint16 ("maxpool_input_pipe");
+// 		desc_T.dimensions[i] = read_uint8 ("maxpool_input_pipe");
+// 		desc_B.dimensions[i] = read_uint8 ("maxpool_input_pipe");
 // 	}
 
 // 	// size = number of 16-bit values in data array..
@@ -88,12 +104,18 @@ void maxPool3D()
 		// configure the tensor T
 
 	int i;
-	uint16_t rt = read_uint16 ("maxpool_input_pipe");
-	uint16_t rb = read_uint16 ("maxpool_input_pipe");
-	uint16_t ct = read_uint16 ("maxpool_input_pipe");
-	uint16_t cb = read_uint16 ("maxpool_input_pipe");
-	uint16_t chl_in = read_uint16 ("maxpool_input_pipe");
-	uint16_t chl_out = read_uint16 ("maxpool_input_pipe");
+	uint16_t rt = read_uint8 ("maxpool_input_pipe");
+	rt = ( rt<<8 ) + read_uint8 ("maxpool_input_pipe");
+	uint16_t rb = read_uint8 ("maxpool_input_pipe");
+	rb = ( rb<<8 ) + read_uint8 ("maxpool_input_pipe");
+	uint16_t ct = read_uint8 ("maxpool_input_pipe");
+	ct = ( ct<<8 ) + read_uint8 ("maxpool_input_pipe");
+	uint16_t cb = read_uint8 ("maxpool_input_pipe");
+	cb = ( cb<<8 ) + read_uint8 ("maxpool_input_pipe");
+	uint16_t chl_in = read_uint8 ("maxpool_input_pipe");
+	chl_in = ( chl_in<<8 ) + read_uint8 ("maxpool_input_pipe");
+	uint16_t chl_out = read_uint8 ("maxpool_input_pipe");
+	chl_out = ( chl_out<<8 ) + read_uint8 ("maxpool_input_pipe");
 	__aa_barrier__();
 	uint64_t size = rt*ct*chl_in;
 	for (i = 0; i < (size >> 4); i++)

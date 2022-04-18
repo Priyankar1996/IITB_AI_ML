@@ -1,9 +1,8 @@
-set AHIR_RELEASE $::env(AHIR_RELEASE)
-
-read_vhdl -library ahir_ieee_proposed $AHIR_RELEASE/vhdl/aHiR_ieee_proposed.vhdl
-read_vhdl -library ahir $AHIR_RELEASE/vhdl/ahirXilinx.vhdl
+read_vhdl -library ahir_ieee_proposed ../vhdl_libs/aHiR_ieee_proposed.vhdl
+read_vhdl -library ahir ../vhdl_libs/ahir.vhdl
 read_vhdl -library simpleUartLib ../misc_vhdl/lib/simpleUartLib.vhdl
 read_vhdl -library RtUart ../misc_vhdl/lib/RtUart.vhdl
+read_vhdl -library work ../ahir/ahir_system_global_package.vhdl
 read_vhdl -library work ../ahir/ahir_system.vhdl
 read_vhdl ../toplevel/fpga_top.vhdl
 

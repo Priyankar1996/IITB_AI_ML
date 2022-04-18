@@ -2,8 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library AjitCustom;
-use AjitCustom.AjitCustomComponents.all;
+library RtUart;
+use RtUart.RtUartComponents.all;
 
 library simpleUartLib;
 use simpleUartLib.uartPackage.all;

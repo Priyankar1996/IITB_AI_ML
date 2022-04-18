@@ -30,8 +30,7 @@ architecture structure of fpga_top is
     				reset             : in     std_logic;
     				locked            : out    std_logic;
     				clk_in1_p         : in     std_logic;
-    				clk_in1_n         : in     std_logic;
-            );
+    				clk_in1_n         : in     std_logic);
     end component;
 
     component ahir_system is

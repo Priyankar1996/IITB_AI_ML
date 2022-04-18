@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T zeropad3D -T zeropad3D_A -T zeropad3D_B -T zeropad3D_C -T zeropad3D_D
+TOPMODULES=-T zeropad3D -T zeropad3D_A -T zeropad3D_B -T zeropad3D_C -T zeropad3D_D -T zeropad3D_E -T zeropad3D_F -T zeropad3D_G -T zeropad3D_H
 
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl

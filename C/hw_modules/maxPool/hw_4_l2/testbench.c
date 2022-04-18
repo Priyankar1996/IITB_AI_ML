@@ -48,8 +48,8 @@ int main(int argc, char**argv){
 
 #ifdef SW
 	init_pipe_handler();
-	register_pipe ("maxpool_input_pipe", 2, 16, PIPE_FIFO_MODE);
-	register_pipe ("maxpool_output_pipe", 2, 16, PIPE_FIFO_MODE);
+	register_pipe ("maxpool_input_pipe", 2, 8, PIPE_FIFO_MODE);
+	register_pipe ("maxpool_output_pipe", 2, 8, PIPE_FIFO_MODE);
 
 	PTHREAD_DECL(maxPool3D);
 
@@ -122,11 +122,13 @@ int main(int argc, char**argv){
 	for (i = 0;i < desc_T.number_of_dimensions;i++){
 		fscanf(file,"%d",&desc_T.dimensions[i]);
 		fprintf(octaveInFile,"%d\n",desc_T.dimensions[i]);
-		write_uint16("maxpool_input_pipe",desc_T.dimensions[i]);
+		write_uint8("maxpool_input_pipe",desc_T.dimensions[i]>>8);
+		write_uint8("maxpool_input_pipe",desc_T.dimensions[i]);
 	
 		if (i==2) desc_B.dimensions[i] = desc_T.dimensions[i];
 		else desc_B.dimensions[i] = 1 + (desc_T.dimensions[i]-length)/stride;
-		write_uint16("maxpool_input_pipe",desc_B.dimensions[i]);
+		write_uint8("maxpool_input_pipe",desc_B.dimensions[i]>>8);
+		write_uint8("maxpool_input_pipe",desc_B.dimensions[i]);
 	}
 	
 
@@ -138,7 +140,8 @@ int main(int argc, char**argv){
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
 		fprintf(octaveInFile,"%hd\n",temp[i&3]);
-		write_uint16("maxpool_input_pipe",temp[i&3]);
+		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
+		write_uint8("maxpool_input_pipe",temp[i&3]);
 		fprintf(stderr,"Sent element %d\n",i);
 		if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
 	}
@@ -160,7 +163,8 @@ int main(int argc, char**argv){
 	int16_t val;
 	for (i = 0; i < size; i++)
 	{
-		val = read_uint16("maxpool_output_pipe");
+		val = read_uint8("maxpool_output_pipe");
+		val = (val << 8) + read_uint8("maxpool_output_pipe");
 		fprintf(outFile,"%d %hd\n",i+1, val);
 		fprintf(stderr,"%d %hd\n",i+1, val);
 	}

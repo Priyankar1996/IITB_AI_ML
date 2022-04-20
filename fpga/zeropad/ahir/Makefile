@@ -55,6 +55,6 @@ vc2vhdl: prog.vc
 	rm -f *unformatted_vhdl
 
 clean:
-	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot
+	rm -rf *.o* *.cf vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.aa
 
 PHONY: all clean	

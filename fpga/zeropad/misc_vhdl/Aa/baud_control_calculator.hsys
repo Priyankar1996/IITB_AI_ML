@@ -1,5 +1,10 @@
 $system baud_control_calculator $library RtUart
    $in 
+          $signal  BAUD_RATE_SIG 32 $depth 1
+          $signal  CLK_FREQUENCY_SIG 32 $depth 1
+          $signal  CLOCK_FREQUENCY_VALID 1 $depth 1
    $out 
+          $signal  BAUD_CONTROL_WORD_SIG 32 $depth 1
+          $signal  BAUD_CONTROL_WORD_VALID 1 $depth 1
 { 
 } 

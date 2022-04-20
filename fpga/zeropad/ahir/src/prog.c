@@ -11,7 +11,7 @@
 
 SizedTensor_16K T,R;
 TensorDescriptor des_inp,des_out;
-uint16_t pad;
+uint8_t pad;
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
@@ -25,66 +25,82 @@ void __aa_barrier__();
 #define __dt__ int16_t
 
 #define __get4xi16__(element) ({\
-	element = read_uint16 ("zeropad_input_pipe");\
-	element = (element << 16) + read_uint16 ("zeropad_input_pipe");\
-	element = (element << 16) + read_uint16 ("zeropad_input_pipe");\
-	element = (element << 16) + read_uint16 ("zeropad_input_pipe");\
+	element = read_uint8 ("zeropad_input_pipe");\
+	element = (element << 16) + read_uint8 ("zeropad_input_pipe");\
+	element = (element << 16) + read_uint8 ("zeropad_input_pipe");\
+	element = (element << 16) + read_uint8 ("zeropad_input_pipe");\
+	element = (element << 16) + read_uint8 ("zeropad_input_pipe");\
+	element = (element << 16) + read_uint8 ("zeropad_input_pipe");\
+	element = (element << 16) + read_uint8 ("zeropad_input_pipe");\
+	element = (element << 16) + read_uint8 ("zeropad_input_pipe");\
 })
 
 #define __set4xi16__(addr) ({\
 	uint64_t element = R.data_array[addr];\
-	__dt__ out_data[4];\
-	out_data[3] = element & 0xFFFF;\
-	element>>=16;\
-	out_data[2] = element & 0xFFFF;\
-	element>>=16;\
-	out_data[1]= element & 0xFFFF;\
-	element>>=16;\
+	uint8_t out_data[8];\
+	out_data[7] = element & 0xFF;\
+	element>>=8;\
+	out_data[6] = element & 0xFF;\
+	element>>=8;\
+	out_data[5]= element & 0xFF;\
+	element>>=8;\
+    out_data[4] = element & 0xFF;\
+	element>>=8;\
+	out_data[3] = element & 0xFF;\
+	element>>=8;\
+	out_data[2] = element & 0xFF;\
+	element>>=8;\
+    out_data[1] = element & 0xFF;\
+	element>>=8;\
 	out_data[0] = element & 0xFFFF;\
-	write_uint16 ("zeropad_output_pipe",out_data[0]);\
-	write_uint16 ("zeropad_output_pipe",out_data[1]);\
-	write_uint16 ("zeropad_output_pipe",out_data[2]);\
-	write_uint16 ("zeropad_output_pipe",out_data[3]);\
+	write_uint8 ("zeropad_output_pipe",out_data[0]);\
+	write_uint8 ("zeropad_output_pipe",out_data[1]);\
+	write_uint8 ("zeropad_output_pipe",out_data[2]);\
+	write_uint8 ("zeropad_output_pipe",out_data[3]);\
+	write_uint8 ("zeropad_output_pipe",out_data[4]);\
+	write_uint8 ("zeropad_output_pipe",out_data[5]);\
+	write_uint8 ("zeropad_output_pipe",out_data[6]);\
+	write_uint8 ("zeropad_output_pipe",out_data[7]);\
 })
 
-uint64_t getRemainingElements(uint16_t ne){
-	uint64_t element = 0;uint16_t n;
-	for (n = 0 ; n < ne; n++){
-		element += read_uint16 ("zeropad_input_pipe");
-		element <<= 16;
-	}
-	element <<= 16*(3-ne);
-	return element;
-}
+// uint64_t getRemainingElements(uint16_t ne){
+// 	uint64_t element = 0;uint16_t n;
+// 	for (n = 0 ; n < ne; n++){
+// 		element += read_uint16 ("zeropad_input_pipe");
+// 		element <<= 16;
+// 	}
+// 	element <<= 16*(3-ne);
+// 	return element;
+// }
 
-void sendRemainingElements(int addr, uint16_t ne){
-	uint64_t element = R.data_array[addr];\
-	__dt__ out_data[3],n;\
-	element>>=16;\
-	out_data[2] = element & 0xFFFF;\
-	element>>=16;\
-	out_data[1]= element & 0xFFFF;\
-	element>>=16;\
-	out_data[0] = element & 0xFFFF;\
-	for (n = 0; n < ne; n++)
-		write_uint16 ("zeropad_output_pipe",out_data[n]);
-}
+// void sendRemainingElements(int addr, uint16_t ne){
+// 	uint64_t element = R.data_array[addr];\
+// 	__dt__ out_data[3],n;\
+// 	element>>=16;\
+// 	out_data[2] = element & 0xFFFF;\
+// 	element>>=16;\
+// 	out_data[1]= element & 0xFFFF;\
+// 	element>>=16;\
+// 	out_data[0] = element & 0xFFFF;\
+// 	for (n = 0; n < ne; n++)
+// 		write_uint16 ("zeropad_output_pipe",out_data[n]);
+// }
 
 uint16_t testConfigure()
 {
     des_inp.data_type = i16;
-    des_inp.row_major_form = read_uint16 ("zeropad_input_pipe");;
-    des_inp.number_of_dimensions = read_uint16 ("zeropad_input_pipe");
+    des_inp.row_major_form = read_uint8 ("zeropad_input_pipe");;
+    des_inp.number_of_dimensions = read_uint8 ("zeropad_input_pipe");
     int i;
     for(i = 0;i < des_inp.number_of_dimensions;i++){
-        des_inp.dimensions[i] = read_uint16 ("zeropad_input_pipe");
+        des_inp.dimensions[i] = read_uint8 ("zeropad_input_pipe");
     }
 
-    pad = read_uint16 ("zeropad_input_pipe");
+    pad = read_uint8 ("zeropad_input_pipe");
     
-	des_out.dimensions[0] = read_uint16 ("zeropad_input_pipe");
-    des_out.dimensions[1] = read_uint16 ("zeropad_input_pipe");
-    des_out.dimensions[2] = read_uint16 ("zeropad_input_pipe");
+	des_out.dimensions[0] = read_uint8 ("zeropad_input_pipe");
+    des_out.dimensions[1] = read_uint8 ("zeropad_input_pipe");
+    des_out.dimensions[2] = read_uint8 ("zeropad_input_pipe");
     
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
     uint64_t input_size = des_inp.dimensions[0]*des_inp.dimensions[1]*des_inp.dimensions[2];
@@ -99,7 +115,7 @@ uint16_t testConfigure()
 
         T.data_array[i] = element;
     }
-    if (input_size&3) T.data_array[i] = getRemainingElements(input_size&3);
+    // if (input_size&3) T.data_array[i] = getRemainingElements(input_size&3);
     return(input_size);
 }
 
@@ -110,7 +126,7 @@ void sendOutput()
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
     }
-    if (size&3) sendRemainingElements(i,size&3);
+    // if (size&3) sendRemainingElements(i,size&3);
 }
 
 void zeropad3D_A()

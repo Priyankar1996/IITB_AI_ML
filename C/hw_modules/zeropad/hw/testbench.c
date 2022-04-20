@@ -44,7 +44,7 @@ DEFINE_THREAD(zeropad3D_H);
 #endif
 
 SizedTensor_16K T,R;
-uint8_t pad;
+uint16_t pad;
 TensorDescriptor des_inp,des_out;
 
 int main(int argc,char **argv)
@@ -156,24 +156,24 @@ int main(int argc,char **argv)
 	#endif
 
     fscanf(input_file,"%hhd",&des_inp.row_major_form);
-	write_uint8("zeropad_input_pipe",des_inp.row_major_form);
+	write_uint16("zeropad_input_pipe",des_inp.row_major_form);
     fscanf(input_file,"%d",&des_inp.number_of_dimensions);
-	write_uint8("zeropad_input_pipe",des_inp.number_of_dimensions);
+	write_uint16("zeropad_input_pipe",des_inp.number_of_dimensions);
 	int ii;
 	for (ii = 0;ii < des_inp.number_of_dimensions;ii++){
 		fscanf(input_file,"%d",&des_inp.dimensions[ii]);
-        write_uint8("zeropad_input_pipe",des_inp.dimensions[ii]);
+        write_uint16("zeropad_input_pipe",des_inp.dimensions[ii]);
 	}
 	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",des_inp.dimensions[0],des_inp.dimensions[1],des_inp.dimensions[2]);
 
 	fscanf(param_file,"%d",&pad);
-	write_uint8("zeropad_input_pipe",pad);
+	write_uint16("zeropad_input_pipe",pad);
 	
 	fprintf(stderr,"Read pad value:%d\n",pad);
 	__UpdateOutputDescriptorZeropadTensors__(des_inp,pad,des_out);
     fprintf(stderr,"Read output descriptor %d,%d,%d.\n",des_out.dimensions[0],des_out.dimensions[1],des_out.dimensions[2]);
 	for(ii = 0;ii < 3;ii++){
-		write_uint8("zeropad_input_pipe",des_out.dimensions[ii]);
+		write_uint16("zeropad_input_pipe",des_out.dimensions[ii]);
 	}
 
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
@@ -185,7 +185,7 @@ int main(int argc,char **argv)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
 			else temp[ii&3] = ii+1;	
-			write_uint8("zeropad_input_pipe",temp[ii&3]);
+			write_uint16("zeropad_input_pipe",temp[ii&3]);
 			//fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
 			if ((ii&3)==3) T.data_array[ii/4] = *(uint64_t*)temp;
 		}
@@ -205,7 +205,7 @@ int main(int argc,char **argv)
 		__dt__ val;
 		for (ii = 0; ii < (size); ii++)
 		{
-			val = read_uint8 ("zeropad_output_pipe");
+			val = read_uint16 ("zeropad_output_pipe");
 			fprintf(stderr,"%lu\n",val);		
 		}
 	}		

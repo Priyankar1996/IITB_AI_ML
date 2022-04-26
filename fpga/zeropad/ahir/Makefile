@@ -39,10 +39,12 @@ llvmbc2aa:  prog.opt.o
 # link and optimize
 aalink: prog.aa
 	AaLinkExtMem prog.aa | vcFormat > prog.linked.aa
+	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
+	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 
 # Aa to vC
-aa2vc: prog.linked.aa
-	Aa2VC -O -C prog.linked.aa | vcFormat > prog.vc
+aa2vc: prog.linked.opt.aa
+	Aa2VC -O -C prog.linked.opt.aa | vcFormat > prog.vc
 
 # vC to VHDL
 vc2vhdl: prog.vc

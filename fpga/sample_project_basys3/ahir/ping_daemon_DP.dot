@@ -1,0 +1,7 @@
+digraph data_path {
+  X_11 [shape=ellipse];
+  RPIPE_data_in_10_inst [shape=rectangle];
+RPIPE_data_in_10_inst -> X_11;
+  WPIPE_data_out_12_inst [shape=rectangle];
+X_11  -> WPIPE_data_out_12_inst;
+}

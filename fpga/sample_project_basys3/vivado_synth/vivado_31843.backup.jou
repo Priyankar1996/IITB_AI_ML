@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2017.1 (64-bit)
+# SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
+# IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+# Start of session at: Wed Apr 27 17:43:10 2022
+# Process ID: 31843
+# Current directory: /home/madhav/ai_ml_sample_project/vivado_synth
+# Command line: vivado -mode batch -source bitgen.tcl
+# Log file: /home/madhav/ai_ml_sample_project/vivado_synth/vivado.log
+# Journal file: /home/madhav/ai_ml_sample_project/vivado_synth/vivado.jou
+#-----------------------------------------------------------
+source bitgen.tcl

@@ -1,0 +1,203 @@
+// Virtual circuit produced from Aa description by Aa2VC 
+// $pipe  data_in : $uint<8>  $depth 2 
+// can point into 
+// in scope  top-level
+$pipe [data_in] 8 $depth 2 
+// $pipe  data_out : $uint<8>  $depth 2 
+// can point into 
+// in scope  top-level
+$pipe [data_out] 8 $depth 2 
+// Declared gated clocks.
+$module [global_storage_initializer_] 
+{
+  // pipe-declarations for block %global_storage_initializer_
+  //  file prog.linked.aa, line 5
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %global_storage_initializer_
+    //  file prog.linked.aa, line 5
+  }
+  // end data-path
+}
+$module [ping_daemon] 
+{
+  // pipe-declarations for block %ping_daemon
+  //  file prog.linked.aa, line 12
+  // pipe-declarations for block %ping_daemon%loop
+  //  file prog.linked.aa, line 17
+  // pipe-declarations for block %ping_daemon%loop%
+  //  file prog.linked.aa, line 19
+  // there are no memory spaces local to this module.
+  $CP 
+  {
+    // begin control-path 
+    <>[branch_block_stmt_7] // Branch Block  file prog.linked.aa, line 17
+    {
+      $P [branch_block_stmt_7__entry__]
+      branch_block_stmt_7__entry__ <-| ($entry)
+      $P [branch_block_stmt_7__exit__]
+      branch_block_stmt_7__exit__ |-> ($exit)
+      $P [merge_stmt_8__entry__] 
+      $P [merge_stmt_8__exit__] 
+      $P [assign_stmt_11_to_assign_stmt_14__entry__] 
+      $P [assign_stmt_11_to_assign_stmt_14__exit__] 
+      $P [loopback]
+      ::[assign_stmt_11_to_assign_stmt_14] 
+      {
+        // start:  		X := data_in $buffering 1// bits of buffering = 8. 
+        //  file prog.linked.aa, line 21
+        // Source expression
+        // data_in
+        $T[RPIPE_data_in_10_sample_start_] 
+        $T[RPIPE_data_in_10_sample_completed_] 
+        $T[RPIPE_data_in_10_update_start_] 
+        $T[RPIPE_data_in_10_update_completed_] 
+        ;;[RPIPE_data_in_10_Sample] 
+        {
+          // pipe read sample
+          $T [rr] $T [ra] 
+        }
+        ;;[RPIPE_data_in_10_Update] 
+        {
+          // pipe read update
+          $T [cr] $T [ca] 
+        }
+        RPIPE_data_in_10_sample_start_ &-> (RPIPE_data_in_10_Sample)
+        RPIPE_data_in_10_sample_completed_ <-& (RPIPE_data_in_10_Sample)
+        RPIPE_data_in_10_update_start_ <-& (RPIPE_data_in_10_sample_completed_)
+        RPIPE_data_in_10_update_start_ &-> (RPIPE_data_in_10_Update)
+        RPIPE_data_in_10_update_completed_ <-& (RPIPE_data_in_10_Update)
+        // Target expression
+        // (as target) X
+        // start: WAR dependencies for X
+        // done: WAR dependencies for X
+        // end:  		X := data_in $buffering 1// bits of buffering = 8. 
+        // start:  		data_out := X $buffering 1// bits of buffering = 8. 
+        //  file prog.linked.aa, line 22
+        // Source expression
+        // X
+        // Target expression
+        // (as target) data_out
+        $T[WPIPE_data_out_12_sample_start_] 
+        $T[WPIPE_data_out_12_sample_completed_] 
+        $T[WPIPE_data_out_12_update_start_] 
+        $T[WPIPE_data_out_12_update_completed_] 
+        ;;[WPIPE_data_out_12_Sample] 
+        {
+          // pipe write sample-start data_out
+          $T [req] $T [ack] 
+        }
+        ;;[WPIPE_data_out_12_Update] 
+        {
+          // pipe write update (complete) data_out
+          $T [req] $T [ack] 
+        }
+        WPIPE_data_out_12_sample_start_ &-> (WPIPE_data_out_12_Sample)
+        WPIPE_data_out_12_sample_completed_ <-& (WPIPE_data_out_12_Sample)
+        WPIPE_data_out_12_update_start_ <-& (WPIPE_data_out_12_sample_completed_)
+        WPIPE_data_out_12_update_start_ &-> (WPIPE_data_out_12_Update)
+        WPIPE_data_out_12_update_completed_ <-& (WPIPE_data_out_12_Update)
+        // start: Forward dependencies from X to transition WPIPE_data_out_12_sample_start_
+        WPIPE_data_out_12_sample_start_ <-& (RPIPE_data_in_10_update_completed_)
+        // done: Forward dependencies from X to transition WPIPE_data_out_12_sample_start_
+        // end:  		data_out := X $buffering 1// bits of buffering = 8. 
+        // load-store dependencies..
+        // pipe read/write dependencies for pipe data_in
+        // read-dependencies for pipe data_in
+        // write-dependencies for pipe data_in
+        // signal write dependencies for data_in
+        // pipe read/write dependencies for pipe data_out
+        // read-dependencies for pipe data_out
+        // write-dependencies for pipe data_out
+        // signal write dependencies for data_out
+      }
+      assign_stmt_11_to_assign_stmt_14__entry__ |-> (assign_stmt_11_to_assign_stmt_14)
+      assign_stmt_11_to_assign_stmt_14__exit__ <-| (assign_stmt_11_to_assign_stmt_14)
+      // control-path for merge  
+      //  file prog.linked.aa, line 19
+      ;;[merge_stmt_8_dead_link] 
+      {
+        $T [dead_transition] $dead 
+      }
+      merge_stmt_8__entry__ |-> (merge_stmt_8_dead_link)
+      merge_stmt_8__exit__ <-| (merge_stmt_8_dead_link)
+      //---------------------   merge statement  file prog.linked.aa, line 19  --------------------------
+      ||[merge_stmt_8__entry___PhiReq] 
+      {
+        // no phi statements in merge..
+      }
+      merge_stmt_8__entry__ |-> (merge_stmt_8__entry___PhiReq)
+      ||[loopback_PhiReq] 
+      {
+        // no phi statements in merge..
+      }
+      loopback |-> (loopback_PhiReq)
+      $P [merge_stmt_8_PhiReqMerge] 
+      merge_stmt_8_PhiReqMerge <-| ( merge_stmt_8__entry___PhiReq  loopback_PhiReq )
+      ||[merge_stmt_8_PhiAck] 
+      {
+        $T [dummy] 
+      }
+      merge_stmt_8_PhiReqMerge |-> (merge_stmt_8_PhiAck)
+      merge_stmt_8__exit__  <-| (merge_stmt_8_PhiAck)
+      //---------------------  end of merge statement  file prog.linked.aa, line 19  --------------------------
+      merge_stmt_8__entry__ <-| (branch_block_stmt_7__entry__)
+      assign_stmt_11_to_assign_stmt_14__entry__ <-| (merge_stmt_8__exit__)
+      loopback <-| (assign_stmt_11_to_assign_stmt_14__exit__)
+    }
+  }
+  // end control-path
+  $DP 
+  {
+    // begin data-path 
+    // constant-object-declarations for block %ping_daemon%loop%
+    //  file prog.linked.aa, line 19
+    // constant-object-declarations for block %ping_daemon%loop
+    //  file prog.linked.aa, line 17
+    // constant-object-declarations for block %ping_daemon
+    //  file prog.linked.aa, line 12
+    // constant-declarations for block %ping_daemon%loop
+    //  file prog.linked.aa, line 17
+    // constant-declarations for block %ping_daemon%loop%
+    //  file prog.linked.aa, line 19
+    // block %ping_daemon%loop
+    //  file prog.linked.aa, line 17
+    // 		X := data_in $buffering 1// bits of buffering = 8. 
+    //  file prog.linked.aa, line 21
+    // X
+    $W[X_11] : $int<8>
+    // 		data_out := X $buffering 1// bits of buffering = 8. 
+    //  file prog.linked.aa, line 22
+    // data_out
+    // datapath-instances for block %ping_daemon%loop
+    //  file prog.linked.aa, line 17
+    // 		X := data_in $buffering 1// bits of buffering = 8. 
+    //  file prog.linked.aa, line 21
+    // data_in
+    $ioport $in [RPIPE_data_in_10_inst] (data_in) (X_11) 
+    $buffering $out RPIPE_data_in_10_inst X_11 1
+    // 		data_out := X $buffering 1// bits of buffering = 8. 
+    //  file prog.linked.aa, line 22
+    // data_out
+    $ioport $out [WPIPE_data_out_12_inst]  (X_11) (data_out) 
+  }
+  // end data-path
+  // CP-DP links for merge  
+  //  file prog.linked.aa, line 19
+  // 		X := data_in $buffering 1// bits of buffering = 8. 
+  //  file prog.linked.aa, line 21
+  // data_in
+  RPIPE_data_in_10_inst <=> (branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/RPIPE_data_in_10_Sample/rr branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/RPIPE_data_in_10_Update/cr) (branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/RPIPE_data_in_10_Sample/ra branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/RPIPE_data_in_10_Update/ca)
+  // 		data_out := X $buffering 1// bits of buffering = 8. 
+  //  file prog.linked.aa, line 22
+  // X
+  // data_out
+  WPIPE_data_out_12_inst <=> (branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/WPIPE_data_out_12_Sample/req branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/WPIPE_data_out_12_Update/req) (branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/WPIPE_data_out_12_Sample/ack branch_block_stmt_7/assign_stmt_11_to_assign_stmt_14/WPIPE_data_out_12_Update/ack)
+}

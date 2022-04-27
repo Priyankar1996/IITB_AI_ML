@@ -1,0 +1,22 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Apr 27 18:05:40 2022
+# Process ID: 14324
+# Current directory: /home/madhav/seagate/ai_ml_git/IITB_AI_ML/fpga/sample_project_basys3/vivado_synth
+# Command line: vivado
+# Log file: /home/madhav/seagate/ai_ml_git/IITB_AI_ML/fpga/sample_project_basys3/vivado_synth/vivado.log
+# Journal file: /home/madhav/seagate/ai_ml_git/IITB_AI_ML/fpga/sample_project_basys3/vivado_synth/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_hw
+connect_hw_server
+open_hw_target
+current_hw_device [get_hw_devices xc7a35t_0]
+refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xc7a35t_0] 0]
+set_property PROBES.FILE {} [get_hw_devices xc7a35t_0]
+set_property FULL_PROBES.FILE {} [get_hw_devices xc7a35t_0]
+set_property PROGRAM.FILE {/home/madhav/seagate/ai_ml_git/IITB_AI_ML/fpga/sample_project_basys3/vivado_synth/sample_project.basys3.bit} [get_hw_devices xc7a35t_0]
+program_hw_devices [get_hw_devices xc7a35t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a35t_0] 0]

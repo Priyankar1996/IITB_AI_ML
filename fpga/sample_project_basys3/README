@@ -1,0 +1,17 @@
+First go to ahir/
+	make
+
+Then go to misc_vhdl
+	./build.sh
+
+Then go to vivado_synth
+	./run.sh 
+
+This should produce a bitfile...
+
+You will have to write a test program to
+use the UART to initialize the 
+hardware etc..  There is an example
+in uart_lib/example/ which can give
+you the basic technique...
+

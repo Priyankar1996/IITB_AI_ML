@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	int I, J;
 
 
-	if(argc < 5)
+	if(argc < 2)
 	{
 		fprintf(stderr,"Usage: %s  <tty> < infile\n", 
 				argv[0]);
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 	signal(SIGTERM, Exit);
 
 	setUartBlockingFlag(1);
-	int tty_fd = setupDebugUartLink(argv[4]);
+	int tty_fd = setupDebugUartLink(argv[1]);
 	if(tty_fd < 0)
 	{
 		fprintf(stderr,"Error: could not open uart %s\n", argv[5]);
@@ -45,14 +45,11 @@ int main(int argc, char* argv[])
 	}
 	
 
-	while(!feof(stdin))
+	while(1)
 	{
-		uint8_t x;
-		int n = fscanf(stdin, "&x", x);
-		if(n == EOF)
-			break;
-
+		uint8_t x  = getchar();
 		tbSendUint8 (x);
+		fprintf(stderr,"sent %c.\n", x);
 	}
 
 	return(0);

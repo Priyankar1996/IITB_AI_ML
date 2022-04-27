@@ -13,12 +13,7 @@ int main(int argc, char* argv[])
 {
 	while(1)
 	{
-		uint32_t r;
-		int n = fscanf(stdin,"0x%x", &r);
-		if( n == EOF)
-			break;
-
-		fprintf(stdout," 0x%x ", r & 0xff);
-
+		uint8_t r = getchar();
+		fprintf(stdout," %c ", r);
 	}
 }

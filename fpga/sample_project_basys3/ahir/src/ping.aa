@@ -1,0 +1,13 @@
+$pipe data_in: $uint<8> $depth 2
+$pipe data_out: $uint<8> $depth 2
+$module [ping_daemon] 
+	$in () $out () $is
+{
+	$branchblock[loop] {
+		$merge $entry loopback $endmerge
+			X := data_in
+			data_out := X
+		$place [loopback]
+	}
+}
+

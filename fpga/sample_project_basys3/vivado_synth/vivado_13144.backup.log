@@ -1,0 +1,27 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Apr 27 18:01:43 2022
+# Process ID: 13144
+# Current directory: /home/madhav/seagate/ai_ml_git/IITB_AI_ML/fpga/sample_project_basys3/vivado_synth
+# Command line: vivado -mode batch -source bitgen.basys3.tcl
+# Log file: /home/madhav/seagate/ai_ml_git/IITB_AI_ML/fpga/sample_project_basys3/vivado_synth/vivado.log
+# Journal file: /home/madhav/seagate/ai_ml_git/IITB_AI_ML/fpga/sample_project_basys3/vivado_synth/vivado.jou
+#-----------------------------------------------------------
+source bitgen.basys3.tcl
+# read_vhdl -library ahir_ieee_proposed ../vhdl_libs/aHiR_ieee_proposed.vhdl
+# read_vhdl -library ahir ../vhdl_libs/ahir.vhdl
+# read_vhdl -library simpleUartLib ../misc_vhdl/lib/simpleUartLib.vhdl
+# read_vhdl -library RtUart ../misc_vhdl/lib/RtUart.vhdl
+# read_vhdl -library work ../ahir/ahir_system_global_package.vhdl
+# read_vhdl -library work ../ahir/ahir_system.vhdl
+# read_vhdl ../toplevel/fpga_top.vhdl
+# read_xdc ../constraint/basys3.xdc
+# synth_design -fsm_extraction off -top fpga_top -part xc7k325tffg900-2
+Command: synth_design -fsm_extraction off -top fpga_top -part xc7k325tffg900-2
+WARNING: [Device 21-436] No parts matched 'xc7k325tffg900-2'
+0 Infos, 1 Warnings, 0 Critical Warnings and 1 Errors encountered.
+synth_design failed
+ERROR: [Common 17-162] Invalid option value specified for '-part'.
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 27 18:01:50 2022...

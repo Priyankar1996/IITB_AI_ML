@@ -1,0 +1,26 @@
+$pipe  data_in : $uint<8>  $depth 2 
+// can point into 
+$pipe  data_out : $uint<8>  $depth 2 
+// can point into 
+$module [global_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $null
+}
+$module [ping_daemon]
+$in ()
+$out ()
+$is
+{
+  $branchblock [loop]
+  {
+    $merge $entry loopback 
+    $endmerge
+    X := data_in $buffering 1// bits of buffering = 8. 
+    data_out := X $buffering 1// bits of buffering = 8. 
+    $place[loopback]
+  }
+}
+// use of gated clocks in modules 

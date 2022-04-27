@@ -119,6 +119,7 @@ int main(int argc,char **argv)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
 			else temp[ii&3] = ii+1;	
+			write_uint8("zeropad_input_pipe",temp[ii&3]>>8);
 			write_uint8("zeropad_input_pipe",temp[ii&3]);
 			//fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
 			if ((ii&3)==3) T.data_array[ii/4] = *(uint64_t*)temp;
@@ -140,6 +141,7 @@ int main(int argc,char **argv)
 		for (ii = 0; ii < (size); ii++)
 		{
 			val = read_uint8 ("zeropad_output_pipe");
+			val = (val <<8) + read_uint8("zeropad_output_pipe");
 			fprintf(stderr,"%lu\n",val);		
 		}
 	}		

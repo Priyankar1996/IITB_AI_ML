@@ -88,7 +88,7 @@ void __aa_barrier__();
 
 uint16_t testConfigure()
 {
-    des_inp.data_type = i16;
+	des_inp.data_type = i16;
     des_inp.row_major_form = read_uint8 ("zeropad_input_pipe");;
     des_inp.number_of_dimensions = read_uint8 ("zeropad_input_pipe");
     int i;
@@ -104,6 +104,7 @@ uint16_t testConfigure()
     
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
     uint64_t input_size = des_inp.dimensions[0]*des_inp.dimensions[1]*des_inp.dimensions[2];
+	fprintf(stderr,"Hello World!\n");    
     
     for(i = 0; i < (input_size >> 2); i ++)
     {

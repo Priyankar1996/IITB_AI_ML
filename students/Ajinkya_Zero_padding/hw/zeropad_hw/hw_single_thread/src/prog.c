@@ -104,7 +104,7 @@ uint16_t testConfigure()
     
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
     uint64_t input_size = des_inp.dimensions[0]*des_inp.dimensions[1]*des_inp.dimensions[2];
-	fprintf(stderr,"Hello World!\n");    
+	// fprintf(stderr,"Hello World!\n");    
     
     for(i = 0; i < (input_size >> 2); i ++)
     {

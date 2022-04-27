@@ -34,13 +34,6 @@
 #ifdef SW
 DEFINE_THREAD(zeropad3D);
 DEFINE_THREAD(zeropad3D_A);
-DEFINE_THREAD(zeropad3D_B);
-DEFINE_THREAD(zeropad3D_C);
-DEFINE_THREAD(zeropad3D_D);
-DEFINE_THREAD(zeropad3D_E);
-DEFINE_THREAD(zeropad3D_F);
-DEFINE_THREAD(zeropad3D_G);
-DEFINE_THREAD(zeropad3D_H);
 #endif
 
 SizedTensor_16K T,R;
@@ -73,44 +66,16 @@ int main(int argc,char **argv)
 
     #ifdef SW
         init_pipe_handler();
-        register_pipe ("zeropad_input_pipe",2,16,PIPE_FIFO_MODE);
-        register_pipe ("zeropad_output_pipe",2,16,PIPE_FIFO_MODE);
-		register_pipe ("Block0_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block1_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block2_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block3_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block4_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block5_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block6_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block7_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block0_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block1_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block2_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block3_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block4_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block5_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block6_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block7_complete",1,16,PIPE_FIFO_MODE);
+        register_pipe ("zeropad_input_pipe",2,8,PIPE_FIFO_MODE);
+        register_pipe ("zeropad_output_pipe",2,8,PIPE_FIFO_MODE);
+		register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
         
 		PTHREAD_DECL(zeropad3D);
 		PTHREAD_DECL(zeropad3D_A);
-		PTHREAD_DECL(zeropad3D_B);
-		PTHREAD_DECL(zeropad3D_C);
-		PTHREAD_DECL(zeropad3D_D);
-		PTHREAD_DECL(zeropad3D_E);
-		PTHREAD_DECL(zeropad3D_F);
-		PTHREAD_DECL(zeropad3D_G);
-		PTHREAD_DECL(zeropad3D_H);
 		
 		PTHREAD_CREATE(zeropad3D);
 		PTHREAD_CREATE(zeropad3D_A);
-		PTHREAD_CREATE(zeropad3D_B);
-		PTHREAD_CREATE(zeropad3D_C);
-		PTHREAD_CREATE(zeropad3D_D);
-		PTHREAD_CREATE(zeropad3D_E);
-		PTHREAD_CREATE(zeropad3D_F);
-		PTHREAD_CREATE(zeropad3D_G);
-		PTHREAD_CREATE(zeropad3D_H);
     #endif
 
     fprintf(stderr,"Reading files\n");
@@ -118,42 +83,11 @@ int main(int argc,char **argv)
 	fscanf(input_file,"%hhd",&rand_input_data);
     
     //Take datatype as input
-    #ifdef __U8
-		des_inp.data_type = u8;
-	#endif
-	#ifdef __U16
-		des_inp.data_type = u16;
-	#endif
-	#ifdef __U32
-		des_inp.data_type = u32;
-	#endif
-	#ifdef __U64
-		des_inp.data_type = u64;
-	#endif
-	#ifdef __I8
-		des_inp.data_type = i8;
-	#endif
+    
 	#ifdef __I16
 		des_inp.data_type = i16;
 	#endif
-	#ifdef __I32
-		des_inp.data_type = i32;
-	#endif
-	#ifdef __I64
-		des_inp.data_type = i64;
-	#endif
-	#ifdef __F8
-		des_inp.data_type = float8;
-	#endif
-	#ifdef __F16
-        des_inp.data_type = float16;
-	#endif
-	#ifdef __F32
-		des_inp.data_type = float32;
-	#endif
-	#ifdef __F64
-		des_inp.data_type = float64;
-	#endif
+	
 
     fscanf(input_file,"%hhd",&des_inp.row_major_form);
 	write_uint8("zeropad_input_pipe",des_inp.row_major_form);
@@ -185,6 +119,7 @@ int main(int argc,char **argv)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
 			else temp[ii&3] = ii+1;	
+			write_uint8("zeropad_input_pipe",temp[ii&3]>>8);
 			write_uint8("zeropad_input_pipe",temp[ii&3]);
 			//fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
 			if ((ii&3)==3) T.data_array[ii/4] = *(uint64_t*)temp;
@@ -206,6 +141,7 @@ int main(int argc,char **argv)
 		for (ii = 0; ii < (size); ii++)
 		{
 			val = read_uint8 ("zeropad_output_pipe");
+			val = (val <<8) + read_uint8("zeropad_output_pipe");
 			fprintf(stderr,"%lu\n",val);		
 		}
 	}		
@@ -226,13 +162,6 @@ int main(int argc,char **argv)
     #ifdef SW
 	    PTHREAD_CANCEL(zeropad3D);
 		PTHREAD_CANCEL(zeropad3D_A);
-		PTHREAD_CANCEL(zeropad3D_B);
-		PTHREAD_CANCEL(zeropad3D_C);
-		PTHREAD_CANCEL(zeropad3D_D);
-		PTHREAD_CANCEL(zeropad3D_E);
-		PTHREAD_CANCEL(zeropad3D_F);
-		PTHREAD_CANCEL(zeropad3D_G);
-		PTHREAD_CANCEL(zeropad3D_H);
 	    close_pipe_handler();
     #endif
 return 0;

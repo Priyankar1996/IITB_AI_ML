@@ -8,13 +8,9 @@ $storage  R :  structx_x__SizedTensor_16K  // memory space index = 4  base addre
 // can point into 
 $storage  T :  structx_x__SizedTensor_16K  // memory space index = 3  base address = 0  word size = 64
 // can point into 
-$storage  count : $uint<64> // memory space index = 5  base address = 0  word size = 64
-// can point into 
 $storage  des_inp :  structx_x__TensorDescriptor  // memory space index = 0  base address = 0  word size = 8
 // can point into 
 $storage  des_out :  structx_x__TensorDescriptor  // memory space index = 2  base address = 0  word size = 32
-// can point into 
-$pipe  elapsed_time_pipe : $uint<64>  $depth 1 
 // can point into 
 $storage  pad : $uint<8> // memory space index = 1  base address = 0  word size = 8
 // can point into 
@@ -266,30 +262,6 @@ $is
     $endmerge
   }
 }
-$module [timer]
-$in ()
-$out ( c : $uint<64>  )
-$is
-{
-  c := count $buffering 1// bits of buffering = 64. 
-}
-$module [timerDaemon]
-$in ()
-$out ()
-$is
-{
-  $branchblock [body]
-  {
-    $dopipeline $depth 3 $buffering 1
-    $fullrate 
-    $merge $entry $loopback 
-    $phi ncount := 			  (ncount + 1 ) $on   $loopback 			  ($bitcast ($uint<64>) 0  ) $on   $entry 
-    // type of target is $uint<64>
-    $endmerge
-    count := ncount $buffering 1// bits of buffering = 64. 
-    $while 1 
-  }
-}
 $module [zeropad3D]
 $in ()
 $out ()
@@ -299,16 +271,10 @@ $is
   {
     $call testConfigure () (call ) 
     $barrier
-    $call timer () (call1 ) 
-    conv := ($bitcast ($uint<64>) ($cast ($int<64>) call1 ) ) $buffering 1// bits of buffering = 64. 
-    conv2 := ($cast ($uint<8>) call ) $buffering 1// bits of buffering = 8. 
-    Block0_starting := conv2 $buffering 1// bits of buffering = 8. 
-    call4 := Block0_complete $buffering 1// bits of buffering = 8. 
+    conv := ($cast ($uint<8>) call ) $buffering 1// bits of buffering = 8. 
+    Block0_starting := conv $buffering 1// bits of buffering = 8. 
+    call2 := Block0_complete $buffering 1// bits of buffering = 8. 
     $barrier
-    $call timer () (call6 ) 
-    conv7 := ($bitcast ($uint<64>) ($cast ($int<64>) call6 ) ) $buffering 1// bits of buffering = 64. 
-    sub := (conv7 - conv) $buffering 1// bits of buffering = 64. 
-    elapsed_time_pipe := sub $buffering 1// bits of buffering = 64. 
     $barrier
     $call sendOutput () () 
     $place[return__]
@@ -480,5 +446,4 @@ $is
 // Memory space 2: des_out 
 // Memory space 3: T 
 // Memory space 4: R 
-// Memory space 5: count 
 // use of gated clocks in modules 

@@ -1,0 +1,12 @@
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <Pipes.h>
+#include <SocketLib.h>
+void global_storage_initializer_();
+void progx_xoptx_xo_storage_initializer_();
+void sendOutput();
+uint16_t testConfigure();
+void zeropad3D();
+void zeropad3D_A();

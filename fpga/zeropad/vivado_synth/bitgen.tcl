@@ -15,7 +15,8 @@ set_property part xc7k325tffg900-2 [current_project]
 set_property board_part xilinx.com:kc705:part0:1.1 [current_project]
 
 ################### standlone proto core ################
-read_ip   ../ip/ClkWiz80MHz/ClockingWizFor80MHz/ClockingWizFor80MHz.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0.xci
+# read_ip   ../ip/ClkWiz80MHz/ClockingWizFor80MHz/ClockingWizFor80MHz.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0.xci
+read_ip ../../clock60MHz/clock60MHz/clock60MHz.srcs/sources_1/ip/clk_wiz_0/clock60MHz.xci
 
 ############### SYNTHESIZE ##############
 synth_design -fsm_extraction off -top fpga_top -part xc7k325tffg900-2

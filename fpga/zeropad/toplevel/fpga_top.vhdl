@@ -40,10 +40,10 @@ architecture structure of fpga_top is
   	port (-- 
 		clk : in std_logic;
 		reset : in std_logic;
-		zeropad_input_pipe_pipe_write_data: in std_logic_vector(15 downto 0);
+		zeropad_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
 		zeropad_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
 		zeropad_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-		zeropad_output_pipe_pipe_read_data: out std_logic_vector(15 downto 0);
+		zeropad_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
 		zeropad_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
 		zeropad_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
   		-- 

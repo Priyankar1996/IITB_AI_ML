@@ -33,7 +33,6 @@
 
 #ifdef SW
 DEFINE_THREAD(zeropad3D);
-DEFINE_THREAD(zeropad3D_A);
 #endif
 
 SizedTensor_16K T,R;
@@ -68,14 +67,11 @@ int main(int argc,char **argv)
         init_pipe_handler();
         register_pipe ("zeropad_input_pipe",2,8,PIPE_FIFO_MODE);
         register_pipe ("zeropad_output_pipe",2,8,PIPE_FIFO_MODE);
-		register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
+
         
 		PTHREAD_DECL(zeropad3D);
-		PTHREAD_DECL(zeropad3D_A);
 		
 		PTHREAD_CREATE(zeropad3D);
-		PTHREAD_CREATE(zeropad3D_A);
     #endif
 
     fprintf(stderr,"Reading files\n");
@@ -90,29 +86,32 @@ int main(int argc,char **argv)
 	
 
     fscanf(input_file,"%hhd",&des_inp.row_major_form);
-	write_uint8("zeropad_input_pipe",des_inp.row_major_form);
     fscanf(input_file,"%d",&des_inp.number_of_dimensions);
-	write_uint8("zeropad_input_pipe",des_inp.number_of_dimensions);
 	int ii;
 	for (ii = 0;ii < des_inp.number_of_dimensions;ii++){
 		fscanf(input_file,"%d",&des_inp.dimensions[ii]);
-        write_uint8("zeropad_input_pipe",des_inp.dimensions[ii]);
+        write_uint8("zeropad_input_pipe",des_inp.dimensions[ii]>>8);
+		write_uint8("zeropad_input_pipe",des_inp.dimensions[ii]);
 	}
 	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",des_inp.dimensions[0],des_inp.dimensions[1],des_inp.dimensions[2]);
 
 	fscanf(param_file,"%d",&pad);
+	write_uint8("zeropad_input_pipe",pad>>8);
 	write_uint8("zeropad_input_pipe",pad);
 	
 	fprintf(stderr,"Read pad value:%d\n",pad);
 	__UpdateOutputDescriptorZeropadTensors__(des_inp,pad,des_out);
     fprintf(stderr,"Read output descriptor %d,%d,%d.\n",des_out.dimensions[0],des_out.dimensions[1],des_out.dimensions[2]);
 	for(ii = 0;ii < 3;ii++){
+		// fprintf(stderr, "Output dimension loop started\n");
+		write_uint8("zeropad_input_pipe",des_out.dimensions[ii]>>8);
 		write_uint8("zeropad_input_pipe",des_out.dimensions[ii]);
 	}
 
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
 	uint64_t input_size = des_inp.dimensions[0]*des_inp.dimensions[1]*des_inp.dimensions[2];
-
+	fprintf(stderr,"Input size:%d\n",input_size);
+	fprintf(stderr,"Now starting to read input data\n");
     if (des_inp.data_type == i16){
 		__dt__ temp[4];
 		for (ii = 0; ii < input_size; ii++)
@@ -161,7 +160,6 @@ int main(int argc,char **argv)
 
     #ifdef SW
 	    PTHREAD_CANCEL(zeropad3D);
-		PTHREAD_CANCEL(zeropad3D_A);
 	    close_pipe_handler();
     #endif
 return 0;

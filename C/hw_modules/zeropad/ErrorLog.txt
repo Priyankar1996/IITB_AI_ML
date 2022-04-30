@@ -1,547 +1,999 @@
-        zeropad3D_A
-        zeropad3D_B
-        zeropad3D_C
-        zeropad3D_D
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar :=                    ($cast ($uint<16>) indvarx_xnext ) $on   ifx_xthen412x_xusx_xusx_xus_ifx_xendx_xusx_xusx_xus                        ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xusx_xusx_xpreheader_ifx_xendx_xusx_xusx_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 419
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar563 :=                         ($cast ($uint<16>) indvarx_xnext564 ) $on   ifx_xthen412x_xusx_xus_ifx_xendx_xusx_xus                       ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xusx_xpreheader_ifx_xendx_xusx_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 441
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar561 :=                         ($cast ($uint<16>) indvarx_xnext562 ) $on   ifx_xthen412x_xusx_xus533_ifx_xendx_xusx_xus535                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xus535x_xpreheader_ifx_xendx_xusx_xus535 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 463
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar569 :=                         ($cast ($uint<16>) indvarx_xnext570 ) $on   ifx_xthen412x_xus_ifx_xendx_xus                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xpreheader_ifx_xendx_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 485
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar559 :=                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xus476x_xusx_xpreheader_ifx_xendx_xus476x_xus                      ($cast ($uint<16>) indvarx_xnext560 ) $on   ifx_xthen412x_xus474x_xus_ifx_xendx_xus476x_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 533
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar567 :=                         ($cast ($uint<16>) indvarx_xnext568 ) $on   ifx_xthen412x_xus474_ifx_xendx_xus476                           ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xus476x_xpreheader_ifx_xendx_xus476 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 555
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar565 :=                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xus504x_xpreheader_ifx_xendx_xus504                        ($cast ($uint<16>) indvarx_xnext566 ) $on   ifx_xthen412x_xus502_ifx_xendx_xus504 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 582
+^CMakefile:55: recipe for target 'aa2vc' failed
+make: *** [aa2vc] Interrupt
+
+ajinkya@ajinkya:~/IITB_AI_ML/students/Ajinkya_Zero_padding/hw/zeropad_hw/hw_aman_single_thread$ make
+gcc -g -c -DSW  -I/home/ajinkya/IITB_AI_ML/ahir_release/include src/prog.c -I../../../../../C/primitives/include/ -Isrc
+gcc -g -c -DSW  -I/home/ajinkya/IITB_AI_ML/ahir_release/include -I/home/ajinkya/IITB_AI_ML/ahir_release/include -Isrc -I../../../../../C/primitives/include/ testbench.c
+gcc -g -o testbench_sw prog.o testbench.o -L/home/ajinkya/IITB_AI_ML/ahir_release/lib -lPipeHandler -lpthread
+clang -O3 -std=gnu89   -I/home/ajinkya/IITB_AI_ML/ahir_release/include -emit-llvm -c src/prog.c -I../../../../../C/primitives/include
+opt --indvars --loopsimplify prog.o -o prog.opt.o
+llvm-dis prog.opt.o
+llvm2aa -extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt  prog.opt.o | vcFormat >  prog.aa
+Warning: no modules specified.. will translate all functions
+Info: pipe zeropad_input_pipe max-depth set to 2
+Info: pipe zeropad_output_pipe max-depth set to 2
+Info: pipe Block0_starting max-depth set to 1
+Info: pipe Block0_complete max-depth set to 1
+Info: pipe Block1_starting max-depth set to 1
+Info: pipe Block1_complete max-depth set to 1
+Info: pipe Block2_starting max-depth set to 1
+Info: pipe Block2_complete max-depth set to 1
+Info: pipe Block3_starting max-depth set to 1
+Info: pipe Block3_complete max-depth set to 1
+Info: pipe Block4_starting max-depth set to 1
+Info: pipe Block4_complete max-depth set to 1
+Info: pipe Block5_starting max-depth set to 1
+Info: pipe Block5_complete max-depth set to 1
+Info: pipe Block6_starting max-depth set to 1
+Info: pipe Block6_complete max-depth set to 1
+Info: pipe Block7_starting max-depth set to 1
+Info: pipe Block7_complete max-depth set to 1
+Info: -storageinit=true: storage initializers will be generated
+Info: -extract_do_while=true: storage initializers will be generated
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: added pipe zeropad_output_pipe with type $uint<8>
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: added pipe zeropad_input_pipe with type $uint<8>
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: locating portname in constant GEP [18 x i8] c"elapsed_time_pipe\00"
+
+Info: added pipe elapsed_time_pipe with type $uint<64>
+Info: generating storage initialization module which calls all initializers in parallel
+Info: visiting function sendOutput
+Info: traversal: visited block entry
+Info: traversal: visited block bb.nph
+Info: traversal: visited block for.end
+Info: traversal: visited block for.body
+Info: traversal: visited block for.end.loopexit
+Info: starting new BB-chain-dag with header entry
+Info: starting new BB-chain-dag with header bb.nph
+Info: starting new BB-chain-dag with header for.body
+Info: starting new BB-chain-dag with header for.end.loopexit
+Info: starting new BB-chain-dag with header for.end
+Basic Block Chain DAGS.
+Basic-block-chain-DAG with header = entry
+ entry
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  entry
+Basic-block-chain-DAG with header = bbx_xnph
+ bbx_xnph
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph
+Basic-block-chain-DAG with header = forx_xbody
+ forx_xbody
+   -> 
+   <- 
+loop-backs 
+  forx_xbody
+exit-points 
+  forx_xbody
+Basic-block-chain-DAG with header = forx_xendx_xloopexit
+ forx_xendx_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xendx_xloopexit
+Basic-block-chain-DAG with header = forx_xend
+ forx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr since it is not (really) used in any function..
+Info: locating portname in constant GEP [20 x i8] c"zeropad_output_pipe\00"
+
+Info: visiting function write_uint8
+Info: ignoring external function write_uint8
+Info: visiting function zeropad3D
+Info: traversal: visited block entry
+Info: traversal: visited block bb.nph
+Info: traversal: visited block for.end
+Info: traversal: visited block for.body
+Info: traversal: visited block while.body.outer
+Info: traversal: visited block for.end.loopexit
+Info: traversal: visited block while.body.outer.split.us
+Info: traversal: visited block while.body.outer.while.body.outer.split_crit_edge
+Info: traversal: visited block while.body.outer.split.us.split.us
+Info: traversal: visited block while.body.outer.split.us.while.body.outer.split.us.split_crit_edge
+Info: traversal: visited block while.body.outer.split.split.us
+Info: traversal: visited block while.body.outer.split.while.body.outer.split.split_crit_edge
+Info: traversal: visited block if.end.us.us.us.preheader
+Info: traversal: visited block if.end.us.us.preheader
+Info: traversal: visited block if.end.us.us547.preheader
+Info: traversal: visited block if.end.us.preheader
+Info: traversal: visited block if.end.us482.us.preheader
+Info: traversal: visited block if.end.us482.preheader
+Info: traversal: visited block if.end.us513.preheader
+Info: traversal: visited block if.end.preheader
+Info: traversal: visited block if.end.us.us.us
+Info: traversal: visited block if.end.us.us
+Info: traversal: visited block if.end.us.us547
+Info: traversal: visited block if.end.us
+Info: traversal: visited block if.end.us482.us
+Info: traversal: visited block if.end.us482
+Info: traversal: visited block if.end.us513
+Info: traversal: visited block if.end
+Info: traversal: visited block if.then418.us.us.us
+Info: traversal: visited block if.else423.loopexit7
+Info: traversal: visited block if.then418.us.us
+Info: traversal: visited block if.else423.loopexit6
+Info: traversal: visited block if.then418.us.us545
+Info: traversal: visited block if.else423.loopexit5
+Info: traversal: visited block if.then418.us
+Info: traversal: visited block if.else423.loopexit4
+Info: traversal: visited block if.then418.us480.us
+Info: traversal: visited block if.else423.loopexit3
+Info: traversal: visited block if.then418.us480
+Info: traversal: visited block if.else423.loopexit2
+Info: traversal: visited block if.then418.us511
+Info: traversal: visited block if.else423.loopexit1
+Info: traversal: visited block if.then418
+Info: traversal: visited block if.else423.loopexit
+Info: traversal: visited block if.else423
+Info: traversal: visited block while.end
+Info: starting new BB-chain-dag with header entry
+Info: starting new BB-chain-dag with header bb.nph
+Info: starting new BB-chain-dag with header for.body
+Info: starting new BB-chain-dag with header for.end.loopexit
+Info: starting new BB-chain-dag with header for.end
+Info: starting new BB-chain-dag with header while.body.outer
+Info: starting new BB-chain-dag with header while.body.outer.while.body.outer.split_crit_edge
+Info: starting new BB-chain-dag with header while.body.outer.split.us
+Info: starting new BB-chain-dag with header while.body.outer.split.us.while.body.outer.split.us.split_crit_edge
+Info: starting new BB-chain-dag with header if.end.us.us547.preheader
+Info: starting new BB-chain-dag with header if.end.us.preheader
+Info: starting new BB-chain-dag with header while.body.outer.split.us.split.us
+Info: starting new BB-chain-dag with header if.end.us.us.us.preheader
+Info: starting new BB-chain-dag with header if.end.us.us.preheader
+Info: starting new BB-chain-dag with header if.then418.us.us.us
+Info: starting new BB-chain-dag with header if.end.us.us.us
+Info: starting new BB-chain-dag with header if.then418.us.us
+Info: starting new BB-chain-dag with header if.end.us.us
+Info: starting new BB-chain-dag with header if.then418.us.us545
+Info: starting new BB-chain-dag with header if.end.us.us547
+Info: starting new BB-chain-dag with header if.then418.us
+Info: starting new BB-chain-dag with header if.end.us
+Info: starting new BB-chain-dag with header while.body.outer.split.while.body.outer.split.split_crit_edge
+Info: starting new BB-chain-dag with header if.end.us513.preheader
+Info: starting new BB-chain-dag with header if.end.preheader
+Info: starting new BB-chain-dag with header while.body.outer.split.split.us
+Info: starting new BB-chain-dag with header if.end.us482.us.preheader
+Info: starting new BB-chain-dag with header if.end.us482.preheader
+Info: starting new BB-chain-dag with header if.then418.us480.us
+Info: starting new BB-chain-dag with header if.end.us482.us
+Info: starting new BB-chain-dag with header if.then418.us480
+Info: starting new BB-chain-dag with header if.end.us482
+Info: starting new BB-chain-dag with header if.then418.us511
+Info: starting new BB-chain-dag with header if.end.us513
+Info: starting new BB-chain-dag with header if.end
+Info: starting new BB-chain-dag with header if.then418
+Info: starting new BB-chain-dag with header if.else423.loopexit
+Info: starting new BB-chain-dag with header if.else423.loopexit1
+Info: starting new BB-chain-dag with header if.else423.loopexit2
+Info: starting new BB-chain-dag with header if.else423.loopexit3
+Info: starting new BB-chain-dag with header if.else423.loopexit4
+Info: starting new BB-chain-dag with header if.else423.loopexit5
+Info: starting new BB-chain-dag with header if.else423.loopexit6
+Info: starting new BB-chain-dag with header if.else423.loopexit7
+Info: starting new BB-chain-dag with header if.else423
+Info: starting new BB-chain-dag with header while.end
+Basic Block Chain DAGS.
+Basic-block-chain-DAG with header = entry
+ entry
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  entry
+Basic-block-chain-DAG with header = bbx_xnph
+ bbx_xnph
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  bbx_xnph
+Basic-block-chain-DAG with header = forx_xbody
+ forx_xbody
+   -> 
+   <- 
+loop-backs 
+  forx_xbody
+exit-points 
+  forx_xbody
+Basic-block-chain-DAG with header = forx_xendx_xloopexit
+ forx_xendx_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xendx_xloopexit
+Basic-block-chain-DAG with header = forx_xend
+ forx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  forx_xend
+Basic-block-chain-DAG with header = whilex_xbodyx_xouter
+ whilex_xbodyx_xouter
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  whilex_xbodyx_xouter
+Basic-block-chain-DAG with header = whilex_xbodyx_xouterx_xwhilex_xbodyx_xouterx_xsplit_crit_edge
+ whilex_xbodyx_xouterx_xwhilex_xbodyx_xouterx_xsplit_crit_edge
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  whilex_xbodyx_xouterx_xwhilex_xbodyx_xouterx_xsplit_crit_edge
+Basic-block-chain-DAG with header = whilex_xbodyx_xouterx_xsplitx_xus
+ whilex_xbodyx_xouterx_xsplitx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  whilex_xbodyx_xouterx_xsplitx_xus
+Basic-block-chain-DAG with header = whilex_xbodyx_xouterx_xsplitx_xusx_xwhilex_xbodyx_xouterx_xsplitx_xusx_xsplit_crit_edge
+ whilex_xbodyx_xouterx_xsplitx_xusx_xwhilex_xbodyx_xouterx_xsplitx_xusx_xsplit_crit_edge
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  whilex_xbodyx_xouterx_xsplitx_xusx_xwhilex_xbodyx_xouterx_xsplitx_xusx_xsplit_crit_edge
+Basic-block-chain-DAG with header = ifx_xendx_xusx_xus547x_xpreheader
+ ifx_xendx_xusx_xus547x_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xusx_xus547x_xpreheader
+Basic-block-chain-DAG with header = ifx_xendx_xusx_xpreheader
+ ifx_xendx_xusx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xusx_xpreheader
+Basic-block-chain-DAG with header = whilex_xbodyx_xouterx_xsplitx_xusx_xsplitx_xus
+ whilex_xbodyx_xouterx_xsplitx_xusx_xsplitx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  whilex_xbodyx_xouterx_xsplitx_xusx_xsplitx_xus
+Basic-block-chain-DAG with header = ifx_xendx_xusx_xusx_xusx_xpreheader
+ ifx_xendx_xusx_xusx_xusx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xusx_xusx_xusx_xpreheader
+Basic-block-chain-DAG with header = ifx_xendx_xusx_xusx_xpreheader
+ ifx_xendx_xusx_xusx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xusx_xusx_xpreheader
+Basic-block-chain-DAG with header = ifx_xthen418x_xusx_xusx_xus
+ ifx_xthen418x_xusx_xusx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418x_xusx_xusx_xus
+Basic-block-chain-DAG with header = ifx_xendx_xusx_xusx_xus
+ ifx_xendx_xusx_xusx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xusx_xusx_xus
+Basic-block-chain-DAG with header = ifx_xthen418x_xusx_xus
+ ifx_xthen418x_xusx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418x_xusx_xus
+Basic-block-chain-DAG with header = ifx_xendx_xusx_xus
+ ifx_xendx_xusx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xusx_xus
+Basic-block-chain-DAG with header = ifx_xthen418x_xusx_xus545
+ ifx_xthen418x_xusx_xus545
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418x_xusx_xus545
+Basic-block-chain-DAG with header = ifx_xendx_xusx_xus547
+ ifx_xendx_xusx_xus547
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xusx_xus547
+Basic-block-chain-DAG with header = ifx_xthen418x_xus
+ ifx_xthen418x_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418x_xus
+Basic-block-chain-DAG with header = ifx_xendx_xus
+ ifx_xendx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xus
+Basic-block-chain-DAG with header = whilex_xbodyx_xouterx_xsplitx_xwhilex_xbodyx_xouterx_xsplitx_xsplit_crit_edge
+ whilex_xbodyx_xouterx_xsplitx_xwhilex_xbodyx_xouterx_xsplitx_xsplit_crit_edge
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  whilex_xbodyx_xouterx_xsplitx_xwhilex_xbodyx_xouterx_xsplitx_xsplit_crit_edge
+Basic-block-chain-DAG with header = ifx_xendx_xus513x_xpreheader
+ ifx_xendx_xus513x_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xus513x_xpreheader
+Basic-block-chain-DAG with header = ifx_xendx_xpreheader
+ ifx_xendx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xpreheader
+Basic-block-chain-DAG with header = whilex_xbodyx_xouterx_xsplitx_xsplitx_xus
+ whilex_xbodyx_xouterx_xsplitx_xsplitx_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  whilex_xbodyx_xouterx_xsplitx_xsplitx_xus
+Basic-block-chain-DAG with header = ifx_xendx_xus482x_xusx_xpreheader
+ ifx_xendx_xus482x_xusx_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xus482x_xusx_xpreheader
+Basic-block-chain-DAG with header = ifx_xendx_xus482x_xpreheader
+ ifx_xendx_xus482x_xpreheader
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xus482x_xpreheader
+Basic-block-chain-DAG with header = ifx_xthen418x_xus480x_xus
+ ifx_xthen418x_xus480x_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418x_xus480x_xus
+Basic-block-chain-DAG with header = ifx_xendx_xus482x_xus
+ ifx_xendx_xus482x_xus
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xus482x_xus
+Basic-block-chain-DAG with header = ifx_xthen418x_xus480
+ ifx_xthen418x_xus480
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418x_xus480
+Basic-block-chain-DAG with header = ifx_xendx_xus482
+ ifx_xendx_xus482
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xus482
+Basic-block-chain-DAG with header = ifx_xthen418x_xus511
+ ifx_xthen418x_xus511
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418x_xus511
+Basic-block-chain-DAG with header = ifx_xendx_xus513
+ ifx_xendx_xus513
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xendx_xus513
+Basic-block-chain-DAG with header = ifx_xend
+ ifx_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xend
+Basic-block-chain-DAG with header = ifx_xthen418
+ ifx_xthen418
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xthen418
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit
+ ifx_xelse423x_xloopexit
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit1
+ ifx_xelse423x_xloopexit1
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit1
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit2
+ ifx_xelse423x_xloopexit2
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit2
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit3
+ ifx_xelse423x_xloopexit3
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit3
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit4
+ ifx_xelse423x_xloopexit4
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit4
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit5
+ ifx_xelse423x_xloopexit5
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit5
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit6
+ ifx_xelse423x_xloopexit6
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit6
+Basic-block-chain-DAG with header = ifx_xelse423x_xloopexit7
+ ifx_xelse423x_xloopexit7
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423x_xloopexit7
+Basic-block-chain-DAG with header = ifx_xelse423
+ ifx_xelse423
+   -> 
+   <- 
+loop-backs 
+exit-points 
+  ifx_xelse423
+Basic-block-chain-DAG with header = whilex_xend
+ whilex_xend
+   -> 
+   <- 
+loop-backs 
+exit-points 
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: saw special function __aa_barrier__.
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr1 since it is not (really) used in any function..
+Info: locating portname in constant GEP [19 x i8] c"zeropad_input_pipe\00"
+
+Info: saw special function __aa_barrier__.
+Info: ignoring get-element-ptr to progx_xoptx_xo_iNtErNal_xx_xstr2 since it is not (really) used in any function..
+Info: locating portname in constant GEP [18 x i8] c"elapsed_time_pipe\00"
+
+Info: saw special function __aa_barrier__.
+Info: visiting function read_uint8
+Info: ignoring external function read_uint8
+Info: visiting function __aa_barrier__
+Info: ignoring external function __aa_barrier__
+Info: visiting function timer
+Info: ignoring external function timer
+Info: visiting function write_uint64
+Info: ignoring external function write_uint64
+AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
+Info:  AaLinkExtMem built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
+Info:     Date: Mon Feb 1 17:21:43 2021 +0530
+Info: parsed and added pipe elapsed_time_pipe width = 64 depth = 1
+Info: parsed and added pipe zeropad_input_pipe width = 8 depth = 2
+Info: parsed and added pipe zeropad_output_pipe width = 8 depth = 2
+Info: Added module progx_xoptx_xo_storage_initializer_
+Info: Added module sendOutput
+Info: Added module zeropad3D
+Info: finished parsing file prog.aa
+Info: Added module timerDaemon
+Info: Added module timer
+Info: finished parsing file timer.aa
+Info: Added module global_storage_initializer_
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+        progx_xoptx_xo_storage_initializer_
+        global_storage_initializer_
+        sendOutput
+        timer
+        timerDaemon
+        zeropad3D
 Info: marking modules reachable from root-modules ... 
-Info: module getRemainingElements is reachable from a specified root module.
 Info: module global_storage_initializer_ is reachable from a specified root module.
 Info: module progx_xoptx_xo_storage_initializer_ is reachable from a specified root module.
 Info: module sendOutput is reachable from a specified root module.
-Info: module sendRemainingElements is reachable from a specified root module.
-Info: module testConfigure is reachable from a specified root module.
 Info: module timer is reachable from a specified root module.
 Info: module timerDaemon is reachable from a specified root module.
 Info: module zeropad3D is reachable from a specified root module.
-Info: module zeropad3D_A is reachable from a specified root module.
-Info: module zeropad3D_B is reachable from a specified root module.
-Info: module zeropad3D_C is reachable from a specified root module.
-Info: module zeropad3D_D is reachable from a specified root module.
 Info: propagating types in the program ... 
 Info: coalescing storage into distinct memory spaces ... 
 Info: Marking foreign pointers in modules which are not called from the program
 Info: Coalescing storage from native objects..
-Info: Finished coalescing storage.. identified 8 disjoint memory space(s)
+Info: Finished coalescing storage.. identified 3 disjoint memory space(s)
 Info: Memory space 0: R 
 Info: Memory space 1: T 
 Info: Memory space 2: count 
-Info: Memory space 3: des_inp 
-Info: Memory space 4: des_out 
-Info: Memory space 5: pad 
-Info: Memory space 6: %sendOutput%body:out_datax_xi_alloc 
-Info: Memory space 7: %sendRemainingElements%body:out_data_alloc 
 Info: propagating constants in the program ... 
-Info:  started equalizing paths for do-while statement do_while_stmt_1397 in module timerDaemon
-Info: Longest path in do_while_stmt_1397 is 1
+AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
+Info:  AaOpt built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
+Info:     Date: Mon Feb 1 17:21:43 2021 +0530
+Info: parsed and added pipe elapsed_time_pipe width = 64 depth = 1
+Info: parsed and added pipe zeropad_input_pipe width = 8 depth = 2
+Info: parsed and added pipe zeropad_output_pipe width = 8 depth = 2
+Info: Added module progx_xoptx_xo_storage_initializer_
+Info: Added module global_storage_initializer_
+Info: Added module sendOutput
+Info: Added module timer
+Info: Added module timerDaemon
+Info: Added module zeropad3D
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+        progx_xoptx_xo_storage_initializer_
+        global_storage_initializer_
+        sendOutput
+        timer
+        timerDaemon
+        zeropad3D
+Info: marking modules reachable from root-modules ... 
+Info: module global_storage_initializer_ is reachable from a specified root module.
+Info: module progx_xoptx_xo_storage_initializer_ is reachable from a specified root module.
+Info: module sendOutput is reachable from a specified root module.
+Info: module timer is reachable from a specified root module.
+Info: module timerDaemon is reachable from a specified root module.
+Info: module zeropad3D is reachable from a specified root module.
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 3 disjoint memory space(s)
+Info: Memory space 0: R 
+Info: Memory space 1: T 
+Info: Memory space 2: count 
+Info: propagating constants in the program ... 
+Info: added 0 bits of buffering during path balancing.
+AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
+Info:  AaOpt built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
+Info:     Date: Mon Feb 1 17:21:43 2021 +0530
+Info: parsed and added pipe elapsed_time_pipe width = 64 depth = 1
+Info: parsed and added pipe zeropad_input_pipe width = 8 depth = 2
+Info: parsed and added pipe zeropad_output_pipe width = 8 depth = 2
+Info: Added module progx_xoptx_xo_storage_initializer_
+Info: Added module global_storage_initializer_
+Info: Added module sendOutput
+Info: Added module timer
+Info: Added module timerDaemon
+Info: Added module zeropad3D
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+        progx_xoptx_xo_storage_initializer_
+        global_storage_initializer_
+        sendOutput
+        timer
+        timerDaemon
+        zeropad3D
+Info: marking modules reachable from root-modules ... 
+Info: module global_storage_initializer_ is reachable from a specified root module.
+Info: module progx_xoptx_xo_storage_initializer_ is reachable from a specified root module.
+Info: module sendOutput is reachable from a specified root module.
+Info: module timer is reachable from a specified root module.
+Info: module timerDaemon is reachable from a specified root module.
+Info: module zeropad3D is reachable from a specified root module.
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 3 disjoint memory space(s)
+Info: Memory space 0: R 
+Info: Memory space 1: T 
+Info: Memory space 2: count 
+Info: propagating constants in the program ... 
+Info:  started equalizing paths for do-while statement do_while_stmt_222 in module timerDaemon
+Info: Longest path in do_while_stmt_222 is 1
 Info: added 0 bits of buffering during path balancing.
 Aa2VC -O -C prog.linked.opt.aa | vcFormat > prog.vc
 Info:  Aa2VC built on AHIR commit 9bab90d2fbfa70d45ed410df32fc7e6e35726f14
 Info:     Date: Mon Feb 1 17:21:43 2021 +0530
 Info: -O option selected, will parallelize straight-line sequences
 Info: -C option selected, will generate C-stubs for mixed C-VHDL simulation
-Info: parsed and added pipe Block0_complete width = 16 depth = 1
-Info: parsed and added pipe Block0_starting width = 16 depth = 1
-Info: parsed and added pipe Block1_complete width = 16 depth = 1
-Info: parsed and added pipe Block1_starting width = 16 depth = 1
-Info: parsed and added pipe Block2_complete width = 16 depth = 1
-Info: parsed and added pipe Block2_starting width = 16 depth = 1
-Info: parsed and added pipe Block3_complete width = 16 depth = 1
-Info: parsed and added pipe Block3_starting width = 16 depth = 1
 Info: parsed and added pipe elapsed_time_pipe width = 64 depth = 1
-Info: parsed and added pipe zeropad_input_pipe width = 16 depth = 2
-Info: parsed and added pipe zeropad_output_pipe width = 16 depth = 2
-Info: Added module getRemainingElements
+Info: parsed and added pipe zeropad_input_pipe width = 8 depth = 2
+Info: parsed and added pipe zeropad_output_pipe width = 8 depth = 2
 Info: Added module progx_xoptx_xo_storage_initializer_
 Info: Added module global_storage_initializer_
 Info: Added module sendOutput
-Info: Added module sendRemainingElements
-Info: Added module testConfigure
 Info: Added module timer
 Info: Added module timerDaemon
 Info: Added module zeropad3D
-Info: Added module zeropad3D_A
-Info: Added module zeropad3D_B
-Info: Added module zeropad3D_C
-Info: Added module zeropad3D_D
 Info: elaborating the program .... initializing the call-graph
 Info: mapping target object references..
 Info: mapping source object references..
 Info: checking for cycles in the call-graph ... 
 Info: module order:
-        getRemainingElements
         progx_xoptx_xo_storage_initializer_
         global_storage_initializer_
         sendOutput
-        sendRemainingElements
-        testConfigure
         timer
         timerDaemon
         zeropad3D
-        zeropad3D_A
-        zeropad3D_B
-        zeropad3D_C
-        zeropad3D_D
 Info: marking modules reachable from root-modules ... 
-Info: module getRemainingElements is reachable from a specified root module.
 Info: module global_storage_initializer_ is reachable from a specified root module.
 Info: module progx_xoptx_xo_storage_initializer_ is reachable from a specified root module.
 Info: module sendOutput is reachable from a specified root module.
-Info: module sendRemainingElements is reachable from a specified root module.
-Info: module testConfigure is reachable from a specified root module.
 Info: module timer is reachable from a specified root module.
 Info: module timerDaemon is reachable from a specified root module.
 Info: module zeropad3D is reachable from a specified root module.
-Info: module zeropad3D_A is reachable from a specified root module.
-Info: module zeropad3D_B is reachable from a specified root module.
-Info: module zeropad3D_C is reachable from a specified root module.
-Info: module zeropad3D_D is reachable from a specified root module.
 Info: propagating types in the program ... 
 Info: coalescing storage into distinct memory spaces ... 
 Info: Marking foreign pointers in modules which are not called from the program
 Info: Coalescing storage from native objects..
-Info: Finished coalescing storage.. identified 8 disjoint memory space(s)
+Info: Finished coalescing storage.. identified 3 disjoint memory space(s)
 Info: Memory space 0: R 
 Info: Memory space 1: T 
 Info: Memory space 2: count 
-Info: Memory space 3: des_inp 
-Info: Memory space 4: des_out 
-Info: Memory space 5: pad 
-Info: Memory space 6: %sendOutput%body:out_datax_xi_alloc 
-Info: Memory space 7: %sendRemainingElements%body:out_data_alloc 
 Info: propagating constants in the program ... 
 Info: Writing optimized VC model.. 
 Info: Writing gated clocks.. 
-Warning: Looks like you have an expression which depends only on signals/constants.. :line 116
-Warning: Looks like you have an expression which depends only on signals/constants.. :line 262
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 670
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 670
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 670
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 671
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 671
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 671
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 672
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 672
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 672
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 673
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 673
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 673
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 674
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 674
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 675
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 675
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 676
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 676
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 677
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 677
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 678
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 678
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 682
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 682
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 682
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 686
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 686
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 690
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 690
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 690
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 694
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 694
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 698
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 698
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 698
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 702
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 702
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 706
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 706
-Aa2VC Error: volatile statement uses downstream statement               tmp4 := ($cast ($uint<32>) tmp22 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 706
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 719
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter                      ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 721
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) inc184x_xix_x1 ) $on   whilex_xcond80x_xouterx_xbackedge_whilex_xcond80x_xouter                         ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond80x_xouterx_xpreheader_whilex_xcond80x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 723
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 884
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 884
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 884
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 885
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 885
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 885
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 886
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 886
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 886
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 887
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 887
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 887
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 888
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 888
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 889
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 889
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 890
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 890
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 891
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 891
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 892
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 892
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 896
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 896
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 896
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 900
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 900
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 904
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 904
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 904
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 908
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 908
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 912
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 912
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 912
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 916
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 916
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 920
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 920
-Aa2VC Error: volatile statement uses downstream statement               tmp3 := ($cast ($uint<32>) tmp27 ) $buffering 1// bits of buffering = 32. 
-: file prog.linked.opt.aa, line 920
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 933
-Aa2VC Error: volatile statement uses downstream statement                       $phi jx_x1x_xph :=                           ($cast ($uint<32>) div ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                           ($cast ($uint<32>) jx_x1x_xphx_xbe ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 934
-Aa2VC Error: volatile statement uses downstream statement                       $phi ix_x1x_xph :=                           ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   whilex_xcond84x_xouterx_xpreheader_whilex_xcond84x_xouter                      ($cast ($uint<32>) inc187x_xix_x1 ) $on   whilex_xcond84x_xouterx_xbackedge_whilex_xcond84x_xouter 
- // type of target is $uint<32>
-: file prog.linked.opt.aa, line 936
-Info: Done writing optimized VC model.. 
-Error: there were errors during elaboration, check the log
-vc2vhdl -D -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl -T zeropad3D -T zeropad3D_A -T zeropad3D_B -T zeropad3D_C -T zeropad3D_D  -T timerDaemon -f prog.vc 
-Info: -D option selected: VHDL will have debug assertions..
-Info: -S option selected: bypass stride will be set to 4.
-Info: -O option selected, will try to compress control-path..
-Info: -I will treat errors as warnings.
-Info: -v option selected: lots of info will be printed (to stderr, and also dot-files of control-paths if -O option is selected).
-Info: -a option selected: will try for minimum overall circuit area.
-Info: -C option selected: will generate testbench which connects to foreign link.
-Info: -e ahir_system top-level VHDL entity will have name ahir_system.unformatted_vhdl
-Info: -w ahir_system will write separate system and testbench VHDL files.
-Info: -s ghdl option selected: will generate testbench with VHPI link.
-Info: module zeropad3D set as one of the ever-running top modules. 
-   NOTE: zeropad3D cannot have any input/output arguments.
-Info: module zeropad3D_A set as one of the ever-running top modules. 
-   NOTE: zeropad3D_A cannot have any input/output arguments.
-Info: module zeropad3D_B set as one of the ever-running top modules. 
-   NOTE: zeropad3D_B cannot have any input/output arguments.
-Info: module zeropad3D_C set as one of the ever-running top modules. 
-   NOTE: zeropad3D_C cannot have any input/output arguments.
-Info: module zeropad3D_D set as one of the ever-running top modules. 
-   NOTE: zeropad3D_D cannot have any input/output arguments.
-Info: module timerDaemon set as one of the ever-running top modules. 
-   NOTE: timerDaemon cannot have any input/output arguments.
-Warning: in equivalence operator ptr_deref_168_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_180_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_192_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator array_obj_ref_286_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_291_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator array_obj_ref_407_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_412_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_432_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_453_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_474_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator array_obj_ref_563_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_567_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: control-path links to flow-through DPE ptr_deref_168_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_168_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_168_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_168_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_180_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_180_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_180_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_180_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_192_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_192_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_192_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_192_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_286_index_1_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_286_index_1_rename ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_286_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_291_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_291_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_291_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_291_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_407_index_1_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_407_index_1_rename ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_407_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_412_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_412_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_412_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_412_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_432_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_432_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_432_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_432_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_453_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_453_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_453_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_453_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_474_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_474_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_474_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_474_gather_scatter ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_563_index_1_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_563_index_1_rename ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE array_obj_ref_563_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_567_base_resize ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_567_root_address_inst ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_567_addr_0 ignored,  in module sendOutput
-Warning: control-path links to flow-through DPE ptr_deref_567_gather_scatter ignored,  in module sendOutput
-Warning: in equivalence operator array_obj_ref_617_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_622_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_642_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_663_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_684_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator array_obj_ref_767_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_786_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: control-path links to flow-through DPE array_obj_ref_617_index_1_resize ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE array_obj_ref_617_index_1_rename ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE array_obj_ref_617_root_address_inst ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_622_base_resize ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_622_root_address_inst ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_622_addr_0 ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_622_gather_scatter ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_642_base_resize ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_642_root_address_inst ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_642_addr_0 ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_642_gather_scatter ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_663_base_resize ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_663_root_address_inst ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_663_addr_0 ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_663_gather_scatter ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_684_base_resize ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_684_root_address_inst ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_684_addr_0 ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_684_gather_scatter ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE array_obj_ref_767_index_1_resize ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE array_obj_ref_767_index_1_rename ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE array_obj_ref_767_root_address_inst ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_786_base_resize ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_786_root_address_inst ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_786_addr_0 ignored,  in module sendRemainingElements
-Warning: control-path links to flow-through DPE ptr_deref_786_gather_scatter ignored,  in module sendRemainingElements
-Warning: in equivalence operator ptr_deref_812_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_830_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_847_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator array_obj_ref_896_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_904_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_921_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_971_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_990_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_1009_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_1022_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_1034_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_1046_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator array_obj_ref_1140_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_1205_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator array_obj_ref_1372_index_1_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: in equivalence operator ptr_deref_1376_base_resize, total input width is not equal to total output width.. output will truncate the input..
-Warning: control-path links to flow-through DPE ptr_deref_812_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_812_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_812_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_830_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_830_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_830_addr_0 ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_830_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_847_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_847_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_847_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_896_index_1_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_896_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_904_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_904_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_904_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_921_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_921_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_921_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE STORE_pad_952_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_971_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_971_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_971_addr_0 ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_971_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_990_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_990_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_990_addr_0 ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_990_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1009_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1009_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1009_addr_0 ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1009_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1022_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1022_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1022_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1034_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1034_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1034_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1046_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1046_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1046_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_1140_index_1_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_1140_index_1_rename ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_1140_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1205_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1205_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1205_addr_0 ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1205_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_1372_index_1_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_1372_index_1_rename ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE array_obj_ref_1372_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1376_base_resize ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1376_root_address_inst ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1376_addr_0 ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE ptr_deref_1376_gather_scatter ignored,  in module testConfigure
-Warning: control-path links to flow-through DPE LOAD_count_1392_gather_scatter ignored,  in module timer
-Warning: control-path links to flow-through DPE STORE_count_1407_gather_scatter ignored,  in module timerDaemon
-^CMakefile:59: recipe for target 'vc2vhdl' failed
-make: *** [vc2vhdl] Interrupt
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar :=                    ($cast ($uint<16>) indvarx_xnext ) $on   ifx_xthen418x_xusx_xusx_xus_ifx_xendx_xusx_xusx_xus                        ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xusx_xusx_xpreheader_ifx_xendx_xusx_xusx_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 421
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar578 :=                         ($cast ($uint<16>) indvarx_xnext579 ) $on   ifx_xthen418x_xusx_xus_ifx_xendx_xusx_xus                       ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xusx_xpreheader_ifx_xendx_xusx_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 444
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar576 :=                         ($cast ($uint<16>) indvarx_xnext577 ) $on   ifx_xthen418x_xusx_xus545_ifx_xendx_xusx_xus547                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xus547x_xpreheader_ifx_xendx_xusx_xus547 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 467
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar584 :=                         ($cast ($uint<16>) indvarx_xnext585 ) $on   ifx_xthen418x_xus_ifx_xendx_xus                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xusx_xpreheader_ifx_xendx_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 490
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar574 :=                         ($cast ($uint<16>) indvarx_xnext575 ) $on   ifx_xthen418x_xus480x_xus_ifx_xendx_xus482x_xus                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xus482x_xusx_xpreheader_ifx_xendx_xus482x_xus 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 539
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar582 :=                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xus482x_xpreheader_ifx_xendx_xus482                        ($cast ($uint<16>) indvarx_xnext583 ) $on   ifx_xthen418x_xus480_ifx_xendx_xus482 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 562
+Aa2VC Error: volatile statement uses downstream statement                       $phi indvar580 :=                         ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xendx_xus513x_xpreheader_ifx_xendx_xus513                        ($cast ($uint<16>) indvarx_xnext581 ) $on   ifx_xthen418x_xus511_ifx_xendx_xus513 
+ // type of target is $uint<16>
+: file prog.linked.opt.aa, line 591
+^CMakefile:55: recipe for target 'aa2vc' failed
+make: *** [aa2vc] Interrupt
 
-ajinkya@Ajinkya:~/IITB_AI_ML/C/hw_modules/zeropad/hw$ 
+ajinkya@ajinkya:~/IITB_AI_ML/students/Ajinkya_Zero_padding/hw/zeropad_hw/hw_aman_single_thread$ 

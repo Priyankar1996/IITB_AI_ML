@@ -105,16 +105,16 @@ uint16_t testConfigure()
         kernel.data_array[i] = element;
     }
 
-    /*uint64_t output_size = output.descriptor.descriptor.dimensions[0] * output.descriptor.descriptor.dimensions[1] * output.descriptor.descriptor.dimensions[2];
+    uint32_t output_size = desc_output.dimensions[0] * desc_output.dimensions[1] * desc_output.dimensions[2];
     for(i = 0; i < output_size>>2; i++)
-        output.data_array[i] = 0;*/
+        output.data_array[i] = 0;
 
     return(input_size);
 }
 
 void sendOutput()
 {
-    uint64_t size = desc_output.dimensions[0] * desc_output.dimensions[1] * desc_output.dimensions[2];
+    uint32_t size = desc_output.dimensions[0] * desc_output.dimensions[1] * desc_output.dimensions[2];
     int i;
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
@@ -198,6 +198,10 @@ void convTranspose()
     uint16_t rv = testConfigure();
     __aa_barrier__();
 
+    #ifndef SW
+	    uint64_t start_time = timer();
+    #endif
+
     write_uint16("Block0_start", rv);
     write_uint16("Block1_start", rv);
     write_uint16("Block2_start", rv);
@@ -207,6 +211,12 @@ void convTranspose()
     uint16_t s2 = read_uint16("Block2_done");
     uint16_t s3 = read_uint16("Block3_done");   
     __aa_barrier__();
+
+    #ifndef SW
+	    uint64_t stop_time = timer();
+	    uint64_t elapsed_time = stop_time - start_time;
+	    write_uint64("elapsed_time_pipe", elapsed_time);
+    #endif
     
     sendOutput();
 }

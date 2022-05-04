@@ -22,6 +22,7 @@ architecture structure of fpga_top is
 	signal RT_1HZ: std_logic;
 	signal BAUD_RATE : std_logic_vector(31 downto 0);
 
+	signal reset2,reset1,reset_sync,clk,lock : std_logic;
 	component clk_wiz_0
   		port
    			(-- Clock in ports
@@ -37,22 +38,22 @@ architecture structure of fpga_top is
 	
 	component ahir_system is  -- system 
   	port (-- 
-    		clk : in std_logic;
-    		reset : in std_logic;
-    		conv_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
-    		conv_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
-    		conv_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-    		conv_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
-    		conv_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
-    		conv_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
-  		--
+		clk : in std_logic;
+		reset : in std_logic;
+		conv_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
+      		conv_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
+      		conv_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
+      		conv_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
+      		conv_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
+      		conv_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
+  		-- 
 	end component; 
     	signal conv_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
     	signal conv_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
     	signal conv_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
     	signal conv_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
     	signal conv_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
-    	signal conv_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0)); -- 
+    	signal conv_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0); -- 
 
 	signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
@@ -94,12 +95,12 @@ begin
 
 	ahir_inst: ahir_system
 		port map (
-    			CLK => CLK, RESET => RESET_SYNC
+    			CLK => CLK, RESET => RESET_SYNC,
     			conv_input_pipe_pipe_write_data => conv_input_pipe_pipe_write_data,
     			conv_input_pipe_pipe_write_req => conv_input_pipe_pipe_write_req,
-    			conv_input_pipe_pipe_write_ack  => conv_input_pipe_pipe_write_ack,
+    			conv_input_pipe_pipe_write_ack  => conv_input_pipe_pipe_write_ack ,
     			conv_output_pipe_pipe_read_data => conv_output_pipe_pipe_read_data,
-    			conv_output_pipe_pipe_read_req  => conv_output_pipe_pipe_read_req,
+    			conv_output_pipe_pipe_read_req  => conv_output_pipe_pipe_read_req ,
     			conv_output_pipe_pipe_read_ack  => conv_output_pipe_pipe_read_ack 
 		);
 	uart_inst:
@@ -113,8 +114,8 @@ begin
 					TX_to_CONSOLE_pipe_write_data => conv_output_pipe_pipe_read_data,
 					TX_to_CONSOLE_pipe_write_req => conv_output_pipe_pipe_read_ack,
 					TX_to_CONSOLE_pipe_write_ack => conv_output_pipe_pipe_read_req,
-					CONSOLE_to_RX_pipe_read_data  => conv_input_pipe_pipe_write_data,
-					CONSOLE_to_RX_pipe_read_req  => conv_input_pipe_pipe_write_ack,
+					CONSOLE_to_RX_pipe_read_data  => conv_input_pipe_pipe_write_data ,
+					CONSOLE_to_RX_pipe_read_req  => conv_input_pipe_pipe_write_ack ,
 					CONSOLE_to_RX_pipe_read_ack => conv_input_pipe_pipe_write_req
 				);
 

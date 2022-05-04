@@ -11,14 +11,14 @@ typedef enum __TensorDataType {
 
 typedef struct __TensorDescriptor {
 
-	TensorDataType data_type;
+	uint32_t data_type;
 
 	// data can be in row-major form
 	// or column major form.
 	//
 	// row-major [0][0], [0][1] etc...
 	// column-major [0][0], [1][0] etc...
-	uint8_t row_major_form;
+	uint32_t row_major_form;
 
 	uint32_t number_of_dimensions;
 	uint32_t dimensions[MAX_DIMENSIONS];

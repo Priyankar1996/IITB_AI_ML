@@ -21,48 +21,91 @@ SizedTensor_16K T,K,R;
 TensorDescriptor desc_T,desc_K,desc_R;
 uint8_t stride;
 
+#define __dt__ int16_t
+
+#define __get8xi8__(element) ({\
+	element = (read_uint8 ("conv_input_pipe"));\
+	element = (element << 8) + (read_uint8 ("conv_input_pipe"));\
+	element = (element << 8) + (read_uint8 ("conv_input_pipe"));\
+	element = (element << 8) + (read_uint8 ("conv_input_pipe"));\
+    	element = (element << 8) + (read_uint8 ("conv_input_pipe"));\
+	element = (element << 8) + (read_uint8 ("conv_input_pipe"));\
+	element = (element << 8) + (read_uint8 ("conv_input_pipe"));\
+	element = (element << 8) + (read_uint8 ("conv_input_pipe"));\
+})
+
+#define __send8xi8__(addr) ({\
+	uint64_t element = R.data_array[addr];\
+	uint8_t out_data[8];\
+	out_data[7] = element & 0xFF;\
+	element>>=8;\
+	out_data[6] = element & 0xFF;\
+	element>>=8;\
+	out_data[5]= element & 0xFF;\
+	element>>=8;\
+    	out_data[4] = element & 0xFF;\
+	element>>=8;\
+	out_data[3] = element & 0xFF;\
+	element>>=8;\
+	out_data[2] = element & 0xFF;\
+	element>>=8;\
+    	out_data[1] = element & 0xFF;\
+	element>>=8;\
+	out_data[0] = element & 0xFF;\
+	write_uint8 ("conv_output_pipe",out_data[0]);\
+	write_uint8 ("conv_output_pipe",out_data[1]);\
+	write_uint8 ("conv_output_pipe",out_data[2]);\
+	write_uint8 ("conv_output_pipe",out_data[3]);\
+    	write_uint8 ("conv_output_pipe",out_data[4]);\
+	write_uint8 ("conv_output_pipe",out_data[5]);\
+	write_uint8 ("conv_output_pipe",out_data[6]);\
+	write_uint8 ("conv_output_pipe",out_data[7]);\
+})
+
 void getInput()
 {
-	int i;
-	desc_T.data_type = i16;
-	desc_K.data_type = i16;
-	desc_T.row_major_form = 1;
-	desc_K.row_major_form = 1;
-	desc_T.number_of_dimensions = 3;
-	desc_K.number_of_dimensions = 4;
-	for(i = 0; i < desc_T.number_of_dimensions; i++)
-	{
-		desc_T.dimensions[i] = read_uint64("conv_input_pipe");
-	}
-	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_T) >> 2)+1; i++)
-	{
-		T.data_array[i] = read_uint64("conv_input_pipe");
-	}
-	for(i = 0; i < desc_K.number_of_dimensions; i++)
-	{
-		desc_K.dimensions[i] = read_uint64("conv_input_pipe");
-	}
-	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_K) >> 2)+1; i++)
-	{
-		K.data_array[i] = read_uint64("conv_input_pipe");
-	}
-	stride = read_uint64("conv_input_pipe");
+	desc_T.row_major_form = read_uint8 ("conv_input_pipe");
+    desc_T.number_of_dimensions = read_uint8 ("conv_input_pipe"); 
+    int i;
+    for(i = 0;i < desc_T.number_of_dimensions;i++){
+        desc_T.dimensions[i] = read_uint8 ("conv_input_pipe");
+    }
+
+	stride = read_uint8 ("conv_input_pipe");
+
+	desc_K.row_major_form = read_uint8 ("conv_input_pipe");
+    desc_K.number_of_dimensions = read_uint8 ("conv_input_pipe");
+    for(i = 0;i < desc_K.number_of_dimensions;i++){
+        desc_K.dimensions[i] = read_uint8 ("conv_input_pipe");
+    }
+    
+	uint32_t input_size = desc_T.dimensions[0]*desc_T.dimensions[1]*desc_T.dimensions[2];
+    uint32_t kernel_size = desc_K.dimensions[0]*desc_K.dimensions[1]*desc_K.dimensions[2]*desc_K.dimensions[3];
+    for(i = 0; i < (input_size >> 2)+1; i++)
+    {
+        uint64_t element;
+        __get8xi8__(element);
+        T.data_array[i] = element;
+    }
+
+    for(i = 0; i < (kernel_size >> 2)+1; i++)
+    {
+        uint64_t element;
+        __get8xi8__(element);
+        K.data_array[i] = element;
+    }
 }
 
 void sendOutput()
 {
-	int i;
-	desc_R.data_type = i16;\
-    	desc_R.number_of_dimensions = 3;\
-    	desc_R.row_major_form = 1;\
-	for(i = 0; i < desc_R.number_of_dimensions; i++)
-	{
-		write_uint64("conv_output_pipe",desc_R.dimensions[i]);
-	}
-	for(i = 0; i < (__NumberOfElementsInSizedTensor__(desc_R) >> 2)+1; i++)
-	{
-		write_uint64("conv_output_pipe",R.data_array[i]);
-	}
+	write_uint8 ("conv_output_pipe",desc_R.dimensions[0]);\
+	write_uint8 ("conv_output_pipe",desc_R.dimensions[1]);\
+	write_uint8 ("conv_output_pipe",desc_R.dimensions[2]);\
+    uint32_t size = desc_R.dimensions[0] * desc_R.dimensions[1] * desc_R.dimensions[2];
+    int i;
+    for (i = 0; i < (size >> 2)+1; i++){
+        __send8xi8__(i);
+    }
 }
 
 void convCore1()
@@ -212,7 +255,6 @@ void conv2D()
 	uint8_t done3 = read_uint16("core3_ack_pipe");
 	uint8_t done4 = read_uint16("core4_ack_pipe");
 	uint8_t done5 = read_uint16("core5_ack_pipe");
-
 	__aa_barrier__();
     sendOutput();
 }

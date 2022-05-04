@@ -39,18 +39,18 @@ architecture structure of fpga_top is
   	port (-- 
     		clk : in std_logic;
     		reset : in std_logic;
-    		conv_input_pipe_pipe_write_data: in std_logic_vector(63 downto 0);
+    		conv_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
     		conv_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
     		conv_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-    		conv_output_pipe_pipe_read_data: out std_logic_vector(63 downto 0);
+    		conv_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
     		conv_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
     		conv_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
   		--
 	end component; 
-    	signal conv_input_pipe_pipe_write_data: std_logic_vector(63 downto 0);
+    	signal conv_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
     	signal conv_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
     	signal conv_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
-    	signal conv_output_pipe_pipe_read_data: std_logic_vector(63 downto 0);
+    	signal conv_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
     	signal conv_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
     	signal conv_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0)); -- 
 

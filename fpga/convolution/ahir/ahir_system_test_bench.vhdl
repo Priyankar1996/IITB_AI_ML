@@ -15,8 +15,6 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
-library GhdlLink;
-use GhdlLink.LogUtilities.all;
 library work;
 use work.ahir_system_global_package.all;
 library GhdlLink;
@@ -30,10 +28,10 @@ architecture VhpiLink of ahir_system_Test_Bench is --
     port (-- 
       clk : in std_logic;
       reset : in std_logic;
-      conv_input_pipe_pipe_write_data: in std_logic_vector(63 downto 0);
+      conv_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
       conv_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
       conv_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-      conv_output_pipe_pipe_read_data: out std_logic_vector(63 downto 0);
+      conv_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
       conv_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
       conv_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
     -- 
@@ -77,11 +75,11 @@ architecture VhpiLink of ahir_system_Test_Bench is --
   signal convCore5_fin_req   : std_logic := '0';
   signal convCore5_fin_ack   : std_logic := '0';
   -- write to pipe conv_input_pipe
-  signal conv_input_pipe_pipe_write_data: std_logic_vector(63 downto 0);
+  signal conv_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
   signal conv_input_pipe_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
   signal conv_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
   -- read from pipe conv_output_pipe
-  signal conv_output_pipe_pipe_read_data: std_logic_vector(63 downto 0);
+  signal conv_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
   signal conv_output_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
   signal conv_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
   -- 
@@ -123,8 +121,8 @@ begin --
       Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
       conv_input_pipe_pipe_write_req <= Unpack_String(req_val_string,1);
       obj_ref := Pack_String_To_Vhpi_String("conv_input_pipe 0");
-      Vhpi_Get_Port_Value(obj_ref,port_val_string,64);
-      conv_input_pipe_pipe_write_data <= Unpack_String(port_val_string,64);
+      Vhpi_Get_Port_Value(obj_ref,port_val_string,8);
+      conv_input_pipe_pipe_write_data <= Unpack_String(port_val_string,8);
       wait until clk = '1';
       obj_ref := Pack_String_To_Vhpi_String("conv_input_pipe ack");
       ack_val_string := Pack_SLV_To_Vhpi_String(conv_input_pipe_pipe_write_ack);
@@ -154,7 +152,7 @@ begin --
       Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
       obj_ref := Pack_String_To_Vhpi_String("conv_output_pipe 0");
       port_val_string := Pack_SLV_To_Vhpi_String(conv_output_pipe_pipe_read_data);
-      Vhpi_Set_Port_Value(obj_ref,port_val_string,64);
+      Vhpi_Set_Port_Value(obj_ref,port_val_string,8);
       -- 
     end loop;
     --

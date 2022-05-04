@@ -61,48 +61,57 @@ void __aa_barrier__();
 	write_uint8 ("zeropad_output_pipe",out_data[7]);\
 })
 
+#define fill_T(i) ({\
+	uint64_t element;\
+	__get4xi16__(element);\
+	T.data_array[4*i] = element;\
+	__get4xi16__(element);\
+	T.data_array[4*i+1] = element;\
+	__get4xi16__(element);\
+	T.data_array[4*i+2] = element;\
+	__get4xi16__(element);\
+	T.data_array[4*i+3] = element;\
+})
+
 void sendOutput(uint32_t size)
 {
     int i;
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
     }
-;
 }
 
 
 void zeropad3D()
 {
     
-    uint16_t t0 = read_uint16("zeropad_input_pipe");
-    t0 = (t0 << 8) + read_uint16("zeropad_input_pipe");
-    uint16_t t1 = read_uint16("zeropad_input_pipe");
-    t1 = (t1 << 8) + read_uint16("zeropad_input_pipe");
-    uint16_t t2 = read_uint16("zeropad_input_pipe");
-    t2 = (t2 << 8) + read_uint16("zeropad_input_pipe");
-    uint16_t pad = read_uint16("zeropad_input_pipe");
-    pad = (pad << 8) + read_uint16("zeropad_input_pipe");
-    uint16_t r0 = read_uint16("zeropad_input_pipe");
-    r0 = (r0 << 8) + read_uint16("zeropad_input_pipe");
-    uint16_t r1 = read_uint16("zeropad_input_pipe");
-    r1 = (r1 << 8) + read_uint16("zeropad_input_pipe");
-    uint16_t r2 = read_uint16("zeropad_input_pipe");
-    r2 = (r2 << 8) + read_uint16("zeropad_input_pipe");
+    uint16_t t0 = read_uint8("zeropad_input_pipe");
+    t0 = (t0 << 8) + read_uint8("zeropad_input_pipe");
+    uint16_t t1 = read_uint8("zeropad_input_pipe");
+    t1 = (t1 << 8) + read_uint8("zeropad_input_pipe");
+    uint16_t t2 = read_uint8("zeropad_input_pipe");
+    t2 = (t2 << 8) + read_uint8("zeropad_input_pipe");
+    uint16_t pad = read_uint8("zeropad_input_pipe");
+    pad = (pad << 8) + read_uint8("zeropad_input_pipe");
+    uint16_t r0 = read_uint8("zeropad_input_pipe");
+    r0 = (r0 << 8) + read_uint8("zeropad_input_pipe");
+    uint16_t r1 = read_uint8("zeropad_input_pipe");
+    r1 = (r1 << 8) + read_uint8("zeropad_input_pipe");
+    uint16_t r2 = read_uint8("zeropad_input_pipe");
+    r2 = (r2 << 8) + read_uint8("zeropad_input_pipe");
 
     __aa_barrier__();
+	uint32_t size = t0 * t1 * t2;
+	uint32_t i;
+	for (i = 0; i < (size >> 4); i++)
+	{
+		fill_T(i);
+	}
 
-    #ifndef SW
-	    uint64_t start_time = timer();
-    #endif
+   
     __zero_pad_opt__(0,t0,0,t1,0,t2,t0,t1,t2,r0,r1,r2,T,pad,R);
        
-    __aa_barrier__();
-    
-    #ifndef SW
-	    uint64_t stop_time = timer();
-	    uint64_t elapsed_time = stop_time - start_time;
-	    write_uint64("elapsed_time_pipe", elapsed_time);
-    #endif
+  
     __aa_barrier__();
 
     sendOutput(r0*r1*r2);

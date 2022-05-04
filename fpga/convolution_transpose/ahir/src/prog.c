@@ -65,28 +65,41 @@ void __aa_barrier__();
 
 uint16_t testConfigure()
 {
-    desc_input.number_of_dimensions = read_uint8 ("ConvTranspose_input_pipe"); 
+    desc_input.number_of_dimensions = read_uint8 ("ConvTranspose_input_pipe");
+    desc_input.number_of_dimensions = (desc_input.number_of_dimensions << 8) + read_uint8 ("ConvTranspose_input_pipe");
+
     int i;
     for(i = 0;i < desc_input.number_of_dimensions;i++){
         desc_input.dimensions[i] = read_uint8 ("ConvTranspose_input_pipe");
+        desc_input.dimensions[i] = (desc_input.dimensions[i] << 8) + read_uint8 ("ConvTranspose_input_pipe");
+
     }
 
     desc_kernel.number_of_dimensions = read_uint8 ("ConvTranspose_input_pipe");
+    desc_kernel.number_of_dimensions = (desc_kernel.number_of_dimensions << 8) + read_uint8 ("ConvTranspose_input_pipe");
+
     for(i = 0;i < desc_kernel.number_of_dimensions;i++){
         desc_kernel.dimensions[i] = read_uint8 ("ConvTranspose_input_pipe");
+        desc_kernel.dimensions[i] = (desc_kernel.dimensions[i] << 8) + read_uint8 ("ConvTranspose_input_pipe");
     }
 
-    for(i=0; i<2; i++)
+    for(i=0; i<2; i++) {
         stride[i] = read_uint8 ("ConvTranspose_input_pipe");
-
+        stride[i] = (stride[i] << 8) + read_uint8 ("ConvTranspose_input_pipe");
+        
+    }
     padding = read_uint8 ("ConvTranspose_input_pipe");
+    padding = (padding << 8) + read_uint8 ("ConvTranspose_input_pipe");
     
 	desc_output.dimensions[0] = read_uint8 ("ConvTranspose_input_pipe");
+    desc_output.dimensions[0] = (desc_output.dimensions[0] << 8) + read_uint8 ("ConvTranspose_input_pipe");
     desc_output.dimensions[1] = read_uint8 ("ConvTranspose_input_pipe");
+    desc_output.dimensions[1] = (desc_output.dimensions[1] << 8) + read_uint8 ("ConvTranspose_input_pipe");
     desc_output.dimensions[2] = read_uint8 ("ConvTranspose_input_pipe");
+    desc_output.dimensions[2] = (desc_output.dimensions[2] << 8) + read_uint8 ("ConvTranspose_input_pipe");
     
-	uint64_t input_size = desc_input.dimensions[0]*desc_input.dimensions[1]*desc_input.dimensions[2];
-    uint64_t kernel_size = desc_kernel.dimensions[0]*desc_kernel.dimensions[1]*desc_kernel.dimensions[2]*desc_kernel.dimensions[3];
+	uint32_t input_size = desc_input.dimensions[0]*desc_input.dimensions[1]*desc_input.dimensions[2];
+    uint32_t kernel_size = desc_kernel.dimensions[0]*desc_kernel.dimensions[1]*desc_kernel.dimensions[2]*desc_kernel.dimensions[3];
     for(i = 0; i < (input_size >> 2); i ++)
     {
         uint64_t element;
@@ -109,7 +122,7 @@ uint16_t testConfigure()
     for(i = 0; i < output_size>>2; i++)
         output.data_array[i] = 0;
 
-    return(input_size);
+    return(1);
 }
 
 void sendOutput()
@@ -199,7 +212,7 @@ void convTranspose()
     __aa_barrier__();
 
     #ifndef SW
-	    uint64_t start_time = timer();
+	    uint32_t start_time = timer();
     #endif
 
     write_uint16("Block0_start", rv);
@@ -213,8 +226,8 @@ void convTranspose()
     __aa_barrier__();
 
     #ifndef SW
-	    uint64_t stop_time = timer();
-	    uint64_t elapsed_time = stop_time - start_time;
+	    uint32_t stop_time = timer();
+	    uint32_t elapsed_time = stop_time - start_time;
 	    write_uint64("elapsed_time_pipe", elapsed_time);
     #endif
     

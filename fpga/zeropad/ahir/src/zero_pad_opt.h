@@ -11,14 +11,6 @@
 #include <assert.h>
 
 void zeropad3D();
-void zeropad3D_A();
-void zeropad3D_B();
-void zeropad3D_C();
-void zeropad3D_D();
-// void zeropad3D_E();
-// void zeropad3D_F();
-// void zeropad3D_G();
-// void zeropad3D_H();
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
@@ -50,6 +42,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 		break_flag = __Check_break_flag__(i,j,k,row_high,col_high,dim2T,j1,pad_reg);\
 		if(break_flag)\
 			break;\
+	__loop_pipeline_var__\
 	}\
 })
 

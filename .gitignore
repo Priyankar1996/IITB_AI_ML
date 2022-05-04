@@ -26,3 +26,5 @@ C/modules/src/readWriteTensorsFromStandardIO.c
 C/modules/src/zero_pad_tensor.c
 C/modules/util/zero_pad_tensor_test.c
 .vscode/c_cpp_properties.json
+students/Ajinkya_Zero_padding/hw/zeropad_hw/hw_aman_single_thread/vhpi.log
+

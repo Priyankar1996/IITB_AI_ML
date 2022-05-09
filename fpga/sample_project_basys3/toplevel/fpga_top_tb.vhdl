@@ -37,7 +37,7 @@ begin
     process(CLK100MHZ)
     variable i : integer := 0;
     begin
-        if (i < 50000) then
+        if (i < 30000) then
         CLK100MHZ <= not CLK100MHZ after 5 ns;
         report "Clock switched";
         report std_logic'image(Rx) & " " & std_logic'image(Tx);
@@ -51,10 +51,12 @@ begin
 
    process
    begin
+        btnC <= '0';
+        wait for 1 us;
         btnC <= '1';
-        wait for 100 ns;
+        wait for 1 us;
         btnc <= '0';
-        wait for 100 ns;
+        wait for 1 us;
 
         Rx <= '1'; wait for 9 us;
         Rx <= '1'; wait for 9 us;

@@ -5,6 +5,8 @@ use ieee.numeric_std.all;
 library RtUart;
 use RtUart.RtUartComponents.all;
 
+-- library unisim;
+-- use unisim.vcomponents.all; -- for 7-series FPGA's
 
 entity fpga_top is
 port(
@@ -97,8 +99,8 @@ begin
 				
 				process (CLK100MHz)
 				begin
-					assert false report "UART TX2CON " & integer'image(to_integer(unsigned(data_in_pipe_write_data))) severity note;
-					assert false report "UART TX2CON(0) " & std_logic'image(data_in_pipe_write_data(0)) severity note;
+					assert false report "UART CONSOLE2RX " & integer'image(to_integer(unsigned(data_in_pipe_write_data))) severity note;
+					assert false report "UART CONSOLE2RX(0) " & std_logic'image(data_in_pipe_write_data(0)) severity note;
     		if (CLK100MHz'event and CLK100MHz = '1') then
 			reset_sync <= btnC;
     		end if;

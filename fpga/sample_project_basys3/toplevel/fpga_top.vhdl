@@ -2,9 +2,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-library unisim;
-use unisim.vcomponents.all; -- for 7-series FPGA's
-
 library RtUart;
 use RtUart.RtUartComponents.all;
 
@@ -13,7 +10,7 @@ entity fpga_top is
 port(
       Rx : in std_logic;
       Tx : out std_logic;
-      LED: out std_logic;
+      LED: out std_logic_vector(7 downto 0);
       CLK100MHZ: in std_logic;
       btnC: in std_logic
     );
@@ -69,7 +66,6 @@ begin
 			end if;
 		end if;
 	end process;
-	LED <= LED_SIG;
 
 	ahir_inst: ahir_system
 		port map (
@@ -81,6 +77,7 @@ begin
     			data_out_pipe_read_req  => data_out_pipe_read_req ,
     			data_out_pipe_read_ack  => data_out_pipe_read_ack 
 		);
+	LED <= data_out_pipe_read_data;
 	uart_inst:
 		configurable_self_tuning_uart
 			port map (
@@ -96,11 +93,12 @@ begin
 					CONSOLE_to_RX_pipe_read_req  => data_in_pipe_write_ack ,
 					CONSOLE_to_RX_pipe_read_ack => data_in_pipe_write_req
 				);
-
-	BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));
-
- 	process (CLK100MHz)
-  	begin
+				BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));
+				
+				process (CLK100MHz)
+				begin
+					assert false report "UART TX2CON " & integer'image(to_integer(unsigned(data_in_pipe_write_data))) severity note;
+					assert false report "UART TX2CON(0) " & std_logic'image(data_in_pipe_write_data(0)) severity note;
     		if (CLK100MHz'event and CLK100MHz = '1') then
 			reset_sync <= btnC;
     		end if;

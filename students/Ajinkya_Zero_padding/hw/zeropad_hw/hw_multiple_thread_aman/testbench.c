@@ -44,7 +44,7 @@ DEFINE_THREAD(zeropad3D_H);
 #endif
 
 SizedTensor_16K T,R;
-uint16_t pad;
+uint8_t pad;
 TensorDescriptor des_inp,des_out;
 
 int main(int argc,char **argv)
@@ -73,24 +73,25 @@ int main(int argc,char **argv)
 
     #ifdef SW
         init_pipe_handler();
-        register_pipe ("zeropad_input_pipe",2,16,PIPE_FIFO_MODE);
-        register_pipe ("zeropad_output_pipe",2,16,PIPE_FIFO_MODE);
+        register_pipe ("zeropad_input_pipe",2,8,PIPE_FIFO_MODE);
+        register_pipe ("zeropad_output_pipe",2,8,PIPE_FIFO_MODE);
 		register_pipe ("Block0_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block1_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block2_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block3_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block4_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block5_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block6_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block7_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block0_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block1_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block1_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block2_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block2_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block3_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block3_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block4_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block4_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block5_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block5_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block6_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block6_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block7_starting",1,16,PIPE_FIFO_MODE);
 		register_pipe ("Block7_complete",1,16,PIPE_FIFO_MODE);
+
         
 		PTHREAD_DECL(zeropad3D);
 		PTHREAD_DECL(zeropad3D_A);
@@ -101,6 +102,7 @@ int main(int argc,char **argv)
 		PTHREAD_DECL(zeropad3D_F);
 		PTHREAD_DECL(zeropad3D_G);
 		PTHREAD_DECL(zeropad3D_H);
+
 		
 		PTHREAD_CREATE(zeropad3D);
 		PTHREAD_CREATE(zeropad3D_A);
@@ -111,6 +113,7 @@ int main(int argc,char **argv)
 		PTHREAD_CREATE(zeropad3D_F);
 		PTHREAD_CREATE(zeropad3D_G);
 		PTHREAD_CREATE(zeropad3D_H);
+
     #endif
 
     fprintf(stderr,"Reading files\n");
@@ -118,62 +121,31 @@ int main(int argc,char **argv)
 	fscanf(input_file,"%hhd",&rand_input_data);
     
     //Take datatype as input
-    #ifdef __U8
-		des_inp.data_type = u8;
-	#endif
-	#ifdef __U16
-		des_inp.data_type = u16;
-	#endif
-	#ifdef __U32
-		des_inp.data_type = u32;
-	#endif
-	#ifdef __U64
-		des_inp.data_type = u64;
-	#endif
-	#ifdef __I8
-		des_inp.data_type = i8;
-	#endif
+    
 	#ifdef __I16
 		des_inp.data_type = i16;
 	#endif
-	#ifdef __I32
-		des_inp.data_type = i32;
-	#endif
-	#ifdef __I64
-		des_inp.data_type = i64;
-	#endif
-	#ifdef __F8
-		des_inp.data_type = float8;
-	#endif
-	#ifdef __F16
-        des_inp.data_type = float16;
-	#endif
-	#ifdef __F32
-		des_inp.data_type = float32;
-	#endif
-	#ifdef __F64
-		des_inp.data_type = float64;
-	#endif
+	
 
     fscanf(input_file,"%hhd",&des_inp.row_major_form);
-	write_uint16("zeropad_input_pipe",des_inp.row_major_form);
+	write_uint8("zeropad_input_pipe",des_inp.row_major_form);
     fscanf(input_file,"%d",&des_inp.number_of_dimensions);
-	write_uint16("zeropad_input_pipe",des_inp.number_of_dimensions);
+	write_uint8("zeropad_input_pipe",des_inp.number_of_dimensions);
 	int ii;
 	for (ii = 0;ii < des_inp.number_of_dimensions;ii++){
 		fscanf(input_file,"%d",&des_inp.dimensions[ii]);
-        write_uint16("zeropad_input_pipe",des_inp.dimensions[ii]);
+        write_uint8("zeropad_input_pipe",des_inp.dimensions[ii]);
 	}
 	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",des_inp.dimensions[0],des_inp.dimensions[1],des_inp.dimensions[2]);
 
 	fscanf(param_file,"%d",&pad);
-	write_uint16("zeropad_input_pipe",pad);
+	write_uint8("zeropad_input_pipe",pad);
 	
 	fprintf(stderr,"Read pad value:%d\n",pad);
 	__UpdateOutputDescriptorZeropadTensors__(des_inp,pad,des_out);
     fprintf(stderr,"Read output descriptor %d,%d,%d.\n",des_out.dimensions[0],des_out.dimensions[1],des_out.dimensions[2]);
 	for(ii = 0;ii < 3;ii++){
-		write_uint16("zeropad_input_pipe",des_out.dimensions[ii]);
+		write_uint8("zeropad_input_pipe",des_out.dimensions[ii]);
 	}
 
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
@@ -185,7 +157,8 @@ int main(int argc,char **argv)
 		{
 			if (rand_input_data)	temp[ii&3] = rand();	//Random data
 			else temp[ii&3] = ii+1;	
-			write_uint16("zeropad_input_pipe",temp[ii&3]);
+			write_uint8("zeropad_input_pipe",temp[ii&3]>>8);
+			write_uint8("zeropad_input_pipe",temp[ii&3]);
 			//fprintf(stderr,"%d\n",temp[ii&3]);				//Sequential data
 			if ((ii&3)==3) T.data_array[ii/4] = *(uint64_t*)temp;
 		}
@@ -205,7 +178,8 @@ int main(int argc,char **argv)
 		__dt__ val;
 		for (ii = 0; ii < (size); ii++)
 		{
-			val = read_uint16 ("zeropad_output_pipe");
+			val = read_uint8 ("zeropad_output_pipe");
+			val = (val <<8) + read_uint8("zeropad_output_pipe");
 			fprintf(stderr,"%lu\n",val);		
 		}
 	}		
@@ -233,6 +207,7 @@ int main(int argc,char **argv)
 		PTHREAD_CANCEL(zeropad3D_F);
 		PTHREAD_CANCEL(zeropad3D_G);
 		PTHREAD_CANCEL(zeropad3D_H);
+
 	    close_pipe_handler();
     #endif
 return 0;

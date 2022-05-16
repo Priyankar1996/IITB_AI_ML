@@ -1,0 +1,1037 @@
+$record [structx_x__SizedTensor_16K]  < $array[16384] $of $uint<64> > 
+$record [structx_x__TensorDescriptor]  < $uint<32> >  < $uint<32> >  < $uint<32> >  < $array[64] $of $uint<32> > 
+$pipe  Block0_complete : $uint<16>  $depth 1 
+// can point into 
+$pipe  Block0_starting : $uint<16>  $depth 1 
+// can point into 
+$pipe  Block1_complete : $uint<16>  $depth 1 
+// can point into 
+$pipe  Block1_starting : $uint<16>  $depth 1 
+// can point into 
+$pipe  Block2_complete : $uint<16>  $depth 1 
+// can point into 
+$pipe  Block2_starting : $uint<16>  $depth 1 
+// can point into 
+$pipe  Block3_complete : $uint<16>  $depth 1 
+// can point into 
+$pipe  Block3_starting : $uint<16>  $depth 1 
+// can point into 
+$storage  R :  structx_x__SizedTensor_16K  // memory space index = 4  base address = 0  word size = 64
+// can point into 
+$storage  T :  structx_x__SizedTensor_16K  // memory space index = 3  base address = 0  word size = 64
+// can point into 
+$storage  count : $uint<64> // memory space index = 5  base address = 0  word size = 64
+// can point into 
+$storage  des_inp :  structx_x__TensorDescriptor  // memory space index = 0  base address = 0  word size = 32
+// can point into 
+$storage  des_out :  structx_x__TensorDescriptor  // memory space index = 2  base address = 0  word size = 32
+// can point into 
+$pipe  elapsed_time_pipe : $uint<64>  $depth 1 
+// can point into 
+$storage  pad : $uint<8> // memory space index = 1  base address = 0  word size = 8
+// can point into 
+$pipe  zeropad_input_pipe : $uint<8>  $depth 2 
+// can point into 
+$pipe  zeropad_output_pipe : $uint<8>  $depth 2 
+// can point into 
+$module [progx_xoptx_xo_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $null
+  $attribute initializer 
+}
+$module [global_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $parallelblock[pb]
+  {
+    $call progx_xoptx_xo_storage_initializer_ () () 
+  }
+}
+$module [sendOutput]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    iNsTr_0 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp := ->(iNsTr_0) $buffering 1// bits of buffering = 32. 
+    iNsTr_1 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp1 := ->(iNsTr_1) $buffering 1// bits of buffering = 32. 
+    iNsTr_2 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp2 := ->(iNsTr_2) $buffering 1// bits of buffering = 32. 
+    mul := (tmp1 * tmp) $buffering 1// bits of buffering = 32. 
+    mul3 := (mul * tmp2) $buffering 1// bits of buffering = 32. 
+    conv := ($cast ($uint<64>) mul3 ) $buffering 1// bits of buffering = 64. 
+    shr76x_xmask := (conv & ($bitcast ($uint<64>) _b0000000000000000000000000000000011111111111111111111111111111100  )) $buffering 1// bits of buffering = 64. 
+    cmp77 := (shr76x_xmask == ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )) $buffering 1// bits of buffering = 1. 
+    $if cmp77 $then 
+    $place[entry_forx_xend]
+    $else 
+    $place[entry_bbx_xnph]
+    $endif
+    $merge entry_bbx_xnph 
+    $endmerge
+    tmp3 := (tmp1 * tmp) $buffering 1// bits of buffering = 32. 
+    tmp4 := (tmp3 * tmp2) $buffering 1// bits of buffering = 32. 
+    tmp5 := ($cast ($uint<64>) tmp4 ) $buffering 1// bits of buffering = 64. 
+    tmp6 := (tmp5 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )) $buffering 1// bits of buffering = 64. 
+    tmp7 := (tmp6 > ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1// bits of buffering = 1. 
+    umax8 := ( $mux tmp7 tmp6  ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  ) )  $buffering 1// bits of buffering = 64. 
+    $place[bbx_xnph_forx_xbody]
+    $merge bbx_xnph_forx_xbody forx_xbody_forx_xbody 
+    $phi indvar := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph_forx_xbody 			  ($cast ($uint<64>) indvarx_xnext ) $on   forx_xbody_forx_xbody 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar]) $buffering 1// bits of buffering = 32. 
+    tmp11 := ->(arrayidx) $buffering 1// bits of buffering = 64. 
+    conv14 := ($cast ($uint<8>) tmp11 ) $buffering 1// bits of buffering = 8. 
+    shr17 := (tmp11 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    conv20 := ($cast ($uint<8>) shr17 ) $buffering 1// bits of buffering = 8. 
+    shr23 := (tmp11 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000010000  )) $buffering 1// bits of buffering = 64. 
+    conv26 := ($cast ($uint<8>) shr23 ) $buffering 1// bits of buffering = 8. 
+    shr29 := (tmp11 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000011000  )) $buffering 1// bits of buffering = 64. 
+    conv32 := ($cast ($uint<8>) shr29 ) $buffering 1// bits of buffering = 8. 
+    shr35 := (tmp11 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000100000  )) $buffering 1// bits of buffering = 64. 
+    conv38 := ($cast ($uint<8>) shr35 ) $buffering 1// bits of buffering = 8. 
+    shr41 := (tmp11 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000101000  )) $buffering 1// bits of buffering = 64. 
+    conv44 := ($cast ($uint<8>) shr41 ) $buffering 1// bits of buffering = 8. 
+    shr47 := (tmp11 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000110000  )) $buffering 1// bits of buffering = 64. 
+    conv50 := ($cast ($uint<8>) shr47 ) $buffering 1// bits of buffering = 8. 
+    shr53 := (tmp11 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000111000  )) $buffering 1// bits of buffering = 64. 
+    conv56 := ($cast ($uint<8>) shr53 ) $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv56 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv50 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv44 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv38 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv32 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv26 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv20 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv14 $buffering 1// bits of buffering = 8. 
+    indvarx_xnext := (indvar + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1// bits of buffering = 64. 
+    exitcond9 := (indvarx_xnext == umax8) $buffering 1// bits of buffering = 1. 
+    $if exitcond9 $then 
+    $place[forx_xbody_forx_xendx_xloopexit]
+    $else 
+    $place[forx_xbody_forx_xbody]
+    $endif
+    $merge forx_xbody_forx_xendx_xloopexit 
+    $endmerge
+    $place[forx_xendx_xloopexit_forx_xend]
+    $merge entry_forx_xend forx_xendx_xloopexit_forx_xend 
+    $endmerge
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [testConfigure]
+$in ()
+$out ( ret_val__ : $uint<16>  )
+$is
+{
+  $branchblock [body]
+  {
+    iNsTr_0 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_0) := ($bitcast ($uint<32>) _b00000000000000000000000000000101  ) $buffering 1// bits of buffering = 32. 
+    call := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv := ($cast ($uint<32>) call ) $buffering 1// bits of buffering = 32. 
+    iNsTr_3 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_3) := conv $buffering 1// bits of buffering = 32. 
+    call1 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv2 := ($cast ($uint<32>) call1 ) $buffering 1// bits of buffering = 32. 
+    iNsTr_6 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_6) := conv2 $buffering 1// bits of buffering = 32. 
+    cmp87 := (call1 == ($bitcast ($uint<8>) _b00000000  )) $buffering 1// bits of buffering = 1. 
+    call588 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    $if cmp87 $then 
+    $place[entry_forx_xend]
+    $else 
+    $place[entry_forx_xbodyx_xpreheader]
+    $endif
+    $merge entry_forx_xbodyx_xpreheader 
+    $endmerge
+    $place[forx_xbodyx_xpreheader_forx_xbody]
+    $merge forx_xbody_forx_xbody forx_xbodyx_xpreheader_forx_xbody 
+    $phi indvar97 := 			  ($cast ($uint<64>) tmp99 ) $on   forx_xbody_forx_xbody 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   forx_xbodyx_xpreheader_forx_xbody 
+    // type of target is $uint<64>
+    $phi call590 := 			  ($cast ($uint<8>) call5 ) $on   forx_xbody_forx_xbody 			  ($cast ($uint<8>) call588 ) $on   forx_xbodyx_xpreheader_forx_xbody 
+    // type of target is $uint<8>
+    $endmerge
+    tmp := (indvar97 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1// bits of buffering = 64. 
+    inc := ($cast ($uint<32>) tmp ) $buffering 1// bits of buffering = 32. 
+    arrayidx := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][indvar97]) $buffering 1// bits of buffering = 32. 
+    conv6 := ($cast ($uint<32>) call590 ) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx) := conv6 $buffering 1// bits of buffering = 32. 
+    tmp99 := (indvar97 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1// bits of buffering = 64. 
+    iNsTr_28 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp3 := ->(iNsTr_28) $buffering 1// bits of buffering = 32. 
+    cmp := (inc < tmp3) $buffering 1// bits of buffering = 1. 
+    call5 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    $if cmp $then 
+    $place[forx_xbody_forx_xbody]
+    $else 
+    $place[forx_xbody_forx_xendx_xloopexit]
+    $endif
+    $merge forx_xbody_forx_xendx_xloopexit 
+    $phi call5x_xlcssa1 := 			  ($cast ($uint<8>) call5 ) $on   forx_xbody_forx_xendx_xloopexit 
+    // type of target is $uint<8>
+    $endmerge
+    $place[forx_xendx_xloopexit_forx_xend]
+    $merge entry_forx_xend forx_xendx_xloopexit_forx_xend 
+    $phi call5x_xlcssa := 			  ($cast ($uint<8>) call588 ) $on   entry_forx_xend 			  ($cast ($uint<8>) call5x_xlcssa1 ) $on   forx_xendx_xloopexit_forx_xend 
+    // type of target is $uint<8>
+    $endmerge
+    pad := call5x_xlcssa $buffering 1// bits of buffering = 8. 
+    call10 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv11 := ($cast ($uint<32>) call10 ) $buffering 1// bits of buffering = 32. 
+    iNsTr_12 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_12) := conv11 $buffering 1// bits of buffering = 32. 
+    call12 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv13 := ($cast ($uint<32>) call12 ) $buffering 1// bits of buffering = 32. 
+    iNsTr_15 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_15) := conv13 $buffering 1// bits of buffering = 32. 
+    call14 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv15 := ($cast ($uint<32>) call14 ) $buffering 1// bits of buffering = 32. 
+    iNsTr_18 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_18) := conv15 $buffering 1// bits of buffering = 32. 
+    iNsTr_20 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp17 := ->(iNsTr_20) $buffering 1// bits of buffering = 32. 
+    iNsTr_21 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp18 := ->(iNsTr_21) $buffering 1// bits of buffering = 32. 
+    iNsTr_22 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp19 := ->(iNsTr_22) $buffering 1// bits of buffering = 32. 
+    mul := (tmp18 * tmp17) $buffering 1// bits of buffering = 32. 
+    mul20 := (mul * tmp19) $buffering 1// bits of buffering = 32. 
+    conv21 := ($cast ($uint<64>) mul20 ) $buffering 1// bits of buffering = 64. 
+    shr83x_xmask := (conv21 & ($bitcast ($uint<64>) _b0000000000000000000000000000000011111111111111111111111111111100  )) $buffering 1// bits of buffering = 64. 
+    cmp2684 := (shr83x_xmask == ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )) $buffering 1// bits of buffering = 1. 
+    $if cmp2684 $then 
+    $place[forx_xend_forx_xend79]
+    $else 
+    $place[forx_xend_bbx_xnph]
+    $endif
+    $merge forx_xend_bbx_xnph 
+    $endmerge
+    tmp4 := (tmp18 * tmp17) $buffering 1// bits of buffering = 32. 
+    tmp5 := (tmp4 * tmp19) $buffering 1// bits of buffering = 32. 
+    tmp6 := ($cast ($uint<64>) tmp5 ) $buffering 1// bits of buffering = 64. 
+    tmp7 := (tmp6 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )) $buffering 1// bits of buffering = 64. 
+    tmp8 := (tmp7 > ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1// bits of buffering = 1. 
+    umax9 := ( $mux tmp8 tmp7  ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  ) )  $buffering 1// bits of buffering = 64. 
+    $place[bbx_xnph_forx_xbody28]
+    $merge bbx_xnph_forx_xbody28 forx_xbody28_forx_xbody28 
+    $phi indvar := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph_forx_xbody28 			  ($cast ($uint<64>) indvarx_xnext ) $on   forx_xbody28_forx_xbody28 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx75 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar]) $buffering 1// bits of buffering = 32. 
+    call30 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv31 := ($cast ($uint<64>) call30 ) $buffering 1// bits of buffering = 64. 
+    shl := (conv31 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    call33 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv35 := ($cast ($uint<64>) call33 ) $buffering 1// bits of buffering = 64. 
+    add := (shl | conv35) $buffering 1// bits of buffering = 64. 
+    shl37 := (add << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    call38 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv40 := ($cast ($uint<64>) call38 ) $buffering 1// bits of buffering = 64. 
+    add41 := (shl37 | conv40) $buffering 1// bits of buffering = 64. 
+    shl43 := (add41 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    call44 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv46 := ($cast ($uint<64>) call44 ) $buffering 1// bits of buffering = 64. 
+    add47 := (shl43 | conv46) $buffering 1// bits of buffering = 64. 
+    shl49 := (add47 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    call50 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv52 := ($cast ($uint<64>) call50 ) $buffering 1// bits of buffering = 64. 
+    add53 := (shl49 | conv52) $buffering 1// bits of buffering = 64. 
+    shl55 := (add53 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    call56 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv58 := ($cast ($uint<64>) call56 ) $buffering 1// bits of buffering = 64. 
+    add59 := (shl55 | conv58) $buffering 1// bits of buffering = 64. 
+    shl61 := (add59 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    call62 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv64 := ($cast ($uint<64>) call62 ) $buffering 1// bits of buffering = 64. 
+    add65 := (shl61 | conv64) $buffering 1// bits of buffering = 64. 
+    shl67 := (add65 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1// bits of buffering = 64. 
+    call68 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv70 := ($cast ($uint<64>) call68 ) $buffering 1// bits of buffering = 64. 
+    add71 := (shl67 | conv70) $buffering 1// bits of buffering = 64. 
+    ->(arrayidx75) := add71 $buffering 1// bits of buffering = 64. 
+    indvarx_xnext := (indvar + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1// bits of buffering = 64. 
+    exitcond10 := (indvarx_xnext == umax9) $buffering 1// bits of buffering = 1. 
+    $if exitcond10 $then 
+    $place[forx_xbody28_forx_xend79x_xloopexit]
+    $else 
+    $place[forx_xbody28_forx_xbody28]
+    $endif
+    $merge forx_xbody28_forx_xend79x_xloopexit 
+    $endmerge
+    $place[forx_xend79x_xloopexit_forx_xend79]
+    $merge forx_xend_forx_xend79 forx_xend79x_xloopexit_forx_xend79 
+    $endmerge
+    ret_val__ := ($cast ($uint<16>) mul20 ) $buffering 1// bits of buffering = 16. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [timer]
+$in ()
+$out ( c : $uint<64>  )
+$is
+{
+  c := count $buffering 1// bits of buffering = 64. 
+}
+$module [timerDaemon]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    $dopipeline $depth 3 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi ncount := 			  (ncount + 1 ) $on   $loopback 			  ($bitcast ($uint<64>) 0  ) $on   $entry 
+    // type of target is $uint<64>
+    $endmerge
+    count := ncount $buffering 1// bits of buffering = 64. 
+    $while 1 
+  }
+}
+$module [zeropad3D]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    $call testConfigure () (call ) 
+    $barrier
+    $call timer () (call1 ) 
+    conv := ($bitcast ($uint<64>) ($cast ($int<64>) call1 ) ) $buffering 1// bits of buffering = 64. 
+    Block0_starting := call $buffering 1// bits of buffering = 16. 
+    Block1_starting := call $buffering 1// bits of buffering = 16. 
+    Block2_starting := call $buffering 1// bits of buffering = 16. 
+    Block3_starting := call $buffering 1// bits of buffering = 16. 
+    call6 := Block0_complete $buffering 1// bits of buffering = 16. 
+    call8 := Block1_complete $buffering 1// bits of buffering = 16. 
+    call10 := Block2_complete $buffering 1// bits of buffering = 16. 
+    call12 := Block3_complete $buffering 1// bits of buffering = 16. 
+    $barrier
+    $call timer () (call14 ) 
+    conv15 := ($bitcast ($uint<64>) ($cast ($int<64>) call14 ) ) $buffering 1// bits of buffering = 64. 
+    sub := (conv15 - conv) $buffering 1// bits of buffering = 64. 
+    elapsed_time_pipe := sub $buffering 1// bits of buffering = 64. 
+    $barrier
+    $call sendOutput () () 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_A]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block0_starting $buffering 1// bits of buffering = 16. 
+    $barrier
+    tmp := pad $buffering 1// bits of buffering = 8. 
+    iNsTr_2 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp2 := ->(iNsTr_2) $buffering 1// bits of buffering = 32. 
+    iNsTr_3 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp5 := ->(iNsTr_3) $buffering 1// bits of buffering = 32. 
+    iNsTr_4 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp11 := ->(iNsTr_4) $buffering 1// bits of buffering = 32. 
+    iNsTr_5 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp14 := ->(iNsTr_5) $buffering 1// bits of buffering = 32. 
+    sext := (tmp5 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv23 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext179 := (tmp11 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv27 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext179 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext172 := (tmp14 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv29 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext172 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    mul30 := (conv29 * conv27) $buffering 1// bits of buffering = 32. 
+    conv38 := ($cast ($uint<32>) tmp ) $buffering 1// bits of buffering = 32. 
+    sext180 := (mul30 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv74 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext180 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext181 := (tmp2 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv130 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext181 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    shl := (conv38 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    mul := (tmp2 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    sext173 := (mul * conv23) $buffering 1// bits of buffering = 32. 
+    conv92 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext173 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody ifx_xend170_whilex_xbody 
+    $phi ix_x2 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) ix_x1x_xph ) $on   ifx_xend170_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) jx_x0x_xph ) $on   ifx_xend170_whilex_xbody 
+    // type of target is $uint<16>
+    $phi kx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend170_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    conv36 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    cmp := (($bitcast ($int<32>) conv36 ) < ($bitcast ($int<32>) conv38 )) $buffering 1// bits of buffering = 1. 
+    $if cmp $then 
+    $place[whilex_xbody_ifx_xthen]
+    $else 
+    $place[whilex_xbody_lorx_xlhsx_xfalse]
+    $endif
+    $merge whilex_xbody_lorx_xlhsx_xfalse 
+    $endmerge
+    iNsTr_10 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp42 := ->(iNsTr_10) $buffering 1// bits of buffering = 32. 
+    div := (tmp42 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add := (div + conv38) $buffering 1// bits of buffering = 32. 
+    cmp45 := (conv36 < add) $buffering 1// bits of buffering = 1. 
+    $if cmp45 $then 
+    $place[lorx_xlhsx_xfalse_lorx_xlhsx_xfalse47]
+    $else 
+    $place[lorx_xlhsx_xfalse_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_lorx_xlhsx_xfalse47 
+    $endmerge
+    conv49 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    cmp52 := (($bitcast ($int<32>) conv49 ) < ($bitcast ($int<32>) conv38 )) $buffering 1// bits of buffering = 1. 
+    $if cmp52 $then 
+    $place[lorx_xlhsx_xfalse47_ifx_xthen]
+    $else 
+    $place[lorx_xlhsx_xfalse47_lorx_xlhsx_xfalse54]
+    $endif
+    $merge lorx_xlhsx_xfalse47_lorx_xlhsx_xfalse54 
+    $endmerge
+    iNsTr_18 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp57 := ->(iNsTr_18) $buffering 1// bits of buffering = 32. 
+    div58 := (tmp57 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add61 := (div58 + conv38) $buffering 1// bits of buffering = 32. 
+    cmp62 := (conv49 < add61) $buffering 1// bits of buffering = 1. 
+    $if cmp62 $then 
+    $place[lorx_xlhsx_xfalse54_ifx_xelse]
+    $else 
+    $place[lorx_xlhsx_xfalse54_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_ifx_xthen lorx_xlhsx_xfalse47_ifx_xthen lorx_xlhsx_xfalse54_ifx_xthen whilex_xbody_ifx_xthen 
+    $endmerge
+    conv66 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    conv70 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    mul71 := (conv70 * conv27) $buffering 1// bits of buffering = 32. 
+    mul77 := (conv36 * conv74) $buffering 1// bits of buffering = 32. 
+    add72 := (mul71 + mul77) $buffering 1// bits of buffering = 32. 
+    add78 := (add72 + conv66) $buffering 1// bits of buffering = 32. 
+    shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) add78 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $place[ifx_xthen_ifx_xend]
+    $merge lorx_xlhsx_xfalse54_ifx_xelse 
+    $endmerge
+    conv82 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    sub := (conv49 - conv38) $buffering 1// bits of buffering = 32. 
+    mul89 := (sub * conv130) $buffering 1// bits of buffering = 32. 
+    sub97 := (conv36 - conv38) $buffering 1// bits of buffering = 32. 
+    mul98 := (sub97 * conv92) $buffering 1// bits of buffering = 32. 
+    add90 := (conv82 + mul98) $buffering 1// bits of buffering = 32. 
+    add99 := (add90 + mul89) $buffering 1// bits of buffering = 32. 
+    mul108 := (conv49 * conv27) $buffering 1// bits of buffering = 32. 
+    mul114 := (conv36 * conv74) $buffering 1// bits of buffering = 32. 
+    add109 := (mul108 + mul114) $buffering 1// bits of buffering = 32. 
+    add115 := (add109 + conv82) $buffering 1// bits of buffering = 32. 
+    shr117 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add99 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom118 := ($bitcast ($uint<64>) ($cast ($int<64>) shr117 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx119 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom118]) $buffering 1// bits of buffering = 32. 
+    tmp120 := ->(arrayidx119) $buffering 1// bits of buffering = 64. 
+    shr122 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add115 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom123 := ($bitcast ($uint<64>) ($cast ($int<64>) shr122 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx124 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom123]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx124) := tmp120 $buffering 1// bits of buffering = 64. 
+    $place[ifx_xelse_ifx_xend]
+    $merge ifx_xelse_ifx_xend ifx_xthen_ifx_xend 
+    $endmerge
+    conv127 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    add128 := (conv127 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1// bits of buffering = 32. 
+    cmp131 := (($bitcast ($int<32>) add128 ) < ($bitcast ($int<32>) conv130 )) $buffering 1// bits of buffering = 1. 
+    $if cmp131 $then 
+    $place[ifx_xend_ifx_xthen133]
+    $else 
+    $place[ifx_xend_ifx_xelse138]
+    $endif
+    $merge ifx_xend_ifx_xthen133 
+    $endmerge
+    add136 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1// bits of buffering = 16. 
+    $place[ifx_xthen133_ifx_xend170]
+    $merge ifx_xend_ifx_xelse138 
+    $endmerge
+    inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1// bits of buffering = 16. 
+    conv141 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_15 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp142 := ->(iNsTr_15) $buffering 1// bits of buffering = 32. 
+    div143 := (tmp142 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add146 := (div143 + shl) $buffering 1// bits of buffering = 32. 
+    cmp147 := (conv141 == add146) $buffering 1// bits of buffering = 1. 
+    inc152 := ($cast ($uint<16>) cmp147 ) $buffering 1// bits of buffering = 16. 
+    inc152x_xix_x2 := (inc152 + ix_x2) $buffering 1// bits of buffering = 16. 
+    jx_x2 := ( $mux cmp147 ($bitcast ($uint<16>) _b0000000000000000  )  inc )  $buffering 1// bits of buffering = 16. 
+    conv155 := ($bitcast ($uint<32>) ($cast ($int<32>) inc152x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_16 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp156 := ->(iNsTr_16) $buffering 1// bits of buffering = 32. 
+    div157 := (tmp156 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add161 := (div157 + shl) $buffering 1// bits of buffering = 32. 
+    cmp162 := (conv155 == add161) $buffering 1// bits of buffering = 1. 
+    $if cmp162 $then 
+    $place[ifx_xelse138_whilex_xend]
+    $else 
+    $place[ifx_xelse138_ifx_xend170]
+    $endif
+    $merge ifx_xelse138_ifx_xend170 ifx_xthen133_ifx_xend170 
+    $phi ix_x1x_xph := 			  ($cast ($uint<16>) ix_x2 ) $on   ifx_xthen133_ifx_xend170 			  ($cast ($uint<16>) inc152x_xix_x2 ) $on   ifx_xelse138_ifx_xend170 
+    // type of target is $uint<16>
+    $phi jx_x0x_xph := 			  ($cast ($uint<16>) jx_x1 ) $on   ifx_xthen133_ifx_xend170 			  ($cast ($uint<16>) jx_x2 ) $on   ifx_xelse138_ifx_xend170 
+    // type of target is $uint<16>
+    $phi kx_x0x_xph := 			  ($cast ($uint<16>) add136 ) $on   ifx_xthen133_ifx_xend170 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xelse138_ifx_xend170 
+    // type of target is $uint<16>
+    $endmerge
+    $place[ifx_xend170_whilex_xbody]
+    $merge ifx_xelse138_whilex_xend 
+    $endmerge
+    $barrier
+    Block0_complete := call $buffering 1// bits of buffering = 16. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_B]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block1_starting $buffering 1// bits of buffering = 16. 
+    $barrier
+    iNsTr_2 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp := ->(iNsTr_2) $buffering 1// bits of buffering = 32. 
+    div := (tmp >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    conv := ($cast ($uint<16>) div ) $buffering 1// bits of buffering = 16. 
+    tmp3 := pad $buffering 1// bits of buffering = 8. 
+    iNsTr_3 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp6 := ->(iNsTr_3) $buffering 1// bits of buffering = 32. 
+    iNsTr_4 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp15 := ->(iNsTr_4) $buffering 1// bits of buffering = 32. 
+    iNsTr_5 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp18 := ->(iNsTr_5) $buffering 1// bits of buffering = 32. 
+    sext182 := (tmp6 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv25 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext182 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext := (tmp << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    sext183 := (tmp15 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv31 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext183 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext175 := (tmp18 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv33 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext175 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    mul34 := (conv33 * conv31) $buffering 1// bits of buffering = 32. 
+    conv42 := ($cast ($uint<32>) tmp3 ) $buffering 1// bits of buffering = 32. 
+    sext184 := (mul34 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv78 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext184 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    shl := (conv42 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    sext176 := (sext * conv25) $buffering 1// bits of buffering = 32. 
+    conv96 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext176 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody ifx_xend173_whilex_xbody 
+    $phi ix_x2 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) ix_x1x_xph ) $on   ifx_xend173_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) conv ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) jx_x0x_xph ) $on   ifx_xend173_whilex_xbody 
+    // type of target is $uint<16>
+    $phi kx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend173_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    conv40 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    cmp := (($bitcast ($int<32>) conv40 ) < ($bitcast ($int<32>) conv42 )) $buffering 1// bits of buffering = 1. 
+    $if cmp $then 
+    $place[whilex_xbody_ifx_xthen]
+    $else 
+    $place[whilex_xbody_lorx_xlhsx_xfalse]
+    $endif
+    $merge whilex_xbody_lorx_xlhsx_xfalse 
+    $endmerge
+    iNsTr_10 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp46 := ->(iNsTr_10) $buffering 1// bits of buffering = 32. 
+    div47 := (tmp46 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add := (div47 + conv42) $buffering 1// bits of buffering = 32. 
+    cmp50 := (conv40 < add) $buffering 1// bits of buffering = 1. 
+    $if cmp50 $then 
+    $place[lorx_xlhsx_xfalse_lorx_xlhsx_xfalse52]
+    $else 
+    $place[lorx_xlhsx_xfalse_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_lorx_xlhsx_xfalse52 
+    $endmerge
+    conv54 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    cmp57 := (($bitcast ($int<32>) conv54 ) < ($bitcast ($int<32>) conv42 )) $buffering 1// bits of buffering = 1. 
+    $if cmp57 $then 
+    $place[lorx_xlhsx_xfalse52_ifx_xthen]
+    $else 
+    $place[lorx_xlhsx_xfalse52_lorx_xlhsx_xfalse59]
+    $endif
+    $merge lorx_xlhsx_xfalse52_lorx_xlhsx_xfalse59 
+    $endmerge
+    iNsTr_18 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp62 := ->(iNsTr_18) $buffering 1// bits of buffering = 32. 
+    add65 := (tmp62 + conv42) $buffering 1// bits of buffering = 32. 
+    cmp66 := (conv54 < add65) $buffering 1// bits of buffering = 1. 
+    $if cmp66 $then 
+    $place[lorx_xlhsx_xfalse59_ifx_xelse]
+    $else 
+    $place[lorx_xlhsx_xfalse59_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_ifx_xthen lorx_xlhsx_xfalse52_ifx_xthen lorx_xlhsx_xfalse59_ifx_xthen whilex_xbody_ifx_xthen 
+    $endmerge
+    conv70 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    conv74 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    mul75 := (conv74 * conv31) $buffering 1// bits of buffering = 32. 
+    mul81 := (conv40 * conv78) $buffering 1// bits of buffering = 32. 
+    add76 := (mul75 + mul81) $buffering 1// bits of buffering = 32. 
+    add82 := (add76 + conv70) $buffering 1// bits of buffering = 32. 
+    shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) add82 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $place[ifx_xthen_ifx_xend]
+    $merge lorx_xlhsx_xfalse59_ifx_xelse 
+    $endmerge
+    conv86 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    sub := (conv54 - conv42) $buffering 1// bits of buffering = 32. 
+    mul93 := (sub * conv25) $buffering 1// bits of buffering = 32. 
+    sub101 := (conv40 - conv42) $buffering 1// bits of buffering = 32. 
+    mul102 := (sub101 * conv96) $buffering 1// bits of buffering = 32. 
+    add94 := (conv86 + mul102) $buffering 1// bits of buffering = 32. 
+    add103 := (add94 + mul93) $buffering 1// bits of buffering = 32. 
+    mul112 := (conv54 * conv31) $buffering 1// bits of buffering = 32. 
+    mul118 := (conv40 * conv78) $buffering 1// bits of buffering = 32. 
+    add113 := (mul112 + mul118) $buffering 1// bits of buffering = 32. 
+    add119 := (add113 + conv86) $buffering 1// bits of buffering = 32. 
+    shr121 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add103 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom122 := ($bitcast ($uint<64>) ($cast ($int<64>) shr121 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx123 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom122]) $buffering 1// bits of buffering = 32. 
+    tmp124 := ->(arrayidx123) $buffering 1// bits of buffering = 64. 
+    shr126 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add119 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom127 := ($bitcast ($uint<64>) ($cast ($int<64>) shr126 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx128 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom127]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx128) := tmp124 $buffering 1// bits of buffering = 64. 
+    $place[ifx_xelse_ifx_xend]
+    $merge ifx_xelse_ifx_xend ifx_xthen_ifx_xend 
+    $endmerge
+    conv131 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    add132 := (conv131 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1// bits of buffering = 32. 
+    cmp135 := (($bitcast ($int<32>) add132 ) < ($bitcast ($int<32>) conv25 )) $buffering 1// bits of buffering = 1. 
+    $if cmp135 $then 
+    $place[ifx_xend_ifx_xthen137]
+    $else 
+    $place[ifx_xend_ifx_xelse142]
+    $endif
+    $merge ifx_xend_ifx_xthen137 
+    $endmerge
+    add140 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1// bits of buffering = 16. 
+    $place[ifx_xthen137_ifx_xend173]
+    $merge ifx_xend_ifx_xelse142 
+    $endmerge
+    inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1// bits of buffering = 16. 
+    conv145 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_15 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp146 := ->(iNsTr_15) $buffering 1// bits of buffering = 32. 
+    add149 := (tmp146 + shl) $buffering 1// bits of buffering = 32. 
+    cmp150 := (conv145 == add149) $buffering 1// bits of buffering = 1. 
+    inc155 := ($cast ($uint<16>) cmp150 ) $buffering 1// bits of buffering = 16. 
+    inc155x_xix_x2 := (inc155 + ix_x2) $buffering 1// bits of buffering = 16. 
+    jx_x2 := ( $mux cmp150 conv  inc )  $buffering 1// bits of buffering = 16. 
+    conv158 := ($bitcast ($uint<32>) ($cast ($int<32>) inc155x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_16 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp159 := ->(iNsTr_16) $buffering 1// bits of buffering = 32. 
+    div160 := (tmp159 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add164 := (div160 + shl) $buffering 1// bits of buffering = 32. 
+    cmp165 := (conv158 == add164) $buffering 1// bits of buffering = 1. 
+    $if cmp165 $then 
+    $place[ifx_xelse142_whilex_xend]
+    $else 
+    $place[ifx_xelse142_ifx_xend173]
+    $endif
+    $merge ifx_xelse142_ifx_xend173 ifx_xthen137_ifx_xend173 
+    $phi ix_x1x_xph := 			  ($cast ($uint<16>) inc155x_xix_x2 ) $on   ifx_xelse142_ifx_xend173 			  ($cast ($uint<16>) ix_x2 ) $on   ifx_xthen137_ifx_xend173 
+    // type of target is $uint<16>
+    $phi jx_x0x_xph := 			  ($cast ($uint<16>) jx_x2 ) $on   ifx_xelse142_ifx_xend173 			  ($cast ($uint<16>) jx_x1 ) $on   ifx_xthen137_ifx_xend173 
+    // type of target is $uint<16>
+    $phi kx_x0x_xph := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xelse142_ifx_xend173 			  ($cast ($uint<16>) add140 ) $on   ifx_xthen137_ifx_xend173 
+    // type of target is $uint<16>
+    $endmerge
+    $place[ifx_xend173_whilex_xbody]
+    $merge ifx_xelse142_whilex_xend 
+    $endmerge
+    $barrier
+    Block1_complete := call $buffering 1// bits of buffering = 16. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_C]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block2_starting $buffering 1// bits of buffering = 16. 
+    $barrier
+    iNsTr_2 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp := ->(iNsTr_2) $buffering 1// bits of buffering = 32. 
+    div := (tmp >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    conv := ($cast ($uint<16>) div ) $buffering 1// bits of buffering = 16. 
+    tmp2 := pad $buffering 1// bits of buffering = 8. 
+    iNsTr_3 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp5 := ->(iNsTr_3) $buffering 1// bits of buffering = 32. 
+    iNsTr_4 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp8 := ->(iNsTr_4) $buffering 1// bits of buffering = 32. 
+    iNsTr_5 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp14 := ->(iNsTr_5) $buffering 1// bits of buffering = 32. 
+    iNsTr_6 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp17 := ->(iNsTr_6) $buffering 1// bits of buffering = 32. 
+    sext := (tmp8 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv26 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext181 := (tmp14 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv30 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext181 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext174 := (tmp17 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv32 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext174 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    mul33 := (conv32 * conv30) $buffering 1// bits of buffering = 32. 
+    conv41 := ($cast ($uint<32>) tmp2 ) $buffering 1// bits of buffering = 32. 
+    sext182 := (mul33 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv77 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext182 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext183 := (tmp5 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv133 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext183 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    shl := (conv41 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    mul := (tmp5 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    sext175 := (mul * conv26) $buffering 1// bits of buffering = 32. 
+    conv95 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext175 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody ifx_xend172_whilex_xbody 
+    $phi ix_x2 := 			  ($cast ($uint<16>) conv ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) ix_x1x_xph ) $on   ifx_xend172_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) jx_x0x_xph ) $on   ifx_xend172_whilex_xbody 
+    // type of target is $uint<16>
+    $phi kx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend172_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    conv39 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    cmp := (($bitcast ($int<32>) conv39 ) < ($bitcast ($int<32>) conv41 )) $buffering 1// bits of buffering = 1. 
+    $if cmp $then 
+    $place[whilex_xbody_ifx_xthen]
+    $else 
+    $place[whilex_xbody_lorx_xlhsx_xfalse]
+    $endif
+    $merge whilex_xbody_lorx_xlhsx_xfalse 
+    $endmerge
+    iNsTr_11 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp45 := ->(iNsTr_11) $buffering 1// bits of buffering = 32. 
+    add := (tmp45 + conv41) $buffering 1// bits of buffering = 32. 
+    cmp48 := (conv39 < add) $buffering 1// bits of buffering = 1. 
+    $if cmp48 $then 
+    $place[lorx_xlhsx_xfalse_lorx_xlhsx_xfalse50]
+    $else 
+    $place[lorx_xlhsx_xfalse_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_lorx_xlhsx_xfalse50 
+    $endmerge
+    conv52 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    cmp55 := (($bitcast ($int<32>) conv52 ) < ($bitcast ($int<32>) conv41 )) $buffering 1// bits of buffering = 1. 
+    $if cmp55 $then 
+    $place[lorx_xlhsx_xfalse50_ifx_xthen]
+    $else 
+    $place[lorx_xlhsx_xfalse50_lorx_xlhsx_xfalse57]
+    $endif
+    $merge lorx_xlhsx_xfalse50_lorx_xlhsx_xfalse57 
+    $endmerge
+    iNsTr_19 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp60 := ->(iNsTr_19) $buffering 1// bits of buffering = 32. 
+    div61 := (tmp60 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add64 := (div61 + conv41) $buffering 1// bits of buffering = 32. 
+    cmp65 := (conv52 < add64) $buffering 1// bits of buffering = 1. 
+    $if cmp65 $then 
+    $place[lorx_xlhsx_xfalse57_ifx_xelse]
+    $else 
+    $place[lorx_xlhsx_xfalse57_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_ifx_xthen lorx_xlhsx_xfalse50_ifx_xthen lorx_xlhsx_xfalse57_ifx_xthen whilex_xbody_ifx_xthen 
+    $endmerge
+    conv69 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    conv73 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    mul74 := (conv73 * conv30) $buffering 1// bits of buffering = 32. 
+    mul80 := (conv39 * conv77) $buffering 1// bits of buffering = 32. 
+    add75 := (mul74 + mul80) $buffering 1// bits of buffering = 32. 
+    add81 := (add75 + conv69) $buffering 1// bits of buffering = 32. 
+    shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) add81 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $place[ifx_xthen_ifx_xend]
+    $merge lorx_xlhsx_xfalse57_ifx_xelse 
+    $endmerge
+    conv85 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    sub := (conv52 - conv41) $buffering 1// bits of buffering = 32. 
+    mul92 := (sub * conv133) $buffering 1// bits of buffering = 32. 
+    sub100 := (conv39 - conv41) $buffering 1// bits of buffering = 32. 
+    mul101 := (sub100 * conv95) $buffering 1// bits of buffering = 32. 
+    add93 := (conv85 + mul101) $buffering 1// bits of buffering = 32. 
+    add102 := (add93 + mul92) $buffering 1// bits of buffering = 32. 
+    mul111 := (conv52 * conv30) $buffering 1// bits of buffering = 32. 
+    mul117 := (conv39 * conv77) $buffering 1// bits of buffering = 32. 
+    add112 := (mul111 + mul117) $buffering 1// bits of buffering = 32. 
+    add118 := (add112 + conv85) $buffering 1// bits of buffering = 32. 
+    shr120 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add102 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom121 := ($bitcast ($uint<64>) ($cast ($int<64>) shr120 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx122 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom121]) $buffering 1// bits of buffering = 32. 
+    tmp123 := ->(arrayidx122) $buffering 1// bits of buffering = 64. 
+    shr125 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add118 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom126 := ($bitcast ($uint<64>) ($cast ($int<64>) shr125 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx127 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom126]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx127) := tmp123 $buffering 1// bits of buffering = 64. 
+    $place[ifx_xelse_ifx_xend]
+    $merge ifx_xelse_ifx_xend ifx_xthen_ifx_xend 
+    $endmerge
+    conv130 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    add131 := (conv130 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1// bits of buffering = 32. 
+    cmp134 := (($bitcast ($int<32>) add131 ) < ($bitcast ($int<32>) conv133 )) $buffering 1// bits of buffering = 1. 
+    $if cmp134 $then 
+    $place[ifx_xend_ifx_xthen136]
+    $else 
+    $place[ifx_xend_ifx_xelse141]
+    $endif
+    $merge ifx_xend_ifx_xthen136 
+    $endmerge
+    add139 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1// bits of buffering = 16. 
+    $place[ifx_xthen136_ifx_xend172]
+    $merge ifx_xend_ifx_xelse141 
+    $endmerge
+    inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1// bits of buffering = 16. 
+    conv144 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_16 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp145 := ->(iNsTr_16) $buffering 1// bits of buffering = 32. 
+    div146 := (tmp145 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    add149 := (div146 + shl) $buffering 1// bits of buffering = 32. 
+    cmp150 := (conv144 == add149) $buffering 1// bits of buffering = 1. 
+    inc155 := ($cast ($uint<16>) cmp150 ) $buffering 1// bits of buffering = 16. 
+    inc155x_xix_x2 := (inc155 + ix_x2) $buffering 1// bits of buffering = 16. 
+    jx_x2 := ( $mux cmp150 ($bitcast ($uint<16>) _b0000000000000000  )  inc )  $buffering 1// bits of buffering = 16. 
+    conv158 := ($bitcast ($uint<32>) ($cast ($int<32>) inc155x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_17 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp159 := ->(iNsTr_17) $buffering 1// bits of buffering = 32. 
+    add163 := (tmp159 + shl) $buffering 1// bits of buffering = 32. 
+    cmp164 := (conv158 == add163) $buffering 1// bits of buffering = 1. 
+    $if cmp164 $then 
+    $place[ifx_xelse141_whilex_xend]
+    $else 
+    $place[ifx_xelse141_ifx_xend172]
+    $endif
+    $merge ifx_xelse141_ifx_xend172 ifx_xthen136_ifx_xend172 
+    $phi ix_x1x_xph := 			  ($cast ($uint<16>) ix_x2 ) $on   ifx_xthen136_ifx_xend172 			  ($cast ($uint<16>) inc155x_xix_x2 ) $on   ifx_xelse141_ifx_xend172 
+    // type of target is $uint<16>
+    $phi jx_x0x_xph := 			  ($cast ($uint<16>) jx_x1 ) $on   ifx_xthen136_ifx_xend172 			  ($cast ($uint<16>) jx_x2 ) $on   ifx_xelse141_ifx_xend172 
+    // type of target is $uint<16>
+    $phi kx_x0x_xph := 			  ($cast ($uint<16>) add139 ) $on   ifx_xthen136_ifx_xend172 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xelse141_ifx_xend172 
+    // type of target is $uint<16>
+    $endmerge
+    $place[ifx_xend172_whilex_xbody]
+    $merge ifx_xelse141_whilex_xend 
+    $endmerge
+    $barrier
+    Block2_complete := call $buffering 1// bits of buffering = 16. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_D]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block3_starting $buffering 1// bits of buffering = 16. 
+    $barrier
+    iNsTr_2 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp := ->(iNsTr_2) $buffering 1// bits of buffering = 32. 
+    div := (tmp >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    conv := ($cast ($uint<16>) div ) $buffering 1// bits of buffering = 16. 
+    iNsTr_3 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp2 := ->(iNsTr_3) $buffering 1// bits of buffering = 32. 
+    div3 := (tmp2 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    conv4 := ($cast ($uint<16>) div3 ) $buffering 1// bits of buffering = 16. 
+    tmp6 := pad $buffering 1// bits of buffering = 8. 
+    iNsTr_4 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp9 := ->(iNsTr_4) $buffering 1// bits of buffering = 32. 
+    iNsTr_5 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    tmp18 := ->(iNsTr_5) $buffering 1// bits of buffering = 32. 
+    iNsTr_6 := @(des_out[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp21 := ->(iNsTr_6) $buffering 1// bits of buffering = 32. 
+    sext := (tmp << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv30 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext183 := (tmp18 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv34 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext183 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext176 := (tmp21 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv36 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext176 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    mul37 := (conv36 * conv34) $buffering 1// bits of buffering = 32. 
+    conv45 := ($cast ($uint<32>) tmp6 ) $buffering 1// bits of buffering = 32. 
+    sext184 := (mul37 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv80 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext184 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    sext185 := (tmp9 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    conv136 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext185 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    shl := (conv45 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1// bits of buffering = 32. 
+    mul := (tmp9 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1// bits of buffering = 32. 
+    sext177 := (mul * conv30) $buffering 1// bits of buffering = 32. 
+    conv98 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext177 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1// bits of buffering = 32. 
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody ifx_xend174_whilex_xbody 
+    $phi ix_x2 := 			  ($cast ($uint<16>) conv4 ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) ix_x1x_xph ) $on   ifx_xend174_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) conv ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) jx_x0x_xph ) $on   ifx_xend174_whilex_xbody 
+    // type of target is $uint<16>
+    $phi kx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend174_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    conv43 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    cmp := (($bitcast ($int<32>) conv43 ) < ($bitcast ($int<32>) conv45 )) $buffering 1// bits of buffering = 1. 
+    $if cmp $then 
+    $place[whilex_xbody_ifx_xthen]
+    $else 
+    $place[whilex_xbody_lorx_xlhsx_xfalse]
+    $endif
+    $merge whilex_xbody_lorx_xlhsx_xfalse 
+    $endmerge
+    iNsTr_11 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp49 := ->(iNsTr_11) $buffering 1// bits of buffering = 32. 
+    add := (tmp49 + conv45) $buffering 1// bits of buffering = 32. 
+    cmp52 := (conv43 < add) $buffering 1// bits of buffering = 1. 
+    $if cmp52 $then 
+    $place[lorx_xlhsx_xfalse_lorx_xlhsx_xfalse54]
+    $else 
+    $place[lorx_xlhsx_xfalse_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_lorx_xlhsx_xfalse54 
+    $endmerge
+    conv56 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    cmp59 := (($bitcast ($int<32>) conv56 ) < ($bitcast ($int<32>) conv45 )) $buffering 1// bits of buffering = 1. 
+    $if cmp59 $then 
+    $place[lorx_xlhsx_xfalse54_ifx_xthen]
+    $else 
+    $place[lorx_xlhsx_xfalse54_lorx_xlhsx_xfalse61]
+    $endif
+    $merge lorx_xlhsx_xfalse54_lorx_xlhsx_xfalse61 
+    $endmerge
+    iNsTr_19 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp64 := ->(iNsTr_19) $buffering 1// bits of buffering = 32. 
+    add67 := (tmp64 + conv45) $buffering 1// bits of buffering = 32. 
+    cmp68 := (conv56 < add67) $buffering 1// bits of buffering = 1. 
+    $if cmp68 $then 
+    $place[lorx_xlhsx_xfalse61_ifx_xelse]
+    $else 
+    $place[lorx_xlhsx_xfalse61_ifx_xthen]
+    $endif
+    $merge lorx_xlhsx_xfalse_ifx_xthen lorx_xlhsx_xfalse54_ifx_xthen lorx_xlhsx_xfalse61_ifx_xthen whilex_xbody_ifx_xthen 
+    $endmerge
+    conv72 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    conv76 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    mul77 := (conv76 * conv34) $buffering 1// bits of buffering = 32. 
+    mul83 := (conv43 * conv80) $buffering 1// bits of buffering = 32. 
+    add78 := (mul77 + mul83) $buffering 1// bits of buffering = 32. 
+    add84 := (add78 + conv72) $buffering 1// bits of buffering = 32. 
+    shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) add84 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $place[ifx_xthen_ifx_xend]
+    $merge lorx_xlhsx_xfalse61_ifx_xelse 
+    $endmerge
+    conv88 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    sub := (conv56 - conv45) $buffering 1// bits of buffering = 32. 
+    mul95 := (sub * conv136) $buffering 1// bits of buffering = 32. 
+    sub103 := (conv43 - conv45) $buffering 1// bits of buffering = 32. 
+    mul104 := (sub103 * conv98) $buffering 1// bits of buffering = 32. 
+    add96 := (conv88 + mul104) $buffering 1// bits of buffering = 32. 
+    add105 := (add96 + mul95) $buffering 1// bits of buffering = 32. 
+    mul114 := (conv56 * conv34) $buffering 1// bits of buffering = 32. 
+    mul120 := (conv43 * conv80) $buffering 1// bits of buffering = 32. 
+    add115 := (mul114 + mul120) $buffering 1// bits of buffering = 32. 
+    add121 := (add115 + conv88) $buffering 1// bits of buffering = 32. 
+    shr123 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add105 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom124 := ($bitcast ($uint<64>) ($cast ($int<64>) shr123 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx125 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom124]) $buffering 1// bits of buffering = 32. 
+    tmp126 := ->(arrayidx125) $buffering 1// bits of buffering = 64. 
+    shr128 := ($bitcast ($uint<32>) (($bitcast ($int<32>) add121 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1// bits of buffering = 32. 
+    idxprom129 := ($bitcast ($uint<64>) ($cast ($int<64>) shr128 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx130 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom129]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx130) := tmp126 $buffering 1// bits of buffering = 64. 
+    $place[ifx_xelse_ifx_xend]
+    $merge ifx_xelse_ifx_xend ifx_xthen_ifx_xend 
+    $endmerge
+    conv133 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    add134 := (conv133 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1// bits of buffering = 32. 
+    cmp137 := (($bitcast ($int<32>) add134 ) < ($bitcast ($int<32>) conv136 )) $buffering 1// bits of buffering = 1. 
+    $if cmp137 $then 
+    $place[ifx_xend_ifx_xthen139]
+    $else 
+    $place[ifx_xend_ifx_xelse144]
+    $endif
+    $merge ifx_xend_ifx_xthen139 
+    $endmerge
+    add142 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1// bits of buffering = 16. 
+    $place[ifx_xthen139_ifx_xend174]
+    $merge ifx_xend_ifx_xelse144 
+    $endmerge
+    inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1// bits of buffering = 16. 
+    conv147 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_16 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    tmp148 := ->(iNsTr_16) $buffering 1// bits of buffering = 32. 
+    add151 := (tmp148 + shl) $buffering 1// bits of buffering = 32. 
+    cmp152 := (conv147 == add151) $buffering 1// bits of buffering = 1. 
+    inc157 := ($cast ($uint<16>) cmp152 ) $buffering 1// bits of buffering = 16. 
+    inc157x_xix_x2 := (inc157 + ix_x2) $buffering 1// bits of buffering = 16. 
+    jx_x2 := ( $mux cmp152 conv  inc )  $buffering 1// bits of buffering = 16. 
+    conv160 := ($bitcast ($uint<32>) ($cast ($int<32>) inc157x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    iNsTr_17 := @(des_inp[($bitcast ($uint<32>) _b00000000000000000000000000000011  )][($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    tmp161 := ->(iNsTr_17) $buffering 1// bits of buffering = 32. 
+    add165 := (tmp161 + shl) $buffering 1// bits of buffering = 32. 
+    cmp166 := (conv160 == add165) $buffering 1// bits of buffering = 1. 
+    $if cmp166 $then 
+    $place[ifx_xelse144_whilex_xend]
+    $else 
+    $place[ifx_xelse144_ifx_xend174]
+    $endif
+    $merge ifx_xelse144_ifx_xend174 ifx_xthen139_ifx_xend174 
+    $phi ix_x1x_xph := 			  ($cast ($uint<16>) ix_x2 ) $on   ifx_xthen139_ifx_xend174 			  ($cast ($uint<16>) inc157x_xix_x2 ) $on   ifx_xelse144_ifx_xend174 
+    // type of target is $uint<16>
+    $phi jx_x0x_xph := 			  ($cast ($uint<16>) jx_x1 ) $on   ifx_xthen139_ifx_xend174 			  ($cast ($uint<16>) jx_x2 ) $on   ifx_xelse144_ifx_xend174 
+    // type of target is $uint<16>
+    $phi kx_x0x_xph := 			  ($cast ($uint<16>) add142 ) $on   ifx_xthen139_ifx_xend174 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   ifx_xelse144_ifx_xend174 
+    // type of target is $uint<16>
+    $endmerge
+    $place[ifx_xend174_whilex_xbody]
+    $merge ifx_xelse144_whilex_xend 
+    $endmerge
+    $barrier
+    Block3_complete := call $buffering 1// bits of buffering = 16. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+// Memory space 0: des_inp 
+// Memory space 1: pad 
+// Memory space 2: des_out 
+// Memory space 3: T 
+// Memory space 4: R 
+// Memory space 5: count 
+// use of gated clocks in modules 

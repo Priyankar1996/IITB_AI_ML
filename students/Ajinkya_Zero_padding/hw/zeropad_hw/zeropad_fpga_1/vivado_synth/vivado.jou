@@ -1,12 +1,12 @@
 #-----------------------------------------------------------
-# Vivado v2017.4 (64-bit)
-# SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
-# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
-# Start of session at: Wed Apr 13 09:10:03 2022
-# Process ID: 19357
-# Current directory: /home/deval/work/IITB_AI_ML/fpga/zeropad/vivado_synth
+# Vivado v2017.1 (64-bit)
+# SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
+# IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+# Start of session at: Wed May 11 17:19:15 2022
+# Process ID: 9488
+# Current directory: /home/AIML/IITB_AI_ML/students/Ajinkya_Zero_padding/hw/zeropad_hw/fpga_zeropad_2/vivado_synth
 # Command line: vivado -mode batch -source bitgen.tcl
-# Log file: /home/deval/work/IITB_AI_ML/fpga/zeropad/vivado_synth/vivado.log
-# Journal file: /home/deval/work/IITB_AI_ML/fpga/zeropad/vivado_synth/vivado.jou
+# Log file: /home/AIML/IITB_AI_ML/students/Ajinkya_Zero_padding/hw/zeropad_hw/fpga_zeropad_2/vivado_synth/vivado.log
+# Journal file: /home/AIML/IITB_AI_ML/students/Ajinkya_Zero_padding/hw/zeropad_hw/fpga_zeropad_2/vivado_synth/vivado.jou
 #-----------------------------------------------------------
 source bitgen.tcl

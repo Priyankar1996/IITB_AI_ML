@@ -99,7 +99,7 @@ $is
         num_out := num_out_pipe
         size := size_pipe
         $volatile mcount_var := ($bitcast ($uint<32>) 0)
-        $volatile acc_var := ($bitcast ($int<32>) 0)
+        $volatile acc_var := ($bitcast ($int<16>) 0)
         $dopipeline $depth 15 $buffering 1 $fullrate
         $merge $entry $loopback
         $phi mycount := mcount_var $on $entry nmycount $on $loopback
@@ -112,7 +112,7 @@ $is
         kval := ($bitcast ($int<16>) kread)
         mul_val := (kval*ival)
         next_sum := (mycount == (size - 1))
-        acc_val :=  (($bitcast ($int<32>) acc) + ($bitcast ($int<32>) mul_val))
+        acc_val :=  (($bitcast ($int<16>) acc) + ($bitcast ($int<16>) mul_val))
         nacc := ($mux next_sum 0 acc_val)
         nmycount := ($mux next_sum 0 (mycount+1))
         out_done_flag := (out_count == num_out)
@@ -120,7 +120,9 @@ $is
         n_out_count := ($mux next_sum ($mux out_done_flag ($bitcast ($uint<16>) 1) (out_count + 1)) out_count)
         all_done_flag := (out_done_flag & next_sum)
         $guard (all_done_flag) input_done_pipe := 1
-        $guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<16>) acc_val)
+        $split (acc_val 8 8) (acc_val_up acc_val_dn)
+        $guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_up)
+        $guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_dn)
         $while 1
     }
 }

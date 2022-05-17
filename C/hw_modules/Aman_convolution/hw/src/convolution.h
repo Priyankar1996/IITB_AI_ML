@@ -52,7 +52,7 @@ void access_T(uint16_t nc, uint16_t r, uint16_t c, uint16_t r1, uint16_t ch, uin
 	uint32_t size_kernel = num_cont*rk;\
 	uint16_t chl=0;\
 	write_uint16("num_out_pipe",cb*rb);\
-	write_uint16("maxpool_output_pipe",300);\
+	write_uint8("maxpool_output_pipe",300);\
 	while(1)\
 	{\
 		loadKernelChannel(chl*size_kernel,(chl+1)*size_kernel);\

@@ -48,8 +48,8 @@ int main(int argc, char**argv){
 
 #ifdef SW
 	init_pipe_handler();
-	register_pipe ("maxpool_input_pipe", 2, 16, PIPE_FIFO_MODE);
-	register_pipe ("maxpool_output_pipe", 2, 16, PIPE_FIFO_MODE);
+	register_pipe ("maxpool_input_pipe", 2, 8, PIPE_FIFO_MODE);
+	register_pipe ("maxpool_output_pipe", 2, 8, PIPE_FIFO_MODE);
 
 	PTHREAD_DECL(convolution3D);
 
@@ -124,7 +124,8 @@ int main(int argc, char**argv){
 	for (i = 0;i < desc_T.number_of_dimensions;i++){
 		fscanf(file,"%d",&desc_T.dimensions[i]);
 		fprintf(octaveInFile,"%d\n",desc_T.dimensions[i]);
-		write_uint16("maxpool_input_pipe",desc_T.dimensions[i]);
+		write_uint8("maxpool_input_pipe",desc_T.dimensions[i]>>8);
+		write_uint8("maxpool_input_pipe",desc_T.dimensions[i]&0xFF);
 	
 		fscanf(file,"%d",&desc_K.dimensions[(i+1)%3]);
 		fprintf(octaveInFile,"%d\n",desc_K.dimensions[(i+1)%3]);
@@ -134,11 +135,16 @@ int main(int argc, char**argv){
 	desc_B.dimensions[0] = 1 + (desc_T.dimensions[0]-desc_K.dimensions[1])/stride;
 	desc_B.dimensions[1] = 1 + (desc_T.dimensions[1]-desc_K.dimensions[2])/stride;
 	desc_B.dimensions[2] = desc_K.dimensions[0];
-	write_uint16("maxpool_input_pipe",desc_B.dimensions[0]);
-	write_uint16("maxpool_input_pipe",desc_B.dimensions[1]);
-	write_uint16("maxpool_input_pipe",desc_B.dimensions[2]);
-	write_uint16("maxpool_input_pipe",desc_K.dimensions[1]);
-	write_uint16("maxpool_input_pipe",desc_K.dimensions[2]);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[0]>>8);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[0]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[1]>>8);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[1]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[2]>>8);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[2]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]>>8);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]>>8);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]&0xFF);
 	
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
@@ -149,7 +155,8 @@ int main(int argc, char**argv){
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
 		fprintf(octaveInFile,"%hd\n",temp[i&3]);
-		write_uint16("maxpool_input_pipe",temp[i&3]);
+		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
+		write_uint8("maxpool_input_pipe",temp[i&3]&0xFF);
 		fprintf(stderr,"Sent element %d\n",i);
 		if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
 	}
@@ -162,7 +169,8 @@ int main(int argc, char**argv){
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
 		fprintf(octaveInFile,"%hd\n",temp[i&3]);
-		write_uint16("maxpool_input_pipe",temp[i&3]);
+		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
+		write_uint8("maxpool_input_pipe",temp[i&3]&0xFF);
 		fprintf(stderr,"Sent kernel element %d\n",i);
 		if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
 	}
@@ -182,10 +190,12 @@ int main(int argc, char**argv){
 	fprintf(stderr,"Reading back the values from hardware\n");
 	
 	int16_t val;
-	val = read_uint16("maxpool_output_pipe");
+	val = read_uint8("maxpool_output_pipe");
+	// val = (val << 8) + read_uint8("maxpool_output_pipe");
 	for (i = 0; i < size; i++)
 	{
-		val = read_uint16("maxpool_output_pipe");
+		val = read_uint8("maxpool_output_pipe");
+		val = (val << 8) + read_uint8("maxpool_output_pipe");
 		fprintf(outFile,"%d %hd\n",i+1, val);
 		fprintf(stderr,"%d %hd\n",i+1, val);
 	}

@@ -13,8 +13,11 @@ $is
         $phi input_word := ($bitcast ($uint<256>) 0) $on $entry ninput_word $on loopback
         $endmerge
         $volatile nmycount := (mycount + 1)
-        val1 := maxpool_input_pipe 
-        val := ($concat val1  maxpool_input_pipe)
+        val1 := maxpool_input_pipe
+        val2 := maxpool_input_pipe
+        maxpool_output_pipe := val1
+        maxpool_output_pipe := val2
+        val := ($concat val1  val2)
         ninput_word := ($concat ($slice input_word 239 0) val)
         $if (mycount < 15) $then
             $place[loopback]

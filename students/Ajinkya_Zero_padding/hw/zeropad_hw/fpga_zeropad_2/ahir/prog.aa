@@ -17,7 +17,6 @@ $pipe Block6_complete : $uint<16> $depth 1
 $pipe Block6_starting : $uint<16> $depth 1
 $pipe Block7_complete : $uint<16> $depth 1
 $pipe Block7_starting : $uint<16> $depth 1
-$pipe elapsed_time_pipe : $uint<64> $depth 1
 $pipe zeropad_input_pipe : $uint<8> $depth 2
 $pipe zeropad_output_pipe : $uint<8> $depth 2
 $storage des_inp:structx_x__TensorDescriptor
@@ -1663,8 +1662,6 @@ $is
     //begin: basic-block entry
     $call testConfigure ()  (call)
     $barrier 
-    $call timer ()  (call1)
-    conv :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) call1) )
     Block0_starting := call
     Block1_starting := call
     Block2_starting := call
@@ -1673,19 +1670,14 @@ $is
     Block5_starting := call
     Block6_starting := call
     Block7_starting := call
-    call10 := Block0_complete
-    call12 := Block1_complete
-    call14 := Block2_complete
-    call16 := Block3_complete
-    call18 := Block4_complete
-    call20 := Block5_complete
-    call22 := Block6_complete
-    call24 := Block7_complete
-    $barrier 
-    $call timer ()  (call26)
-    conv27 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) call26) )
-    sub := (conv27 - conv)
-    elapsed_time_pipe := sub
+    call9 := Block0_complete
+    call11 := Block1_complete
+    call13 := Block2_complete
+    call15 := Block3_complete
+    call17 := Block4_complete
+    call19 := Block5_complete
+    call21 := Block6_complete
+    call23 := Block7_complete
     $barrier 
     $call sendOutput ()  ()
     $place [return__]

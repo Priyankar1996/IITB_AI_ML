@@ -192,10 +192,10 @@ int main(int argc,char **argv)
 	fclose(param_file);
 	fclose(out_file);
 
-	#ifndef SW
-		uint64_t time_taken = read_uint64("elapsed_time_pipe");
-		fprintf(stderr,"Time taken is %lu\n",time_taken);
-	#endif
+	// #ifndef SW
+	// 	uint64_t time_taken = read_uint64("elapsed_time_pipe");
+	// 	fprintf(stderr,"Time taken is %lu\n",time_taken);
+	// #endif
 
     #ifdef SW
 	    PTHREAD_CANCEL(zeropad3D);

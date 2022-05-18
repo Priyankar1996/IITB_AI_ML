@@ -10,7 +10,7 @@
 #include <inttypes.h>
 #include <assert.h>
 
-void zeropad3D();
+// void zeropad3D();
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
@@ -20,9 +20,9 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 #endif
 
 #define __dt__ int16_t
-#define __dim0__(td) ({td.dimensions[0];})
-#define __dim1__(td) ({td.dimensions[1];})
-#define __dim2__(td) ({td.dimensions[2];})
+// #define __dim0__(td) ({td.dimensions[0];})
+// #define __dim1__(td) ({td.dimensions[1];})
+// #define __dim2__(td) ({td.dimensions[2];})
 
 #define __zero_pad_opt__(row_low,row_high,col_low,col_high,z_low,z_high,tx,ty,tz,rx,ry,rz,T,pad,R) ({\
 	__dt__ k = 0,j1 = col_low,i = row_low,pad_reg = pad,dim2T = tz,\

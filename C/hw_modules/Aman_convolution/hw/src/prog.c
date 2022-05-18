@@ -34,14 +34,14 @@ void fill_T(uint64_t i);
 #endif
 
 #define __get4xi16__(element) ({\
-	element = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
-	element = (element << 8) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
-	element = (element << 8) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
-	element = (element << 8) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
-	element = (element << 8) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
-	element = (element << 8) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
-	element = (element << 8) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
-	element = (element << 8) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");\
+	element = read_uint8("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8("maxpool_input_pipe");\
+	element = (element << 8) + read_uint8("maxpool_input_pipe");\
 })
 
 #define __set4xi16__(addr) ({\
@@ -87,7 +87,7 @@ void fill_T(uint64_t i);
 uint64_t getRemainingElements(uint16_t ne){
 	uint64_t element = 0;
 	for (uint16_t n = 0 ; n < (ne<<1); n++){
-		element += my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
+		element += read_uint8("maxpool_input_pipe");
 		element <<= 8;
 	}
 	element <<= 16*(3-ne) + 8;
@@ -96,23 +96,26 @@ uint64_t getRemainingElements(uint16_t ne){
 
 void convolution3D()
 {
+	// write_uint8("maxpool_output_pipe",100);
+	// write_uint8("maxpool_output_pipe",100);
+	__aa_barrier__();
 	int i;
-	uint16_t rt = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	rt = ( rt<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	uint16_t ct = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	ct = ( ct<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	uint16_t chl_in = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	chl_in = ( chl_in<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	uint16_t rb = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	rb = ( rb<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	uint16_t cb = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	cb = ( cb<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	uint16_t chl_out = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	chl_out = ( chl_out<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	uint16_t rk = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	rk = ( rk<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	uint16_t ck = my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
-	ck = ( ck<<8 ) + my_read_write_fn("maxpool_input_pipe","maxpool_output_pipe");
+	uint16_t rt = read_uint8("maxpool_input_pipe");
+	rt = ( rt<<8 ) + read_uint8("maxpool_input_pipe");
+	uint16_t ct = read_uint8("maxpool_input_pipe");
+	ct = ( ct<<8 ) + read_uint8("maxpool_input_pipe");
+	uint16_t chl_in = read_uint8("maxpool_input_pipe");
+	chl_in = ( chl_in<<8 ) + read_uint8("maxpool_input_pipe");
+	uint16_t rb = read_uint8("maxpool_input_pipe");
+	rb = ( rb<<8 ) + read_uint8("maxpool_input_pipe");
+	uint16_t cb = read_uint8("maxpool_input_pipe");
+	cb = ( cb<<8 ) + read_uint8("maxpool_input_pipe");
+	uint16_t chl_out = read_uint8("maxpool_input_pipe");
+	chl_out = ( chl_out<<8 ) + read_uint8("maxpool_input_pipe");
+	uint16_t rk = read_uint8("maxpool_input_pipe");
+	rk = ( rk<<8 ) + read_uint8("maxpool_input_pipe");
+	uint16_t ck = read_uint8("maxpool_input_pipe");
+	ck = ( ck<<8 ) + read_uint8("maxpool_input_pipe");
 
 	// size = number of 16-bit values in data array..
 	uint64_t size = rt*ct*chl_in;

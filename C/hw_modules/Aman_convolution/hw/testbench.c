@@ -191,7 +191,7 @@ int main(int argc, char**argv){
 	
 	int16_t val;
 	val = read_uint8("maxpool_output_pipe");
-	// val = (val << 8) + read_uint8("maxpool_output_pipe");
+	val = (val << 8) + read_uint8("maxpool_output_pipe");
 	for (i = 0; i < size; i++)
 	{
 		val = read_uint8("maxpool_output_pipe");

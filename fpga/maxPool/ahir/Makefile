@@ -10,8 +10,9 @@ PIPEHANDLER_LIB=$(AHIR_LIB)
 PTHREADUTILS_INCLUDE=$(AHIR_INCLUDE)
 VHDL_LIB=$(AHIR_RELEASE)/vhdl
 
-SIZED_TENSOR=../../../primitives/include
+SIZED_TENSOR=../../../C/primitives/include
 
+default: C2VHDL
 all: SW HW 
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
@@ -56,7 +57,7 @@ aa2vc: prog.linked.opt.aa
 
 # vC to VHDL
 vc2vhdl: prog.vc
-	vc2vhdl -D -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc 
+	vc2vhdl -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc 
 	vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
 	vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
 	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl

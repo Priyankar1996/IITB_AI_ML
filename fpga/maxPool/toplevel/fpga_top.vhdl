@@ -19,7 +19,8 @@ end entity fpga_top;
 architecture structure of fpga_top is
 
     signal RT_1HZ: std_logic;
-    signal BAUD_RATE: std_logic_vector(31 downto 0);
+    signal BAUD_RATE : std_logic_vector(31 downto 0);
+	signal reset2,reset1,reset_sync,clk,lock : std_logic;
 
     component clk_wiz_0
         port
@@ -48,7 +49,6 @@ architecture structure of fpga_top is
 		elapsed_time_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
     end component;
 
-		signal reset2,reset1,reset_sync,clk,lock: std_logic;
 		signal maxpool_input_pipe_pipe_write_data : std_logic_vector(7 downto 0);
 		signal maxpool_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
 		signal maxpool_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
@@ -123,8 +123,8 @@ architecture structure of fpga_top is
 					TX_to_CONSOLE_pipe_write_req => maxpool_output_pipe_pipe_read_ack,
 					TX_to_CONSOLE_pipe_write_ack => maxpool_output_pipe_pipe_read_req,
 					CONSOLE_to_RX_pipe_read_data  => maxpool_input_pipe_pipe_write_data ,
-					CONSOLE_to_RX_pipe_read_req  => maxpool_input_pipe_pipe_write_req ,
-					CONSOLE_to_RX_pipe_read_ack => maxpool_input_pipe_pipe_write_ack
+					CONSOLE_to_RX_pipe_read_req  => maxpool_input_pipe_pipe_write_ack ,
+					CONSOLE_to_RX_pipe_read_ack => maxpool_input_pipe_pipe_write_req
 				);
 
 	BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));

@@ -123,8 +123,8 @@ architecture structure of fpga_top is
 					TX_to_CONSOLE_pipe_write_req => maxpool_output_pipe_pipe_read_ack,
 					TX_to_CONSOLE_pipe_write_ack => maxpool_output_pipe_pipe_read_req,
 					CONSOLE_to_RX_pipe_read_data  => maxpool_input_pipe_pipe_write_data ,
-					CONSOLE_to_RX_pipe_read_req  => maxpool_input_pipe_pipe_write_req ,
-					CONSOLE_to_RX_pipe_read_ack => maxpool_input_pipe_pipe_write_ack
+					CONSOLE_to_RX_pipe_read_req  => maxpool_input_pipe_pipe_write_ack ,
+					CONSOLE_to_RX_pipe_read_ack => maxpool_input_pipe_pipe_write_req
 				);
 
 	BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));

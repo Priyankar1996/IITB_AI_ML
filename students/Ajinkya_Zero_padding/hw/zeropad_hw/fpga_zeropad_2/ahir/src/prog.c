@@ -274,9 +274,9 @@ void zeropad3D()
     uint16_t rv = testConfigure();
     __aa_barrier__();
 
-    #ifndef SW
-	    uint64_t start_time = timer();
-    #endif
+    // #ifndef SW
+	//     uint64_t start_time = timer();
+    // #endif
     write_uint16("Block0_starting", rv);
     write_uint16("Block1_starting", rv);
     write_uint16("Block2_starting", rv);
@@ -293,13 +293,13 @@ void zeropad3D()
     uint16_t s5 = read_uint16("Block5_complete");
     uint16_t s6 = read_uint16("Block6_complete");
     uint16_t s7 = read_uint16("Block7_complete");   
-    __aa_barrier__();
+    // __aa_barrier__();
     
-    #ifndef SW
-	    uint64_t stop_time = timer();
-	    uint64_t elapsed_time = stop_time - start_time;
-	    write_uint64("elapsed_time_pipe", elapsed_time);
-    #endif
+    // #ifndef SW
+	//     uint64_t stop_time = timer();
+	//     uint64_t elapsed_time = stop_time - start_time;
+	//     write_uint64("elapsed_time_pipe", elapsed_time);
+    // #endif
     __aa_barrier__();
 
     sendOutput();

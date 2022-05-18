@@ -42,8 +42,6 @@ $storage  des_inp :  structx_x__TensorDescriptor  // memory space index = 0  bas
 // can point into 
 $storage  des_out :  structx_x__TensorDescriptor  // memory space index = 2  base address = 0  word size = 32
 // can point into 
-$pipe  elapsed_time_pipe : $uint<64>  $depth 1 
-// can point into 
 $storage  pad : $uint<8> // memory space index = 1  base address = 0  word size = 8
 // can point into 
 $pipe  zeropad_input_pipe : $uint<8>  $depth 2 
@@ -328,8 +326,6 @@ $is
   {
     $call testConfigure () (call ) 
     $barrier
-    $call timer () (call1 ) 
-    conv := ($bitcast ($uint<64>) ($cast ($int<64>) call1 ) ) $buffering 1// bits of buffering = 64. 
     Block0_starting := call $buffering 1// bits of buffering = 16. 
     Block1_starting := call $buffering 1// bits of buffering = 16. 
     Block2_starting := call $buffering 1// bits of buffering = 16. 
@@ -338,19 +334,14 @@ $is
     Block5_starting := call $buffering 1// bits of buffering = 16. 
     Block6_starting := call $buffering 1// bits of buffering = 16. 
     Block7_starting := call $buffering 1// bits of buffering = 16. 
-    call10 := Block0_complete $buffering 1// bits of buffering = 16. 
-    call12 := Block1_complete $buffering 1// bits of buffering = 16. 
-    call14 := Block2_complete $buffering 1// bits of buffering = 16. 
-    call16 := Block3_complete $buffering 1// bits of buffering = 16. 
-    call18 := Block4_complete $buffering 1// bits of buffering = 16. 
-    call20 := Block5_complete $buffering 1// bits of buffering = 16. 
-    call22 := Block6_complete $buffering 1// bits of buffering = 16. 
-    call24 := Block7_complete $buffering 1// bits of buffering = 16. 
-    $barrier
-    $call timer () (call26 ) 
-    conv27 := ($bitcast ($uint<64>) ($cast ($int<64>) call26 ) ) $buffering 1// bits of buffering = 64. 
-    sub := (conv27 - conv) $buffering 1// bits of buffering = 64. 
-    elapsed_time_pipe := sub $buffering 1// bits of buffering = 64. 
+    call9 := Block0_complete $buffering 1// bits of buffering = 16. 
+    call11 := Block1_complete $buffering 1// bits of buffering = 16. 
+    call13 := Block2_complete $buffering 1// bits of buffering = 16. 
+    call15 := Block3_complete $buffering 1// bits of buffering = 16. 
+    call17 := Block4_complete $buffering 1// bits of buffering = 16. 
+    call19 := Block5_complete $buffering 1// bits of buffering = 16. 
+    call21 := Block6_complete $buffering 1// bits of buffering = 16. 
+    call23 := Block7_complete $buffering 1// bits of buffering = 16. 
     $barrier
     $call sendOutput () () 
     $place[return__]
@@ -746,7 +737,7 @@ $is
     // type of target is $uint<16>
     $phi jx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) jx_x0x_xph ) $on   ifx_xend174_whilex_xbody 
     // type of target is $uint<16>
-    $phi kx_x1 := 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend174_whilex_xbody 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    $phi kx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend174_whilex_xbody 
     // type of target is $uint<16>
     $endmerge
     conv39 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x2 ) ) $buffering 1// bits of buffering = 32. 
@@ -1100,7 +1091,7 @@ $is
     // type of target is $uint<16>
     $phi jx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) jx_x0x_xph ) $on   ifx_xend176_whilex_xbody 
     // type of target is $uint<16>
-    $phi kx_x1 := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend176_whilex_xbody 
+    $phi kx_x1 := 			  ($cast ($uint<16>) kx_x0x_xph ) $on   ifx_xend176_whilex_xbody 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
     // type of target is $uint<16>
     $endmerge
     conv39 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x2 ) ) $buffering 1// bits of buffering = 32. 
@@ -1573,7 +1564,7 @@ $is
     $place[ifx_xelse142_ifx_xend173]
     $endif
     $merge ifx_xelse142_ifx_xend173 ifx_xthen137_ifx_xend173 
-    $phi ix_x1x_xph := 			  ($cast ($uint<16>) ix_x2 ) $on   ifx_xthen137_ifx_xend173 			  ($cast ($uint<16>) inc156x_xix_x2 ) $on   ifx_xelse142_ifx_xend173 
+    $phi ix_x1x_xph := 			  ($cast ($uint<16>) inc156x_xix_x2 ) $on   ifx_xelse142_ifx_xend173 			  ($cast ($uint<16>) ix_x2 ) $on   ifx_xthen137_ifx_xend173 
     // type of target is $uint<16>
     $phi jx_x0x_xph := 			  ($cast ($uint<16>) jx_x2 ) $on   ifx_xelse142_ifx_xend173 			  ($cast ($uint<16>) jx_x1 ) $on   ifx_xthen137_ifx_xend173 
     // type of target is $uint<16>

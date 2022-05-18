@@ -42,7 +42,10 @@ architecture structure of fpga_top is
 		maxpool_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
 		maxpool_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
 		maxpool_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
-		maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
+		maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0);
+ 		elapsed_time_pipe_pipe_read_data: out std_logic_vector(63 downto 0);
+		elapsed_time_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
+		elapsed_time_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
     end component;
 
 		signal reset2,reset1,reset_sync,clk,lock: std_logic;
@@ -52,6 +55,9 @@ architecture structure of fpga_top is
 		signal maxpool_output_pipe_pipe_read_data : std_logic_vector(7 downto 0);
 		signal maxpool_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
 		signal maxpool_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
+ 		signal elapsed_time_pipe_pipe_read_data: std_logic_vector(63 downto 0);
+		signal elapsed_time_pipe_pipe_read_req : std_logic_vector(0 downto 0);
+		signal elapsed_time_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
 
 		signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
@@ -100,7 +106,10 @@ architecture structure of fpga_top is
 				maxpool_input_pipe_pipe_write_req => maxpool_input_pipe_pipe_write_req,
 				maxpool_output_pipe_pipe_read_data => maxpool_output_pipe_pipe_read_data,
 				maxpool_output_pipe_pipe_read_ack => maxpool_output_pipe_pipe_read_ack,
-				maxpool_output_pipe_pipe_read_req => maxpool_output_pipe_pipe_read_req);
+				maxpool_output_pipe_pipe_read_req => maxpool_output_pipe_pipe_read_req,
+ 				elapsed_time_pipe_pipe_read_data => elapsed_time_pipe_pipe_read_data,
+				elapsed_time_pipe_pipe_read_req => elapsed_time_pipe_pipe_read_req,
+				elapsed_time_pipe_pipe_read_ack => elapsed_time_pipe_pipe_read_ack);
 
     uart_inst:
 		configurable_self_tuning_uart
@@ -114,8 +123,8 @@ architecture structure of fpga_top is
 					TX_to_CONSOLE_pipe_write_req => maxpool_output_pipe_pipe_read_ack,
 					TX_to_CONSOLE_pipe_write_ack => maxpool_output_pipe_pipe_read_req,
 					CONSOLE_to_RX_pipe_read_data  => maxpool_input_pipe_pipe_write_data ,
-					CONSOLE_to_RX_pipe_read_req  => maxpool_input_pipe_pipe_write_req ,
-					CONSOLE_to_RX_pipe_read_ack => maxpool_input_pipe_pipe_write_ack
+					CONSOLE_to_RX_pipe_read_req  => maxpool_input_pipe_pipe_write_ack ,
+					CONSOLE_to_RX_pipe_read_ack => maxpool_input_pipe_pipe_write_req
 				);
 
 	BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));

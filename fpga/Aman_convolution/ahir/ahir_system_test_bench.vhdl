@@ -41,12 +41,18 @@ architecture VhpiLink of ahir_system_Test_Bench is --
   end component;
   signal clk: std_logic := '0';
   signal reset: std_logic := '1';
-  signal maxPool3D_tag_in: std_logic_vector(1 downto 0);
-  signal maxPool3D_tag_out: std_logic_vector(1 downto 0);
-  signal maxPool3D_start_req : std_logic := '0';
-  signal maxPool3D_start_ack : std_logic := '0';
-  signal maxPool3D_fin_req   : std_logic := '0';
-  signal maxPool3D_fin_ack   : std_logic := '0';
+  signal convolution3D_tag_in: std_logic_vector(1 downto 0);
+  signal convolution3D_tag_out: std_logic_vector(1 downto 0);
+  signal convolution3D_start_req : std_logic := '0';
+  signal convolution3D_start_ack : std_logic := '0';
+  signal convolution3D_fin_req   : std_logic := '0';
+  signal convolution3D_fin_ack   : std_logic := '0';
+  signal convolve_tag_in: std_logic_vector(1 downto 0);
+  signal convolve_tag_out: std_logic_vector(1 downto 0);
+  signal convolve_start_req : std_logic := '0';
+  signal convolve_start_ack : std_logic := '0';
+  signal convolve_fin_req   : std_logic := '0';
+  signal convolve_fin_ack   : std_logic := '0';
   signal timerDaemon_tag_in: std_logic_vector(1 downto 0);
   signal timerDaemon_tag_out: std_logic_vector(1 downto 0);
   signal timerDaemon_start_req : std_logic := '0';
@@ -110,6 +116,23 @@ begin --
       obj_ref := Pack_String_To_Vhpi_String("elapsed_time_pipe 0");
       port_val_string := Pack_SLV_To_Vhpi_String(elapsed_time_pipe_pipe_read_data);
       Vhpi_Set_Port_Value(obj_ref,port_val_string,64);
+      -- 
+    end loop;
+    --
+  end process;
+  process
+  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
+  begin --
+    wait until reset = '0';
+    -- let the DUT come out of reset.... give it 4 cycles.
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    while true loop -- 
+      wait until clk = '0';
+      wait for 1 ns; 
+      wait until clk = '1';
       -- 
     end loop;
     --

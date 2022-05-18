@@ -10,6 +10,8 @@ PIPEHANDLER_LIB=$(AHIR_LIB)
 PTHREADUTILS_INCLUDE=$(AHIR_INCLUDE)
 VHDL_LIB=$(AHIR_RELEASE)/vhdl
 
+FPGA=../../../../fpga/Aman_convolution/ahir
+
 SIZED_TENSOR=../../../primitives/include
 
 all: SW HW 
@@ -32,6 +34,7 @@ SW: src/prog.c testbench.c
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
 C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
+fpga : c2llvmbc llvmbc2aa  aalink aa2vc  fpga_vc2vhdl
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
@@ -60,6 +63,12 @@ vc2vhdl: prog.vc
 	vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
 	vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
 	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl
+
+fpga_vc2vhdl: prog.vc
+	vc2vhdl -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc 
+	vhdlFormat < ahir_system_global_package.unformatted_vhdl > $(FPGA)/ahir_system_global_package.vhdl
+	vhdlFormat < ahir_system.unformatted_vhdl > $(FPGA)/ahir_system.vhdl
+	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > $(FPGA)/ahir_system_test_bench.vhdl
 
 # build testbench and ghdl executable
 # note the use of SOCKETLIB in building the testbench.

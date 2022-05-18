@@ -12,7 +12,7 @@
 SizedTensor_16K T,R;
 TensorDescriptor des_inp,des_out;
 uint8_t pad;
-uint8_t row_high,col_high,depth_high;
+uint8_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high;
 // uint32_t row_high = des_inp.dimensions[0];
 // uint32_t col_high = des_inp.dimensions[1];
 // uint32_t depth_high = des_inp.dimensions[2];
@@ -84,12 +84,12 @@ uint16_t testConfigure()
 
     pad = read_uint8 ("zeropad_input_pipe");
     
-	des_out.dimensions[0] = read_uint8 ("zeropad_input_pipe");
-    des_out.dimensions[1] = read_uint8 ("zeropad_input_pipe");
-    des_out.dimensions[2] = read_uint8 ("zeropad_input_pipe");
+	out_row_high = read_uint8 ("zeropad_input_pipe");
+    out_col_high = read_uint8 ("zeropad_input_pipe");
+    out_depth_high = read_uint8 ("zeropad_input_pipe");
     
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
-    uint64_t input_size = des_inp.dimensions[0]*des_inp.dimensions[1]*des_inp.dimensions[2];
+    uint64_t input_size = row_high*col_high*depth_high;
 	// fprintf(stderr,"Hello World!\n");    
     
     for(i = 0; i < (input_size >> 2); i ++)
@@ -111,7 +111,7 @@ uint16_t testConfigure()
 
 void sendOutput()
 {
-    uint64_t size = des_out.dimensions[0] * des_out.dimensions[1] * des_out.dimensions[2];
+    uint64_t size = out_row_high * out_col_high * out_depth_high;
     int i;
     for (i = 0; i < (size >> 2); i++){
         __set4xi16__(i);
@@ -133,8 +133,8 @@ void sendOutput()
 //     // __aa_barrier__();
 //     __zero_pad_opt__(0,(row_high/4),
 //                                0,(col_high/2),0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();
 //     #ifdef SW
 // 	    fprintf(stderr,"Block-0 done.\n");
@@ -156,8 +156,8 @@ void sendOutput()
 //     __zero_pad_opt__(0,(row_high/4),
 //                             (col_high/2),
 //                             col_high,0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();
 //     #ifdef SW
 //         fprintf(stderr,"Block-1 done.\n");
@@ -179,8 +179,8 @@ void sendOutput()
 //     __zero_pad_opt__((row_high/4),
 //                                row_high/2,0,
 //                                (col_high/2),0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();
 //     #ifdef SW
 //         fprintf(stderr,"Block-2 done.\n");
@@ -203,8 +203,8 @@ void sendOutput()
 //                                row_high/2,
 //                                (col_high/2),
 //                                col_high,0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();    
 //     #ifdef SW
 //         fprintf(stderr,"Block-3 done.\n");
@@ -227,8 +227,8 @@ void sendOutput()
 //                                3*(row_high)/4,
 //                                0,
 //                                (col_high)/2,0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();    
 //     #ifdef SW
 //         fprintf(stderr,"Block-4 done.\n");
@@ -251,8 +251,8 @@ void sendOutput()
 //                                3*(row_high)/4,
 //                                (col_high/2),
 //                                col_high,0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();    
 //     #ifdef SW
 //         fprintf(stderr,"Block-5 done.\n");
@@ -275,8 +275,8 @@ void sendOutput()
 //                                row_high,
 //                                0,
 //                                (col_high)/2,0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();    
 //     #ifdef SW
 //         fprintf(stderr,"Block-6 done.\n");
@@ -299,8 +299,8 @@ void sendOutput()
 //                                row_high,
 //                                (col_high/2),
 //                                col_high,0,depth_high,row_high,
-//                                col_high,depth_high,des_out.dimensions[0],
-//                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+//                                col_high,depth_high,out_row_high,
+//                                  out_col_high,out_depth_high,T,pad,R);
 //     __aa_barrier__();    
 //     #ifdef SW
 //         fprintf(stderr,"Block-7 done.\n");
@@ -313,9 +313,9 @@ void zeropad3D()
 {
     uint16_t rv = testConfigure();
 
-    row_high = des_inp.dimensions[0];
-    col_high = des_inp.dimensions[1];
-    depth_high = des_inp.dimensions[2];
+    // row_high = des_inp.dimensions[0];
+    // col_high = des_inp.dimensions[1];
+    // depth_high = des_inp.dimensions[2];
     __aa_barrier__();
 
     // #ifndef SW
@@ -325,55 +325,55 @@ void zeropad3D()
 
     __zero_pad_opt__(0,(row_high/4),
                                0,(col_high/2),0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__();
     __zero_pad_opt__(0,(row_high/4),
                             (col_high/2),
                             col_high,0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__();
     __zero_pad_opt__((row_high/4),
                                row_high/2,0,
                                (col_high/2),0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__();
     __zero_pad_opt__((row_high/4),
                                row_high/2,
                                (col_high/2),
                                col_high,0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__(); 
     __zero_pad_opt__((row_high/2),
                                3*(row_high)/4,
                                0,
                                (col_high)/2,0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__();
     __zero_pad_opt__((row_high/2),
                                3*(row_high)/4,
                                (col_high/2),
                                col_high,0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__(); 
     __zero_pad_opt__(3*(row_high/4),
                                row_high,
                                0,
                                (col_high)/2,0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__(); 
     __zero_pad_opt__((3*(row_high)/4),
                                row_high,
                                (col_high/2),
                                col_high,0,depth_high,row_high,
-                               col_high,depth_high,des_out.dimensions[0],
-                                 des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
     // __aa_barrier__();   
 
 

@@ -8,7 +8,9 @@ package ahir_system_global_package is --
   constant count_base_address : std_logic_vector(0 downto 0) := "0";
   constant depth_high_base_address : std_logic_vector(0 downto 0) := "0";
   constant des_inp_base_address : std_logic_vector(6 downto 0) := "0000000";
-  constant des_out_base_address : std_logic_vector(6 downto 0) := "0000000";
+  constant out_col_high_base_address : std_logic_vector(0 downto 0) := "0";
+  constant out_depth_high_base_address : std_logic_vector(0 downto 0) := "0";
+  constant out_row_high_base_address : std_logic_vector(0 downto 0) := "0";
   constant pad_base_address : std_logic_vector(0 downto 0) := "0";
   constant row_high_base_address : std_logic_vector(0 downto 0) := "0";
   -- 

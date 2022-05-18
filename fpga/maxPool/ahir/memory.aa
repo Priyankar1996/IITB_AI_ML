@@ -10,7 +10,7 @@ $is
     {
         $merge $entry loopback
         $phi mycount := ($bitcast ($uint<4>) 0) $on $entry nmycount $on loopback
-        $phi input_word := ($bitcast ($uint<256>) 0) $on $entry ninput_word $on loopback
+        $phi input_word := ($bitcast ($uint<64>) 0) $on $entry ninput_word $on loopback
         $endmerge
         $volatile nmycount := (mycount + 1)
         val1 := maxpool_input_pipe

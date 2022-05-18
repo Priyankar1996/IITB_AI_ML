@@ -66,28 +66,6 @@ SizedTensor_16K T;
 	write_uint8 ("maxpool_output_pipe",out_data[7]);\
 })
 
-// void testConfigure()
-// {
-
-// 	// configure the tensor T
-// 	desc_T.data_type = u16;
-// 	desc_T.row_major_form = 1;
-// 	desc_T.number_of_dimensions = 3;
-// 	desc_B.number_of_dimensions = 3;
-// 	int i;
-// 	for (i = 0;i < desc_T.number_of_dimensions;i++){
-// 		desc_T.dimensions[i] = read_uint8 ("maxpool_input_pipe");
-// 		desc_B.dimensions[i] = read_uint8 ("maxpool_input_pipe");
-// 	}
-
-// 	// size = number of 16-bit values in data array..
-// 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
-// 	for (i = 0; i < (size >> 4); i++)
-// 	{
-// 		fill_T(i);
-// 	}
-// }
-
 // this sends B...
 void sendB(uint32_t size)
 {
@@ -114,10 +92,14 @@ void maxPool3D()
 	chl_in = ( chl_in<<8 ) + read_uint8 ("maxpool_input_pipe");
 	uint16_t chl_out = read_uint8 ("maxpool_input_pipe");
 	chl_out = ( chl_out<<8 ) + read_uint8 ("maxpool_input_pipe");
+	write_uint8("maxpool_output_pipe",rt);
+	write_uint8("maxpool_output_pipe",ct);
+	write_uint8("maxpool_output_pipe",rb);
+	write_uint8("maxpool_output_pipe",cb);
 	__aa_barrier__();
 	uint32_t size = rt*ct*chl_in;
 	uint32_t i;
-	for (i = 0; i < (size >> 4); i++)
+	for (i = 0; i < (size >> 2); i++)
 	{
 		fill_T(i);
 	}
@@ -125,7 +107,7 @@ void maxPool3D()
 	uint16_t ce = cb;
 	uint16_t re = rb;
 	uint16_t dim1d = ct;
-	uint16_t offset1 = chl_out>>4, offset2 = dim1d*offset1;
+	uint16_t offset1 = chl_out>>2, offset2 = dim1d*offset1;
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();

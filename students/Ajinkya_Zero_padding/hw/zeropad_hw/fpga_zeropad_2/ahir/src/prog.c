@@ -327,54 +327,54 @@ void zeropad3D()
                                0,(col_high/2),0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__();
+    // __aa_barrier__();
     __zero_pad_opt__(0,(row_high/4),
                             (col_high/2),
                             col_high,0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__();
+    // __aa_barrier__();
     __zero_pad_opt__((row_high/4),
                                row_high/2,0,
                                (col_high/2),0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__();
+    // __aa_barrier__();
     __zero_pad_opt__((row_high/4),
                                row_high/2,
                                (col_high/2),
                                col_high,0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__(); 
+    // __aa_barrier__(); 
     __zero_pad_opt__((row_high/2),
                                3*(row_high)/4,
                                0,
                                (col_high)/2,0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__();
+    // __aa_barrier__();
     __zero_pad_opt__((row_high/2),
                                3*(row_high)/4,
                                (col_high/2),
                                col_high,0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__(); 
+    // __aa_barrier__(); 
     __zero_pad_opt__(3*(row_high/4),
                                row_high,
                                0,
                                (col_high)/2,0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__(); 
+    // __aa_barrier__(); 
     __zero_pad_opt__((3*(row_high)/4),
                                row_high,
                                (col_high/2),
                                col_high,0,depth_high,row_high,
                                col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
-    __aa_barrier__();   
+    // __aa_barrier__();   
 
 
     // write_uint16("Block0_starting", rv);

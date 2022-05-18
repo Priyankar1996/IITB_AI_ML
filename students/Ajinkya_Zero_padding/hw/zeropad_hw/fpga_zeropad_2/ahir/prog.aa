@@ -24,6 +24,9 @@ $storage pad:$uint<8>
 $storage des_out:structx_x__TensorDescriptor
 $storage T:structx_x__SizedTensor_16K
 $storage R:structx_x__SizedTensor_16K
+$storage depth_high:$uint<32>
+$storage col_high:$uint<32>
+$storage row_high:$uint<32>
 $module [progx_xoptx_xo_storage_initializer_] $in () $out () $is 
 {
   $null
@@ -266,18 +269,16 @@ $is
     $barrier 
     // load 
     tmp := pad
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp2 := ->(iNsTr_2) 
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp2 := depth_high
     // load 
-    tmp5 := ->(iNsTr_3) 
-    iNsTr_4 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp5 := col_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp11 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp11 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp14 := ->(iNsTr_5) 
+    tmp14 := ->(iNsTr_3) 
     sext := (tmp5 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv23 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext179 := (tmp11 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -308,9 +309,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_10 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp42 := ->(iNsTr_10) 
+    tmp42 := row_high
     div := (tmp42 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add := (div + conv38)
     // compare instruction
@@ -326,9 +326,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse54
     $merge lorx_xlhsx_xfalse47_lorx_xlhsx_xfalse54
     $endmerge
-    iNsTr_18 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp57 := ->(iNsTr_18) 
+    tmp57 := col_high
     div58 := (tmp57 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add61 := (div58 + conv38)
     // compare instruction
@@ -390,9 +389,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv141 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_15 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp142 := ->(iNsTr_15) 
+    tmp142 := col_high
     div143 := (tmp142 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add146 := (div143 + shl)
     // compare instruction
@@ -401,9 +399,8 @@ $is
     inc152x_xix_x2 := (inc152 + ix_x2)
     jx_x2 := ( $mux cmp147 ( $bitcast ($uint<16> ) _b0000000000000000 )  inc)
     conv155 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc152x_xix_x2) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp156 := ->(iNsTr_16) 
+    tmp156 := row_high
     div157 := (tmp156 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add161 := (div157 + shl)
     // compare instruction
@@ -435,22 +432,20 @@ $is
     //begin: basic-block entry
     call := Block1_starting
     $barrier 
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp := ->(iNsTr_2) 
+    tmp := col_high
     div := (tmp >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     conv := ($cast ($uint<16>) div)
     // load 
     tmp3 := pad
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp6 := ->(iNsTr_3) 
-    iNsTr_4 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp6 := depth_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp15 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp15 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp18 := ->(iNsTr_5) 
+    tmp18 := ->(iNsTr_3) 
     sext182 := (tmp6 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv25 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext182) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext := (tmp << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -479,9 +474,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_10 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp46 := ->(iNsTr_10) 
+    tmp46 := row_high
     div47 := (tmp46 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add := (div47 + conv42)
     // compare instruction
@@ -497,9 +491,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse59
     $merge lorx_xlhsx_xfalse52_lorx_xlhsx_xfalse59
     $endmerge
-    iNsTr_18 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp62 := ->(iNsTr_18) 
+    tmp62 := col_high
     add65 := (tmp62 + conv42)
     // compare instruction
     cmp66 := (conv54 < add65 )
@@ -560,9 +553,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv145 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_15 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp146 := ->(iNsTr_15) 
+    tmp146 := col_high
     add149 := (tmp146 + shl)
     // compare instruction
     cmp150 := (conv145 == add149 )
@@ -570,9 +562,8 @@ $is
     inc155x_xix_x2 := (inc155 + ix_x2)
     jx_x2 := ( $mux cmp150 conv inc)
     conv158 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc155x_xix_x2) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp159 := ->(iNsTr_16) 
+    tmp159 := row_high
     div160 := (tmp159 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add164 := (div160 + shl)
     // compare instruction
@@ -604,25 +595,22 @@ $is
     //begin: basic-block entry
     call := Block2_starting
     $barrier 
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp := ->(iNsTr_2) 
+    tmp := row_high
     div := (tmp >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     conv := ($cast ($uint<16>) div)
     // load 
     tmp2 := pad
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp5 := ->(iNsTr_3) 
-    iNsTr_4 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp5 := depth_high
     // load 
-    tmp8 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp8 := col_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp14 := ->(iNsTr_5) 
-    iNsTr_6 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp14 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp17 := ->(iNsTr_6) 
+    tmp17 := ->(iNsTr_3) 
     sext := (tmp8 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv26 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext183 := (tmp14 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -653,9 +641,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_11 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp45 := ->(iNsTr_11) 
+    tmp45 := row_high
     div46 := (tmp45 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add := (div46 + conv41)
     // compare instruction
@@ -671,9 +658,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse58
     $merge lorx_xlhsx_xfalse51_lorx_xlhsx_xfalse58
     $endmerge
-    iNsTr_19 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp61 := ->(iNsTr_19) 
+    tmp61 := col_high
     div62 := (tmp61 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add65 := (div62 + conv41)
     // compare instruction
@@ -735,9 +721,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv145 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp146 := ->(iNsTr_16) 
+    tmp146 := col_high
     div147 := (tmp146 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add150 := (div147 + shl)
     // compare instruction
@@ -746,9 +731,8 @@ $is
     inc156x_xix_x2 := (inc156 + ix_x2)
     jx_x2 := ( $mux cmp151 ( $bitcast ($uint<16> ) _b0000000000000000 )  inc)
     conv159 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc156x_xix_x2) )
-    iNsTr_17 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp160 := ->(iNsTr_17) 
+    tmp160 := row_high
     div161 := (tmp160 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add165 := (div161 + shl)
     // compare instruction
@@ -780,27 +764,24 @@ $is
     //begin: basic-block entry
     call := Block3_starting
     $barrier 
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp := ->(iNsTr_2) 
+    tmp := col_high
     div := (tmp >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     conv := ($cast ($uint<16>) div)
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp2 := ->(iNsTr_3) 
+    tmp2 := row_high
     div3 := (tmp2 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     conv4 := ($cast ($uint<16>) div3)
     // load 
     tmp6 := pad
-    iNsTr_4 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp9 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp9 := depth_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp18 := ->(iNsTr_5) 
-    iNsTr_6 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp18 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp21 := ->(iNsTr_6) 
+    tmp21 := ->(iNsTr_3) 
     sext := (tmp << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv30 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext185 := (tmp18 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -831,9 +812,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_11 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp49 := ->(iNsTr_11) 
+    tmp49 := row_high
     div50 := (tmp49 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add := (div50 + conv45)
     // compare instruction
@@ -849,9 +829,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse62
     $merge lorx_xlhsx_xfalse55_lorx_xlhsx_xfalse62
     $endmerge
-    iNsTr_19 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp65 := ->(iNsTr_19) 
+    tmp65 := col_high
     add68 := (tmp65 + conv45)
     // compare instruction
     cmp69 := (conv57 < add68 )
@@ -912,9 +891,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv148 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp149 := ->(iNsTr_16) 
+    tmp149 := col_high
     add152 := (tmp149 + shl)
     // compare instruction
     cmp153 := (conv148 == add152 )
@@ -922,9 +900,8 @@ $is
     inc158x_xix_x2 := (inc158 + ix_x2)
     jx_x2 := ( $mux cmp153 conv inc)
     conv161 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc158x_xix_x2) )
-    iNsTr_17 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp162 := ->(iNsTr_17) 
+    tmp162 := row_high
     div163 := (tmp162 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add167 := (div163 + shl)
     // compare instruction
@@ -956,25 +933,22 @@ $is
     //begin: basic-block entry
     call := Block4_starting
     $barrier 
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp := ->(iNsTr_2) 
+    tmp := row_high
     div := (tmp >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     conv := ($cast ($uint<16>) div)
     // load 
     tmp2 := pad
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp5 := ->(iNsTr_3) 
-    iNsTr_4 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp5 := depth_high
     // load 
-    tmp8 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp8 := col_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp14 := ->(iNsTr_5) 
-    iNsTr_6 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp14 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp17 := ->(iNsTr_6) 
+    tmp17 := ->(iNsTr_3) 
     sext := (tmp8 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv26 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext185 := (tmp14 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -1005,9 +979,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_11 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp45 := ->(iNsTr_11) 
+    tmp45 := row_high
     mul46 := (tmp45 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
     div47 := (mul46 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add := (div47 + conv41)
@@ -1024,9 +997,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse59
     $merge lorx_xlhsx_xfalse52_lorx_xlhsx_xfalse59
     $endmerge
-    iNsTr_19 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp62 := ->(iNsTr_19) 
+    tmp62 := col_high
     div63 := (tmp62 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add66 := (div63 + conv41)
     // compare instruction
@@ -1088,9 +1060,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv146 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp147 := ->(iNsTr_16) 
+    tmp147 := col_high
     div148 := (tmp147 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add151 := (div148 + shl)
     // compare instruction
@@ -1099,9 +1070,8 @@ $is
     inc157x_xix_x2 := (inc157 + ix_x2)
     jx_x2 := ( $mux cmp152 ( $bitcast ($uint<16> ) _b0000000000000000 )  inc)
     conv160 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc157x_xix_x2) )
-    iNsTr_17 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp161 := ->(iNsTr_17) 
+    tmp161 := row_high
     mul162 := (tmp161 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
     div163 := (mul162 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add167 := (div163 + shl)
@@ -1134,27 +1104,24 @@ $is
     //begin: basic-block entry
     call := Block5_starting
     $barrier 
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp := ->(iNsTr_2) 
+    tmp := col_high
     div := (tmp >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     conv := ($cast ($uint<16>) div)
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp2 := ->(iNsTr_3) 
+    tmp2 := row_high
     div3 := (tmp2 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     conv4 := ($cast ($uint<16>) div3)
     // load 
     tmp6 := pad
-    iNsTr_4 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp9 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp9 := depth_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp18 := ->(iNsTr_5) 
-    iNsTr_6 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp18 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp21 := ->(iNsTr_6) 
+    tmp21 := ->(iNsTr_3) 
     sext := (tmp << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv30 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext187 := (tmp18 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -1185,9 +1152,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_11 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp49 := ->(iNsTr_11) 
+    tmp49 := row_high
     mul50 := (tmp49 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
     div51 := (mul50 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add := (div51 + conv45)
@@ -1204,9 +1170,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse63
     $merge lorx_xlhsx_xfalse56_lorx_xlhsx_xfalse63
     $endmerge
-    iNsTr_19 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp66 := ->(iNsTr_19) 
+    tmp66 := col_high
     add69 := (tmp66 + conv45)
     // compare instruction
     cmp70 := (conv58 < add69 )
@@ -1267,9 +1232,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv149 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp150 := ->(iNsTr_16) 
+    tmp150 := col_high
     add153 := (tmp150 + shl)
     // compare instruction
     cmp154 := (conv149 == add153 )
@@ -1277,9 +1241,8 @@ $is
     inc159x_xix_x2 := (inc159 + ix_x2)
     jx_x2 := ( $mux cmp154 conv inc)
     conv162 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc159x_xix_x2) )
-    iNsTr_17 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp163 := ->(iNsTr_17) 
+    tmp163 := row_high
     mul164 := (tmp163 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
     div165 := (mul164 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     add169 := (div165 + shl)
@@ -1312,26 +1275,23 @@ $is
     //begin: basic-block entry
     call := Block6_starting
     $barrier 
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp := ->(iNsTr_2) 
+    tmp := row_high
     div := (tmp >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     mul := (div * ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
     conv := ($cast ($uint<16>) mul)
     // load 
     tmp2 := pad
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp5 := ->(iNsTr_3) 
-    iNsTr_4 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp5 := depth_high
     // load 
-    tmp8 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp8 := col_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp14 := ->(iNsTr_5) 
-    iNsTr_6 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp14 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp17 := ->(iNsTr_6) 
+    tmp17 := ->(iNsTr_3) 
     sext := (tmp8 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv26 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext182 := (tmp14 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -1362,9 +1322,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_11 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp46 := ->(iNsTr_11) 
+    tmp46 := row_high
     add := (tmp46 + conv42)
     // compare instruction
     cmp49 := (conv40 < add )
@@ -1379,9 +1338,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse58
     $merge lorx_xlhsx_xfalse51_lorx_xlhsx_xfalse58
     $endmerge
-    iNsTr_19 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp61 := ->(iNsTr_19) 
+    tmp61 := col_high
     div62 := (tmp61 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add65 := (div62 + conv42)
     // compare instruction
@@ -1443,9 +1401,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv145 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp146 := ->(iNsTr_16) 
+    tmp146 := col_high
     div147 := (tmp146 >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     add150 := (div147 + shl)
     // compare instruction
@@ -1454,9 +1411,8 @@ $is
     inc156x_xix_x2 := (inc156 + ix_x2)
     jx_x2 := ( $mux cmp151 ( $bitcast ($uint<16> ) _b0000000000000000 )  inc)
     conv159 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc156x_xix_x2) )
-    iNsTr_17 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp160 := ->(iNsTr_17) 
+    tmp160 := row_high
     add164 := (tmp160 + shl)
     // compare instruction
     cmp165 := (conv159 == add164 )
@@ -1487,28 +1443,25 @@ $is
     //begin: basic-block entry
     call := Block7_starting
     $barrier 
-    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp := ->(iNsTr_2) 
+    tmp := col_high
     div := (tmp >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
     conv := ($cast ($uint<16>) div)
-    iNsTr_3 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp2 := ->(iNsTr_3) 
+    tmp2 := row_high
     mul := (tmp2 * ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) )
     div3 := (mul >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) )
     conv4 := ($cast ($uint<16>) div3)
     // load 
     tmp6 := pad
-    iNsTr_4 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp9 := ->(iNsTr_4) 
-    iNsTr_5 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    tmp9 := depth_high
+    iNsTr_2 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
     // load 
-    tmp18 := ->(iNsTr_5) 
-    iNsTr_6 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    tmp18 := ->(iNsTr_2) 
+    iNsTr_3 := @(des_out[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp21 := ->(iNsTr_6) 
+    tmp21 := ->(iNsTr_3) 
     sext := (tmp << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
     conv30 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) sext) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 )  )))
     sext184 := (tmp18 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
@@ -1539,9 +1492,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse
     $merge whilex_xbody_lorx_xlhsx_xfalse
     $endmerge
-    iNsTr_11 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp50 := ->(iNsTr_11) 
+    tmp50 := row_high
     add := (tmp50 + conv46)
     // compare instruction
     cmp53 := (conv44 < add )
@@ -1556,9 +1508,8 @@ $is
     //begin: basic-block lorx_xlhsx_xfalse62
     $merge lorx_xlhsx_xfalse55_lorx_xlhsx_xfalse62
     $endmerge
-    iNsTr_19 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp65 := ->(iNsTr_19) 
+    tmp65 := col_high
     add68 := (tmp65 + conv46)
     // compare instruction
     cmp69 := (conv57 < add68 )
@@ -1619,9 +1570,8 @@ $is
     $endmerge
     inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
     conv148 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc) )
-    iNsTr_16 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
     // load 
-    tmp149 := ->(iNsTr_16) 
+    tmp149 := col_high
     add152 := (tmp149 + shl)
     // compare instruction
     cmp153 := (conv148 == add152 )
@@ -1629,9 +1579,8 @@ $is
     inc158x_xix_x2 := (inc158 + ix_x2)
     jx_x2 := ( $mux cmp153 conv inc)
     conv161 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) inc158x_xix_x2) )
-    iNsTr_17 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
     // load 
-    tmp162 := ->(iNsTr_17) 
+    tmp162 := row_high
     add166 := (tmp162 + shl)
     // compare instruction
     cmp167 := (conv161 == add166 )
@@ -1661,6 +1610,18 @@ $is
   {
     //begin: basic-block entry
     $call testConfigure ()  (call)
+    iNsTr_0 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) ])
+    // load 
+    tmp := ->(iNsTr_0) 
+    row_high := tmp
+    iNsTr_2 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000001 ) ])
+    // load 
+    tmp1 := ->(iNsTr_2) 
+    col_high := tmp1
+    iNsTr_4 := @(des_inp[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ][( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000010 ) ])
+    // load 
+    tmp2 := ->(iNsTr_4) 
+    depth_high := tmp2
     $barrier 
     Block0_starting := call
     Block1_starting := call
@@ -1670,14 +1631,14 @@ $is
     Block5_starting := call
     Block6_starting := call
     Block7_starting := call
-    call9 := Block0_complete
-    call11 := Block1_complete
-    call13 := Block2_complete
-    call15 := Block3_complete
-    call17 := Block4_complete
-    call19 := Block5_complete
-    call21 := Block6_complete
-    call23 := Block7_complete
+    call12 := Block0_complete
+    call14 := Block1_complete
+    call16 := Block2_complete
+    call18 := Block3_complete
+    call20 := Block4_complete
+    call22 := Block5_complete
+    call24 := Block6_complete
+    call26 := Block7_complete
     $barrier 
     $call sendOutput ()  ()
     $place [return__]

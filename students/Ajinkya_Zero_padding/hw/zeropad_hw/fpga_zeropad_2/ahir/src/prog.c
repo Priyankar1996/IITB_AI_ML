@@ -12,6 +12,11 @@
 SizedTensor_16K T,R;
 TensorDescriptor des_inp,des_out;
 uint8_t pad;
+uint32_t row_high,col_high,depth_high;
+// uint32_t row_high = des_inp.dimensions[0];
+// uint32_t col_high = des_inp.dimensions[1];
+// uint32_t depth_high = des_inp.dimensions[2];
+
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
@@ -119,9 +124,13 @@ void zeropad3D_A()
         fprintf(stderr,"Block-0 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__(0,(des_inp.dimensions[0]/4),
-                               0,(des_inp.dimensions[1]/2),0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__(0,(row_high/4),
+                               0,(col_high/2),0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();
     #ifdef SW
@@ -137,10 +146,14 @@ void zeropad3D_B()
         fprintf(stderr,"Block-1 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__(0,(des_inp.dimensions[0]/4),
-                            (des_inp.dimensions[1]/2),
-                            des_inp.dimensions[1],0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__(0,(row_high/4),
+                            (col_high/2),
+                            col_high,0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();
     #ifdef SW
@@ -156,10 +169,14 @@ void zeropad3D_C()
         fprintf(stderr,"Block-2 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((des_inp.dimensions[0]/4),
-                               des_inp.dimensions[0]/2,0,
-                               (des_inp.dimensions[1]/2),0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__((row_high/4),
+                               row_high/2,0,
+                               (col_high/2),0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();
     #ifdef SW
@@ -175,11 +192,15 @@ void zeropad3D_D()
         fprintf(stderr,"Block-3 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((des_inp.dimensions[0]/4),
-                               des_inp.dimensions[0]/2,
-                               (des_inp.dimensions[1]/2),
-                               des_inp.dimensions[1],0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__((row_high/4),
+                               row_high/2,
+                               (col_high/2),
+                               col_high,0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();    
     #ifdef SW
@@ -195,11 +216,15 @@ void zeropad3D_E()
         fprintf(stderr,"Block-4 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((des_inp.dimensions[0]/2),
-                               3*(des_inp.dimensions[0])/4,
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__((row_high/2),
+                               3*(row_high)/4,
                                0,
-                               (des_inp.dimensions[1])/2,0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+                               (col_high)/2,0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();    
     #ifdef SW
@@ -215,11 +240,15 @@ void zeropad3D_F()
         fprintf(stderr,"Block-5 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((des_inp.dimensions[0]/2),
-                               3*(des_inp.dimensions[0])/4,
-                               (des_inp.dimensions[1]/2),
-                               des_inp.dimensions[1],0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__((row_high/2),
+                               3*(row_high)/4,
+                               (col_high/2),
+                               col_high,0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();    
     #ifdef SW
@@ -235,11 +264,15 @@ void zeropad3D_G()
         fprintf(stderr,"Block-6 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__(3*(des_inp.dimensions[0]/4),
-                               des_inp.dimensions[0],
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__(3*(row_high/4),
+                               row_high,
                                0,
-                               (des_inp.dimensions[1])/2,0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+                               (col_high)/2,0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();    
     #ifdef SW
@@ -255,11 +288,15 @@ void zeropad3D_H()
         fprintf(stderr,"Block-7 started.\n");
     #endif
     __aa_barrier__();
-    __zero_pad_opt__((3*(des_inp.dimensions[0])/4),
-                               des_inp.dimensions[0],
-                               (des_inp.dimensions[1]/2),
-                               des_inp.dimensions[1],0,des_inp.dimensions[2],des_inp.dimensions[0],
-                               des_inp.dimensions[1],des_inp.dimensions[2],des_out.dimensions[0],
+    // uint32_t row_high = des_inp.dimensions[0];
+    // uint32_t col_high = des_inp.dimensions[1];
+    // uint32_t depth_high = des_inp.dimensions[2];
+    // __aa_barrier__();
+    __zero_pad_opt__((3*(row_high)/4),
+                               row_high,
+                               (col_high/2),
+                               col_high,0,depth_high,row_high,
+                               col_high,depth_high,des_out.dimensions[0],
                                  des_out.dimensions[1],des_out.dimensions[2],T,pad,R);
     __aa_barrier__();    
     #ifdef SW
@@ -272,6 +309,10 @@ void zeropad3D_H()
 void zeropad3D()
 {
     uint16_t rv = testConfigure();
+
+    row_high = des_inp.dimensions[0];
+    col_high = des_inp.dimensions[1];
+    depth_high = des_inp.dimensions[2];
     __aa_barrier__();
 
     // #ifndef SW

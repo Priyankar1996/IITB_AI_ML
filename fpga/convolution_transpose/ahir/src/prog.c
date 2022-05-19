@@ -22,12 +22,18 @@ void __aa_barrier__();
 
 #define __dt__ int16_t
 
+#define my_read_write_fn(s1,s2) ({\
+	uint8_t x = read_uint8(s1);\
+	write_uint8(s2,x);\
+	x;\
+})
+
 #define __get4xi16__(element) ({\
 	element = read_uint8 ("ConvTranspose_input_pipe");\
 	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
 	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
 	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
-        element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
+    element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
 	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
 	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
 	element = (element << 8) + read_uint8 ("ConvTranspose_input_pipe");\
@@ -55,7 +61,7 @@ void __aa_barrier__();
 	write_uint8 ("ConvTranspose_output_pipe",out_data[1]);\
 	write_uint8 ("ConvTranspose_output_pipe",out_data[2]);\
 	write_uint8 ("ConvTranspose_output_pipe",out_data[3]);\
-        write_uint8 ("ConvTranspose_output_pipe",out_data[4]);\
+    write_uint8 ("ConvTranspose_output_pipe",out_data[4]);\
 	write_uint8 ("ConvTranspose_output_pipe",out_data[5]);\
 	write_uint8 ("ConvTranspose_output_pipe",out_data[6]);\
 	write_uint8 ("ConvTranspose_output_pipe",out_data[7]);\
@@ -71,11 +77,11 @@ void convTransposeA()
     k[1] = read_uint16("Block0_start");
     k[2] = read_uint16("Block0_start");
     k[3] = read_uint16("Block0_start");
+    s    = read_uint16("Block0_start");
+    p    = read_uint16("Block0_start");
     o[0] = read_uint16("Block0_start");
     o[1] = read_uint16("Block0_start");
     o[2] = read_uint16("Block0_start");
-    s    = read_uint16("Block0_start");
-    p    = read_uint16("Block0_start");
     __aa_barrier__();
 
     __ConvTransposeOptimized__(0,i[0]/2,0,i[1]/2, 
@@ -94,11 +100,11 @@ void convTransposeB()
     k[1] = read_uint16("Block1_start");
     k[2] = read_uint16("Block1_start");
     k[3] = read_uint16("Block1_start");
+    s    = read_uint16("Block1_start");
+    p    = read_uint16("Block1_start");
     o[0] = read_uint16("Block1_start");
     o[1] = read_uint16("Block1_start");
     o[2] = read_uint16("Block1_start");
-    s    = read_uint16("Block1_start");
-    p    = read_uint16("Block1_start");
     __aa_barrier__();
 
     __ConvTransposeOptimized__(0,i[0]/2,i[1]/2,i[1],
@@ -117,11 +123,11 @@ void convTransposeC()
     k[1] = read_uint16("Block2_start");
     k[2] = read_uint16("Block2_start");
     k[3] = read_uint16("Block2_start");
+    s    = read_uint16("Block2_start");
+    p    = read_uint16("Block2_start");
     o[0] = read_uint16("Block2_start");
     o[1] = read_uint16("Block2_start");
     o[2] = read_uint16("Block2_start");
-    s    = read_uint16("Block2_start");
-    p    = read_uint16("Block2_start");
     __aa_barrier__();
     __ConvTransposeOptimized__(i[0]/2,i[0],0,i[1]/2,
                                i,k,o,input,kernel,s,p,output);
@@ -139,11 +145,11 @@ void convTransposeD()
     k[1] = read_uint16("Block3_start");
     k[2] = read_uint16("Block3_start");
     k[3] = read_uint16("Block3_start");
+    s    = read_uint16("Block3_start");
+    p    = read_uint16("Block3_start");
     o[0] = read_uint16("Block3_start");
     o[1] = read_uint16("Block3_start");
     o[2] = read_uint16("Block3_start");
-    s    = read_uint16("Block3_start");
-    p    = read_uint16("Block3_start");
     __aa_barrier__();
     __ConvTransposeOptimized__(i[0]/2,i[0],i[1]/2,i[1],
                                i,k,o,input,kernel,s,p,output);
@@ -172,7 +178,13 @@ void convTranspose()
 
     uint32_t input_size = inp_dim0 * inp_dim1 * inp_dim2;
     uint32_t kernel_size = ker_dim0 * ker_dim1 * ker_dim2 * ker_dim3;
-    
+
+    stride0 = read_uint8 ("ConvTranspose_input_pipe");
+    stride0 = (stride0 << 8) + read_uint8 ("ConvTranspose_input_pipe");
+
+    padding = read_uint8 ("ConvTranspose_input_pipe");
+    padding = (padding << 8) + read_uint8 ("ConvTranspose_input_pipe");
+        
     out_dim0 = read_uint8 ("ConvTranspose_input_pipe");
     out_dim0 = (out_dim0 << 8) + read_uint8 ("ConvTranspose_input_pipe");
     out_dim1 = read_uint8 ("ConvTranspose_input_pipe");
@@ -180,21 +192,15 @@ void convTranspose()
     out_dim2 = read_uint8 ("ConvTranspose_input_pipe");
     out_dim2 = (out_dim2 << 8) + read_uint8 ("ConvTranspose_input_pipe");
 
-    stride0 = read_uint8 ("ConvTranspose_input_pipe");
-    stride0 = (stride0 << 8) + read_uint8 ("ConvTranspose_input_pipe");
-
-    padding = read_uint8 ("ConvTranspose_input_pipe");
-    padding = (padding << 8) + read_uint8 ("ConvTranspose_input_pipe");
-    
     int i;
-    for(i = 0; i < (input_size >> 3); i ++)
+    for(i = 0; i < (input_size >> 2); i ++)
     {
         uint64_t element;
         __get4xi16__(element);
         input.data_array[i] = element;
     }
 
-    for(i = 0; i < (kernel_size >> 3); i ++)
+    for(i = 0; i < (kernel_size >> 2); i ++)
     {
         uint64_t element;
         __get4xi16__(element);
@@ -205,9 +211,9 @@ void convTranspose()
     for(i = 0; i < (output_size >> 2); i++)
         output.data_array[i] = 0;
     __aa_barrier__();
-   
-    uint32_t start_time = timer();
-
+#ifndef SW   
+    uint64_t start_time = timer();
+#endif
     write_uint16("Block0_start", inp_dim0);
     write_uint16("Block0_start", inp_dim1);
     write_uint16("Block0_start", inp_dim2);
@@ -215,11 +221,11 @@ void convTranspose()
     write_uint16("Block0_start", ker_dim1);
     write_uint16("Block0_start", ker_dim2);
     write_uint16("Block0_start", ker_dim3);
+    write_uint16("Block0_start", stride0);
+    write_uint16("Block0_start", padding);
     write_uint16("Block0_start", out_dim0);
     write_uint16("Block0_start", out_dim1);
     write_uint16("Block0_start", out_dim2);
-    write_uint16("Block0_start", stride0);
-    write_uint16("Block0_start", padding);
     
     write_uint16("Block1_start", inp_dim0);
     write_uint16("Block1_start", inp_dim1);
@@ -228,11 +234,11 @@ void convTranspose()
     write_uint16("Block1_start", ker_dim1);
     write_uint16("Block1_start", ker_dim2);
     write_uint16("Block1_start", ker_dim3);
+    write_uint16("Block1_start", stride0);
+    write_uint16("Block1_start", padding);
     write_uint16("Block1_start", out_dim0);
     write_uint16("Block1_start", out_dim1);
     write_uint16("Block1_start", out_dim2);
-    write_uint16("Block1_start", stride0);
-    write_uint16("Block1_start", padding);
      
     write_uint16("Block2_start", inp_dim0);
     write_uint16("Block2_start", inp_dim1);
@@ -241,11 +247,11 @@ void convTranspose()
     write_uint16("Block2_start", ker_dim1);
     write_uint16("Block2_start", ker_dim2);
     write_uint16("Block2_start", ker_dim3);
+    write_uint16("Block2_start", stride0);
+    write_uint16("Block2_start", padding);    
     write_uint16("Block2_start", out_dim0);
     write_uint16("Block2_start", out_dim1);
     write_uint16("Block2_start", out_dim2);
-    write_uint16("Block2_start", stride0);
-    write_uint16("Block2_start", padding);    
  
     write_uint16("Block3_start", inp_dim0);
     write_uint16("Block3_start", inp_dim1);
@@ -254,24 +260,25 @@ void convTranspose()
     write_uint16("Block3_start", ker_dim1);
     write_uint16("Block3_start", ker_dim2);
     write_uint16("Block3_start", ker_dim3);
+    write_uint16("Block3_start", stride0);
+    write_uint16("Block3_start", padding);
     write_uint16("Block3_start", out_dim0);
     write_uint16("Block3_start", out_dim1);
     write_uint16("Block3_start", out_dim2);
-    write_uint16("Block3_start", stride0);
-    write_uint16("Block3_start", padding);
 
     uint16_t s0 = read_uint16("Block0_done");
     uint16_t s1 = read_uint16("Block1_done");
     uint16_t s2 = read_uint16("Block2_done");
     uint16_t s3 = read_uint16("Block3_done");   
     __aa_barrier__();
-
-    uint32_t stop_time = timer();
-    uint32_t elapsed_time = stop_time - start_time;
-    write_uint32("elapsed_time_pipe", elapsed_time);
+#ifndef SW
+    uint64_t stop_time = timer();
+    uint64_t elapsed_time = stop_time - start_time;
+    write_uint64("elapsed_time_pipe", elapsed_time);
+#endif
     __aa_barrier__();
 
-    for (i = 0; i < (output_size >> 3); i++){
+    for (i = 0; i < (output_size >> 2); i++){
         __set4xi16__(i);
     }   
 }

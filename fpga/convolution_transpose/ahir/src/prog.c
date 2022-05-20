@@ -229,8 +229,8 @@ void convTranspose()
     write_uint16("Block0_start", ker_dim3);
     write_uint16("Block0_start", stride0);
     write_uint16("Block0_start", padding);
-    write_uint16("Block0_start", offset0);
     write_uint16("Block0_start", (offset0 >> 16));
+    write_uint16("Block0_start", offset0);
     write_uint16("Block0_start", out_dim0);
     write_uint16("Block0_start", out_dim1);
     write_uint16("Block0_start", out_dim2);
@@ -244,8 +244,8 @@ void convTranspose()
     write_uint16("Block1_start", ker_dim3);
     write_uint16("Block1_start", stride0);
     write_uint16("Block1_start", padding);
-    write_uint16("Block1_start", offset1);
     write_uint16("Block1_start", (offset1 >> 16));
+    write_uint16("Block1_start", offset1);
     write_uint16("Block1_start", out_dim0);
     write_uint16("Block1_start", out_dim1);
     write_uint16("Block1_start", out_dim2);
@@ -259,8 +259,8 @@ void convTranspose()
     write_uint16("Block2_start", ker_dim3);
     write_uint16("Block2_start", stride0);
     write_uint16("Block2_start", padding);
-    write_uint16("Block2_start", offset2); 
     write_uint16("Block2_start", (offset2 >> 16));
+    write_uint16("Block2_start", offset2); 
     write_uint16("Block2_start", out_dim0);
     write_uint16("Block2_start", out_dim1);
     write_uint16("Block2_start", out_dim2);   
@@ -274,8 +274,8 @@ void convTranspose()
     write_uint16("Block3_start", ker_dim3);
     write_uint16("Block3_start", stride0);
     write_uint16("Block3_start", padding);
-    write_uint16("Block3_start", offset3);
     write_uint16("Block3_start", (offset3 >> 16));
+    write_uint16("Block3_start", offset3);
     write_uint16("Block3_start", out_dim0);
     write_uint16("Block3_start", out_dim1);
     write_uint16("Block3_start", out_dim2);
@@ -289,7 +289,30 @@ void convTranspose()
 #ifndef SW
     uint64_t stop_time = timer();
     uint64_t elapsed_time = stop_time - start_time;
-    write_uint64("elapsed_time_pipe", elapsed_time);
+	uint8_t time_data[8];
+	time_data[7] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[6] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[5]= elapsed_time & 0xFF;
+	elapsed_time>>=8;
+    time_data[4] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[3] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[2] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+    time_data[1] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[0] = elapsed_time & 0xFFFF;
+	write_uint8 ("ConvTranspose_output_pipe",time_data[0]);
+	write_uint8 ("ConvTranspose_output_pipe",time_data[1]);
+	write_uint8 ("ConvTranspose_output_pipe",time_data[2]);
+	write_uint8 ("ConvTranspose_output_pipe",time_data[3]);
+    write_uint8 ("ConvTranspose_output_pipe",time_data[4]);
+	write_uint8 ("ConvTranspose_output_pipe",time_data[5]);
+	write_uint8 ("ConvTranspose_output_pipe",time_data[6]);
+	write_uint8 ("ConvTranspose_output_pipe",time_data[7]);
 #endif    
     __aa_barrier__();
 

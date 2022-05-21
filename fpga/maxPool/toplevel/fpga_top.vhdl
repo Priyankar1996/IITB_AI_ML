@@ -18,7 +18,6 @@ end entity fpga_top;
 
 architecture structure of fpga_top is
 
-    signal RT_1HZ: std_logic;
     signal BAUD_RATE : std_logic_vector(31 downto 0);
 	signal reset2,reset1,reset_sync,clk,lock : std_logic;
 
@@ -54,6 +53,8 @@ architecture structure of fpga_top is
 		signal maxpool_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
 		signal maxpool_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
 		signal send_TX_data : std_logic_vector(7 downto 0);
+		signal last_c : boolean;
+		signal odd_sig : boolean;
 
 		signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
@@ -67,7 +68,9 @@ architecture structure of fpga_top is
 		if(clk'event and clk ='1') then
 			if(reset = '1') then
 				COUNTER <= 0;
-				RT_1HZ <= '0';
+				odd_sig <= false;
+				last_c <= false;
+				send_TX_data <= "00000000";
 			else
 				COUNTER <= COUNTER + 1;
 			end if;
@@ -100,9 +103,32 @@ architecture structure of fpga_top is
 				maxpool_output_pipe_pipe_read_req => maxpool_output_pipe_pipe_read_req,
  				);
 
-send_TX_data <= std_logic_vector(to_unsigned(COUNTER)) when
-				 (maxpool_input_pipe_pipe_write_data == "1111111111111111") 
-				 else maxpool_input_pipe_pipe_write_data;
+	process (maxpool_output_pipe_pipe_read_ack)
+	variable last_c_var : boolean;
+	variable odd : boolean;
+	variable send_TX_var : std_logic_vector(7 downto 0);
+	begin
+		last_c_var := last_c;
+		send_TX_var := send_TX_data;
+		if (maxpool_output_pipe_pipe_read_ack = "1") then
+			if (maxpool_output_pipe_pipe_read_data = "11111111") then
+				if (not odd_var) then
+					last_c_var := true;
+					send_TX_var := std_logic_vector(to_unsigned(COUNTER srl 8,8));
+				else if (odd_var and last_c)
+					last_c_var := false;
+					send_TX_var := std_logic_vector(to_unsigned(COUNTER,8));
+				end if;
+			else
+				last_c_var := false;
+				send_TX_var := maxpool_output_pipe_pipe_read_data;
+			end if;
+			odd_var := not odd_var;
+		end if;
+		odd_sig <= odd_var;
+		last_c <= last_c_var;
+		send_TX_data <= send_TX_var;
+	end process;
 
     uart_inst:
 		configurable_self_tuning_uart

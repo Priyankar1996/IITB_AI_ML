@@ -105,7 +105,7 @@ architecture structure of fpga_top is
 
 	process (maxpool_output_pipe_pipe_read_ack)
 	variable last_c_var : boolean;
-	variable odd : boolean;
+	variable odd_var : boolean;
 	variable send_TX_var : std_logic_vector(7 downto 0);
 	begin
 		last_c_var := last_c;
@@ -114,7 +114,7 @@ architecture structure of fpga_top is
 			if (maxpool_output_pipe_pipe_read_data = "11111111") then
 				if (not odd_var) then
 					last_c_var := true;
-					send_TX_var := std_logic_vector(to_unsigned(COUNTER srl 8,8));
+					send_TX_var := std_logic_vector(to_unsigned(COUNTER, 16))(15 downto 8);
 				else if (odd_var and last_c)
 					last_c_var := false;
 					send_TX_var := std_logic_vector(to_unsigned(COUNTER,8));
@@ -134,7 +134,6 @@ architecture structure of fpga_top is
 		configurable_self_tuning_uart
 			port map (
 					CLK => CLK, RESET => RESET_SYNC,
-					rt_1Hz(0) => RT_1HZ,
 					BAUD_RATE => BAUD_RATE,
 					UART_RX(0) => Rx,
 					UART_TX(0) => Tx,

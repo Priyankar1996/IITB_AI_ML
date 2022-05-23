@@ -2,3 +2,5 @@ To execute the hardware model using testbench_sw:
 ./testbench_sw ../util/Test_inputs/input_image.txt ../util/Test_inputs/input_parameters.txt 
 To execute the hardware model using testbench_hw:
 ./testbench_hw ../util/Test_inputs/input_image.txt ../util/Test_inputs/input_parameters.txt 
+
+THIS IS THE LATEST VERSION OF THE SOFTWARE AND THE HARDWARE MODEL AND IS FASTER THAN THE OLDER VERSION WITH TIME OF 1464.

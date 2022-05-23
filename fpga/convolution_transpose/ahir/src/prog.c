@@ -216,9 +216,10 @@ void convTranspose()
     uint32_t output_size = out_dim0 * out_dim1 * out_dim2;
     for(i = 0; i < (output_size >> 2); i++)
         output.data_array[i] = 0;
-    __aa_barrier__();
 #ifndef SW
+    __aa_barrier__();
     uint64_t start_time = timer();
+    __aa_barrier__();
 #endif
     write_uint16("Block0_start", inp_dim0);
     write_uint16("Block0_start", inp_dim1);
@@ -279,22 +280,25 @@ void convTranspose()
     write_uint16("Block3_start", out_dim0);
     write_uint16("Block3_start", out_dim1);
     write_uint16("Block3_start", out_dim2);
+
+    __aa_barrier__();
     
 
     uint16_t s0 = read_uint16("Block0_done");
     uint16_t s1 = read_uint16("Block1_done");
     uint16_t s2 = read_uint16("Block2_done");
-    uint16_t s3 = read_uint16("Block3_done");   
+    uint16_t s3 = read_uint16("Block3_done");  
     __aa_barrier__();
 #ifndef SW
     uint64_t stop_time = timer();
     uint64_t elapsed_time = stop_time - start_time;
+    write_uint64 ("elapsed_time_pipe", elapsed_time);
 	uint8_t time_data[8];
 	time_data[7] = elapsed_time & 0xFF;
 	elapsed_time>>=8;
 	time_data[6] = elapsed_time & 0xFF;
 	elapsed_time>>=8;
-	time_data[5]= elapsed_time & 0xFF;
+	time_data[5] = elapsed_time & 0xFF;
 	elapsed_time>>=8;
     time_data[4] = elapsed_time & 0xFF;
 	elapsed_time>>=8;
@@ -304,7 +308,7 @@ void convTranspose()
 	elapsed_time>>=8;
     time_data[1] = elapsed_time & 0xFF;
 	elapsed_time>>=8;
-	time_data[0] = elapsed_time & 0xFFFF;
+	time_data[0] = elapsed_time & 0xFF;
 	write_uint8 ("ConvTranspose_output_pipe",time_data[0]);
 	write_uint8 ("ConvTranspose_output_pipe",time_data[1]);
 	write_uint8 ("ConvTranspose_output_pipe",time_data[2]);

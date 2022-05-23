@@ -18,8 +18,9 @@ end entity fpga_top;
 
 architecture structure of fpga_top is
 
+    signal RT_1HZ: std_logic;
     signal BAUD_RATE : std_logic_vector(31 downto 0);
-	signal reset2,reset1,reset_sync,clk,lock : std_logic;
+    signal reset2,reset1,reset_sync,clk,lock : std_logic;
 
     component clk_wiz_0
         port
@@ -42,8 +43,7 @@ architecture structure of fpga_top is
 		maxpool_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
 		maxpool_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
 		maxpool_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
-		maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0);
- 		);
+		maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
     end component;
 
 		signal maxpool_input_pipe_pipe_write_data : std_logic_vector(7 downto 0);
@@ -56,7 +56,8 @@ architecture structure of fpga_top is
 		signal last_c : boolean;
 		signal odd_sig : boolean;
 
-		signal COUNTER: integer;
+		signal COUNTER_CLK: integer;
+		signal COUNTER_TIMER: integer;
 	constant CLK_FREQUENCY: integer := 80000000;
     begin
     
@@ -67,13 +68,20 @@ architecture structure of fpga_top is
 	begin
 		if(clk'event and clk ='1') then
 			if(reset = '1') then
-				COUNTER <= 0;
+				COUNTER_TIMER <= 0;
+				COUNTER_CLK <= 0;
 				odd_sig <= false;
 				last_c <= false;
 				send_TX_data <= "00000000";
 			else
-				COUNTER <= COUNTER + 1;
-			end if;
+				COUNTER_TIMER <= COUNTER_TIMER + 1;
+				if (COUNTER_CLK =(CLK_FREQUENCY/2)-1) then
+					RT_1HZ <= not RT_1HZ;
+					COUNTER_CLK <= 0;
+				else
+					COUNTER_CLK <= COUNTER_CLK + 1;
+				end if;
+			end if;	
 		end if;
 	end process;
 
@@ -100,13 +108,13 @@ architecture structure of fpga_top is
 				maxpool_input_pipe_pipe_write_req => maxpool_input_pipe_pipe_write_req,
 				maxpool_output_pipe_pipe_read_data => maxpool_output_pipe_pipe_read_data,
 				maxpool_output_pipe_pipe_read_ack => maxpool_output_pipe_pipe_read_ack,
-				maxpool_output_pipe_pipe_read_req => maxpool_output_pipe_pipe_read_req,
- 				);
+				maxpool_output_pipe_pipe_read_req => maxpool_output_pipe_pipe_read_req);
 
 	process (maxpool_output_pipe_pipe_read_ack)
 	variable last_c_var : boolean;
 	variable odd_var : boolean;
 	variable send_TX_var : std_logic_vector(7 downto 0);
+	variable send_TX_var16 : std_logic_vector(15 downto 0);
 	begin
 		last_c_var := last_c;
 		send_TX_var := send_TX_data;
@@ -114,10 +122,11 @@ architecture structure of fpga_top is
 			if (maxpool_output_pipe_pipe_read_data = "11111111") then
 				if (not odd_var) then
 					last_c_var := true;
-					send_TX_var := std_logic_vector(to_unsigned(COUNTER, 16))(15 downto 8);
-				else if (odd_var and last_c)
+					send_TX_var16 := std_logic_vector(to_unsigned(COUNTER_TIMER, 16));
+					send_TX_var := send_TX_var16(15 downto 8);
+				elsif (odd_var and last_c) then
 					last_c_var := false;
-					send_TX_var := std_logic_vector(to_unsigned(COUNTER,8));
+					send_TX_var := std_logic_vector(to_unsigned(COUNTER_TIMER, 8));
 				end if;
 			else
 				last_c_var := false;
@@ -134,6 +143,7 @@ architecture structure of fpga_top is
 		configurable_self_tuning_uart
 			port map (
 					CLK => CLK, RESET => RESET_SYNC,
+					rt_1Hz(0) => RT_1HZ,
 					BAUD_RATE => BAUD_RATE,
 					UART_RX(0) => Rx,
 					UART_TX(0) => Tx,

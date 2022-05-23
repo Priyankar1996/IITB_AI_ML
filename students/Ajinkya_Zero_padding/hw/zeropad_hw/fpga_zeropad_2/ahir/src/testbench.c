@@ -75,22 +75,22 @@ int main(int argc,char **argv)
         init_pipe_handler();
         register_pipe ("zeropad_input_pipe",2,8,PIPE_FIFO_MODE);
         register_pipe ("zeropad_output_pipe",2,8,PIPE_FIFO_MODE);
-		register_pipe ("Block0_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block0_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block1_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block1_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block2_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block2_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block3_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block3_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block4_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block4_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block5_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block5_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block6_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block6_complete",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block7_starting",1,16,PIPE_FIFO_MODE);
-		register_pipe ("Block7_complete",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block1_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block1_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block2_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block2_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block3_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block3_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block4_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block4_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block5_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block5_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block6_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block6_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block7_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block7_complete",1,8,PIPE_FIFO_MODE);
 
         
 		PTHREAD_DECL(zeropad3D);
@@ -192,10 +192,10 @@ int main(int argc,char **argv)
 	fclose(param_file);
 	fclose(out_file);
 
-	// #ifndef SW
-	// 	uint64_t time_taken = read_uint64("elapsed_time_pipe");
-	// 	fprintf(stderr,"Time taken is %lu\n",time_taken);
-	// #endif
+	#ifndef SW
+		uint64_t time_taken = read_uint64("elapsed_time_pipe");
+		fprintf(stderr,"Time taken is %lu\n",time_taken);
+	#endif
 
     #ifdef SW
 	    PTHREAD_CANCEL(zeropad3D);

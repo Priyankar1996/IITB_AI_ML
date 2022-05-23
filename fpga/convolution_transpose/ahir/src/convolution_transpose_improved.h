@@ -63,8 +63,8 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
             add_dest_dim1,add_dest_dim2,flag;\
     uint32_t add_src_0 = offset, add_out_0 = 0;\
     while(1) {\
-        add_dest_dim0 = input_dim0*stride + k[1] - padding - 1;\
-        add_dest_dim1 = input_dim1*stride + k[2] - padding - 1;\
+        add_dest_dim0 = (input_dim0*stride) + k[1] - padding - 1;\
+        add_dest_dim1 = (input_dim1*stride) + k[2] - padding - 1;\
         add_out_0 = input_dim2 + o[2]*(add_dest_dim1 + o[1]*add_dest_dim0);\
         output.data_array[add_out_0 >> 2] = input.data_array[add_src_0 >> 2];\
         flag = __CheckEndOfWhile__(input_dim0,input_dim1,input_dim2,row_high,col_high,i[2]);\

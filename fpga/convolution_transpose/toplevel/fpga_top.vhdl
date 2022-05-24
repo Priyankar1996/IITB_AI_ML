@@ -37,15 +37,12 @@ architecture structure of fpga_top is
     port (
 		clk : in std_logic;
 		reset : in std_logic;
-		ConvTranspose_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0),
-		ConvTranspose_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0),
-		ConvTranspose_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0),
-		ConvTranspose_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0),
-		ConvTranspose_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0),
-		ConvTranspose_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)
-		elapsed_time_pipe_pipe_read_data: out std_logic_vector(63 downto 0),
-		elapsed_time_pipe_pipe_read_req : in std_logic_vector(0 downto 0),
-		elapsed_time_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
+		ConvTranspose_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
+		ConvTranspose_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
+		ConvTranspose_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
+		ConvTranspose_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
+		ConvTranspose_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
+		ConvTranspose_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
     end component;
 
 		signal reset2,reset1,reset_sync,clk,lock: std_logic;
@@ -55,12 +52,8 @@ architecture structure of fpga_top is
 		signal ConvTranspose_output_pipe_pipe_read_data : std_logic_vector(7 downto 0);
 		signal ConvTranspose_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
 		signal ConvTranspose_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
-		signal elapsed_time_pipe_pipe_read_data: std_logic_vector(63 downto 0);
-		signal elapsed_time_pipe_pipe_read_req : std_logic_vector(0 downto 0);
-		signal elapsed_time_pipe_pipe_read_ack : std_logic_vector(0 downto 0)
-
 		signal COUNTER: integer;
-	constant CLK_FREQUENCY: integer := 80000000;
+	constant CLK_FREQUENCY: integer := 60000000;
     begin
     
     ------------------------------------------------------------
@@ -106,10 +99,7 @@ architecture structure of fpga_top is
 				ConvTranspose_input_pipe_pipe_write_req => ConvTranspose_input_pipe_pipe_write_req,
 				ConvTranspose_output_pipe_pipe_read_data => ConvTranspose_output_pipe_pipe_read_data,
 				ConvTranspose_output_pipe_pipe_read_ack => ConvTranspose_output_pipe_pipe_read_ack,
-				ConvTranspose_output_pipe_pipe_read_req => ConvTranspose_output_pipe_pipe_read_req,
-				elapsed_time_pipe_pipe_read_data => elapsed_time_pipe_pipe_read_data,
-				elapsed_time_pipe_pipe_read_req => elapsed_time_pipe_pipe_read_req,
-				elapsed_time_pipe_pipe_read_ack => elapsed_time_pipe_pipe_read_ack);
+				ConvTranspose_output_pipe_pipe_read_req => ConvTranspose_output_pipe_pipe_read_req);
 
     uart_inst:
 		configurable_self_tuning_uart

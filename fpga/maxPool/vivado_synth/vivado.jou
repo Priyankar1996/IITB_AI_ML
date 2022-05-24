@@ -2,11 +2,11 @@
 # Vivado v2017.1 (64-bit)
 # SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
 # IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
-# Start of session at: Mon Apr 18 14:03:17 2022
-# Process ID: 20826
-# Current directory: /home/ai_ml_group/IITB_AI_ML/fpga/maxPool/vivado_synth
+# Start of session at: Tue May 24 11:32:04 2022
+# Process ID: 9092
+# Current directory: /home/AIML/IITB_AI_ML/fpga/maxPool/vivado_synth
 # Command line: vivado -mode batch -source bitgen.tcl
-# Log file: /home/ai_ml_group/IITB_AI_ML/fpga/maxPool/vivado_synth/vivado.log
-# Journal file: /home/ai_ml_group/IITB_AI_ML/fpga/maxPool/vivado_synth/vivado.jou
+# Log file: /home/AIML/IITB_AI_ML/fpga/maxPool/vivado_synth/vivado.log
+# Journal file: /home/AIML/IITB_AI_ML/fpga/maxPool/vivado_synth/vivado.jou
 #-----------------------------------------------------------
 source bitgen.tcl

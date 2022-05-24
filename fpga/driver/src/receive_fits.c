@@ -13,8 +13,8 @@ int main(int argc, char* argv[])
 {
 	while(1)
 	{
-		uint8_t r;
-		r = tbGetUint8();
+		uint16_t r;
+		r = tbGetUint16();
 		fprintf(stdout,"%hu\n", r);
 	}
 }

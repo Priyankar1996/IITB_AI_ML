@@ -160,7 +160,7 @@ void maxPool3D()
 	write_uint8 ("maxpool_output_pipe",time_data[5]);
 	write_uint8 ("maxpool_output_pipe",time_data[6]);
 	write_uint8 ("maxpool_output_pipe",time_data[7]);
-	write_uint64("elapsed_time_pipe", elapsed_time);
+	//write_uint64("elapsed_time_pipe", elapsed_time);
 #endif
 	__aa_barrier__();
 	sendB (cb*rb*chl_out);

@@ -72,7 +72,7 @@ architecture structure of fpga_top is
 				COUNTER_CLK <= 0;
 				odd_sig <= false;
 				last_c <= false;
-				send_TX_data <= "00000000";
+				send_TX_data <= "00101010";
 			else
 				COUNTER_TIMER <= COUNTER_TIMER + 1;
 				if (COUNTER_CLK =(CLK_FREQUENCY/2)-1) then
@@ -110,34 +110,37 @@ architecture structure of fpga_top is
 				maxpool_output_pipe_pipe_read_ack => maxpool_output_pipe_pipe_read_ack,
 				maxpool_output_pipe_pipe_read_req => maxpool_output_pipe_pipe_read_req);
 
-	process (maxpool_output_pipe_pipe_read_ack)
-	variable last_c_var : boolean;
-	variable odd_var : boolean;
-	variable send_TX_var : std_logic_vector(7 downto 0);
-	variable send_TX_var16 : std_logic_vector(15 downto 0);
-	begin
-		last_c_var := last_c;
-		send_TX_var := send_TX_data;
-		if (maxpool_output_pipe_pipe_read_ack = "1") then
-			if (maxpool_output_pipe_pipe_read_data = "11111111") then
-				if (not odd_var) then
-					last_c_var := true;
-					send_TX_var16 := std_logic_vector(to_unsigned(COUNTER_TIMER, 16));
-					send_TX_var := send_TX_var16(15 downto 8);
-				elsif (odd_var and last_c) then
-					last_c_var := false;
-					send_TX_var := std_logic_vector(to_unsigned(COUNTER_TIMER, 8));
-				end if;
-			else
-				last_c_var := false;
-				send_TX_var := maxpool_output_pipe_pipe_read_data;
-			end if;
-			odd_var := not odd_var;
-		end if;
-		odd_sig <= odd_var;
-		last_c <= last_c_var;
-		send_TX_data <= send_TX_var;
-	end process;
+--	process (clk)
+--	variable last_c_var : boolean;
+--	variable odd_var : boolean;
+--	variable send_TX_var : std_logic_vector(7 downto 0);
+--	variable send_TX_var16 : std_logic_vector(15 downto 0);
+--	begin
+--		if (rising_edge(clk) and (maxpool_output_pipe_pipe_read_ack = "1")) then
+--			last_c_var := last_c;
+--			send_TX_var := send_TX_data;
+--			odd_var := odd_sig;
+--			if (maxpool_output_pipe_pipe_read_data = "11111111") then
+--				if (not odd_var) then
+--					last_c_var := true;
+--					send_TX_var16 := std_logic_vector(to_unsigned(COUNTER_TIMER, 16));
+--					send_TX_var := send_TX_var16(15 downto 8);
+--				elsif (odd_var and last_c) then
+--					last_c_var := false;
+--					send_TX_var := std_logic_vector(to_unsigned(COUNTER_TIMER, 8));
+--				end if;
+--			else
+--				last_c_var := false;
+--				send_TX_var := maxpool_output_pipe_pipe_read_data;
+--			end if;
+--			odd_var := not odd_var;
+--			odd_sig <= odd_var;
+--			last_c <= last_c_var;
+--			send_TX_data <= send_TX_var;
+--		end if;
+--	end process;
+
+send_TX_data <= maxpool_output_pipe_pipe_read_data;
 
     uart_inst:
 		configurable_self_tuning_uart

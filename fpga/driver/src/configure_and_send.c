@@ -47,11 +47,11 @@ int main(int argc, char* argv[])
 
 	while(1)
 	{
-		uint8_t x;
+		uint16_t x;
 		fscanf(stdin,"%hu",&x);
-		if(x == 255)
+		if(x == 65535)
 		break;
-		tbSendUint8 (x);
+		tbSendUint16 (x);
 		fprintf(stderr,"sent %hu.\n", x);
 	}
 

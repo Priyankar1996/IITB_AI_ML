@@ -1119,7 +1119,7 @@ $module [baudControlCalculatorDaemon]
       assign_stmt_137__entry__ |-> (assign_stmt_137)
       assign_stmt_137__exit__ <-| (assign_stmt_137)
       // if-statement  
-      //  file core.linked.opt.aa, line -2006299784
+      //  file core.linked.opt.aa, line -1334449288
       ;;[if_stmt_138_dead_link] 
       {
         $T [dead_transition] $dead 
@@ -1554,7 +1554,7 @@ $module [baudControlCalculatorDaemon]
     // constant-declarations for block %baudControlCalculatorDaemon%loop%
     //  file core.linked.opt.aa, line 64
     // if-statement  
-    //  file core.linked.opt.aa, line -2006299784
+    //  file core.linked.opt.aa, line -1334449288
     // constant-declarations for block %baudControlCalculatorDaemon%loop%
     //  file core.linked.opt.aa, line 70
     // ($bitcast ($uint<16>) _b0  )
@@ -1583,7 +1583,7 @@ $module [baudControlCalculatorDaemon]
     // clock_valid
     $W[clock_valid_137] : $int<1>
     // if statement  
-    //  file core.linked.opt.aa, line -2006299784
+    //  file core.linked.opt.aa, line -1334449288
     // ( ~ clock_valid )
     $intermediate $W[NOT_u1_u1_140_wire] : $int<1>
     // 		SS := (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  )) $buffering 1// bits of buffering = 32. 
@@ -1645,7 +1645,7 @@ $module [baudControlCalculatorDaemon]
     $ioport $in [RPIPE_CLOCK_FREQUENCY_VALID_136_inst] (CLOCK_FREQUENCY_VALID) (RPIPE_CLOCK_FREQUENCY_VALID_136_wire) 
     $buffering $out RPIPE_CLOCK_FREQUENCY_VALID_136_inst RPIPE_CLOCK_FREQUENCY_VALID_136_wire 1
     // datapath-instances for if  
-    //  file core.linked.opt.aa, line -2006299784
+    //  file core.linked.opt.aa, line -1334449288
     // ( ~ clock_valid )
     ~ [NOT_u1_u1_140_inst] (clock_valid_137) (NOT_u1_u1_140_wire)   $flowthrough
     $delay NOT_u1_u1_140_inst 0
@@ -1735,7 +1735,7 @@ $module [baudControlCalculatorDaemon]
   // CLOCK_FREQUENCY_VALID
   W_clock_valid_135_inst <=> (branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Sample/req branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Update/req) (branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Sample/ack branch_block_stmt_133/assign_stmt_137/assign_stmt_137_Update/ack)
   // CP-DP links for if  
-  //  file core.linked.opt.aa, line -2006299784
+  //  file core.linked.opt.aa, line -1334449288
   // ( ~ clock_valid )
   if_stmt_138_branch <=> (branch_block_stmt_133/if_stmt_138_eval_test/branch_req) (branch_block_stmt_133/if_stmt_138_else_link/else_choice_transition branch_block_stmt_133/if_stmt_138_if_link/if_choice_transition)
   // CP-DP links for merge  

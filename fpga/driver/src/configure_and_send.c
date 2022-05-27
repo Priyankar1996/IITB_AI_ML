@@ -47,9 +47,12 @@ int main(int argc, char* argv[])
 
 	while(1)
 	{
-		uint8_t x  = getchar();
-		tbSendUint8 (x);
-		fprintf(stderr,"sent %c.\n", x);
+		uint16_t x;
+		fscanf(stdin,"%hu",&x);
+		if(x == 65535)
+		break;
+		tbSendUint16 (x);
+		fprintf(stderr,"sent %hu.\n", x);
 	}
 
 	return(0);

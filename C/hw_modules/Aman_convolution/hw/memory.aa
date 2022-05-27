@@ -1,6 +1,7 @@
 //$record [structx_x__SizedTensorCustom] < $array [16384] $of $uint<64> > 
 //$storage T:structx_x__SizedTensorCustom
 $pipe kernel_pipe1 : $uint<16> $depth 100
+$pipe kernel_pipe2 : $uint<16> $depth 100
 $pipe input_pipe1 : $uint<16> $depth 100
 $pipe size_pipe : $uint<32> $depth 1
 $pipe kernel_done_pipe : $uint<1> $depth 1
@@ -8,11 +9,12 @@ $pipe input_done_pipe : $uint<1> $depth 1
 
 // Load the kernel channel into the kernel pipes
 $module [loadKernelChannel]
-$in (start_add end_add : $uint<64>)
+$in (start_add end_add : $uint<64> pp : $uint<8>)
 $out ()
 $is
 {   
     sh_start := (start_add>>2)
+    pingpong := ($bitcast ($uint<1>) pp)
     fetch_addr := @(K[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][sh_start])
     my_fetch := ->(fetch_addr)
     first_fill := (start_add == 0)
@@ -26,16 +28,16 @@ $is
         $endmerge
         my_num1 := ((3-(mycount&3))<<4)
         $volatile nmycount := (mycount + 1)
-        //$guard (~first_fill) empty_pipe_content := kernel_pipe1
         var_val := ($bitcast ($uint<16>) (fetch_val>>my_num1))
-        kernel_pipe1 := var_val
+        $guard (~pingpong) kernel_pipe1 := var_val
+        $guard (pingpong) kernel_pipe2 := var_val
         fn := ((nmycount& 3) == 0)
         fetch_addr := @(K[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][(nmycount >>2)])
         $guard (fn) fv := ->(fetch_addr)
         nfetch_val := ($mux fn fv fetch_val)
         $while (mycount < (end_add-1))
     }
-    $guard (first_fill) size_pipe := ($bitcast ($uint<32>) (end_add - start_add))
+    size_pipe := ($concat pingpong ($bitcast ($uint<31>) (end_add - start_add)))
 }
 
 // Access the input tensor and write to iput pipe
@@ -96,9 +98,12 @@ $is
 {
     $branchblock [conv_block]
     {
+        $merge $entry loopback
+        $endmerge
         num_out := num_out_pipe
-        size := size_pipe
-        $volatile mcount_var := ($bitcast ($uint<32>) 0)
+        size_read := size_pipe
+        $split (size_read 1 31) (pingpong size)
+        $volatile mcount_var := ($bitcast ($uint<31>) 0)
         $volatile acc_var := ($bitcast ($int<16>) 0)
         $dopipeline $depth 15 $buffering 1 $fullrate
         $merge $entry $loopback
@@ -108,7 +113,9 @@ $is
         $endmerge
         iread := input_pipe1
         ival := ($bitcast ($int<16>) iread)
-        kread := kernel_pipe1
+        $guard (~pingpong) temp1 := kernel_pipe1
+        $guard (pingpong) temp2 := kernel_pipe2
+        kread := ($mux pingpong temp2 temp1)
         kval := ($bitcast ($int<16>) kread)
         mul_val := (kval*ival)
         next_sum := (mycount == (size - 1))
@@ -116,13 +123,17 @@ $is
         nacc := ($mux next_sum 0 acc_val)
         nmycount := ($mux next_sum 0 (mycount+1))
         out_done_flag := (out_count == num_out)
-        $guard (~out_done_flag) kernel_pipe1 := kread
+        send_back1 := ((~out_done_flag) & (~pingpong))
+        send_back2 := ((~out_done_flag) & pingpong)
+        $guard (send_back1) kernel_pipe1 := kread
+        $guard (send_back2) kernel_pipe2 := kread
         n_out_count := ($mux next_sum ($mux out_done_flag ($bitcast ($uint<16>) 1) (out_count + 1)) out_count)
         all_done_flag := (out_done_flag & next_sum)
         $guard (all_done_flag) input_done_pipe := 1
         $split (acc_val 8 8) (acc_val_up acc_val_dn)
         $guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_up)
         $guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_dn)
-        $while 1
+        $while (~all_done_flag)
+        $place [loopback]
     }
 }

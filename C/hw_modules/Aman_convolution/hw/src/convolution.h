@@ -19,13 +19,13 @@ void convolve();
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
 void __aa_barrier__();
-void loadKernelChannel(uint64_t start, uint64_t end);
+void loadKernelChannel(uint64_t start, uint64_t end, uint8_t pingpong);
 void access_T(uint16_t nc, uint16_t r, uint16_t c, uint16_t r1, uint16_t ch, uint16_t a);
 #else
 	#define __loop_pipeline_var__ {;}
 	#define __aa_barrier__() {;}
 	#define access_T(val,a,b,c,d,e) ({;})
-	#define loadKernelChannel(s,e) ({0;})
+	#define loadKernelChannel(s,e,p) ({0;})
 #endif
 
 #define __increment_mm__(row,col,max_col) ({\
@@ -51,12 +51,12 @@ void access_T(uint16_t nc, uint16_t r, uint16_t c, uint16_t r1, uint16_t ch, uin
 	uint16_t num_cont = ck*chl_in;\
 	uint32_t size_kernel = num_cont*rk;\
 	uint16_t chl=0;\
-	write_uint16("num_out_pipe",cb*rb);\
 	write_uint8("maxpool_output_pipe",200);\
 	write_uint8("maxpool_output_pipe",200);\
 	while(1)\
 	{\
-		loadKernelChannel(chl*size_kernel,(chl+1)*size_kernel);\
+		write_uint16("num_out_pipe",cb*rb);\
+		loadKernelChannel(chl*size_kernel,(chl+1)*size_kernel,chl&1);\
 		access_T(num_cont,rb,cb-1,rk-1, chl_in , ct);\
 		chl++;\
 		if (chl == chl_out) break;\

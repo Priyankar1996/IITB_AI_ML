@@ -144,7 +144,34 @@ void convolution3D()
 #ifndef SW
 	uint64_t stop_time = timer();
 	uint64_t elapsed_time = stop_time - start_time;
-	write_uint64("elapsed_time_pipe", elapsed_time);
+#ifndef fpga 
+	write_uint64("elapsed_time_pipe",elapsed_time);
+#else
+	uint8_t time_data[8];
+	time_data[7] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[6] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[5]= elapsed_time & 0xFF;
+	elapsed_time>>=8;
+    time_data[4] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[3] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[2] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+    time_data[1] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[0] = elapsed_time & 0xFF;
+	write_uint8 ("maxpool_output_pipe",time_data[0]);
+	write_uint8 ("maxpool_output_pipe",time_data[1]);
+	write_uint8 ("maxpool_output_pipe",time_data[2]);
+	write_uint8 ("maxpool_output_pipe",time_data[3]);
+    write_uint8 ("maxpool_output_pipe",time_data[4]);
+	write_uint8 ("maxpool_output_pipe",time_data[5]);
+	write_uint8 ("maxpool_output_pipe",time_data[6]);
+	write_uint8 ("maxpool_output_pipe",time_data[7]);
+#endif
 #endif
 	__aa_barrier__();
 	// sendB ();

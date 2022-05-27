@@ -13,7 +13,8 @@ int main(int argc, char* argv[])
 {
 	while(1)
 	{
-		uint8_t r = getchar();
-		fprintf(stdout," %c ", r);
+		uint16_t r;
+		r = tbGetUint16();
+		fprintf(stdout,"%hu\n", r);
 	}
 }

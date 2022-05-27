@@ -21,7 +21,6 @@
 DEFINE_THREAD(convolution3D);
 #endif
 
-SizedTensor_16K T,B;
 TensorDescriptor desc_T,desc_B,desc_K;
 
 int main(int argc, char**argv){
@@ -158,9 +157,7 @@ int main(int argc, char**argv){
 		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
 		write_uint8("maxpool_input_pipe",temp[i&3]&0xFF);
 		fprintf(stderr,"Sent element %d\n",i);
-		if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
 	}
-	T.data_array[i/4] = *(uint64_t*)temp;
 
 	size = __NumberOfElementsInSizedTensor__(desc_K);
 
@@ -172,9 +169,7 @@ int main(int argc, char**argv){
 		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
 		write_uint8("maxpool_input_pipe",temp[i&3]&0xFF);
 		fprintf(stderr,"Sent kernel element %d\n",i);
-		if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
 	}
-	T.data_array[i/4] = *(uint64_t*)temp;
 	fclose(octaveInFile);
 
 	fprintf(stderr,"Checkpoint\n");

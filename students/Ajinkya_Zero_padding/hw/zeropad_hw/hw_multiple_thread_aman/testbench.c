@@ -37,10 +37,10 @@ DEFINE_THREAD(zeropad3D_A);
 DEFINE_THREAD(zeropad3D_B);
 DEFINE_THREAD(zeropad3D_C);
 DEFINE_THREAD(zeropad3D_D);
-DEFINE_THREAD(zeropad3D_E);
-DEFINE_THREAD(zeropad3D_F);
-DEFINE_THREAD(zeropad3D_G);
-DEFINE_THREAD(zeropad3D_H);
+// DEFINE_THREAD(zeropad3D_E);
+// DEFINE_THREAD(zeropad3D_F);
+// DEFINE_THREAD(zeropad3D_G);
+// DEFINE_THREAD(zeropad3D_H);
 #endif
 
 SizedTensor_16K T,R;
@@ -83,14 +83,14 @@ int main(int argc,char **argv)
 		register_pipe ("Block2_complete",1,8,PIPE_FIFO_MODE);
 		register_pipe ("Block3_starting",1,8,PIPE_FIFO_MODE);
 		register_pipe ("Block3_complete",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block4_starting",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block4_complete",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block5_starting",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block5_complete",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block6_starting",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block6_complete",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block7_starting",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block7_complete",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block4_starting",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block4_complete",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block5_starting",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block5_complete",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block6_starting",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block6_complete",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block7_starting",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block7_complete",1,8,PIPE_FIFO_MODE);
 
         
 		PTHREAD_DECL(zeropad3D);
@@ -98,10 +98,10 @@ int main(int argc,char **argv)
 		PTHREAD_DECL(zeropad3D_B);
 		PTHREAD_DECL(zeropad3D_C);
 		PTHREAD_DECL(zeropad3D_D);
-		PTHREAD_DECL(zeropad3D_E);
-		PTHREAD_DECL(zeropad3D_F);
-		PTHREAD_DECL(zeropad3D_G);
-		PTHREAD_DECL(zeropad3D_H);
+		// PTHREAD_DECL(zeropad3D_E);
+		// PTHREAD_DECL(zeropad3D_F);
+		// PTHREAD_DECL(zeropad3D_G);
+		// PTHREAD_DECL(zeropad3D_H);
 
 		
 		PTHREAD_CREATE(zeropad3D);
@@ -109,10 +109,10 @@ int main(int argc,char **argv)
 		PTHREAD_CREATE(zeropad3D_B);
 		PTHREAD_CREATE(zeropad3D_C);
 		PTHREAD_CREATE(zeropad3D_D);
-		PTHREAD_CREATE(zeropad3D_E);
-		PTHREAD_CREATE(zeropad3D_F);
-		PTHREAD_CREATE(zeropad3D_G);
-		PTHREAD_CREATE(zeropad3D_H);
+		// PTHREAD_CREATE(zeropad3D_E);
+		// PTHREAD_CREATE(zeropad3D_F);
+		// PTHREAD_CREATE(zeropad3D_G);
+		// PTHREAD_CREATE(zeropad3D_H);
 
     #endif
 
@@ -203,10 +203,10 @@ int main(int argc,char **argv)
 		PTHREAD_CANCEL(zeropad3D_B);
 		PTHREAD_CANCEL(zeropad3D_C);
 		PTHREAD_CANCEL(zeropad3D_D);
-		PTHREAD_CANCEL(zeropad3D_E);
-		PTHREAD_CANCEL(zeropad3D_F);
-		PTHREAD_CANCEL(zeropad3D_G);
-		PTHREAD_CANCEL(zeropad3D_H);
+		// PTHREAD_CANCEL(zeropad3D_E);
+		// PTHREAD_CANCEL(zeropad3D_F);
+		// PTHREAD_CANCEL(zeropad3D_G);
+		// PTHREAD_CANCEL(zeropad3D_H);
 
 	    close_pipe_handler();
     #endif

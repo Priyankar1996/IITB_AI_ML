@@ -81,13 +81,14 @@ void concat()
     out_dim2 = (out_dim2 << 8) + read_uint8 ("Concat_input_pipe");
 
     int i;
-    uint32_t input1_size = input1_dim0 * input1_dim1 * input1_dim2;
-    uint32_t input2_size = input2_dim0 * input2_dim1 * input2_dim2;
     uint32_t output_size = out_dim0 * out_dim1 *out_dim2;
-    uint16_t count1 = (input1_dim1 * input1_dim2)>>3;
-    uint16_t count2 = (input2_dim1 * input2_dim2)>>3; 
+    uint16_t count1 = (input1_dim1 * input1_dim2);
+    uint16_t count2 = (input2_dim1 * input2_dim2);
+    uint32_t input1_size = count1 * input1_dim0;
+    uint32_t input2_size = count2 * input2_dim0; 
     for(i = 0; i < (input1_size >> 3); i ++)
     {
+        __loop_pipeline_var__;
         uint64_t element;
         __get8xi8__(element);
         input_1.data_array[i] = element;
@@ -95,6 +96,7 @@ void concat()
 
     for(i = 0; i < (input2_size >> 3); i ++)
     {
+        __loop_pipeline_var__;
         uint64_t element;
         __get8xi8__(element);
         input_2.data_array[i] = element;
@@ -104,7 +106,7 @@ void concat()
     uint64_t start_time = timer();
     __aa_barrier__();
 #endif
-    __ConcatTensors__(input_1,input_2,output,count1,count2,(output_size >> 3));
+    __ConcatTensors__(input_1,input_2,output,(count1>>3),(count2>>3),(output_size >> 3));
     __aa_barrier__();
 #ifndef SW
     uint64_t stop_time = timer();

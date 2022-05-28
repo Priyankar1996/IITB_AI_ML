@@ -34,24 +34,24 @@ architecture structure of fpga_top is
     end component;
 
     component ahir_system is
-    port (
+	port (-- 
 		clk : in std_logic;
 		reset : in std_logic;
-		ConvTranspose_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
-		ConvTranspose_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
-		ConvTranspose_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
-		ConvTranspose_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
-		ConvTranspose_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
-		ConvTranspose_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0));
+		Concat_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
+		Concat_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
+		Concat_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
+		Concat_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
+		Concat_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
+		Concat_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)));
     end component;
 
 		signal reset2,reset1,reset_sync,clk,lock: std_logic;
-		signal ConvTranspose_input_pipe_pipe_write_data : std_logic_vector(7 downto 0);
-		signal ConvTranspose_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
-		signal ConvTranspose_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
-		signal ConvTranspose_output_pipe_pipe_read_data : std_logic_vector(7 downto 0);
-		signal ConvTranspose_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
-		signal ConvTranspose_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
+		signal Concat_input_pipe_pipe_write_data : std_logic_vector(7 downto 0);
+		signal Concat_input_pipe_pipe_write_req : std_logic_vector(0 downto 0);
+		signal Concat_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
+		signal Concat_output_pipe_pipe_read_data : std_logic_vector(7 downto 0);
+		signal Concat_output_pipe_pipe_read_req : std_logic_vector(0 downto 0);
+		signal Concat_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
 		signal COUNTER: integer;
 	constant CLK_FREQUENCY: integer := 60000000;
     begin
@@ -94,12 +94,12 @@ architecture structure of fpga_top is
 	ahir_inst: ahir_system
 		port map (clk => CLK, 
 				reset => RESET_SYNC,
-				ConvTranspose_input_pipe_pipe_write_data => ConvTranspose_input_pipe_pipe_write_data,
-				ConvTranspose_input_pipe_pipe_write_ack => ConvTranspose_input_pipe_pipe_write_ack,
-				ConvTranspose_input_pipe_pipe_write_req => ConvTranspose_input_pipe_pipe_write_req,
-				ConvTranspose_output_pipe_pipe_read_data => ConvTranspose_output_pipe_pipe_read_data,
-				ConvTranspose_output_pipe_pipe_read_ack => ConvTranspose_output_pipe_pipe_read_ack,
-				ConvTranspose_output_pipe_pipe_read_req => ConvTranspose_output_pipe_pipe_read_req);
+				Concat_input_pipe_pipe_write_data => Concat_input_pipe_pipe_write_data,
+				Concat_input_pipe_pipe_write_ack => Concat_input_pipe_pipe_write_ack,
+				Concat_input_pipe_pipe_write_req => Concat_input_pipe_pipe_write_req,
+				Concat_output_pipe_pipe_read_data => Concat_output_pipe_pipe_read_data,
+				Concat_output_pipe_pipe_read_ack => Concat_output_pipe_pipe_read_ack,
+				Concat_output_pipe_pipe_read_req => Concat_output_pipe_pipe_read_req);
 
     uart_inst:
 		configurable_self_tuning_uart
@@ -109,12 +109,12 @@ architecture structure of fpga_top is
 					BAUD_RATE => BAUD_RATE,
 					UART_RX(0) => Rx,
 					UART_TX(0) => Tx,
-					TX_to_CONSOLE_pipe_write_data => ConvTranspose_output_pipe_pipe_read_data,
-					TX_to_CONSOLE_pipe_write_req => ConvTranspose_output_pipe_pipe_read_ack,
-					TX_to_CONSOLE_pipe_write_ack => ConvTranspose_output_pipe_pipe_read_req,
-					CONSOLE_to_RX_pipe_read_data  => ConvTranspose_input_pipe_pipe_write_data ,
-					CONSOLE_to_RX_pipe_read_req  => ConvTranspose_input_pipe_pipe_write_ack ,
-					CONSOLE_to_RX_pipe_read_ack => ConvTranspose_input_pipe_pipe_write_req
+					TX_to_CONSOLE_pipe_write_data => Concat_output_pipe_pipe_read_data,
+					TX_to_CONSOLE_pipe_write_req => Concat_output_pipe_pipe_read_ack,
+					TX_to_CONSOLE_pipe_write_ack => Concat_output_pipe_pipe_read_req,
+					CONSOLE_to_RX_pipe_read_data  => Concat_input_pipe_pipe_write_data ,
+					CONSOLE_to_RX_pipe_read_req  => Concat_input_pipe_pipe_write_ack ,
+					CONSOLE_to_RX_pipe_read_ack => Concat_input_pipe_pipe_write_req
 				);
 
 	BAUD_RATE <= std_logic_vector(to_unsigned(115200, 32));

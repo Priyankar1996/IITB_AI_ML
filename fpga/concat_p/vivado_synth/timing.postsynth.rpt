@@ -1,0 +1,963 @@
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
+| Date         : Tue May 24 15:42:12 2022
+| Host         : ajit7 running 64-bit Ubuntu 16.04.7 LTS
+| Command      : report_timing_summary -file timing.postsynth.rpt -nworst 4
+| Design       : fpga_top
+| Device       : 7k325t-ffg900
+| Speed File   : -2  PRODUCTION 1.12 2017-02-17
+------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  false
+
+  Corner  Analyze    Analyze    
+  Name    Max Paths  Min Paths  
+  ------  ---------  ---------  
+  Slow    Yes        Yes        
+  Fast    Yes        Yes        
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock
+2. checking constant_clock
+3. checking pulse_width_clock
+4. checking unconstrained_internal_endpoints
+5. checking no_input_delay
+6. checking no_output_delay
+7. checking multiple_clock
+8. checking generated_clocks
+9. checking loops
+10. checking partial_input_delay
+11. checking partial_output_delay
+12. checking latch_loops
+
+1. checking no_clock
+--------------------
+ There are 0 register/latch pins with no clock.
+
+
+2. checking constant_clock
+--------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock
+-----------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints
+--------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay
+--------------------------
+ There are 2 input ports with no input delay specified. (HIGH)
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay
+---------------------------
+ There is 1 port with no output delay specified. (HIGH)
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock
+--------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks
+----------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops
+-----------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay
+--------------------------------
+ There are 0 input ports with partial input delay specified.
+
+
+11. checking partial_output_delay
+---------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops
+------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+    -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+      2.093        0.000                      0                21411        0.014        0.000                      0                21411        1.100        0.000                       0                  7171  
+
+
+All user specified timing constraints are met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+Clock                 Waveform(ns)         Period(ns)      Frequency(MHz)
+-----                 ------------         ----------      --------------
+clk_p                 {0.000 2.500}        5.000           200.000         
+  clk_out1_clk_wiz_0  {0.000 8.333}        16.667          60.000          
+  clkfbout_clk_wiz_0  {0.000 12.500}       25.000          40.000          
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock                     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+-----                     -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+clk_p                                                                                                                                                                   1.100        0.000                       0                     1  
+  clk_out1_clk_wiz_0        2.093        0.000                      0                21411        0.014        0.000                      0                21411        7.691        0.000                       0                  7167  
+  clkfbout_clk_wiz_0                                                                                                                                                   23.592        0.000                       0                     3  
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    ----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  clk_p
+  To Clock:  clk_p
+
+Setup :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+PW    :            0  Failing Endpoints,  Worst Slack        1.100ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         clk_p
+Waveform(ns):       { 0.000 2.500 }
+Period(ns):         5.000
+Sources:            { clk_p }
+
+Check Type        Corner  Lib Pin           Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location  Pin
+Min Period        n/a     PLLE2_ADV/CLKIN1  n/a            1.071         5.000       3.929                clocking/inst/plle2_adv_inst/CLKIN1
+Max Period        n/a     PLLE2_ADV/CLKIN1  n/a            52.633        5.000       47.633               clocking/inst/plle2_adv_inst/CLKIN1
+Low Pulse Width   Fast    PLLE2_ADV/CLKIN1  n/a            1.400         2.500       1.100                clocking/inst/plle2_adv_inst/CLKIN1
+High Pulse Width  Slow    PLLE2_ADV/CLKIN1  n/a            1.400         2.500       1.100                clocking/inst/plle2_adv_inst/CLKIN1
+
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  clk_out1_clk_wiz_0
+  To Clock:  clk_out1_clk_wiz_0
+
+Setup :            0  Failing Endpoints,  Worst Slack        2.093ns,  Total Violation        0.000ns
+Hold  :            0  Failing Endpoints,  Worst Slack        0.014ns,  Total Violation        0.000ns
+PW    :            0  Failing Endpoints,  Worst Slack        7.691ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             2.093ns  (required time - arrival time)
+  Source:                 ahir_inst/convTranspose_instance/x__5/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            16.667ns  (clk_out1_clk_wiz_0 rise@16.667ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        14.351ns  (logic 10.370ns (72.262%)  route 3.981ns (27.738%))
+  Logic Levels:           21  (CARRY4=11 DSP48E1=2 LUT2=2 LUT4=2 LUT5=2 LUT6=2)
+  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -2.633ns = ( 14.034 - 16.667 ) 
+    Source Clock Delay      (SCD):    -2.908ns
+    Clock Pessimism Removal (CPR):    -0.421ns
+  Clock Uncertainty:      0.114ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.217ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.832     0.832 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.584     1.416    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -5.467    -4.051 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.466    -3.585    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.093    -3.492 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.584    -2.908    ahir_inst/convTranspose_instance/clk_out1
+                         DSP48E1                                      r  ahir_inst/convTranspose_instance/x__5/CLK
+  -------------------------------------------------------------------    -------------------
+                         DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      2.860    -0.048 r  ahir_inst/convTranspose_instance/x__5/P[31]
+                         net (fo=1, unplaced)         0.466     0.417    ahir_inst/convTranspose_instance/x__5_n_74
+                         DSP48E1 (Prop_dsp48e1_A[14]_P[0])
+                                                      2.737     3.154 r  ahir_inst/convTranspose_instance/x__6/P[0]
+                         net (fo=1, unplaced)         0.466     3.620    ahir_inst/convTranspose_instance/x__6_n_105
+                         LUT2 (Prop_lut2_I1_O)        0.043     3.663 r  ahir_inst/convTranspose_instance/x__8_i_19/O
+                         net (fo=1, unplaced)         0.000     3.663    ahir_inst/convTranspose_instance/x__8_i_19_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     3.930 r  ahir_inst/convTranspose_instance/x__8_i_4/CO[3]
+                         net (fo=1, unplaced)         0.007     3.937    ahir_inst/convTranspose_instance/x__8_i_4_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     3.990 r  ahir_inst/convTranspose_instance/x__8_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     3.990    ahir_inst/convTranspose_instance/x__8_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     4.043 r  ahir_inst/convTranspose_instance/x__8_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     4.043    ahir_inst/convTranspose_instance/x__8_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.173     4.216 r  ahir_inst/convTranspose_instance/x__8_i_1/O[1]
+                         net (fo=1, unplaced)         0.466     4.682    ahir_inst/convTranspose_instance/x__8_i_1_n_6
+                         DSP48E1 (Prop_dsp48e1_A[12]_P[0])
+                                                      2.817     7.499 r  ahir_inst/convTranspose_instance/x__8/P[0]
+                         net (fo=1, unplaced)         0.466     7.964    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__8[0]
+                         LUT2 (Prop_lut2_I1_O)        0.043     8.007 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1/O
+                         net (fo=1, unplaced)         0.000     8.007    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     8.274 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.007     8.281    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     8.334 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.000     8.334    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.119     8.453 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[28]_i_2__1/O[2]
+                         net (fo=3, unplaced)         0.288     8.741    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/x__9_0[2]
+                         LUT4 (Prop_lut4_I3_O)        0.127     8.868 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0/O
+                         net (fo=1, unplaced)         0.270     9.138    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0_n_0
+                         LUT6 (Prop_lut6_I1_O)        0.043     9.181 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0/O
+                         net (fo=1, unplaced)         0.270     9.451    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.043     9.494 r  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_2__0/O
+                         net (fo=24, unplaced)        0.806    10.300    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__9
+                         LUT5 (Prop_lut5_I3_O)        0.043    10.343 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0/O
+                         net (fo=1, unplaced)         0.270    10.613    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0_n_0
+                         LUT4 (Prop_lut4_I3_O)        0.043    10.656 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0/O
+                         net (fo=1, unplaced)         0.000    10.656    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267    10.923 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.923    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    10.976 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.976    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    11.029 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0/CO[3]
+                         net (fo=1, unplaced)         0.000    11.029    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.089    11.118 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_2__1/CO[1]
+                         net (fo=2, unplaced)         0.200    11.318    ahir_inst/result3_out
+                         LUT5 (Prop_lut5_I0_O)        0.124    11.442 r  ahir_inst/noBypass.ack0_i_1__5/O
+                         net (fo=1, unplaced)         0.000    11.442    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/CapEqOne.non_zero_reg_0
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                     16.667    16.667 r  
+    AD12                                              0.000    16.667 r  clk_p (IN)
+                         net (fo=0)                   0.000    16.667    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.735    17.402 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.439    17.841    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -4.771    13.070 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.442    13.512    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.083    13.595 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.439    14.034    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/clk_out1
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/C
+                         clock pessimism             -0.421    13.613    
+                         clock uncertainty           -0.114    13.499    
+                         FDRE (Setup_fdre_C_D)        0.036    13.535    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg
+  -------------------------------------------------------------------
+                         required time                         13.535    
+                         arrival time                         -11.442    
+  -------------------------------------------------------------------
+                         slack                                  2.093    
+
+Slack (MET) :             2.093ns  (required time - arrival time)
+  Source:                 ahir_inst/convTranspose_instance/x__5/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            16.667ns  (clk_out1_clk_wiz_0 rise@16.667ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        14.351ns  (logic 10.370ns (72.262%)  route 3.981ns (27.738%))
+  Logic Levels:           21  (CARRY4=11 DSP48E1=2 LUT2=2 LUT4=2 LUT5=2 LUT6=2)
+  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -2.633ns = ( 14.034 - 16.667 ) 
+    Source Clock Delay      (SCD):    -2.908ns
+    Clock Pessimism Removal (CPR):    -0.421ns
+  Clock Uncertainty:      0.114ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.217ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.832     0.832 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.584     1.416    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -5.467    -4.051 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.466    -3.585    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.093    -3.492 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.584    -2.908    ahir_inst/convTranspose_instance/clk_out1
+                         DSP48E1                                      r  ahir_inst/convTranspose_instance/x__5/CLK
+  -------------------------------------------------------------------    -------------------
+                         DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      2.860    -0.048 r  ahir_inst/convTranspose_instance/x__5/P[31]
+                         net (fo=1, unplaced)         0.466     0.417    ahir_inst/convTranspose_instance/x__5_n_74
+                         DSP48E1 (Prop_dsp48e1_A[14]_P[0])
+                                                      2.737     3.154 r  ahir_inst/convTranspose_instance/x__6/P[0]
+                         net (fo=1, unplaced)         0.466     3.620    ahir_inst/convTranspose_instance/x__6_n_105
+                         LUT2 (Prop_lut2_I1_O)        0.043     3.663 r  ahir_inst/convTranspose_instance/x__8_i_19/O
+                         net (fo=1, unplaced)         0.000     3.663    ahir_inst/convTranspose_instance/x__8_i_19_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     3.930 r  ahir_inst/convTranspose_instance/x__8_i_4/CO[3]
+                         net (fo=1, unplaced)         0.007     3.937    ahir_inst/convTranspose_instance/x__8_i_4_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     3.990 r  ahir_inst/convTranspose_instance/x__8_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     3.990    ahir_inst/convTranspose_instance/x__8_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     4.043 f  ahir_inst/convTranspose_instance/x__8_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     4.043    ahir_inst/convTranspose_instance/x__8_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.173     4.216 r  ahir_inst/convTranspose_instance/x__8_i_1/O[1]
+                         net (fo=1, unplaced)         0.466     4.682    ahir_inst/convTranspose_instance/x__8_i_1_n_6
+                         DSP48E1 (Prop_dsp48e1_A[12]_P[0])
+                                                      2.817     7.499 r  ahir_inst/convTranspose_instance/x__8/P[0]
+                         net (fo=1, unplaced)         0.466     7.964    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__8[0]
+                         LUT2 (Prop_lut2_I1_O)        0.043     8.007 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1/O
+                         net (fo=1, unplaced)         0.000     8.007    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     8.274 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.007     8.281    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     8.334 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.000     8.334    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.119     8.453 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[28]_i_2__1/O[2]
+                         net (fo=3, unplaced)         0.288     8.741    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/x__9_0[2]
+                         LUT4 (Prop_lut4_I3_O)        0.127     8.868 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0/O
+                         net (fo=1, unplaced)         0.270     9.138    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0_n_0
+                         LUT6 (Prop_lut6_I1_O)        0.043     9.181 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0/O
+                         net (fo=1, unplaced)         0.270     9.451    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.043     9.494 r  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_2__0/O
+                         net (fo=24, unplaced)        0.806    10.300    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__9
+                         LUT5 (Prop_lut5_I3_O)        0.043    10.343 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0/O
+                         net (fo=1, unplaced)         0.270    10.613    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0_n_0
+                         LUT4 (Prop_lut4_I3_O)        0.043    10.656 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0/O
+                         net (fo=1, unplaced)         0.000    10.656    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267    10.923 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.923    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    10.976 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.976    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    11.029 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0/CO[3]
+                         net (fo=1, unplaced)         0.000    11.029    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.089    11.118 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_2__1/CO[1]
+                         net (fo=2, unplaced)         0.200    11.318    ahir_inst/result3_out
+                         LUT5 (Prop_lut5_I0_O)        0.124    11.442 r  ahir_inst/noBypass.ack0_i_1__5/O
+                         net (fo=1, unplaced)         0.000    11.442    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/CapEqOne.non_zero_reg_0
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                     16.667    16.667 r  
+    AD12                                              0.000    16.667 r  clk_p (IN)
+                         net (fo=0)                   0.000    16.667    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.735    17.402 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.439    17.841    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -4.771    13.070 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.442    13.512    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.083    13.595 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.439    14.034    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/clk_out1
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/C
+                         clock pessimism             -0.421    13.613    
+                         clock uncertainty           -0.114    13.499    
+                         FDRE (Setup_fdre_C_D)        0.036    13.535    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg
+  -------------------------------------------------------------------
+                         required time                         13.535    
+                         arrival time                         -11.442    
+  -------------------------------------------------------------------
+                         slack                                  2.093    
+
+Slack (MET) :             2.093ns  (required time - arrival time)
+  Source:                 ahir_inst/convTranspose_instance/x__5/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            16.667ns  (clk_out1_clk_wiz_0 rise@16.667ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        14.351ns  (logic 10.370ns (72.262%)  route 3.981ns (27.738%))
+  Logic Levels:           21  (CARRY4=11 DSP48E1=2 LUT2=2 LUT4=2 LUT5=2 LUT6=2)
+  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -2.633ns = ( 14.034 - 16.667 ) 
+    Source Clock Delay      (SCD):    -2.908ns
+    Clock Pessimism Removal (CPR):    -0.421ns
+  Clock Uncertainty:      0.114ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.217ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.832     0.832 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.584     1.416    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -5.467    -4.051 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.466    -3.585    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.093    -3.492 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.584    -2.908    ahir_inst/convTranspose_instance/clk_out1
+                         DSP48E1                                      r  ahir_inst/convTranspose_instance/x__5/CLK
+  -------------------------------------------------------------------    -------------------
+                         DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      2.860    -0.048 r  ahir_inst/convTranspose_instance/x__5/P[31]
+                         net (fo=1, unplaced)         0.466     0.417    ahir_inst/convTranspose_instance/x__5_n_74
+                         DSP48E1 (Prop_dsp48e1_A[14]_P[0])
+                                                      2.737     3.154 r  ahir_inst/convTranspose_instance/x__6/P[0]
+                         net (fo=1, unplaced)         0.466     3.620    ahir_inst/convTranspose_instance/x__6_n_105
+                         LUT2 (Prop_lut2_I1_O)        0.043     3.663 r  ahir_inst/convTranspose_instance/x__8_i_19/O
+                         net (fo=1, unplaced)         0.000     3.663    ahir_inst/convTranspose_instance/x__8_i_19_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     3.930 r  ahir_inst/convTranspose_instance/x__8_i_4/CO[3]
+                         net (fo=1, unplaced)         0.007     3.937    ahir_inst/convTranspose_instance/x__8_i_4_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     3.990 r  ahir_inst/convTranspose_instance/x__8_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     3.990    ahir_inst/convTranspose_instance/x__8_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     4.043 r  ahir_inst/convTranspose_instance/x__8_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     4.043    ahir_inst/convTranspose_instance/x__8_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.173     4.216 f  ahir_inst/convTranspose_instance/x__8_i_1/O[1]
+                         net (fo=1, unplaced)         0.466     4.682    ahir_inst/convTranspose_instance/x__8_i_1_n_6
+                         DSP48E1 (Prop_dsp48e1_A[12]_P[0])
+                                                      2.817     7.499 r  ahir_inst/convTranspose_instance/x__8/P[0]
+                         net (fo=1, unplaced)         0.466     7.964    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__8[0]
+                         LUT2 (Prop_lut2_I1_O)        0.043     8.007 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1/O
+                         net (fo=1, unplaced)         0.000     8.007    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     8.274 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.007     8.281    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     8.334 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.000     8.334    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.119     8.453 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[28]_i_2__1/O[2]
+                         net (fo=3, unplaced)         0.288     8.741    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/x__9_0[2]
+                         LUT4 (Prop_lut4_I3_O)        0.127     8.868 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0/O
+                         net (fo=1, unplaced)         0.270     9.138    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0_n_0
+                         LUT6 (Prop_lut6_I1_O)        0.043     9.181 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0/O
+                         net (fo=1, unplaced)         0.270     9.451    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.043     9.494 r  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_2__0/O
+                         net (fo=24, unplaced)        0.806    10.300    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__9
+                         LUT5 (Prop_lut5_I3_O)        0.043    10.343 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0/O
+                         net (fo=1, unplaced)         0.270    10.613    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0_n_0
+                         LUT4 (Prop_lut4_I3_O)        0.043    10.656 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0/O
+                         net (fo=1, unplaced)         0.000    10.656    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267    10.923 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.923    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    10.976 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.976    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    11.029 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0/CO[3]
+                         net (fo=1, unplaced)         0.000    11.029    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.089    11.118 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_2__1/CO[1]
+                         net (fo=2, unplaced)         0.200    11.318    ahir_inst/result3_out
+                         LUT5 (Prop_lut5_I0_O)        0.124    11.442 r  ahir_inst/noBypass.ack0_i_1__5/O
+                         net (fo=1, unplaced)         0.000    11.442    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/CapEqOne.non_zero_reg_0
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                     16.667    16.667 r  
+    AD12                                              0.000    16.667 r  clk_p (IN)
+                         net (fo=0)                   0.000    16.667    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.735    17.402 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.439    17.841    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -4.771    13.070 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.442    13.512    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.083    13.595 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.439    14.034    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/clk_out1
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/C
+                         clock pessimism             -0.421    13.613    
+                         clock uncertainty           -0.114    13.499    
+                         FDRE (Setup_fdre_C_D)        0.036    13.535    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg
+  -------------------------------------------------------------------
+                         required time                         13.535    
+                         arrival time                         -11.442    
+  -------------------------------------------------------------------
+                         slack                                  2.093    
+
+Slack (MET) :             2.093ns  (required time - arrival time)
+  Source:                 ahir_inst/convTranspose_instance/x__5/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            16.667ns  (clk_out1_clk_wiz_0 rise@16.667ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        14.351ns  (logic 10.370ns (72.262%)  route 3.981ns (27.738%))
+  Logic Levels:           21  (CARRY4=11 DSP48E1=2 LUT2=2 LUT4=2 LUT5=2 LUT6=2)
+  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -2.633ns = ( 14.034 - 16.667 ) 
+    Source Clock Delay      (SCD):    -2.908ns
+    Clock Pessimism Removal (CPR):    -0.421ns
+  Clock Uncertainty:      0.114ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.217ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.832     0.832 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.584     1.416    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -5.467    -4.051 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.466    -3.585    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.093    -3.492 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.584    -2.908    ahir_inst/convTranspose_instance/clk_out1
+                         DSP48E1                                      r  ahir_inst/convTranspose_instance/x__5/CLK
+  -------------------------------------------------------------------    -------------------
+                         DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      2.860    -0.048 r  ahir_inst/convTranspose_instance/x__5/P[31]
+                         net (fo=1, unplaced)         0.466     0.417    ahir_inst/convTranspose_instance/x__5_n_74
+                         DSP48E1 (Prop_dsp48e1_A[14]_P[0])
+                                                      2.737     3.154 r  ahir_inst/convTranspose_instance/x__6/P[0]
+                         net (fo=1, unplaced)         0.466     3.620    ahir_inst/convTranspose_instance/x__6_n_105
+                         LUT2 (Prop_lut2_I1_O)        0.043     3.663 r  ahir_inst/convTranspose_instance/x__8_i_19/O
+                         net (fo=1, unplaced)         0.000     3.663    ahir_inst/convTranspose_instance/x__8_i_19_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     3.930 r  ahir_inst/convTranspose_instance/x__8_i_4/CO[3]
+                         net (fo=1, unplaced)         0.007     3.937    ahir_inst/convTranspose_instance/x__8_i_4_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     3.990 r  ahir_inst/convTranspose_instance/x__8_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     3.990    ahir_inst/convTranspose_instance/x__8_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     4.043 f  ahir_inst/convTranspose_instance/x__8_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     4.043    ahir_inst/convTranspose_instance/x__8_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.173     4.216 f  ahir_inst/convTranspose_instance/x__8_i_1/O[1]
+                         net (fo=1, unplaced)         0.466     4.682    ahir_inst/convTranspose_instance/x__8_i_1_n_6
+                         DSP48E1 (Prop_dsp48e1_A[12]_P[0])
+                                                      2.817     7.499 r  ahir_inst/convTranspose_instance/x__8/P[0]
+                         net (fo=1, unplaced)         0.466     7.964    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__8[0]
+                         LUT2 (Prop_lut2_I1_O)        0.043     8.007 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1/O
+                         net (fo=1, unplaced)         0.000     8.007    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data[20]_i_9__1_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267     8.274 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.007     8.281    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[20]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053     8.334 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1/CO[3]
+                         net (fo=1, unplaced)         0.000     8.334    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[24]_i_2__1_n_0
+                         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.119     8.453 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[28]_i_2__1/O[2]
+                         net (fo=3, unplaced)         0.288     8.741    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/x__9_0[2]
+                         LUT4 (Prop_lut4_I3_O)        0.127     8.868 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0/O
+                         net (fo=1, unplaced)         0.270     9.138    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_8__0_n_0
+                         LUT6 (Prop_lut6_I1_O)        0.043     9.181 f  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0/O
+                         net (fo=1, unplaced)         0.270     9.451    ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_5__0_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.043     9.494 r  ahir_inst/convTranspose_instance/data_path.if_stmt_437_branch.branch_instance/noBypass.ack1_i_2__0/O
+                         net (fo=24, unplaced)        0.806    10.300    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/x__9
+                         LUT5 (Prop_lut5_I3_O)        0.043    10.343 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0/O
+                         net (fo=1, unplaced)         0.270    10.613    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_30__0_n_0
+                         LUT4 (Prop_lut4_I3_O)        0.043    10.656 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0/O
+                         net (fo=1, unplaced)         0.000    10.656    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_i_20__0_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.267    10.923 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.923    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_12__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    10.976 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0/CO[3]
+                         net (fo=1, unplaced)         0.000    10.976    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_7__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.053    11.029 r  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0/CO[3]
+                         net (fo=1, unplaced)         0.000    11.029    ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_4__0_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.089    11.118 f  ahir_inst/convTranspose_instance/data_path.type_cast_665_inst_block.type_cast_665_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.ack1_reg_i_2__1/CO[1]
+                         net (fo=2, unplaced)         0.200    11.318    ahir_inst/result3_out
+                         LUT5 (Prop_lut5_I0_O)        0.124    11.442 r  ahir_inst/noBypass.ack0_i_1__5/O
+                         net (fo=1, unplaced)         0.000    11.442    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/CapEqOne.non_zero_reg_0
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                     16.667    16.667 r  
+    AD12                                              0.000    16.667 r  clk_p (IN)
+                         net (fo=0)                   0.000    16.667    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.735    17.402 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.439    17.841    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -4.771    13.070 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.442    13.512    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.083    13.595 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.439    14.034    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/clk_out1
+                         FDRE                                         r  ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg/C
+                         clock pessimism             -0.421    13.613    
+                         clock uncertainty           -0.114    13.499    
+                         FDRE (Setup_fdre_C_D)        0.036    13.535    ahir_inst/convTranspose_instance/data_path.if_stmt_845_branch.branch_instance/noBypass.ack0_reg
+  -------------------------------------------------------------------
+                         required time                         13.535    
+                         arrival time                         -11.442    
+  -------------------------------------------------------------------
+                         slack                                  2.093    
+
+
+
+
+
+Min Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             0.014ns  (arrival time - required time)
+  Source:                 uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Hold (Min at Fast Process Corner)
+  Requirement:            0.000ns  (clk_out1_clk_wiz_0 rise@0.000ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        0.230ns  (logic 0.162ns (70.302%)  route 0.068ns (29.698%))
+  Logic Levels:           1  (CARRY4=1)
+  Clock Path Skew:        0.145ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    -0.859ns
+    Source Clock Delay      (SCD):    -0.778ns
+    Clock Pessimism Removal (CPR):    -0.227ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.367     0.367 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.114     0.481    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -1.630    -1.148 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.231    -0.918    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.026    -0.892 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.114    -0.778    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+  -------------------------------------------------------------------    -------------------
+                         FDRE (Prop_fdre_C_Q)         0.100    -0.678 r  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/Q
+                         net (fo=4, unplaced)         0.068    -0.609    uart_inst/uart_inst/baseInst/bg/counter_reg_n_0_[12]
+                         CARRY4 (Prop_carry4_DI[0]_O[1])
+                                                      0.062    -0.547 r  uart_inst/uart_inst/baseInst/bg/_inferred__1/i__carry__2/O[1]
+                         net (fo=1, unplaced)         0.000    -0.547    uart_inst/uart_inst/baseInst/bg/counter[13]
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.446     0.446 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.259     0.705    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -2.096    -1.391 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.243    -1.148    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.030    -1.118 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.259    -0.859    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/C
+                         clock pessimism              0.227    -0.633    
+                         FDRE (Hold_fdre_C_D)         0.071    -0.562    uart_inst/uart_inst/baseInst/bg/counter_reg[13]
+  -------------------------------------------------------------------
+                         required time                          0.562    
+                         arrival time                          -0.547    
+  -------------------------------------------------------------------
+                         slack                                  0.014    
+
+Slack (MET) :             0.014ns  (arrival time - required time)
+  Source:                 uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Hold (Min at Fast Process Corner)
+  Requirement:            0.000ns  (clk_out1_clk_wiz_0 rise@0.000ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        0.230ns  (logic 0.162ns (70.302%)  route 0.068ns (29.698%))
+  Logic Levels:           1  (CARRY4=1)
+  Clock Path Skew:        0.145ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    -0.859ns
+    Source Clock Delay      (SCD):    -0.778ns
+    Clock Pessimism Removal (CPR):    -0.227ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.367     0.367 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.114     0.481    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -1.630    -1.148 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.231    -0.918    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.026    -0.892 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.114    -0.778    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+  -------------------------------------------------------------------    -------------------
+                         FDRE (Prop_fdre_C_Q)         0.100    -0.678 f  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/Q
+                         net (fo=4, unplaced)         0.068    -0.609    uart_inst/uart_inst/baseInst/bg/counter_reg_n_0_[12]
+                         CARRY4 (Prop_carry4_DI[0]_O[1])
+                                                      0.062    -0.547 r  uart_inst/uart_inst/baseInst/bg/_inferred__1/i__carry__2/O[1]
+                         net (fo=1, unplaced)         0.000    -0.547    uart_inst/uart_inst/baseInst/bg/counter[13]
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.446     0.446 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.259     0.705    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -2.096    -1.391 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.243    -1.148    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.030    -1.118 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.259    -0.859    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/C
+                         clock pessimism              0.227    -0.633    
+                         FDRE (Hold_fdre_C_D)         0.071    -0.562    uart_inst/uart_inst/baseInst/bg/counter_reg[13]
+  -------------------------------------------------------------------
+                         required time                          0.562    
+                         arrival time                          -0.547    
+  -------------------------------------------------------------------
+                         slack                                  0.014    
+
+Slack (MET) :             0.014ns  (arrival time - required time)
+  Source:                 uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Hold (Min at Fast Process Corner)
+  Requirement:            0.000ns  (clk_out1_clk_wiz_0 rise@0.000ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        0.230ns  (logic 0.162ns (70.302%)  route 0.068ns (29.698%))
+  Logic Levels:           1  (CARRY4=1)
+  Clock Path Skew:        0.145ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    -0.859ns
+    Source Clock Delay      (SCD):    -0.778ns
+    Clock Pessimism Removal (CPR):    -0.227ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.367     0.367 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.114     0.481    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -1.630    -1.148 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.231    -0.918    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.026    -0.892 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.114    -0.778    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+  -------------------------------------------------------------------    -------------------
+                         FDRE (Prop_fdre_C_Q)         0.100    -0.678 r  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/Q
+                         net (fo=4, unplaced)         0.068    -0.609    uart_inst/uart_inst/baseInst/bg/counter_reg_n_0_[12]
+                         CARRY4 (Prop_carry4_DI[0]_O[1])
+                                                      0.062    -0.547 f  uart_inst/uart_inst/baseInst/bg/_inferred__1/i__carry__2/O[1]
+                         net (fo=1, unplaced)         0.000    -0.547    uart_inst/uart_inst/baseInst/bg/counter[13]
+                         FDRE                                         f  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.446     0.446 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.259     0.705    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -2.096    -1.391 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.243    -1.148    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.030    -1.118 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.259    -0.859    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/C
+                         clock pessimism              0.227    -0.633    
+                         FDRE (Hold_fdre_C_D)         0.071    -0.562    uart_inst/uart_inst/baseInst/bg/counter_reg[13]
+  -------------------------------------------------------------------
+                         required time                          0.562    
+                         arrival time                          -0.547    
+  -------------------------------------------------------------------
+                         slack                                  0.014    
+
+Slack (MET) :             0.014ns  (arrival time - required time)
+  Source:                 uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Destination:            uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+                            (rising edge-triggered cell FDRE clocked by clk_out1_clk_wiz_0  {rise@0.000ns fall@8.333ns period=16.667ns})
+  Path Group:             clk_out1_clk_wiz_0
+  Path Type:              Hold (Min at Fast Process Corner)
+  Requirement:            0.000ns  (clk_out1_clk_wiz_0 rise@0.000ns - clk_out1_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        0.230ns  (logic 0.162ns (70.302%)  route 0.068ns (29.698%))
+  Logic Levels:           1  (CARRY4=1)
+  Clock Path Skew:        0.145ns (DCD - SCD - CPR)
+    Destination Clock Delay (DCD):    -0.859ns
+    Source Clock Delay      (SCD):    -0.778ns
+    Clock Pessimism Removal (CPR):    -0.227ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.367     0.367 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.114     0.481    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -1.630    -1.148 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.231    -0.918    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.026    -0.892 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.114    -0.778    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/C
+  -------------------------------------------------------------------    -------------------
+                         FDRE (Prop_fdre_C_Q)         0.100    -0.678 f  uart_inst/uart_inst/baseInst/bg/counter_reg[12]/Q
+                         net (fo=4, unplaced)         0.068    -0.609    uart_inst/uart_inst/baseInst/bg/counter_reg_n_0_[12]
+                         CARRY4 (Prop_carry4_DI[0]_O[1])
+                                                      0.062    -0.547 f  uart_inst/uart_inst/baseInst/bg/_inferred__1/i__carry__2/O[1]
+                         net (fo=1, unplaced)         0.000    -0.547    uart_inst/uart_inst/baseInst/bg/counter[13]
+                         FDRE                                         f  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    AD12                                              0.000     0.000 r  clk_p (IN)
+                         net (fo=0)                   0.000     0.000    clocking/inst/clk_in1_p
+    AD12                 IBUFDS (Prop_ibufds_I_O)     0.446     0.446 r  clocking/inst/clkin1_ibufgds/O
+                         net (fo=1, unplaced)         0.259     0.705    clocking/inst/clk_in1_clk_wiz_0
+                         PLLE2_ADV (Prop_plle2_adv_CLKIN1_CLKOUT0)
+                                                     -2.096    -1.391 r  clocking/inst/plle2_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.243    -1.148    clocking/inst/clk_out1_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.030    -1.118 r  clocking/inst/clkout1_buf/O
+                         net (fo=7184, unplaced)      0.259    -0.859    uart_inst/uart_inst/baseInst/bg/clk_out1
+                         FDRE                                         r  uart_inst/uart_inst/baseInst/bg/counter_reg[13]/C
+                         clock pessimism              0.227    -0.633    
+                         FDRE (Hold_fdre_C_D)         0.071    -0.562    uart_inst/uart_inst/baseInst/bg/counter_reg[13]
+  -------------------------------------------------------------------
+                         required time                          0.562    
+                         arrival time                          -0.547    
+  -------------------------------------------------------------------
+                         slack                                  0.014    
+
+
+
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         clk_out1_clk_wiz_0
+Waveform(ns):       { 0.000 8.333 }
+Period(ns):         16.667
+Sources:            { clocking/inst/plle2_adv_inst/CLKOUT0 }
+
+Check Type        Corner  Lib Pin             Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location  Pin
+Min Period        n/a     RAMB36E1/CLKARDCLK  n/a            1.839         16.667      14.828               ahir_inst/MemorySpace_memory_space_2/nonTrivGen.core/mb/memBase/ColGen[0].RowGen[0].baseMem/mem_array_reg_6/CLKARDCLK
+Max Period        n/a     PLLE2_ADV/CLKOUT0   n/a            160.000       16.667      143.333              clocking/inst/plle2_adv_inst/CLKOUT0
+Low Pulse Width   Slow    SRL16E/CLK          n/a            0.642         8.333       7.691                reset2_reg_srl2/CLK
+High Pulse Width  Slow    SRL16E/CLK          n/a            0.642         8.333       7.691                reset2_reg_srl2/CLK
+
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  clkfbout_clk_wiz_0
+  To Clock:  clkfbout_clk_wiz_0
+
+Setup :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+PW    :            0  Failing Endpoints,  Worst Slack       23.592ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         clkfbout_clk_wiz_0
+Waveform(ns):       { 0.000 12.500 }
+Period(ns):         25.000
+Sources:            { clocking/inst/plle2_adv_inst/CLKFBOUT }
+
+Check Type  Corner  Lib Pin            Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location  Pin
+Min Period  n/a     BUFG/I             n/a            1.409         25.000      23.592               clocking/inst/clkf_buf/I
+Max Period  n/a     PLLE2_ADV/CLKFBIN  n/a            52.633        25.000      27.633               clocking/inst/plle2_adv_inst/CLKFBIN
+
+
+

@@ -1,0 +1,11 @@
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <Pipes.h>
+#include <SocketLib.h>
+void concat();
+void global_storage_initializer_();
+void progx_xoptx_xo_storage_initializer_();
+uint64_t timer();
+void timerDaemon();

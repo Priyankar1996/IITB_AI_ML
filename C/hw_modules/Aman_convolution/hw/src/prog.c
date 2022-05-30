@@ -6,7 +6,7 @@
 #include <Pipes.h>
 #include "pipeHandler.h"
 #include "sized_tensor.h"
-#include "convolution.h"
+#include "convolution_multipipe.h"
 #include "inttypes.h"
 
 SizedTensor_16K T,B,K;
@@ -144,9 +144,7 @@ void convolution3D()
 #ifndef SW
 	uint64_t stop_time = timer();
 	uint64_t elapsed_time = stop_time - start_time;
-#ifndef fpga 
-	write_uint64("elapsed_time_pipe",elapsed_time);
-#else
+	// write_uint64("elapsed_time_pipe",elapsed_time);
 	uint8_t time_data[8];
 	time_data[7] = elapsed_time & 0xFF;
 	elapsed_time>>=8;
@@ -171,7 +169,6 @@ void convolution3D()
 	write_uint8 ("maxpool_output_pipe",time_data[5]);
 	write_uint8 ("maxpool_output_pipe",time_data[6]);
 	write_uint8 ("maxpool_output_pipe",time_data[7]);
-#endif
 #endif
 	__aa_barrier__();
 	// sendB ();

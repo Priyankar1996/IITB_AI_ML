@@ -185,8 +185,8 @@ int main(int argc, char**argv){
 	fprintf(stderr,"Reading back the values from hardware\n");
 	
 	int16_t val;
-	val = read_uint8("maxpool_output_pipe");
-	val = (val << 8) + read_uint8("maxpool_output_pipe");
+	// val = read_uint8("maxpool_output_pipe");
+	// val = (val << 8) + read_uint8("maxpool_output_pipe");
 	for (i = 0; i < size; i++)
 	{
 		val = read_uint8("maxpool_output_pipe");

@@ -1,2 +1,3 @@
 maxpool_input_pipe 2
 maxpool_output_pipe 2
+output_pipe 10

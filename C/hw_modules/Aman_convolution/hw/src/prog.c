@@ -46,7 +46,7 @@ void fill_T(uint64_t i);
 
 #define __set4xi16__(addr) ({\
 	uint64_t element = B.data_array[addr];\
-	uint16_t out_data[8];\
+	uint8_t out_data[8];\
 	out_data[7] = element & 0xFF;\
 	element>>=8;\
 	out_data[6] = element & 0xFF;\
@@ -72,17 +72,6 @@ void fill_T(uint64_t i);
 	write_uint8 ("maxpool_output_pipe",out_data[7]);\
 })
 
-// // this sends B...
-// void sendB()
-// {
-// 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_B);
-// 	int i;
-// 	for(i=0; i < (size>>2); i++)
-// 	{
-// 		__set4xi16__(i);
-// 	}
-// }
-
 // printf("val = 0%" PRIx64 "\n",element);
 uint64_t getRemainingElements(uint16_t ne){
 	uint64_t element = 0;
@@ -93,6 +82,41 @@ uint64_t getRemainingElements(uint16_t ne){
 	element <<= 16*(3-ne) + 8;
 	return element;
 }
+
+void sendRemainingElements(int addr, uint16_t ne){
+	uint64_t element = B.data_array[addr];\
+	uint8_t out_data[6];\
+	element>>=16;\
+	out_data[5] = element & 0xFF;
+	element>>=8;\
+	out_data[4] = element & 0xFF;
+	element>>=8;\
+	out_data[3] = element & 0xFF;
+	element>>=8;\
+	out_data[2] = element & 0xFF;\
+	element>>=8;\
+	out_data[1] = element & 0xFF;
+	element>>=8;\
+	out_data[0] = element & 0xFF;
+	for (int n = 0; n < ne; n++)
+	{
+		write_uint8 ("maxpool_output_pipe",out_data[2*n]);
+		write_uint8 ("maxpool_output_pipe",out_data[2*n+1]);
+	}
+}
+
+// this sends B...
+void sendB(uint64_t size)
+{
+	int i;
+	for(i=0; i < (size>>2); i++)
+	{
+		__set4xi16__(i);
+	}
+	if (size & 3) sendRemainingElements(i,size&3);
+}
+
+
 
 void convolution3D()
 {
@@ -134,17 +158,24 @@ void convolution3D()
 		K.data_array[i] = element;
 	}
 	if (size&3) K.data_array[i] = getRemainingElements(size&3);
+	B.data_array[0] = 0;
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();
+	write_uint16("output_pipe",rb);
+	write_uint16("output_pipe",cb);
+	write_uint16("output_pipe",chl_out);
 #endif
 	__aa_barrier__();
 	__convolution3D_div__( cb, rb, chl_out, chl_in, ct, rk, ck);
 	__aa_barrier__();
 #ifndef SW
+	uint8_t done = read_uint8("input_done_pipe");
+	__aa_barrier__();
 	uint64_t stop_time = timer();
 	uint64_t elapsed_time = stop_time - start_time;
-	// write_uint64("elapsed_time_pipe",elapsed_time);
+	sendB (cb*rb*chl_out);
+	__aa_barrier__();
 	uint8_t time_data[8];
 	time_data[7] = elapsed_time & 0xFF;
 	elapsed_time>>=8;
@@ -170,6 +201,4 @@ void convolution3D()
 	write_uint8 ("maxpool_output_pipe",time_data[6]);
 	write_uint8 ("maxpool_output_pipe",time_data[7]);
 #endif
-	__aa_barrier__();
-	// sendB ();
 }

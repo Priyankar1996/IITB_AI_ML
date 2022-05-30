@@ -9,6 +9,7 @@
 
 void convolution3D();
 void convolve();
+void sendModule();
 
 #define __I16 1
 
@@ -51,8 +52,6 @@ void access_T(uint16_t r, uint16_t ch, uint16_t a);
 	uint16_t num_cont = ck*chl_in;\
 	uint32_t size_kernel = num_cont*rk;\
 	uint16_t chl=0;\
-	write_uint8("maxpool_output_pipe",200);\
-	write_uint8("maxpool_output_pipe",200);\
 	while(1)\
 	{\
 		write_uint16("num_out_pipe",rb);\

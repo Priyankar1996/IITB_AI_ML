@@ -37,15 +37,21 @@ int main(int argc,char **argv)
 
     int ii;
 	for (ii = 0;ii < 3;ii++){
-		fscanf(input_file,"%hu",&desc_input1.dimensions[ii]);
-	    fprintf(out_file,"%u\n",(desc_input1.dimensions[ii]>>8));
-	    fprintf(out_file,"%u\n",(desc_input1.dimensions[ii]));        
+		uint8_t var1,var2;
+		fscanf(input_file,"%u",&var1);
+		fscanf(input_file,"%u",&var2);
+		desc_input1.dimensions[ii] = (var1 << 8) + var2;
+	    fprintf(out_file,"%hu\n",(desc_input1.dimensions[ii] >> 8));        
+	    fprintf(out_file,"%hu\n",(desc_input1.dimensions[ii]));        
 	}
 	fprintf(stderr,"Read input-1's descriptor %d,%d,%d.\n",desc_input1.dimensions[0],desc_input1.dimensions[1],desc_input1.dimensions[2]);
     for (ii = 0;ii < 3;ii++){
-		fscanf(input_file,"%hu",&desc_input2.dimensions[ii]);
-	    fprintf(out_file,"%u\n",(desc_input2.dimensions[ii]>>8));
-	    fprintf(out_file,"%u\n",desc_input2.dimensions[ii]);
+		uint8_t var1,var2;
+		fscanf(input_file,"%u",&var1);
+		fscanf(input_file,"%u",&var2);
+		desc_input2.dimensions[ii] = (var1 << 8) + var2;
+		fprintf(out_file,"%hu\n",(desc_input2.dimensions[ii] >> 8));
+		fprintf(out_file,"%hu\n",desc_input2.dimensions[ii]);
 	}
 	fprintf(stderr,"Read input-2's descriptor %d,%d,%d.\n",desc_input2.dimensions[0],desc_input2.dimensions[1],desc_input2.dimensions[2]);
 	uint32_t input1_size = desc_input1.dimensions[0]*desc_input1.dimensions[1]*desc_input1.dimensions[2];
@@ -59,13 +65,13 @@ int main(int argc,char **argv)
     for (ii = 0; ii < input1_size; ii++)
 	{
 		if (rand_input_data)	temp[ii&3] = rand();	//Random data
-		else temp[ii&7] = (ii+1)%256;	
+		else temp[ii&7] = (ii+1)%128;	
 		fprintf(out_file,"%u\n",temp[ii&7]);							//Sequential dat
 	}
     for (ii = 0; ii < input2_size; ii++)
 	{
 		if (rand_input_data)	temp[ii&3] = rand();	//Random data
-		else temp[ii&7] = (ii+1)%256;	
+		else temp[ii&7] = (ii+1)%128;	
 		fprintf(out_file,"%u\n",temp[ii&7]);							//Sequential dat
 	}
 	fprintf(stderr,"Wrote all input values\n");

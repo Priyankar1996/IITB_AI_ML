@@ -433,8 +433,8 @@ begin --
     -- CP-element group 9:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 9: predecessors 
     -- CP-element group 9: successors 
-    -- CP-element group 9: 	150 
     -- CP-element group 9: 	149 
+    -- CP-element group 9: 	150 
     -- CP-element group 9: 	15 
     -- CP-element group 9: 	16 
     -- CP-element group 9: 	32 
@@ -851,8 +851,8 @@ begin --
     -- CP-element group 33: marked-predecessors 
     -- CP-element group 33: 	177 
     -- CP-element group 33: 	184 
-    -- CP-element group 33: 	191 
     -- CP-element group 33: 	198 
+    -- CP-element group 33: 	191 
     -- CP-element group 33: successors 
     -- CP-element group 33: 	13 
     -- CP-element group 33:  members (1) 
@@ -865,7 +865,7 @@ begin --
       constant joinName: string(1 to 28) := "access_T_cp_element_group_33"; 
       signal preds: BooleanArray(1 to 5); -- 
     begin -- 
-      preds <= access_T_CP_0_elements(9) & access_T_CP_0_elements(177) & access_T_CP_0_elements(184) & access_T_CP_0_elements(191) & access_T_CP_0_elements(198);
+      preds <= access_T_CP_0_elements(9) & access_T_CP_0_elements(177) & access_T_CP_0_elements(184) & access_T_CP_0_elements(198) & access_T_CP_0_elements(191);
       gj_access_T_cp_element_group_33 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => access_T_CP_0_elements(33), clk => clk, reset => reset); --
     end block;
@@ -896,11 +896,11 @@ begin --
     -- CP-element group 37:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 37: predecessors 
     -- CP-element group 37: successors 
-    -- CP-element group 37: 	175 
     -- CP-element group 37: 	182 
+    -- CP-element group 37: 	175 
     -- CP-element group 37: 	14 
-    -- CP-element group 37: 	189 
     -- CP-element group 37: 	196 
+    -- CP-element group 37: 	189 
     -- CP-element group 37:  members (2) 
       -- CP-element group 37: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/phi_stmt_52_update_completed_
       -- CP-element group 37: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/phi_stmt_52_update_completed__ps
@@ -1304,8 +1304,8 @@ begin --
     -- CP-element group 71: 	9 
     -- CP-element group 71: marked-predecessors 
     -- CP-element group 71: 	184 
-    -- CP-element group 71: 	191 
     -- CP-element group 71: 	198 
+    -- CP-element group 71: 	191 
     -- CP-element group 71: successors 
     -- CP-element group 71: 	13 
     -- CP-element group 71:  members (1) 
@@ -1318,7 +1318,7 @@ begin --
       constant joinName: string(1 to 28) := "access_T_cp_element_group_71"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= access_T_CP_0_elements(9) & access_T_CP_0_elements(184) & access_T_CP_0_elements(191) & access_T_CP_0_elements(198);
+      preds <= access_T_CP_0_elements(9) & access_T_CP_0_elements(184) & access_T_CP_0_elements(198) & access_T_CP_0_elements(191);
       gj_access_T_cp_element_group_71 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => access_T_CP_0_elements(71), clk => clk, reset => reset); --
     end block;
@@ -1351,8 +1351,8 @@ begin --
     -- CP-element group 75: successors 
     -- CP-element group 75: 	182 
     -- CP-element group 75: 	14 
-    -- CP-element group 75: 	189 
     -- CP-element group 75: 	196 
+    -- CP-element group 75: 	189 
     -- CP-element group 75:  members (2) 
       -- CP-element group 75: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/phi_stmt_62_update_completed_
       -- CP-element group 75: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/phi_stmt_62_update_completed__ps
@@ -2322,8 +2322,8 @@ begin --
     -- CP-element group 153: 	148 
     -- CP-element group 153: successors 
     -- CP-element group 153: marked-successors 
-    -- CP-element group 153: 	150 
     -- CP-element group 153: 	148 
+    -- CP-element group 153: 	150 
     -- CP-element group 153:  members (3) 
       -- CP-element group 153: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/addr_of_135_sample_completed_
       -- CP-element group 153: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/addr_of_135_request/$exit
@@ -2392,10 +2392,10 @@ begin --
     -- CP-element group 156:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 156: predecessors 
     -- CP-element group 156: marked-predecessors 
-    -- CP-element group 156: 	165 
     -- CP-element group 156: 	169 
-    -- CP-element group 156: 	173 
     -- CP-element group 156: 	161 
+    -- CP-element group 156: 	173 
+    -- CP-element group 156: 	165 
     -- CP-element group 156: successors 
     -- CP-element group 156: 	158 
     -- CP-element group 156:  members (5) 
@@ -2415,7 +2415,7 @@ begin --
       constant joinName: string(1 to 29) := "access_T_cp_element_group_156"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= access_T_CP_0_elements(165) & access_T_CP_0_elements(169) & access_T_CP_0_elements(173) & access_T_CP_0_elements(161);
+      preds <= access_T_CP_0_elements(169) & access_T_CP_0_elements(161) & access_T_CP_0_elements(173) & access_T_CP_0_elements(165);
       gj_access_T_cp_element_group_156 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => access_T_CP_0_elements(156), clk => clk, reset => reset); --
     end block;
@@ -2424,8 +2424,8 @@ begin --
     -- CP-element group 157: 	155 
     -- CP-element group 157: successors 
     -- CP-element group 157: marked-successors 
-    -- CP-element group 157: 	155 
     -- CP-element group 157: 	149 
+    -- CP-element group 157: 	155 
     -- CP-element group 157:  members (5) 
       -- CP-element group 157: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/ptr_deref_139_sample_completed_
       -- CP-element group 157: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/ptr_deref_139_Sample/$exit
@@ -2440,10 +2440,10 @@ begin --
     -- CP-element group 158: predecessors 
     -- CP-element group 158: 	156 
     -- CP-element group 158: successors 
-    -- CP-element group 158: 	159 
     -- CP-element group 158: 	167 
-    -- CP-element group 158: 	171 
     -- CP-element group 158: 	163 
+    -- CP-element group 158: 	171 
+    -- CP-element group 158: 	159 
     -- CP-element group 158:  members (9) 
       -- CP-element group 158: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/ptr_deref_139_update_completed_
       -- CP-element group 158: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/ptr_deref_139_Update/$exit
@@ -2514,8 +2514,8 @@ begin --
     -- CP-element group 161: 	159 
     -- CP-element group 161: successors 
     -- CP-element group 161: marked-successors 
-    -- CP-element group 161: 	159 
     -- CP-element group 161: 	156 
+    -- CP-element group 161: 	159 
     -- CP-element group 161:  members (3) 
       -- CP-element group 161: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/slice_143_sample_completed_
       -- CP-element group 161: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/slice_143_Sample/$exit
@@ -2593,8 +2593,8 @@ begin --
     -- CP-element group 165: 	163 
     -- CP-element group 165: successors 
     -- CP-element group 165: marked-successors 
-    -- CP-element group 165: 	156 
     -- CP-element group 165: 	163 
+    -- CP-element group 165: 	156 
     -- CP-element group 165:  members (3) 
       -- CP-element group 165: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/slice_147_sample_completed_
       -- CP-element group 165: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/slice_147_Sample/$exit
@@ -2672,8 +2672,8 @@ begin --
     -- CP-element group 169: 	167 
     -- CP-element group 169: successors 
     -- CP-element group 169: marked-successors 
-    -- CP-element group 169: 	156 
     -- CP-element group 169: 	167 
+    -- CP-element group 169: 	156 
     -- CP-element group 169:  members (3) 
       -- CP-element group 169: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/slice_151_sample_completed_
       -- CP-element group 169: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/slice_151_Sample/$exit
@@ -2998,9 +2998,9 @@ begin --
       port map(clk => clk, reset => reset, req => W_c2_161_delayed_14_0_164_inst_ack_1, ack => access_T_CP_0_elements(185)); -- 
     -- CP-element group 186:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 186: predecessors 
-    -- CP-element group 186: 	185 
-    -- CP-element group 186: 	166 
     -- CP-element group 186: 	181 
+    -- CP-element group 186: 	166 
+    -- CP-element group 186: 	185 
     -- CP-element group 186: marked-predecessors 
     -- CP-element group 186: 	188 
     -- CP-element group 186: successors 
@@ -3020,7 +3020,7 @@ begin --
       constant joinName: string(1 to 29) := "access_T_cp_element_group_186"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= access_T_CP_0_elements(185) & access_T_CP_0_elements(166) & access_T_CP_0_elements(181) & access_T_CP_0_elements(188);
+      preds <= access_T_CP_0_elements(181) & access_T_CP_0_elements(166) & access_T_CP_0_elements(185) & access_T_CP_0_elements(188);
       gj_access_T_cp_element_group_186 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => access_T_CP_0_elements(186), clk => clk, reset => reset); --
     end block;
@@ -3030,8 +3030,8 @@ begin --
     -- CP-element group 187: successors 
     -- CP-element group 187: 	188 
     -- CP-element group 187: marked-successors 
-    -- CP-element group 187: 	183 
     -- CP-element group 187: 	164 
+    -- CP-element group 187: 	183 
     -- CP-element group 187:  members (6) 
       -- CP-element group 187: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/WPIPE_input_pipe1_168_sample_completed_
       -- CP-element group 187: 	 branch_block_stmt_27/do_while_stmt_45/do_while_stmt_45_loop_body/WPIPE_input_pipe1_168_update_start_
@@ -19426,95 +19426,96 @@ architecture convolve_arch of convolve is --
   signal convolve_CP_4075_symbol: Boolean;
   -- volatile/operator module components. 
   -- links between control-path and data-path
-  signal NOT_u1_u1_1945_inst_req_0 : boolean;
-  signal W_next_sum_1969_delayed_1_0_1996_inst_ack_0 : boolean;
-  signal RPIPE_input_pipe1_1878_inst_req_0 : boolean;
-  signal type_cast_2002_inst_ack_1 : boolean;
-  signal slice_1990_inst_req_1 : boolean;
-  signal W_next_sum_1969_delayed_1_0_1996_inst_req_0 : boolean;
-  signal SUB_u31_u31_1910_inst_ack_0 : boolean;
-  signal NOT_u1_u1_1945_inst_req_1 : boolean;
-  signal RPIPE_input_pipe1_1878_inst_ack_0 : boolean;
-  signal WPIPE_maxpool_output_pipe_2008_inst_req_1 : boolean;
-  signal NOT_u1_u1_1945_inst_ack_0 : boolean;
-  signal WPIPE_input_done_pipe_1985_inst_ack_1 : boolean;
-  signal WPIPE_maxpool_output_pipe_2008_inst_ack_1 : boolean;
+  signal n_out_count_1978_1873_buf_ack_1 : boolean;
   signal SUB_u31_u31_1910_inst_ack_1 : boolean;
-  signal RPIPE_num_out_pipe_1839_inst_ack_0 : boolean;
-  signal SUB_u31_u31_1910_inst_req_1 : boolean;
-  signal RPIPE_num_out_pipe_1839_inst_req_0 : boolean;
-  signal type_cast_2010_inst_req_0 : boolean;
-  signal slice_1990_inst_ack_1 : boolean;
-  signal RPIPE_kernel_pipe2_1890_inst_req_0 : boolean;
-  signal NOT_u1_u1_1945_inst_ack_1 : boolean;
-  signal WPIPE_maxpool_output_pipe_2000_inst_req_1 : boolean;
-  signal W_next_sum_1969_delayed_1_0_1996_inst_req_1 : boolean;
-  signal RPIPE_kernel_pipe2_1890_inst_ack_0 : boolean;
-  signal type_cast_2010_inst_ack_0 : boolean;
-  signal RPIPE_input_pipe1_1878_inst_req_1 : boolean;
-  signal RPIPE_input_pipe1_1878_inst_ack_1 : boolean;
-  signal type_cast_2002_inst_req_1 : boolean;
-  signal WPIPE_maxpool_output_pipe_2008_inst_ack_0 : boolean;
-  signal WPIPE_maxpool_output_pipe_2000_inst_ack_1 : boolean;
-  signal W_next_sum_1969_delayed_1_0_1996_inst_ack_1 : boolean;
-  signal RPIPE_kernel_pipe2_1890_inst_req_1 : boolean;
-  signal W_next_sum_1974_delayed_1_0_2004_inst_req_0 : boolean;
-  signal phi_stmt_1871_req_0 : boolean;
-  signal slice_1994_inst_req_0 : boolean;
-  signal W_next_sum_1974_delayed_1_0_2004_inst_ack_0 : boolean;
-  signal RPIPE_kernel_pipe2_1890_inst_ack_1 : boolean;
-  signal slice_1994_inst_ack_0 : boolean;
-  signal WPIPE_maxpool_output_pipe_2000_inst_req_0 : boolean;
-  signal type_cast_2002_inst_req_0 : boolean;
-  signal type_cast_2002_inst_ack_0 : boolean;
-  signal WPIPE_kernel_pipe1_1960_inst_req_0 : boolean;
-  signal phi_stmt_1871_req_1 : boolean;
-  signal nacc_1929_1870_buf_req_0 : boolean;
-  signal slice_1994_inst_req_1 : boolean;
-  signal W_next_sum_1974_delayed_1_0_2004_inst_req_1 : boolean;
-  signal do_while_stmt_1861_branch_ack_1 : boolean;
+  signal WPIPE_maxpool_output_pipe_1996_inst_ack_1 : boolean;
+  signal W_next_sum_1965_delayed_1_0_1992_inst_req_1 : boolean;
   signal slice_1990_inst_req_0 : boolean;
-  signal WPIPE_input_done_pipe_1985_inst_ack_0 : boolean;
-  signal WPIPE_input_done_pipe_1985_inst_req_0 : boolean;
-  signal WPIPE_kernel_pipe1_1960_inst_ack_0 : boolean;
-  signal type_cast_2010_inst_req_1 : boolean;
-  signal W_next_sum_1974_delayed_1_0_2004_inst_ack_1 : boolean;
-  signal slice_1994_inst_ack_1 : boolean;
-  signal WPIPE_maxpool_output_pipe_2000_inst_ack_0 : boolean;
-  signal nacc_1929_1870_buf_ack_0 : boolean;
-  signal phi_stmt_1871_ack_0 : boolean;
-  signal WPIPE_maxpool_output_pipe_2008_inst_req_0 : boolean;
-  signal do_while_stmt_1861_branch_ack_0 : boolean;
-  signal WPIPE_kernel_pipe1_1960_inst_req_1 : boolean;
-  signal RPIPE_kernel_pipe1_1886_inst_req_0 : boolean;
-  signal type_cast_2010_inst_ack_1 : boolean;
-  signal SUB_u31_u31_1910_inst_req_0 : boolean;
-  signal WPIPE_kernel_pipe1_1960_inst_ack_1 : boolean;
-  signal slice_1990_inst_ack_0 : boolean;
-  signal RPIPE_kernel_pipe1_1886_inst_ack_0 : boolean;
   signal WPIPE_kernel_pipe2_1964_inst_ack_1 : boolean;
   signal WPIPE_kernel_pipe2_1964_inst_req_1 : boolean;
+  signal RPIPE_kernel_pipe1_1886_inst_ack_1 : boolean;
+  signal phi_stmt_1871_ack_0 : boolean;
+  signal RPIPE_kernel_pipe1_1886_inst_req_1 : boolean;
+  signal W_next_sum_1970_delayed_1_0_2000_inst_req_1 : boolean;
+  signal W_next_sum_1970_delayed_1_0_2000_inst_ack_1 : boolean;
+  signal do_while_stmt_1861_branch_ack_1 : boolean;
+  signal WPIPE_input_done_pipe_2011_inst_req_1 : boolean;
+  signal slice_1986_inst_ack_0 : boolean;
+  signal type_cast_2006_inst_ack_1 : boolean;
+  signal nacc_1929_1870_buf_ack_1 : boolean;
+  signal slice_1986_inst_req_0 : boolean;
+  signal W_next_sum_1970_delayed_1_0_2000_inst_req_0 : boolean;
+  signal SUB_u31_u31_1910_inst_ack_0 : boolean;
+  signal n_out_count_1978_1873_buf_req_1 : boolean;
+  signal RPIPE_num_out_pipe_1839_inst_req_0 : boolean;
+  signal RPIPE_num_out_pipe_1839_inst_ack_0 : boolean;
+  signal W_next_sum_1965_delayed_1_0_1992_inst_ack_1 : boolean;
+  signal slice_1990_inst_ack_0 : boolean;
+  signal WPIPE_maxpool_output_pipe_1996_inst_req_0 : boolean;
+  signal type_cast_1998_inst_req_0 : boolean;
+  signal NOT_u1_u1_1945_inst_req_0 : boolean;
+  signal W_next_sum_1970_delayed_1_0_2000_inst_ack_0 : boolean;
+  signal slice_1990_inst_req_1 : boolean;
+  signal type_cast_1998_inst_ack_0 : boolean;
+  signal RPIPE_input_pipe1_1878_inst_req_0 : boolean;
+  signal slice_1990_inst_ack_1 : boolean;
+  signal NOT_u1_u1_1945_inst_ack_0 : boolean;
+  signal type_cast_1998_inst_ack_1 : boolean;
+  signal RPIPE_input_pipe1_1878_inst_ack_0 : boolean;
+  signal WPIPE_maxpool_output_pipe_1996_inst_ack_0 : boolean;
+  signal do_while_stmt_1861_branch_ack_0 : boolean;
+  signal RPIPE_kernel_pipe2_1890_inst_req_0 : boolean;
+  signal RPIPE_kernel_pipe2_1890_inst_ack_0 : boolean;
+  signal NOT_u1_u1_1945_inst_req_1 : boolean;
+  signal type_cast_2006_inst_req_0 : boolean;
+  signal phi_stmt_1871_req_0 : boolean;
+  signal RPIPE_kernel_pipe2_1890_inst_req_1 : boolean;
+  signal NOT_u1_u1_1945_inst_ack_1 : boolean;
+  signal slice_1986_inst_req_1 : boolean;
+  signal slice_1986_inst_ack_1 : boolean;
+  signal RPIPE_input_pipe1_1878_inst_req_1 : boolean;
+  signal RPIPE_kernel_pipe2_1890_inst_ack_1 : boolean;
+  signal WPIPE_input_done_pipe_2011_inst_ack_1 : boolean;
+  signal WPIPE_maxpool_output_pipe_2004_inst_ack_1 : boolean;
+  signal W_next_sum_1965_delayed_1_0_1992_inst_req_0 : boolean;
+  signal RPIPE_input_pipe1_1878_inst_ack_1 : boolean;
+  signal phi_stmt_1871_req_1 : boolean;
+  signal type_cast_1998_inst_req_1 : boolean;
+  signal WPIPE_maxpool_output_pipe_1996_inst_req_1 : boolean;
+  signal type_cast_2006_inst_ack_0 : boolean;
+  signal WPIPE_maxpool_output_pipe_2004_inst_req_1 : boolean;
+  signal WPIPE_maxpool_output_pipe_2004_inst_req_0 : boolean;
+  signal W_next_sum_1965_delayed_1_0_1992_inst_ack_0 : boolean;
+  signal nacc_1929_1870_buf_req_0 : boolean;
+  signal WPIPE_input_done_pipe_2011_inst_req_0 : boolean;
+  signal WPIPE_input_done_pipe_2011_inst_ack_0 : boolean;
+  signal type_cast_2006_inst_req_1 : boolean;
+  signal WPIPE_maxpool_output_pipe_2004_inst_ack_0 : boolean;
+  signal WPIPE_kernel_pipe1_1960_inst_req_0 : boolean;
+  signal SUB_u31_u31_1910_inst_req_1 : boolean;
   signal WPIPE_kernel_pipe2_1964_inst_ack_0 : boolean;
   signal WPIPE_kernel_pipe2_1964_inst_req_0 : boolean;
-  signal phi_stmt_1867_ack_0 : boolean;
+  signal WPIPE_kernel_pipe1_1960_inst_ack_1 : boolean;
+  signal WPIPE_kernel_pipe1_1960_inst_req_1 : boolean;
+  signal WPIPE_kernel_pipe1_1960_inst_ack_0 : boolean;
   signal RPIPE_num_out_pipe_1839_inst_req_1 : boolean;
   signal RPIPE_num_out_pipe_1839_inst_ack_1 : boolean;
-  signal RPIPE_kernel_pipe1_1886_inst_ack_1 : boolean;
+  signal phi_stmt_1867_ack_0 : boolean;
   signal RPIPE_size_pipe_1842_inst_req_0 : boolean;
   signal RPIPE_size_pipe_1842_inst_ack_0 : boolean;
+  signal RPIPE_kernel_pipe1_1886_inst_ack_0 : boolean;
   signal RPIPE_size_pipe_1842_inst_req_1 : boolean;
-  signal RPIPE_kernel_pipe1_1886_inst_req_1 : boolean;
   signal RPIPE_size_pipe_1842_inst_ack_1 : boolean;
-  signal nacc_1929_1870_buf_ack_1 : boolean;
-  signal n_out_count_1978_1873_buf_ack_1 : boolean;
-  signal n_out_count_1978_1873_buf_req_1 : boolean;
+  signal nacc_1929_1870_buf_req_1 : boolean;
   signal n_out_count_1978_1873_buf_ack_0 : boolean;
   signal n_out_count_1978_1873_buf_req_0 : boolean;
+  signal RPIPE_kernel_pipe1_1886_inst_req_0 : boolean;
   signal slice_1846_inst_req_0 : boolean;
   signal slice_1846_inst_ack_0 : boolean;
   signal slice_1846_inst_req_1 : boolean;
   signal slice_1846_inst_ack_1 : boolean;
-  signal nacc_1929_1870_buf_req_1 : boolean;
+  signal SUB_u31_u31_1910_inst_req_0 : boolean;
+  signal nacc_1929_1870_buf_ack_0 : boolean;
   signal slice_1850_inst_req_0 : boolean;
   signal slice_1850_inst_ack_0 : boolean;
   signal slice_1850_inst_req_1 : boolean;
@@ -19523,7 +19524,6 @@ architecture convolve_arch of convolve is --
   signal phi_stmt_1863_req_1 : boolean;
   signal phi_stmt_1863_req_0 : boolean;
   signal phi_stmt_1863_ack_0 : boolean;
-  signal WPIPE_input_done_pipe_1985_inst_req_1 : boolean;
   signal nmycount_1937_1866_buf_req_0 : boolean;
   signal nmycount_1937_1866_buf_ack_0 : boolean;
   signal nmycount_1937_1866_buf_req_1 : boolean;
@@ -19635,7 +19635,7 @@ begin --
   always_true_symbol <= true; 
   default_zero_sig <= '0';
   convolve_CP_4075: Block -- control-path 
-    signal convolve_CP_4075_elements: BooleanArray(144 downto 0);
+    signal convolve_CP_4075_elements: BooleanArray(143 downto 0);
     -- 
   begin -- 
     convolve_CP_4075_elements(0) <= convolve_CP_4075_start;
@@ -19643,7 +19643,7 @@ begin --
     -- CP-element group 0:  branch  transition  place  bypass 
     -- CP-element group 0: predecessors 
     -- CP-element group 0: successors 
-    -- CP-element group 0: 	144 
+    -- CP-element group 0: 	143 
     -- CP-element group 0:  members (7) 
       -- CP-element group 0: 	 branch_block_stmt_1836/merge_stmt_1837_dead_link/$entry
       -- CP-element group 0: 	 branch_block_stmt_1836/branch_block_stmt_1836__entry__
@@ -19662,36 +19662,41 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_1836/$exit
       -- 
     convolve_CP_4075_elements(1) <= false; 
-    -- CP-element group 2:  transition  place  bypass 
+    -- CP-element group 2:  transition  place  output  bypass 
     -- CP-element group 2: predecessors 
-    -- CP-element group 2: 	143 
+    -- CP-element group 2: 	140 
     -- CP-element group 2: successors 
-    -- CP-element group 2: 	144 
-    -- CP-element group 2:  members (4) 
+    -- CP-element group 2: 	141 
+    -- CP-element group 2:  members (6) 
       -- CP-element group 2: 	 branch_block_stmt_1836/do_while_stmt_1861__exit__
-      -- CP-element group 2: 	 branch_block_stmt_1836/loopback
-      -- CP-element group 2: 	 branch_block_stmt_1836/loopback_PhiReq/$exit
-      -- CP-element group 2: 	 branch_block_stmt_1836/loopback_PhiReq/$entry
+      -- CP-element group 2: 	 branch_block_stmt_1836/assign_stmt_2013__entry__
+      -- CP-element group 2: 	 branch_block_stmt_1836/assign_stmt_2013/$entry
+      -- CP-element group 2: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_sample_start_
+      -- CP-element group 2: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Sample/$entry
+      -- CP-element group 2: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Sample/req
       -- 
-    convolve_CP_4075_elements(2) <= convolve_CP_4075_elements(143);
+    req_4533_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4533_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(2), ack => WPIPE_input_done_pipe_2011_inst_req_0); -- 
+    convolve_CP_4075_elements(2) <= convolve_CP_4075_elements(140);
     -- CP-element group 3:  transition  input  output  bypass 
     -- CP-element group 3: predecessors 
-    -- CP-element group 3: 	144 
+    -- CP-element group 3: 	143 
     -- CP-element group 3: successors 
     -- CP-element group 3: 	4 
     -- CP-element group 3:  members (6) 
-      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Sample/ra
-      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Update/$entry
-      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_update_start_
-      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_sample_completed_
       -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Sample/$exit
+      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Sample/ra
+      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_sample_completed_
+      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_update_start_
+      -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Update/$entry
       -- CP-element group 3: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Update/cr
       -- 
-    ra_4101_symbol_link_from_dp: control_delay_element -- 
+    ra_4103_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 3_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_num_out_pipe_1839_inst_ack_0, ack => convolve_CP_4075_elements(3)); -- 
-    cr_4105_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4105_symbol_delay",delay_value => 0)
+    cr_4107_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4107_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(3), ack => RPIPE_num_out_pipe_1839_inst_req_1); -- 
     -- CP-element group 4:  transition  input  bypass 
     -- CP-element group 4: predecessors 
@@ -19699,16 +19704,16 @@ begin --
     -- CP-element group 4: successors 
     -- CP-element group 4: 	11 
     -- CP-element group 4:  members (3) 
-      -- CP-element group 4: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Update/$exit
       -- CP-element group 4: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_update_completed_
+      -- CP-element group 4: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Update/$exit
       -- CP-element group 4: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Update/ca
       -- 
-    ca_4106_symbol_link_from_dp: control_delay_element -- 
+    ca_4108_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 4_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_num_out_pipe_1839_inst_ack_1, ack => convolve_CP_4075_elements(4)); -- 
     -- CP-element group 5:  transition  input  output  bypass 
     -- CP-element group 5: predecessors 
-    -- CP-element group 5: 	144 
+    -- CP-element group 5: 	143 
     -- CP-element group 5: successors 
     -- CP-element group 5: 	6 
     -- CP-element group 5:  members (6) 
@@ -19719,18 +19724,18 @@ begin --
       -- CP-element group 5: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_Update/$entry
       -- CP-element group 5: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_Update/cr
       -- 
-    ra_4115_symbol_link_from_dp: control_delay_element -- 
+    ra_4117_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 5_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_size_pipe_1842_inst_ack_0, ack => convolve_CP_4075_elements(5)); -- 
-    cr_4119_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4119_symbol_delay",delay_value => 0)
+    cr_4121_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4121_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(5), ack => RPIPE_size_pipe_1842_inst_req_1); -- 
     -- CP-element group 6:  fork  transition  input  output  bypass 
     -- CP-element group 6: predecessors 
     -- CP-element group 6: 	5 
     -- CP-element group 6: successors 
-    -- CP-element group 6: 	7 
     -- CP-element group 6: 	9 
+    -- CP-element group 6: 	7 
     -- CP-element group 6:  members (9) 
       -- CP-element group 6: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_update_completed_
       -- CP-element group 6: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_Update/$exit
@@ -19742,15 +19747,15 @@ begin --
       -- CP-element group 6: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Sample/$entry
       -- CP-element group 6: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Sample/rr
       -- 
-    ca_4120_symbol_link_from_dp: control_delay_element -- 
+    ca_4122_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 6_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_size_pipe_1842_inst_ack_1, ack => convolve_CP_4075_elements(6)); -- 
-    rr_4128_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4128_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(6), ack => slice_1846_inst_req_0); -- 
-    rr_4142_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4142_symbol_delay",delay_value => 0)
+    rr_4144_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4144_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(6), ack => slice_1850_inst_req_0); -- 
+    rr_4130_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4130_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(6), ack => slice_1846_inst_req_0); -- 
     -- CP-element group 7:  transition  input  bypass 
     -- CP-element group 7: predecessors 
     -- CP-element group 7: 	6 
@@ -19760,12 +19765,12 @@ begin --
       -- CP-element group 7: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Sample/$exit
       -- CP-element group 7: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Sample/ra
       -- 
-    ra_4129_symbol_link_from_dp: control_delay_element -- 
+    ra_4131_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 7_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => slice_1846_inst_ack_0, ack => convolve_CP_4075_elements(7)); -- 
     -- CP-element group 8:  transition  input  bypass 
     -- CP-element group 8: predecessors 
-    -- CP-element group 8: 	144 
+    -- CP-element group 8: 	143 
     -- CP-element group 8: successors 
     -- CP-element group 8: 	11 
     -- CP-element group 8:  members (3) 
@@ -19773,7 +19778,7 @@ begin --
       -- CP-element group 8: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Update/$exit
       -- CP-element group 8: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Update/ca
       -- 
-    ca_4134_symbol_link_from_dp: control_delay_element -- 
+    ca_4136_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 8_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => slice_1846_inst_ack_1, ack => convolve_CP_4075_elements(8)); -- 
     -- CP-element group 9:  transition  input  bypass 
@@ -19785,12 +19790,12 @@ begin --
       -- CP-element group 9: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Sample/$exit
       -- CP-element group 9: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Sample/ra
       -- 
-    ra_4143_symbol_link_from_dp: control_delay_element -- 
+    ra_4145_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 9_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => slice_1850_inst_ack_0, ack => convolve_CP_4075_elements(9)); -- 
     -- CP-element group 10:  transition  input  bypass 
     -- CP-element group 10: predecessors 
-    -- CP-element group 10: 	144 
+    -- CP-element group 10: 	143 
     -- CP-element group 10: successors 
     -- CP-element group 10: 	11 
     -- CP-element group 10:  members (3) 
@@ -19798,20 +19803,20 @@ begin --
       -- CP-element group 10: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Update/$exit
       -- CP-element group 10: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Update/ca
       -- 
-    ca_4148_symbol_link_from_dp: control_delay_element -- 
+    ca_4150_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 10_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => slice_1850_inst_ack_1, ack => convolve_CP_4075_elements(10)); -- 
     -- CP-element group 11:  join  transition  place  bypass 
     -- CP-element group 11: predecessors 
     -- CP-element group 11: 	8 
-    -- CP-element group 11: 	4 
     -- CP-element group 11: 	10 
+    -- CP-element group 11: 	4 
     -- CP-element group 11: successors 
     -- CP-element group 11: 	12 
     -- CP-element group 11:  members (3) 
       -- CP-element group 11: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860__exit__
-      -- CP-element group 11: 	 branch_block_stmt_1836/do_while_stmt_1861__entry__
       -- CP-element group 11: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/$exit
+      -- CP-element group 11: 	 branch_block_stmt_1836/do_while_stmt_1861__entry__
       -- 
     convolve_cp_element_group_11: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
@@ -19820,7 +19825,7 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_11"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(8) & convolve_CP_4075_elements(4) & convolve_CP_4075_elements(10);
+      preds <= convolve_CP_4075_elements(8) & convolve_CP_4075_elements(10) & convolve_CP_4075_elements(4);
       gj_convolve_cp_element_group_11 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(11), clk => clk, reset => reset); --
     end block;
@@ -19837,7 +19842,7 @@ begin --
     -- CP-element group 13:  merge  place  bypass  pipeline-parent 
     -- CP-element group 13: predecessors 
     -- CP-element group 13: successors 
-    -- CP-element group 13: 	143 
+    -- CP-element group 13: 	140 
     -- CP-element group 13:  members (1) 
       -- CP-element group 13: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861__exit__
       -- 
@@ -19854,29 +19859,29 @@ begin --
     -- CP-element group 15: predecessors 
     -- CP-element group 15: 	20 
     -- CP-element group 15: successors 
-    -- CP-element group 15: 	141 
-    -- CP-element group 15: 	142 
+    -- CP-element group 15: 	138 
+    -- CP-element group 15: 	139 
     -- CP-element group 15:  members (3) 
-      -- CP-element group 15: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_exit/$entry
       -- CP-element group 15: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_taken/$entry
+      -- CP-element group 15: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_exit/$entry
       -- CP-element group 15: 	 branch_block_stmt_1836/do_while_stmt_1861/condition_done
       -- 
     convolve_CP_4075_elements(15) <= convolve_CP_4075_elements(20);
     -- CP-element group 16:  branch  place  bypass  pipeline-parent 
     -- CP-element group 16: predecessors 
-    -- CP-element group 16: 	140 
+    -- CP-element group 16: 	137 
     -- CP-element group 16: successors 
     -- CP-element group 16:  members (1) 
       -- CP-element group 16: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_body_done
       -- 
-    convolve_CP_4075_elements(16) <= convolve_CP_4075_elements(140);
+    convolve_CP_4075_elements(16) <= convolve_CP_4075_elements(137);
     -- CP-element group 17:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 17: predecessors 
     -- CP-element group 17: 	14 
     -- CP-element group 17: successors 
-    -- CP-element group 17: 	67 
+    -- CP-element group 17: 	48 
     -- CP-element group 17: 	31 
-    -- CP-element group 17: 	50 
+    -- CP-element group 17: 	67 
     -- CP-element group 17:  members (1) 
       -- CP-element group 17: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/back_edge_to_loop_body
       -- 
@@ -19885,8 +19890,8 @@ begin --
     -- CP-element group 18: predecessors 
     -- CP-element group 18: 	12 
     -- CP-element group 18: successors 
+    -- CP-element group 18: 	50 
     -- CP-element group 18: 	33 
-    -- CP-element group 18: 	52 
     -- CP-element group 18: 	69 
     -- CP-element group 18:  members (1) 
       -- CP-element group 18: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/first_time_through_loop_body
@@ -19895,18 +19900,18 @@ begin --
     -- CP-element group 19:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 19: predecessors 
     -- CP-element group 19: successors 
-    -- CP-element group 19: 	88 
-    -- CP-element group 19: 	92 
-    -- CP-element group 19: 	63 
-    -- CP-element group 19: 	64 
-    -- CP-element group 19: 	80 
-    -- CP-element group 19: 	84 
-    -- CP-element group 19: 	25 
-    -- CP-element group 19: 	26 
-    -- CP-element group 19: 	139 
     -- CP-element group 19: 	44 
     -- CP-element group 19: 	45 
     -- CP-element group 19: 	96 
+    -- CP-element group 19: 	136 
+    -- CP-element group 19: 	25 
+    -- CP-element group 19: 	26 
+    -- CP-element group 19: 	61 
+    -- CP-element group 19: 	62 
+    -- CP-element group 19: 	80 
+    -- CP-element group 19: 	84 
+    -- CP-element group 19: 	88 
+    -- CP-element group 19: 	92 
     -- CP-element group 19:  members (2) 
       -- CP-element group 19: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/$entry
       -- CP-element group 19: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/loop_body_start
@@ -19914,18 +19919,18 @@ begin --
     -- Element group convolve_CP_4075_elements(19) is bound as output of CP function.
     -- CP-element group 20:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 20: predecessors 
-    -- CP-element group 20: 	66 
+    -- CP-element group 20: 	95 
+    -- CP-element group 20: 	136 
     -- CP-element group 20: 	24 
     -- CP-element group 20: 	30 
-    -- CP-element group 20: 	139 
-    -- CP-element group 20: 	95 
+    -- CP-element group 20: 	66 
     -- CP-element group 20: successors 
     -- CP-element group 20: 	15 
     -- CP-element group 20:  members (1) 
       -- CP-element group 20: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/condition_evaluated
       -- 
-    condition_evaluated_4163_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " condition_evaluated_4163_symbol_delay",delay_value => 0)
+    condition_evaluated_4165_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " condition_evaluated_4165_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(20), ack => do_while_stmt_1861_branch_req_0); -- 
     convolve_cp_element_group_20: block -- 
       constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 15,2 => 15,3 => 15,4 => 15);
@@ -19934,23 +19939,23 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_20"; 
       signal preds: BooleanArray(1 to 5); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(66) & convolve_CP_4075_elements(24) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(139) & convolve_CP_4075_elements(95);
+      preds <= convolve_CP_4075_elements(95) & convolve_CP_4075_elements(136) & convolve_CP_4075_elements(24) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(66);
       gj_convolve_cp_element_group_20 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(20), clk => clk, reset => reset); --
     end block;
     -- CP-element group 21:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 21: predecessors 
-    -- CP-element group 21: 	63 
-    -- CP-element group 21: 	25 
     -- CP-element group 21: 	44 
+    -- CP-element group 21: 	25 
+    -- CP-element group 21: 	61 
     -- CP-element group 21: marked-predecessors 
     -- CP-element group 21: 	24 
     -- CP-element group 21: successors 
     -- CP-element group 21: 	27 
-    -- CP-element group 21: 	46 
+    -- CP-element group 21: 	63 
     -- CP-element group 21:  members (2) 
-      -- CP-element group 21: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_sample_start__ps
       -- CP-element group 21: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/aggregated_phi_sample_req
+      -- CP-element group 21: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_sample_start__ps
       -- 
     convolve_cp_element_group_21: block -- 
       constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 15,2 => 15,3 => 1);
@@ -19959,24 +19964,24 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_21"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(63) & convolve_CP_4075_elements(25) & convolve_CP_4075_elements(44) & convolve_CP_4075_elements(24);
+      preds <= convolve_CP_4075_elements(44) & convolve_CP_4075_elements(25) & convolve_CP_4075_elements(61) & convolve_CP_4075_elements(24);
       gj_convolve_cp_element_group_21 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(21), clk => clk, reset => reset); --
     end block;
     -- CP-element group 22:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 22: predecessors 
-    -- CP-element group 22: 	65 
+    -- CP-element group 22: 	46 
     -- CP-element group 22: 	28 
-    -- CP-element group 22: 	47 
+    -- CP-element group 22: 	64 
     -- CP-element group 22: successors 
-    -- CP-element group 22: 	89 
     -- CP-element group 22: 	81 
     -- CP-element group 22: 	85 
+    -- CP-element group 22: 	89 
     -- CP-element group 22: 	93 
     -- CP-element group 22: marked-successors 
-    -- CP-element group 22: 	63 
-    -- CP-element group 22: 	25 
     -- CP-element group 22: 	44 
+    -- CP-element group 22: 	25 
+    -- CP-element group 22: 	61 
     -- CP-element group 22:  members (4) 
       -- CP-element group 22: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_sample_completed_
       -- CP-element group 22: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/aggregated_phi_sample_ack
@@ -19990,21 +19995,21 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_22"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(65) & convolve_CP_4075_elements(28) & convolve_CP_4075_elements(47);
+      preds <= convolve_CP_4075_elements(46) & convolve_CP_4075_elements(28) & convolve_CP_4075_elements(64);
       gj_convolve_cp_element_group_22 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(22), clk => clk, reset => reset); --
     end block;
     -- CP-element group 23:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 23: predecessors 
-    -- CP-element group 23: 	64 
-    -- CP-element group 23: 	26 
     -- CP-element group 23: 	45 
+    -- CP-element group 23: 	26 
+    -- CP-element group 23: 	62 
     -- CP-element group 23: successors 
     -- CP-element group 23: 	29 
-    -- CP-element group 23: 	48 
+    -- CP-element group 23: 	65 
     -- CP-element group 23:  members (2) 
-      -- CP-element group 23: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_update_start__ps
       -- CP-element group 23: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/aggregated_phi_update_req
+      -- CP-element group 23: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_update_start__ps
       -- 
     convolve_cp_element_group_23: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 15,2 => 15);
@@ -20013,15 +20018,15 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_23"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(64) & convolve_CP_4075_elements(26) & convolve_CP_4075_elements(45);
+      preds <= convolve_CP_4075_elements(45) & convolve_CP_4075_elements(26) & convolve_CP_4075_elements(62);
       gj_convolve_cp_element_group_23 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(23), clk => clk, reset => reset); --
     end block;
     -- CP-element group 24:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 24: predecessors 
-    -- CP-element group 24: 	66 
+    -- CP-element group 24: 	47 
     -- CP-element group 24: 	30 
-    -- CP-element group 24: 	49 
+    -- CP-element group 24: 	66 
     -- CP-element group 24: successors 
     -- CP-element group 24: 	20 
     -- CP-element group 24: marked-successors 
@@ -20036,7 +20041,7 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_24"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(66) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(49);
+      preds <= convolve_CP_4075_elements(47) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(66);
       gj_convolve_cp_element_group_24 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(24), clk => clk, reset => reset); --
     end block;
@@ -20044,8 +20049,8 @@ begin --
     -- CP-element group 25: predecessors 
     -- CP-element group 25: 	19 
     -- CP-element group 25: marked-predecessors 
-    -- CP-element group 25: 	22 
     -- CP-element group 25: 	95 
+    -- CP-element group 25: 	22 
     -- CP-element group 25: successors 
     -- CP-element group 25: 	21 
     -- CP-element group 25:  members (1) 
@@ -20054,11 +20059,11 @@ begin --
     convolve_cp_element_group_25: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 1,2 => 1);
       constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 1,2 => 1);
-      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 1,2 => 0);
+      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
       constant joinName: string(1 to 28) := "convolve_cp_element_group_25"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(22) & convolve_CP_4075_elements(95);
+      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(22);
       gj_convolve_cp_element_group_25 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(25), clk => clk, reset => reset); --
     end block;
@@ -20066,24 +20071,23 @@ begin --
     -- CP-element group 26: predecessors 
     -- CP-element group 26: 	19 
     -- CP-element group 26: marked-predecessors 
+    -- CP-element group 26: 	116 
+    -- CP-element group 26: 	127 
     -- CP-element group 26: 	30 
-    -- CP-element group 26: 	130 
-    -- CP-element group 26: 	119 
-    -- CP-element group 26: 	107 
     -- CP-element group 26: successors 
     -- CP-element group 26: 	23 
     -- CP-element group 26:  members (1) 
       -- CP-element group 26: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1863_update_start_
       -- 
     convolve_cp_element_group_26: block -- 
-      constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1);
-      constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 1,2 => 1,3 => 1,4 => 1);
-      constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
+      constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 1,2 => 1,3 => 1);
+      constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 1,2 => 1,3 => 1);
+      constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
       constant joinName: string(1 to 28) := "convolve_cp_element_group_26"; 
-      signal preds: BooleanArray(1 to 5); -- 
+      signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(130) & convolve_CP_4075_elements(119) & convolve_CP_4075_elements(107);
-      gj_convolve_cp_element_group_26 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(116) & convolve_CP_4075_elements(127) & convolve_CP_4075_elements(30);
+      gj_convolve_cp_element_group_26 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(26), clk => clk, reset => reset); --
     end block;
     -- CP-element group 27:  fork  transition  bypass  pipeline-parent 
@@ -20113,11 +20117,10 @@ begin --
     -- CP-element group 30:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 30: predecessors 
     -- CP-element group 30: successors 
+    -- CP-element group 30: 	114 
     -- CP-element group 30: 	20 
+    -- CP-element group 30: 	125 
     -- CP-element group 30: 	24 
-    -- CP-element group 30: 	128 
-    -- CP-element group 30: 	106 
-    -- CP-element group 30: 	117 
     -- CP-element group 30: marked-successors 
     -- CP-element group 30: 	26 
     -- CP-element group 30:  members (2) 
@@ -20140,8 +20143,8 @@ begin --
       -- CP-element group 32: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1863_loopback_sample_req
       -- CP-element group 32: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1863_loopback_sample_req_ps
       -- 
-    phi_stmt_1863_loopback_sample_req_4178_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_1863_loopback_sample_req_4178_symbol_delay",delay_value => 0)
+    phi_stmt_1863_loopback_sample_req_4180_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_1863_loopback_sample_req_4180_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(32), ack => phi_stmt_1863_req_1); -- 
     -- Element group convolve_CP_4075_elements(32) is bound as output of CP function.
     -- CP-element group 33:  fork  transition  bypass  pipeline-parent 
@@ -20159,8 +20162,8 @@ begin --
       -- CP-element group 34: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1863_entry_sample_req
       -- CP-element group 34: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1863_entry_sample_req_ps
       -- 
-    phi_stmt_1863_entry_sample_req_4181_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_1863_entry_sample_req_4181_symbol_delay",delay_value => 0)
+    phi_stmt_1863_entry_sample_req_4183_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_1863_entry_sample_req_4183_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(34), ack => phi_stmt_1863_req_0); -- 
     -- Element group convolve_CP_4075_elements(34) is bound as output of CP function.
     -- CP-element group 35:  join  transition  input  bypass  pipeline-parent 
@@ -20170,7 +20173,7 @@ begin --
       -- CP-element group 35: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1863_phi_mux_ack
       -- CP-element group 35: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1863_phi_mux_ack_ps
       -- 
-    phi_stmt_1863_phi_mux_ack_4184_symbol_link_from_dp: control_delay_element -- 
+    phi_stmt_1863_phi_mux_ack_4186_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 35_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_1863_ack_0, ack => convolve_CP_4075_elements(35)); -- 
     -- CP-element group 36:  join  fork  transition  bypass  pipeline-parent 
@@ -20220,8 +20223,8 @@ begin --
       -- CP-element group 40: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Sample/$entry
       -- CP-element group 40: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Sample/req
       -- 
-    req_4205_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4205_symbol_delay",delay_value => 0)
+    req_4207_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4207_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(40), ack => nmycount_1937_1866_buf_req_0); -- 
     -- Element group convolve_CP_4075_elements(40) is bound as output of CP function.
     -- CP-element group 41:  join  fork  transition  output  bypass  pipeline-parent 
@@ -20234,8 +20237,8 @@ begin --
       -- CP-element group 41: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Update/$entry
       -- CP-element group 41: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Update/req
       -- 
-    req_4210_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4210_symbol_delay",delay_value => 0)
+    req_4212_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4212_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(41), ack => nmycount_1937_1866_buf_req_1); -- 
     -- Element group convolve_CP_4075_elements(41) is bound as output of CP function.
     -- CP-element group 42:  join  transition  input  bypass  pipeline-parent 
@@ -20248,7 +20251,7 @@ begin --
       -- CP-element group 42: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Sample/$exit
       -- CP-element group 42: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Sample/ack
       -- 
-    ack_4206_symbol_link_from_dp: control_delay_element -- 
+    ack_4208_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 42_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => nmycount_1937_1866_buf_ack_0, ack => convolve_CP_4075_elements(42)); -- 
     -- CP-element group 43:  join  transition  input  bypass  pipeline-parent 
@@ -20261,18 +20264,18 @@ begin --
       -- CP-element group 43: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Update/$exit
       -- CP-element group 43: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nmycount_1866_Update/ack
       -- 
-    ack_4211_symbol_link_from_dp: control_delay_element -- 
+    ack_4213_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 43_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => nmycount_1937_1866_buf_ack_1, ack => convolve_CP_4075_elements(43)); -- 
     -- CP-element group 44:  join  transition  bypass  pipeline-parent 
     -- CP-element group 44: predecessors 
     -- CP-element group 44: 	19 
     -- CP-element group 44: marked-predecessors 
+    -- CP-element group 44: 	95 
+    -- CP-element group 44: 	22 
+    -- CP-element group 44: 	83 
     -- CP-element group 44: 	87 
     -- CP-element group 44: 	91 
-    -- CP-element group 44: 	83 
-    -- CP-element group 44: 	22 
-    -- CP-element group 44: 	95 
     -- CP-element group 44: successors 
     -- CP-element group 44: 	21 
     -- CP-element group 44:  members (1) 
@@ -20281,11 +20284,11 @@ begin --
     convolve_cp_element_group_44: block -- 
       constant place_capacities: IntegerArray(0 to 5) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1,5 => 1);
       constant place_markings: IntegerArray(0 to 5)  := (0 => 0,1 => 1,2 => 1,3 => 1,4 => 1,5 => 1);
-      constant place_delays: IntegerArray(0 to 5) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1,5 => 0);
+      constant place_delays: IntegerArray(0 to 5) := (0 => 0,1 => 0,2 => 1,3 => 0,4 => 0,5 => 0);
       constant joinName: string(1 to 28) := "convolve_cp_element_group_44"; 
       signal preds: BooleanArray(1 to 6); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(83) & convolve_CP_4075_elements(22) & convolve_CP_4075_elements(95);
+      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(22) & convolve_CP_4075_elements(83) & convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91);
       gj_convolve_cp_element_group_44 : generic_join generic map(name => joinName, number_of_predecessors => 6, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(44), clk => clk, reset => reset); --
     end block;
@@ -20293,9 +20296,9 @@ begin --
     -- CP-element group 45: predecessors 
     -- CP-element group 45: 	19 
     -- CP-element group 45: marked-predecessors 
-    -- CP-element group 45: 	49 
-    -- CP-element group 45: 	111 
-    -- CP-element group 45: 	115 
+    -- CP-element group 45: 	47 
+    -- CP-element group 45: 	108 
+    -- CP-element group 45: 	112 
     -- CP-element group 45: successors 
     -- CP-element group 45: 	23 
     -- CP-element group 45:  members (1) 
@@ -20308,250 +20311,248 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_45"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(49) & convolve_CP_4075_elements(111) & convolve_CP_4075_elements(115);
+      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(47) & convolve_CP_4075_elements(108) & convolve_CP_4075_elements(112);
       gj_convolve_cp_element_group_45 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(45), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 46:  fork  transition  bypass  pipeline-parent 
+    -- CP-element group 46:  join  transition  bypass  pipeline-parent 
     -- CP-element group 46: predecessors 
-    -- CP-element group 46: 	21 
     -- CP-element group 46: successors 
+    -- CP-element group 46: 	22 
     -- CP-element group 46:  members (1) 
-      -- CP-element group 46: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_sample_start__ps
+      -- CP-element group 46: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_sample_completed__ps
       -- 
-    convolve_CP_4075_elements(46) <= convolve_CP_4075_elements(21);
-    -- CP-element group 47:  join  transition  bypass  pipeline-parent 
+    -- Element group convolve_CP_4075_elements(46) is bound as output of CP function.
+    -- CP-element group 47:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 47: predecessors 
     -- CP-element group 47: successors 
-    -- CP-element group 47: 	22 
-    -- CP-element group 47:  members (1) 
-      -- CP-element group 47: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_sample_completed__ps
+    -- CP-element group 47: 	106 
+    -- CP-element group 47: 	110 
+    -- CP-element group 47: 	24 
+    -- CP-element group 47: marked-successors 
+    -- CP-element group 47: 	45 
+    -- CP-element group 47:  members (2) 
+      -- CP-element group 47: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_update_completed_
+      -- CP-element group 47: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_update_completed__ps
       -- 
     -- Element group convolve_CP_4075_elements(47) is bound as output of CP function.
     -- CP-element group 48:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 48: predecessors 
-    -- CP-element group 48: 	23 
+    -- CP-element group 48: 	17 
     -- CP-element group 48: successors 
     -- CP-element group 48:  members (1) 
-      -- CP-element group 48: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_update_start__ps
+      -- CP-element group 48: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_loopback_trigger
       -- 
-    convolve_CP_4075_elements(48) <= convolve_CP_4075_elements(23);
-    -- CP-element group 49:  fork  transition  bypass  pipeline-parent 
+    convolve_CP_4075_elements(48) <= convolve_CP_4075_elements(17);
+    -- CP-element group 49:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 49: predecessors 
     -- CP-element group 49: successors 
-    -- CP-element group 49: 	24 
-    -- CP-element group 49: 	109 
-    -- CP-element group 49: 	113 
-    -- CP-element group 49: marked-successors 
-    -- CP-element group 49: 	45 
     -- CP-element group 49:  members (2) 
-      -- CP-element group 49: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_update_completed_
-      -- CP-element group 49: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_update_completed__ps
+      -- CP-element group 49: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_loopback_sample_req
+      -- CP-element group 49: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_loopback_sample_req_ps
       -- 
+    phi_stmt_1867_loopback_sample_req_4224_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_1867_loopback_sample_req_4224_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(49), ack => phi_stmt_1867_req_1); -- 
     -- Element group convolve_CP_4075_elements(49) is bound as output of CP function.
     -- CP-element group 50:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 50: predecessors 
-    -- CP-element group 50: 	17 
+    -- CP-element group 50: 	18 
     -- CP-element group 50: successors 
     -- CP-element group 50:  members (1) 
-      -- CP-element group 50: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_loopback_trigger
+      -- CP-element group 50: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_entry_trigger
       -- 
-    convolve_CP_4075_elements(50) <= convolve_CP_4075_elements(17);
+    convolve_CP_4075_elements(50) <= convolve_CP_4075_elements(18);
     -- CP-element group 51:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 51: predecessors 
     -- CP-element group 51: successors 
     -- CP-element group 51:  members (2) 
-      -- CP-element group 51: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_loopback_sample_req
-      -- CP-element group 51: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_loopback_sample_req_ps
+      -- CP-element group 51: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_entry_sample_req
+      -- CP-element group 51: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_entry_sample_req_ps
       -- 
-    phi_stmt_1867_loopback_sample_req_4222_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_1867_loopback_sample_req_4222_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(51), ack => phi_stmt_1867_req_1); -- 
+    phi_stmt_1867_entry_sample_req_4227_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_1867_entry_sample_req_4227_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(51), ack => phi_stmt_1867_req_0); -- 
     -- Element group convolve_CP_4075_elements(51) is bound as output of CP function.
-    -- CP-element group 52:  fork  transition  bypass  pipeline-parent 
+    -- CP-element group 52:  join  transition  input  bypass  pipeline-parent 
     -- CP-element group 52: predecessors 
-    -- CP-element group 52: 	18 
     -- CP-element group 52: successors 
-    -- CP-element group 52:  members (1) 
-      -- CP-element group 52: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_entry_trigger
+    -- CP-element group 52:  members (2) 
+      -- CP-element group 52: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_phi_mux_ack_ps
+      -- CP-element group 52: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_phi_mux_ack
       -- 
-    convolve_CP_4075_elements(52) <= convolve_CP_4075_elements(18);
-    -- CP-element group 53:  fork  transition  output  bypass  pipeline-parent 
+    phi_stmt_1867_phi_mux_ack_4230_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 52_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => phi_stmt_1867_ack_0, ack => convolve_CP_4075_elements(52)); -- 
+    -- CP-element group 53:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 53: predecessors 
     -- CP-element group 53: successors 
-    -- CP-element group 53:  members (2) 
-      -- CP-element group 53: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_entry_sample_req
-      -- CP-element group 53: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_entry_sample_req_ps
+    -- CP-element group 53:  members (4) 
+      -- CP-element group 53: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_start__ps
+      -- CP-element group 53: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_completed__ps
+      -- CP-element group 53: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_start_
+      -- CP-element group 53: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_completed_
       -- 
-    phi_stmt_1867_entry_sample_req_4225_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_1867_entry_sample_req_4225_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(53), ack => phi_stmt_1867_req_0); -- 
     -- Element group convolve_CP_4075_elements(53) is bound as output of CP function.
-    -- CP-element group 54:  join  transition  input  bypass  pipeline-parent 
+    -- CP-element group 54:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 54: predecessors 
     -- CP-element group 54: successors 
+    -- CP-element group 54: 	56 
     -- CP-element group 54:  members (2) 
-      -- CP-element group 54: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_phi_mux_ack
-      -- CP-element group 54: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1867_phi_mux_ack_ps
+      -- CP-element group 54: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_start__ps
+      -- CP-element group 54: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_start_
       -- 
-    phi_stmt_1867_phi_mux_ack_4228_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 54_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => phi_stmt_1867_ack_0, ack => convolve_CP_4075_elements(54)); -- 
-    -- CP-element group 55:  join  fork  transition  bypass  pipeline-parent 
+    -- Element group convolve_CP_4075_elements(54) is bound as output of CP function.
+    -- CP-element group 55:  join  transition  bypass  pipeline-parent 
     -- CP-element group 55: predecessors 
+    -- CP-element group 55: 	56 
     -- CP-element group 55: successors 
-    -- CP-element group 55:  members (4) 
-      -- CP-element group 55: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_start__ps
-      -- CP-element group 55: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_start_
-      -- CP-element group 55: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_completed__ps
-      -- CP-element group 55: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_sample_completed_
+    -- CP-element group 55:  members (1) 
+      -- CP-element group 55: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_completed__ps
       -- 
-    -- Element group convolve_CP_4075_elements(55) is bound as output of CP function.
-    -- CP-element group 56:  join  fork  transition  bypass  pipeline-parent 
+    convolve_CP_4075_elements(55) <= convolve_CP_4075_elements(56);
+    -- CP-element group 56:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 56: predecessors 
+    -- CP-element group 56: 	54 
     -- CP-element group 56: successors 
-    -- CP-element group 56: 	58 
-    -- CP-element group 56:  members (2) 
-      -- CP-element group 56: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_start__ps
-      -- CP-element group 56: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_start_
+    -- CP-element group 56: 	55 
+    -- CP-element group 56:  members (1) 
+      -- CP-element group 56: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_completed_
       -- 
-    -- Element group convolve_CP_4075_elements(56) is bound as output of CP function.
-    -- CP-element group 57:  join  transition  bypass  pipeline-parent 
+    -- Element group convolve_CP_4075_elements(56) is a control-delay.
+    cp_element_56_delay: control_delay_element  generic map(name => " 56_delay", delay_value => 1)  port map(req => convolve_CP_4075_elements(54), ack => convolve_CP_4075_elements(56), clk => clk, reset =>reset);
+    -- CP-element group 57:  join  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 57: predecessors 
-    -- CP-element group 57: 	58 
     -- CP-element group 57: successors 
-    -- CP-element group 57:  members (1) 
-      -- CP-element group 57: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_completed__ps
+    -- CP-element group 57: 	59 
+    -- CP-element group 57:  members (4) 
+      -- CP-element group 57: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_start_
+      -- CP-element group 57: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/$entry
+      -- CP-element group 57: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/req
+      -- CP-element group 57: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_start__ps
       -- 
-    convolve_CP_4075_elements(57) <= convolve_CP_4075_elements(58);
-    -- CP-element group 58:  transition  delay-element  bypass  pipeline-parent 
+    req_4251_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4251_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(57), ack => nacc_1929_1870_buf_req_0); -- 
+    -- Element group convolve_CP_4075_elements(57) is bound as output of CP function.
+    -- CP-element group 58:  join  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 58: predecessors 
-    -- CP-element group 58: 	56 
     -- CP-element group 58: successors 
-    -- CP-element group 58: 	57 
-    -- CP-element group 58:  members (1) 
-      -- CP-element group 58: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_acc_var_1869_update_completed_
+    -- CP-element group 58: 	60 
+    -- CP-element group 58:  members (4) 
+      -- CP-element group 58: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_start__ps
+      -- CP-element group 58: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_start_
+      -- CP-element group 58: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/req
+      -- CP-element group 58: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/$entry
       -- 
-    -- Element group convolve_CP_4075_elements(58) is a control-delay.
-    cp_element_58_delay: control_delay_element  generic map(name => " 58_delay", delay_value => 1)  port map(req => convolve_CP_4075_elements(56), ack => convolve_CP_4075_elements(58), clk => clk, reset =>reset);
-    -- CP-element group 59:  join  fork  transition  output  bypass  pipeline-parent 
+    req_4256_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4256_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(58), ack => nacc_1929_1870_buf_req_1); -- 
+    -- Element group convolve_CP_4075_elements(58) is bound as output of CP function.
+    -- CP-element group 59:  join  transition  input  bypass  pipeline-parent 
     -- CP-element group 59: predecessors 
+    -- CP-element group 59: 	57 
     -- CP-element group 59: successors 
-    -- CP-element group 59: 	61 
     -- CP-element group 59:  members (4) 
-      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_start__ps
-      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_start_
-      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/$entry
-      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/req
+      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_completed__ps
+      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_completed_
+      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/$exit
+      -- CP-element group 59: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/ack
       -- 
-    req_4249_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4249_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(59), ack => nacc_1929_1870_buf_req_0); -- 
-    -- Element group convolve_CP_4075_elements(59) is bound as output of CP function.
-    -- CP-element group 60:  join  fork  transition  output  bypass  pipeline-parent 
+    ack_4252_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 59_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => nacc_1929_1870_buf_ack_0, ack => convolve_CP_4075_elements(59)); -- 
+    -- CP-element group 60:  join  transition  input  bypass  pipeline-parent 
     -- CP-element group 60: predecessors 
+    -- CP-element group 60: 	58 
     -- CP-element group 60: successors 
-    -- CP-element group 60: 	62 
     -- CP-element group 60:  members (4) 
-      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_start_
-      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/$entry
-      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/req
-      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_start__ps
+      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_completed__ps
+      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/ack
+      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_completed_
+      -- CP-element group 60: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/$exit
       -- 
-    req_4254_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4254_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(60), ack => nacc_1929_1870_buf_req_1); -- 
-    -- Element group convolve_CP_4075_elements(60) is bound as output of CP function.
-    -- CP-element group 61:  join  transition  input  bypass  pipeline-parent 
+    ack_4257_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 60_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => nacc_1929_1870_buf_ack_1, ack => convolve_CP_4075_elements(60)); -- 
+    -- CP-element group 61:  join  transition  bypass  pipeline-parent 
     -- CP-element group 61: predecessors 
-    -- CP-element group 61: 	59 
+    -- CP-element group 61: 	19 
+    -- CP-element group 61: marked-predecessors 
+    -- CP-element group 61: 	95 
+    -- CP-element group 61: 	22 
     -- CP-element group 61: successors 
-    -- CP-element group 61:  members (4) 
-      -- CP-element group 61: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_completed_
-      -- CP-element group 61: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/$exit
-      -- CP-element group 61: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Sample/ack
-      -- CP-element group 61: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_sample_completed__ps
+    -- CP-element group 61: 	21 
+    -- CP-element group 61:  members (1) 
+      -- CP-element group 61: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_sample_start_
       -- 
-    ack_4250_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 61_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => nacc_1929_1870_buf_ack_0, ack => convolve_CP_4075_elements(61)); -- 
-    -- CP-element group 62:  join  transition  input  bypass  pipeline-parent 
-    -- CP-element group 62: predecessors 
-    -- CP-element group 62: 	60 
-    -- CP-element group 62: successors 
-    -- CP-element group 62:  members (4) 
-      -- CP-element group 62: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_completed__ps
-      -- CP-element group 62: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_update_completed_
-      -- CP-element group 62: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/ack
-      -- CP-element group 62: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_nacc_1870_Update/$exit
-      -- 
-    ack_4255_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 62_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => nacc_1929_1870_buf_ack_1, ack => convolve_CP_4075_elements(62)); -- 
-    -- CP-element group 63:  join  transition  bypass  pipeline-parent 
-    -- CP-element group 63: predecessors 
-    -- CP-element group 63: 	19 
-    -- CP-element group 63: marked-predecessors 
-    -- CP-element group 63: 	22 
-    -- CP-element group 63: 	95 
-    -- CP-element group 63: successors 
-    -- CP-element group 63: 	21 
-    -- CP-element group 63:  members (1) 
-      -- CP-element group 63: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_sample_start_
-      -- 
-    convolve_cp_element_group_63: block -- 
+    convolve_cp_element_group_61: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 1,2 => 1);
       constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 1,2 => 1);
-      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 1,2 => 0);
-      constant joinName: string(1 to 28) := "convolve_cp_element_group_63"; 
+      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
+      constant joinName: string(1 to 28) := "convolve_cp_element_group_61"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(22) & convolve_CP_4075_elements(95);
-      gj_convolve_cp_element_group_63 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(63), clk => clk, reset => reset); --
+      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(22);
+      gj_convolve_cp_element_group_61 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(61), clk => clk, reset => reset); --
     end block;
+    -- CP-element group 62:  join  transition  bypass  pipeline-parent 
+    -- CP-element group 62: predecessors 
+    -- CP-element group 62: 	19 
+    -- CP-element group 62: marked-predecessors 
+    -- CP-element group 62: 	101 
+    -- CP-element group 62: 	104 
+    -- CP-element group 62: 	66 
+    -- CP-element group 62: successors 
+    -- CP-element group 62: 	23 
+    -- CP-element group 62:  members (1) 
+      -- CP-element group 62: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_update_start_
+      -- 
+    convolve_cp_element_group_62: block -- 
+      constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 1,2 => 1,3 => 1);
+      constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 1,2 => 1,3 => 1);
+      constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
+      constant joinName: string(1 to 28) := "convolve_cp_element_group_62"; 
+      signal preds: BooleanArray(1 to 4); -- 
+    begin -- 
+      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(101) & convolve_CP_4075_elements(104) & convolve_CP_4075_elements(66);
+      gj_convolve_cp_element_group_62 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(62), clk => clk, reset => reset); --
+    end block;
+    -- CP-element group 63:  fork  transition  bypass  pipeline-parent 
+    -- CP-element group 63: predecessors 
+    -- CP-element group 63: 	21 
+    -- CP-element group 63: successors 
+    -- CP-element group 63:  members (1) 
+      -- CP-element group 63: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_sample_start__ps
+      -- 
+    convolve_CP_4075_elements(63) <= convolve_CP_4075_elements(21);
     -- CP-element group 64:  join  transition  bypass  pipeline-parent 
     -- CP-element group 64: predecessors 
-    -- CP-element group 64: 	19 
-    -- CP-element group 64: marked-predecessors 
-    -- CP-element group 64: 	66 
-    -- CP-element group 64: 	101 
-    -- CP-element group 64: 	104 
-    -- CP-element group 64: 	107 
     -- CP-element group 64: successors 
-    -- CP-element group 64: 	23 
+    -- CP-element group 64: 	22 
     -- CP-element group 64:  members (1) 
-      -- CP-element group 64: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_update_start_
+      -- CP-element group 64: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_sample_completed__ps
       -- 
-    convolve_cp_element_group_64: block -- 
-      constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1);
-      constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 1,2 => 1,3 => 1,4 => 1);
-      constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
-      constant joinName: string(1 to 28) := "convolve_cp_element_group_64"; 
-      signal preds: BooleanArray(1 to 5); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(19) & convolve_CP_4075_elements(66) & convolve_CP_4075_elements(101) & convolve_CP_4075_elements(104) & convolve_CP_4075_elements(107);
-      gj_convolve_cp_element_group_64 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(64), clk => clk, reset => reset); --
-    end block;
-    -- CP-element group 65:  join  transition  bypass  pipeline-parent 
+    -- Element group convolve_CP_4075_elements(64) is bound as output of CP function.
+    -- CP-element group 65:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 65: predecessors 
+    -- CP-element group 65: 	23 
     -- CP-element group 65: successors 
-    -- CP-element group 65: 	22 
     -- CP-element group 65:  members (1) 
-      -- CP-element group 65: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_sample_completed__ps
+      -- CP-element group 65: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_update_start__ps
       -- 
-    -- Element group convolve_CP_4075_elements(65) is bound as output of CP function.
+    convolve_CP_4075_elements(65) <= convolve_CP_4075_elements(23);
     -- CP-element group 66:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 66: predecessors 
     -- CP-element group 66: successors 
+    -- CP-element group 66: 	103 
+    -- CP-element group 66: 	100 
     -- CP-element group 66: 	20 
     -- CP-element group 66: 	24 
-    -- CP-element group 66: 	100 
-    -- CP-element group 66: 	103 
-    -- CP-element group 66: 	106 
     -- CP-element group 66: marked-successors 
-    -- CP-element group 66: 	64 
+    -- CP-element group 66: 	62 
     -- CP-element group 66:  members (2) 
       -- CP-element group 66: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_update_completed_
       -- CP-element group 66: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_update_completed__ps
@@ -20572,8 +20573,8 @@ begin --
       -- CP-element group 68: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_loopback_sample_req
       -- CP-element group 68: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_loopback_sample_req_ps
       -- 
-    phi_stmt_1871_loopback_sample_req_4266_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_1871_loopback_sample_req_4266_symbol_delay",delay_value => 0)
+    phi_stmt_1871_loopback_sample_req_4268_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_1871_loopback_sample_req_4268_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(68), ack => phi_stmt_1871_req_0); -- 
     -- Element group convolve_CP_4075_elements(68) is bound as output of CP function.
     -- CP-element group 69:  fork  transition  bypass  pipeline-parent 
@@ -20591,18 +20592,18 @@ begin --
       -- CP-element group 70: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_entry_sample_req
       -- CP-element group 70: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_entry_sample_req_ps
       -- 
-    phi_stmt_1871_entry_sample_req_4269_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_1871_entry_sample_req_4269_symbol_delay",delay_value => 0)
+    phi_stmt_1871_entry_sample_req_4271_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_1871_entry_sample_req_4271_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(70), ack => phi_stmt_1871_req_1); -- 
     -- Element group convolve_CP_4075_elements(70) is bound as output of CP function.
     -- CP-element group 71:  join  transition  input  bypass  pipeline-parent 
     -- CP-element group 71: predecessors 
     -- CP-element group 71: successors 
     -- CP-element group 71:  members (2) 
-      -- CP-element group 71: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_phi_mux_ack_ps
       -- CP-element group 71: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_phi_mux_ack
+      -- CP-element group 71: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/phi_stmt_1871_phi_mux_ack_ps
       -- 
-    phi_stmt_1871_phi_mux_ack_4272_symbol_link_from_dp: control_delay_element -- 
+    phi_stmt_1871_phi_mux_ack_4274_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 71_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_1871_ack_0, ack => convolve_CP_4075_elements(71)); -- 
     -- CP-element group 72:  join  fork  transition  output  bypass  pipeline-parent 
@@ -20611,12 +20612,12 @@ begin --
     -- CP-element group 72: 	74 
     -- CP-element group 72:  members (4) 
       -- CP-element group 72: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_sample_start__ps
-      -- CP-element group 72: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_sample_start_
       -- CP-element group 72: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Sample/req
       -- CP-element group 72: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Sample/$entry
+      -- CP-element group 72: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_sample_start_
       -- 
-    req_4285_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4285_symbol_delay",delay_value => 0)
+    req_4287_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4287_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(72), ack => n_out_count_1978_1873_buf_req_0); -- 
     -- Element group convolve_CP_4075_elements(72) is bound as output of CP function.
     -- CP-element group 73:  join  fork  transition  output  bypass  pipeline-parent 
@@ -20624,13 +20625,13 @@ begin --
     -- CP-element group 73: successors 
     -- CP-element group 73: 	75 
     -- CP-element group 73:  members (4) 
-      -- CP-element group 73: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_update_start__ps
       -- CP-element group 73: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Update/req
+      -- CP-element group 73: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_update_start__ps
       -- CP-element group 73: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Update/$entry
       -- CP-element group 73: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_update_start_
       -- 
-    req_4290_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4290_symbol_delay",delay_value => 0)
+    req_4292_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4292_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(73), ack => n_out_count_1978_1873_buf_req_1); -- 
     -- Element group convolve_CP_4075_elements(73) is bound as output of CP function.
     -- CP-element group 74:  join  transition  input  bypass  pipeline-parent 
@@ -20638,12 +20639,12 @@ begin --
     -- CP-element group 74: 	72 
     -- CP-element group 74: successors 
     -- CP-element group 74:  members (4) 
-      -- CP-element group 74: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_sample_completed_
       -- CP-element group 74: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_sample_completed__ps
       -- CP-element group 74: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Sample/ack
       -- CP-element group 74: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Sample/$exit
+      -- CP-element group 74: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_sample_completed_
       -- 
-    ack_4286_symbol_link_from_dp: control_delay_element -- 
+    ack_4288_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 74_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => n_out_count_1978_1873_buf_ack_0, ack => convolve_CP_4075_elements(74)); -- 
     -- CP-element group 75:  join  transition  input  bypass  pipeline-parent 
@@ -20651,22 +20652,22 @@ begin --
     -- CP-element group 75: 	73 
     -- CP-element group 75: successors 
     -- CP-element group 75:  members (4) 
-      -- CP-element group 75: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_update_completed__ps
       -- CP-element group 75: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Update/ack
       -- CP-element group 75: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_Update/$exit
+      -- CP-element group 75: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_update_completed__ps
       -- CP-element group 75: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/R_n_out_count_1873_update_completed_
       -- 
-    ack_4291_symbol_link_from_dp: control_delay_element -- 
+    ack_4293_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 75_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => n_out_count_1978_1873_buf_ack_1, ack => convolve_CP_4075_elements(75)); -- 
     -- CP-element group 76:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 76: predecessors 
     -- CP-element group 76: successors 
     -- CP-element group 76:  members (4) 
-      -- CP-element group 76: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_sample_completed_
       -- CP-element group 76: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_sample_completed__ps
-      -- CP-element group 76: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_sample_start_
       -- CP-element group 76: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_sample_start__ps
+      -- CP-element group 76: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_sample_start_
+      -- CP-element group 76: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_sample_completed_
       -- 
     -- Element group convolve_CP_4075_elements(76) is bound as output of CP function.
     -- CP-element group 77:  join  fork  transition  bypass  pipeline-parent 
@@ -20674,8 +20675,8 @@ begin --
     -- CP-element group 77: successors 
     -- CP-element group 77: 	79 
     -- CP-element group 77:  members (2) 
-      -- CP-element group 77: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_update_start_
       -- CP-element group 77: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_update_start__ps
+      -- CP-element group 77: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1875_update_start_
       -- 
     -- Element group convolve_CP_4075_elements(77) is bound as output of CP function.
     -- CP-element group 78:  join  transition  bypass  pipeline-parent 
@@ -20704,12 +20705,12 @@ begin --
     -- CP-element group 80: successors 
     -- CP-element group 80: 	82 
     -- CP-element group 80:  members (3) 
+      -- CP-element group 80: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Sample/$entry
       -- CP-element group 80: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Sample/rr
       -- CP-element group 80: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_sample_start_
-      -- CP-element group 80: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Sample/$entry
       -- 
-    rr_4308_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4308_symbol_delay",delay_value => 0)
+    rr_4310_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4310_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(80), ack => RPIPE_input_pipe1_1878_inst_req_0); -- 
     convolve_cp_element_group_80: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
@@ -20724,29 +20725,29 @@ begin --
     end block;
     -- CP-element group 81:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 81: predecessors 
-    -- CP-element group 81: 	82 
     -- CP-element group 81: 	22 
+    -- CP-element group 81: 	82 
     -- CP-element group 81: marked-predecessors 
-    -- CP-element group 81: 	111 
-    -- CP-element group 81: 	115 
+    -- CP-element group 81: 	108 
+    -- CP-element group 81: 	112 
     -- CP-element group 81: successors 
     -- CP-element group 81: 	83 
     -- CP-element group 81:  members (3) 
+      -- CP-element group 81: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_update_start_
       -- CP-element group 81: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Update/$entry
       -- CP-element group 81: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Update/cr
-      -- CP-element group 81: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_update_start_
       -- 
-    cr_4313_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4313_symbol_delay",delay_value => 0)
+    cr_4315_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4315_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(81), ack => RPIPE_input_pipe1_1878_inst_req_1); -- 
     convolve_cp_element_group_81: block -- 
-      constant place_capacities: IntegerArray(0 to 3) := (0 => 1,1 => 15,2 => 1,3 => 1);
+      constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 1,2 => 1,3 => 1);
       constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 0,2 => 1,3 => 1);
       constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
       constant joinName: string(1 to 28) := "convolve_cp_element_group_81"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(82) & convolve_CP_4075_elements(22) & convolve_CP_4075_elements(111) & convolve_CP_4075_elements(115);
+      preds <= convolve_CP_4075_elements(22) & convolve_CP_4075_elements(82) & convolve_CP_4075_elements(108) & convolve_CP_4075_elements(112);
       gj_convolve_cp_element_group_81 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(81), clk => clk, reset => reset); --
     end block;
@@ -20756,28 +20757,28 @@ begin --
     -- CP-element group 82: successors 
     -- CP-element group 82: 	81 
     -- CP-element group 82:  members (3) 
-      -- CP-element group 82: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Sample/ra
-      -- CP-element group 82: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Sample/$exit
       -- CP-element group 82: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_sample_completed_
+      -- CP-element group 82: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Sample/$exit
+      -- CP-element group 82: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Sample/ra
       -- 
-    ra_4309_symbol_link_from_dp: control_delay_element -- 
+    ra_4311_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 82_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_input_pipe1_1878_inst_ack_0, ack => convolve_CP_4075_elements(82)); -- 
     -- CP-element group 83:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 83: predecessors 
     -- CP-element group 83: 	81 
     -- CP-element group 83: successors 
-    -- CP-element group 83: 	109 
-    -- CP-element group 83: 	113 
+    -- CP-element group 83: 	106 
+    -- CP-element group 83: 	110 
     -- CP-element group 83: marked-successors 
-    -- CP-element group 83: 	80 
     -- CP-element group 83: 	44 
+    -- CP-element group 83: 	80 
     -- CP-element group 83:  members (3) 
+      -- CP-element group 83: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_update_completed_
       -- CP-element group 83: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Update/$exit
       -- CP-element group 83: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_Update/ca
-      -- CP-element group 83: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_input_pipe1_1878_update_completed_
       -- 
-    ca_4314_symbol_link_from_dp: control_delay_element -- 
+    ca_4316_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 83_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_input_pipe1_1878_inst_ack_1, ack => convolve_CP_4075_elements(83)); -- 
     -- CP-element group 84:  join  transition  output  bypass  pipeline-parent 
@@ -20789,11 +20790,11 @@ begin --
     -- CP-element group 84: 	86 
     -- CP-element group 84:  members (3) 
       -- CP-element group 84: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_sample_start_
-      -- CP-element group 84: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Sample/$entry
       -- CP-element group 84: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Sample/rr
+      -- CP-element group 84: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Sample/$entry
       -- 
-    rr_4322_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4322_symbol_delay",delay_value => 0)
+    rr_4324_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4324_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(84), ack => RPIPE_kernel_pipe1_1886_inst_req_0); -- 
     convolve_cp_element_group_84: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
@@ -20808,31 +20809,31 @@ begin --
     end block;
     -- CP-element group 85:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 85: predecessors 
-    -- CP-element group 85: 	86 
     -- CP-element group 85: 	22 
+    -- CP-element group 85: 	86 
     -- CP-element group 85: marked-predecessors 
     -- CP-element group 85: 	101 
     -- CP-element group 85: 	104 
-    -- CP-element group 85: 	111 
-    -- CP-element group 85: 	115 
+    -- CP-element group 85: 	108 
+    -- CP-element group 85: 	112 
     -- CP-element group 85: successors 
     -- CP-element group 85: 	87 
     -- CP-element group 85:  members (3) 
-      -- CP-element group 85: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_update_start_
       -- CP-element group 85: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Update/cr
+      -- CP-element group 85: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_update_start_
       -- CP-element group 85: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Update/$entry
       -- 
-    cr_4327_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4327_symbol_delay",delay_value => 0)
+    cr_4329_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4329_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(85), ack => RPIPE_kernel_pipe1_1886_inst_req_1); -- 
     convolve_cp_element_group_85: block -- 
-      constant place_capacities: IntegerArray(0 to 5) := (0 => 1,1 => 15,2 => 1,3 => 1,4 => 1,5 => 1);
+      constant place_capacities: IntegerArray(0 to 5) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1,5 => 1);
       constant place_markings: IntegerArray(0 to 5)  := (0 => 0,1 => 0,2 => 1,3 => 1,4 => 1,5 => 1);
       constant place_delays: IntegerArray(0 to 5) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0,5 => 0);
       constant joinName: string(1 to 28) := "convolve_cp_element_group_85"; 
       signal preds: BooleanArray(1 to 6); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(86) & convolve_CP_4075_elements(22) & convolve_CP_4075_elements(101) & convolve_CP_4075_elements(104) & convolve_CP_4075_elements(111) & convolve_CP_4075_elements(115);
+      preds <= convolve_CP_4075_elements(22) & convolve_CP_4075_elements(86) & convolve_CP_4075_elements(101) & convolve_CP_4075_elements(104) & convolve_CP_4075_elements(108) & convolve_CP_4075_elements(112);
       gj_convolve_cp_element_group_85 : generic_join generic map(name => joinName, number_of_predecessors => 6, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(85), clk => clk, reset => reset); --
     end block;
@@ -20843,29 +20844,29 @@ begin --
     -- CP-element group 86: 	85 
     -- CP-element group 86:  members (3) 
       -- CP-element group 86: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_sample_completed_
-      -- CP-element group 86: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Sample/$exit
       -- CP-element group 86: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Sample/ra
+      -- CP-element group 86: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Sample/$exit
       -- 
-    ra_4323_symbol_link_from_dp: control_delay_element -- 
+    ra_4325_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 86_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_kernel_pipe1_1886_inst_ack_0, ack => convolve_CP_4075_elements(86)); -- 
     -- CP-element group 87:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 87: predecessors 
     -- CP-element group 87: 	85 
     -- CP-element group 87: successors 
-    -- CP-element group 87: 	100 
     -- CP-element group 87: 	103 
-    -- CP-element group 87: 	109 
-    -- CP-element group 87: 	113 
+    -- CP-element group 87: 	100 
+    -- CP-element group 87: 	106 
+    -- CP-element group 87: 	110 
     -- CP-element group 87: marked-successors 
-    -- CP-element group 87: 	84 
     -- CP-element group 87: 	44 
+    -- CP-element group 87: 	84 
     -- CP-element group 87:  members (3) 
-      -- CP-element group 87: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_update_completed_
-      -- CP-element group 87: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Update/ca
       -- CP-element group 87: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Update/$exit
+      -- CP-element group 87: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_Update/ca
+      -- CP-element group 87: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe1_1886_update_completed_
       -- 
-    ca_4328_symbol_link_from_dp: control_delay_element -- 
+    ca_4330_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 87_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_kernel_pipe1_1886_inst_ack_1, ack => convolve_CP_4075_elements(87)); -- 
     -- CP-element group 88:  join  transition  output  bypass  pipeline-parent 
@@ -20880,8 +20881,8 @@ begin --
       -- CP-element group 88: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Sample/rr
       -- CP-element group 88: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Sample/$entry
       -- 
-    rr_4336_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4336_symbol_delay",delay_value => 0)
+    rr_4338_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4338_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(88), ack => RPIPE_kernel_pipe2_1890_inst_req_0); -- 
     convolve_cp_element_group_88: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
@@ -20896,13 +20897,13 @@ begin --
     end block;
     -- CP-element group 89:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 89: predecessors 
-    -- CP-element group 89: 	90 
     -- CP-element group 89: 	22 
+    -- CP-element group 89: 	90 
     -- CP-element group 89: marked-predecessors 
     -- CP-element group 89: 	101 
     -- CP-element group 89: 	104 
-    -- CP-element group 89: 	111 
-    -- CP-element group 89: 	115 
+    -- CP-element group 89: 	108 
+    -- CP-element group 89: 	112 
     -- CP-element group 89: successors 
     -- CP-element group 89: 	91 
     -- CP-element group 89:  members (3) 
@@ -20910,17 +20911,17 @@ begin --
       -- CP-element group 89: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Update/$entry
       -- CP-element group 89: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Update/cr
       -- 
-    cr_4341_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4341_symbol_delay",delay_value => 0)
+    cr_4343_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4343_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(89), ack => RPIPE_kernel_pipe2_1890_inst_req_1); -- 
     convolve_cp_element_group_89: block -- 
-      constant place_capacities: IntegerArray(0 to 5) := (0 => 1,1 => 15,2 => 1,3 => 1,4 => 1,5 => 1);
+      constant place_capacities: IntegerArray(0 to 5) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1,5 => 1);
       constant place_markings: IntegerArray(0 to 5)  := (0 => 0,1 => 0,2 => 1,3 => 1,4 => 1,5 => 1);
       constant place_delays: IntegerArray(0 to 5) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0,5 => 0);
       constant joinName: string(1 to 28) := "convolve_cp_element_group_89"; 
       signal preds: BooleanArray(1 to 6); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(90) & convolve_CP_4075_elements(22) & convolve_CP_4075_elements(101) & convolve_CP_4075_elements(104) & convolve_CP_4075_elements(111) & convolve_CP_4075_elements(115);
+      preds <= convolve_CP_4075_elements(22) & convolve_CP_4075_elements(90) & convolve_CP_4075_elements(101) & convolve_CP_4075_elements(104) & convolve_CP_4075_elements(108) & convolve_CP_4075_elements(112);
       gj_convolve_cp_element_group_89 : generic_join generic map(name => joinName, number_of_predecessors => 6, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(89), clk => clk, reset => reset); --
     end block;
@@ -20934,26 +20935,26 @@ begin --
       -- CP-element group 90: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Sample/$exit
       -- CP-element group 90: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Sample/ra
       -- 
-    ra_4337_symbol_link_from_dp: control_delay_element -- 
+    ra_4339_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 90_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_kernel_pipe2_1890_inst_ack_0, ack => convolve_CP_4075_elements(90)); -- 
     -- CP-element group 91:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 91: predecessors 
     -- CP-element group 91: 	89 
     -- CP-element group 91: successors 
-    -- CP-element group 91: 	100 
     -- CP-element group 91: 	103 
-    -- CP-element group 91: 	109 
-    -- CP-element group 91: 	113 
+    -- CP-element group 91: 	100 
+    -- CP-element group 91: 	106 
+    -- CP-element group 91: 	110 
     -- CP-element group 91: marked-successors 
-    -- CP-element group 91: 	88 
     -- CP-element group 91: 	44 
+    -- CP-element group 91: 	88 
     -- CP-element group 91:  members (3) 
       -- CP-element group 91: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_update_completed_
       -- CP-element group 91: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Update/$exit
       -- CP-element group 91: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/RPIPE_kernel_pipe2_1890_Update/ca
       -- 
-    ca_4342_symbol_link_from_dp: control_delay_element -- 
+    ca_4344_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 91_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_kernel_pipe2_1890_inst_ack_1, ack => convolve_CP_4075_elements(91)); -- 
     -- CP-element group 92:  join  transition  output  bypass  pipeline-parent 
@@ -20964,12 +20965,12 @@ begin --
     -- CP-element group 92: successors 
     -- CP-element group 92: 	94 
     -- CP-element group 92:  members (3) 
-      -- CP-element group 92: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_sample_start_
       -- CP-element group 92: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Sample/$entry
+      -- CP-element group 92: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_sample_start_
       -- CP-element group 92: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Sample/rr
       -- 
-    rr_4350_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4350_symbol_delay",delay_value => 0)
+    rr_4352_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4352_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(92), ack => SUB_u31_u31_1910_inst_req_0); -- 
     convolve_cp_element_group_92: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
@@ -20986,29 +20987,28 @@ begin --
     -- CP-element group 93: predecessors 
     -- CP-element group 93: 	22 
     -- CP-element group 93: marked-predecessors 
-    -- CP-element group 93: 	130 
-    -- CP-element group 93: 	119 
+    -- CP-element group 93: 	116 
     -- CP-element group 93: 	95 
-    -- CP-element group 93: 	107 
+    -- CP-element group 93: 	127 
     -- CP-element group 93: successors 
     -- CP-element group 93: 	95 
     -- CP-element group 93:  members (3) 
-      -- CP-element group 93: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Update/cr
-      -- CP-element group 93: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_update_start_
       -- CP-element group 93: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Update/$entry
+      -- CP-element group 93: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_update_start_
+      -- CP-element group 93: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Update/cr
       -- 
-    cr_4355_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4355_symbol_delay",delay_value => 0)
+    cr_4357_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4357_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(93), ack => SUB_u31_u31_1910_inst_req_1); -- 
     convolve_cp_element_group_93: block -- 
-      constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1);
-      constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 1,2 => 1,3 => 1,4 => 1);
-      constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
+      constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 1,2 => 1,3 => 1);
+      constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 1,2 => 1,3 => 1);
+      constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
       constant joinName: string(1 to 28) := "convolve_cp_element_group_93"; 
-      signal preds: BooleanArray(1 to 5); -- 
+      signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(22) & convolve_CP_4075_elements(130) & convolve_CP_4075_elements(119) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(107);
-      gj_convolve_cp_element_group_93 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+      preds <= convolve_CP_4075_elements(22) & convolve_CP_4075_elements(116) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(127);
+      gj_convolve_cp_element_group_93 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(93), clk => clk, reset => reset); --
     end block;
     -- CP-element group 94:  fork  transition  input  bypass  pipeline-parent 
@@ -21022,28 +21022,27 @@ begin --
       -- CP-element group 94: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_sample_completed_
       -- CP-element group 94: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Sample/$exit
       -- 
-    ra_4351_symbol_link_from_dp: control_delay_element -- 
+    ra_4353_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 94_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => SUB_u31_u31_1910_inst_ack_0, ack => convolve_CP_4075_elements(94)); -- 
     -- CP-element group 95:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 95: predecessors 
     -- CP-element group 95: 	93 
     -- CP-element group 95: successors 
+    -- CP-element group 95: 	114 
     -- CP-element group 95: 	20 
-    -- CP-element group 95: 	128 
-    -- CP-element group 95: 	106 
-    -- CP-element group 95: 	117 
+    -- CP-element group 95: 	125 
     -- CP-element group 95: marked-successors 
-    -- CP-element group 95: 	63 
-    -- CP-element group 95: 	25 
     -- CP-element group 95: 	44 
+    -- CP-element group 95: 	25 
+    -- CP-element group 95: 	61 
     -- CP-element group 95: 	93 
     -- CP-element group 95:  members (3) 
       -- CP-element group 95: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Update/ca
-      -- CP-element group 95: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_update_completed_
       -- CP-element group 95: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_Update/$exit
+      -- CP-element group 95: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/SUB_u31_u31_1910_update_completed_
       -- 
-    ca_4356_symbol_link_from_dp: control_delay_element -- 
+    ca_4358_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 95_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => SUB_u31_u31_1910_inst_ack_1, ack => convolve_CP_4075_elements(95)); -- 
     -- CP-element group 96:  join  transition  output  bypass  pipeline-parent 
@@ -21054,12 +21053,12 @@ begin --
     -- CP-element group 96: successors 
     -- CP-element group 96: 	98 
     -- CP-element group 96:  members (3) 
-      -- CP-element group 96: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Sample/rr
       -- CP-element group 96: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Sample/$entry
       -- CP-element group 96: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_sample_start_
+      -- CP-element group 96: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Sample/rr
       -- 
-    rr_4364_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4364_symbol_delay",delay_value => 0)
+    rr_4366_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4366_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(96), ack => NOT_u1_u1_1945_inst_req_0); -- 
     convolve_cp_element_group_96: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
@@ -21075,17 +21074,17 @@ begin --
     -- CP-element group 97:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 97: predecessors 
     -- CP-element group 97: marked-predecessors 
-    -- CP-element group 97: 	99 
     -- CP-element group 97: 	101 
+    -- CP-element group 97: 	99 
     -- CP-element group 97: successors 
     -- CP-element group 97: 	99 
     -- CP-element group 97:  members (3) 
-      -- CP-element group 97: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Update/cr
-      -- CP-element group 97: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Update/$entry
       -- CP-element group 97: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_update_start_
+      -- CP-element group 97: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Update/$entry
+      -- CP-element group 97: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Update/cr
       -- 
-    cr_4369_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4369_symbol_delay",delay_value => 0)
+    cr_4371_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4371_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(97), ack => NOT_u1_u1_1945_inst_req_1); -- 
     convolve_cp_element_group_97: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
@@ -21094,7 +21093,7 @@ begin --
       constant joinName: string(1 to 28) := "convolve_cp_element_group_97"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(99) & convolve_CP_4075_elements(101);
+      preds <= convolve_CP_4075_elements(101) & convolve_CP_4075_elements(99);
       gj_convolve_cp_element_group_97 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(97), clk => clk, reset => reset); --
     end block;
@@ -21105,11 +21104,11 @@ begin --
     -- CP-element group 98: marked-successors 
     -- CP-element group 98: 	96 
     -- CP-element group 98:  members (3) 
-      -- CP-element group 98: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Sample/$exit
       -- CP-element group 98: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_sample_completed_
+      -- CP-element group 98: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Sample/$exit
       -- CP-element group 98: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Sample/ra
       -- 
-    ra_4365_symbol_link_from_dp: control_delay_element -- 
+    ra_4367_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 98_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => NOT_u1_u1_1945_inst_ack_0, ack => convolve_CP_4075_elements(98)); -- 
     -- CP-element group 99:  fork  transition  input  bypass  pipeline-parent 
@@ -21120,19 +21119,19 @@ begin --
     -- CP-element group 99: marked-successors 
     -- CP-element group 99: 	97 
     -- CP-element group 99:  members (3) 
+      -- CP-element group 99: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_update_completed_
       -- CP-element group 99: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Update/$exit
       -- CP-element group 99: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_Update/ca
-      -- CP-element group 99: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/NOT_u1_u1_1945_update_completed_
       -- 
-    ca_4370_symbol_link_from_dp: control_delay_element -- 
+    ca_4372_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 99_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => NOT_u1_u1_1945_inst_ack_1, ack => convolve_CP_4075_elements(99)); -- 
     -- CP-element group 100:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 100: predecessors 
+    -- CP-element group 100: 	99 
+    -- CP-element group 100: 	66 
     -- CP-element group 100: 	87 
     -- CP-element group 100: 	91 
-    -- CP-element group 100: 	66 
-    -- CP-element group 100: 	99 
     -- CP-element group 100: marked-predecessors 
     -- CP-element group 100: 	102 
     -- CP-element group 100: successors 
@@ -21142,17 +21141,17 @@ begin --
       -- CP-element group 100: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Sample/$entry
       -- CP-element group 100: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Sample/req
       -- 
-    req_4378_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4378_symbol_delay",delay_value => 0)
+    req_4380_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4380_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(100), ack => WPIPE_kernel_pipe1_1960_inst_req_0); -- 
     convolve_cp_element_group_100: block -- 
-      constant place_capacities: IntegerArray(0 to 4) := (0 => 1,1 => 1,2 => 15,3 => 1,4 => 1);
+      constant place_capacities: IntegerArray(0 to 4) := (0 => 1,1 => 15,2 => 1,3 => 1,4 => 1);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
       constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
       constant joinName: string(1 to 29) := "convolve_cp_element_group_100"; 
       signal preds: BooleanArray(1 to 5); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(66) & convolve_CP_4075_elements(99) & convolve_CP_4075_elements(102);
+      preds <= convolve_CP_4075_elements(99) & convolve_CP_4075_elements(66) & convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(102);
       gj_convolve_cp_element_group_100 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(100), clk => clk, reset => reset); --
     end block;
@@ -21162,44 +21161,44 @@ begin --
     -- CP-element group 101: successors 
     -- CP-element group 101: 	102 
     -- CP-element group 101: marked-successors 
-    -- CP-element group 101: 	89 
-    -- CP-element group 101: 	64 
-    -- CP-element group 101: 	85 
     -- CP-element group 101: 	97 
+    -- CP-element group 101: 	62 
+    -- CP-element group 101: 	85 
+    -- CP-element group 101: 	89 
     -- CP-element group 101:  members (6) 
       -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_sample_completed_
       -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_update_start_
       -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Sample/$exit
-      -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Sample/ack
-      -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Update/$entry
       -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Update/req
+      -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Update/$entry
+      -- CP-element group 101: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Sample/ack
       -- 
-    ack_4379_symbol_link_from_dp: control_delay_element -- 
+    ack_4381_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 101_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_kernel_pipe1_1960_inst_ack_0, ack => convolve_CP_4075_elements(101)); -- 
-    req_4383_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4383_symbol_delay",delay_value => 0)
+    req_4385_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4385_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(101), ack => WPIPE_kernel_pipe1_1960_inst_req_1); -- 
     -- CP-element group 102:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 102: predecessors 
     -- CP-element group 102: 	101 
     -- CP-element group 102: successors 
-    -- CP-element group 102: 	140 
+    -- CP-element group 102: 	137 
     -- CP-element group 102: marked-successors 
     -- CP-element group 102: 	100 
     -- CP-element group 102:  members (3) 
       -- CP-element group 102: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_update_completed_
-      -- CP-element group 102: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Update/$exit
       -- CP-element group 102: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Update/ack
+      -- CP-element group 102: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe1_1960_Update/$exit
       -- 
-    ack_4384_symbol_link_from_dp: control_delay_element -- 
+    ack_4386_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 102_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_kernel_pipe1_1960_inst_ack_1, ack => convolve_CP_4075_elements(102)); -- 
     -- CP-element group 103:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 103: predecessors 
+    -- CP-element group 103: 	66 
     -- CP-element group 103: 	87 
     -- CP-element group 103: 	91 
-    -- CP-element group 103: 	66 
     -- CP-element group 103: marked-predecessors 
     -- CP-element group 103: 	105 
     -- CP-element group 103: successors 
@@ -21209,17 +21208,17 @@ begin --
       -- CP-element group 103: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_Sample/$entry
       -- CP-element group 103: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_sample_start_
       -- 
-    req_4392_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4392_symbol_delay",delay_value => 0)
+    req_4394_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4394_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(103), ack => WPIPE_kernel_pipe2_1964_inst_req_0); -- 
     convolve_cp_element_group_103: block -- 
-      constant place_capacities: IntegerArray(0 to 3) := (0 => 1,1 => 1,2 => 15,3 => 1);
+      constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 1,2 => 1,3 => 1);
       constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 0,2 => 0,3 => 1);
       constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
       constant joinName: string(1 to 29) := "convolve_cp_element_group_103"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(66) & convolve_CP_4075_elements(105);
+      preds <= convolve_CP_4075_elements(66) & convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(105);
       gj_convolve_cp_element_group_103 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(103), clk => clk, reset => reset); --
     end block;
@@ -21229,9 +21228,9 @@ begin --
     -- CP-element group 104: successors 
     -- CP-element group 104: 	105 
     -- CP-element group 104: marked-successors 
-    -- CP-element group 104: 	89 
-    -- CP-element group 104: 	64 
+    -- CP-element group 104: 	62 
     -- CP-element group 104: 	85 
+    -- CP-element group 104: 	89 
     -- CP-element group 104:  members (6) 
       -- CP-element group 104: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_Update/req
       -- CP-element group 104: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_Update/$entry
@@ -21240,17 +21239,17 @@ begin --
       -- CP-element group 104: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_update_start_
       -- CP-element group 104: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_sample_completed_
       -- 
-    ack_4393_symbol_link_from_dp: control_delay_element -- 
+    ack_4395_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 104_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_kernel_pipe2_1964_inst_ack_0, ack => convolve_CP_4075_elements(104)); -- 
-    req_4397_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4397_symbol_delay",delay_value => 0)
+    req_4399_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4399_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(104), ack => WPIPE_kernel_pipe2_1964_inst_req_1); -- 
     -- CP-element group 105:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 105: predecessors 
     -- CP-element group 105: 	104 
     -- CP-element group 105: successors 
-    -- CP-element group 105: 	140 
+    -- CP-element group 105: 	137 
     -- CP-element group 105: marked-successors 
     -- CP-element group 105: 	103 
     -- CP-element group 105:  members (3) 
@@ -21258,832 +21257,802 @@ begin --
       -- CP-element group 105: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_Update/$exit
       -- CP-element group 105: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_kernel_pipe2_1964_update_completed_
       -- 
-    ack_4398_symbol_link_from_dp: control_delay_element -- 
+    ack_4400_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 105_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_kernel_pipe2_1964_inst_ack_1, ack => convolve_CP_4075_elements(105)); -- 
     -- CP-element group 106:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 106: predecessors 
-    -- CP-element group 106: 	66 
-    -- CP-element group 106: 	30 
-    -- CP-element group 106: 	95 
+    -- CP-element group 106: 	47 
+    -- CP-element group 106: 	83 
+    -- CP-element group 106: 	87 
+    -- CP-element group 106: 	91 
     -- CP-element group 106: marked-predecessors 
     -- CP-element group 106: 	108 
     -- CP-element group 106: successors 
-    -- CP-element group 106: 	107 
+    -- CP-element group 106: 	108 
     -- CP-element group 106:  members (3) 
-      -- CP-element group 106: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Sample/$entry
-      -- CP-element group 106: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Sample/req
-      -- CP-element group 106: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_sample_start_
+      -- CP-element group 106: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Sample/rr
+      -- CP-element group 106: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_sample_start_
+      -- CP-element group 106: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Sample/$entry
       -- 
-    req_4406_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4406_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(106), ack => WPIPE_input_done_pipe_1985_inst_req_0); -- 
+    rr_4408_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4408_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(106), ack => slice_1986_inst_req_0); -- 
     convolve_cp_element_group_106: block -- 
-      constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 15,2 => 1,3 => 1);
-      constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 0,2 => 0,3 => 1);
-      constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_106"; 
-      signal preds: BooleanArray(1 to 4); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(66) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(108);
-      gj_convolve_cp_element_group_106 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(106), clk => clk, reset => reset); --
-    end block;
-    -- CP-element group 107:  fork  transition  input  output  bypass  pipeline-parent 
-    -- CP-element group 107: predecessors 
-    -- CP-element group 107: 	106 
-    -- CP-element group 107: successors 
-    -- CP-element group 107: 	108 
-    -- CP-element group 107: marked-successors 
-    -- CP-element group 107: 	64 
-    -- CP-element group 107: 	26 
-    -- CP-element group 107: 	93 
-    -- CP-element group 107:  members (6) 
-      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Sample/$exit
-      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Sample/ack
-      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Update/$entry
-      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_update_start_
-      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_sample_completed_
-      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Update/req
-      -- 
-    ack_4407_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 107_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_input_done_pipe_1985_inst_ack_0, ack => convolve_CP_4075_elements(107)); -- 
-    req_4411_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4411_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(107), ack => WPIPE_input_done_pipe_1985_inst_req_1); -- 
-    -- CP-element group 108:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 108: predecessors 
-    -- CP-element group 108: 	107 
-    -- CP-element group 108: successors 
-    -- CP-element group 108: 	140 
-    -- CP-element group 108: marked-successors 
-    -- CP-element group 108: 	106 
-    -- CP-element group 108:  members (3) 
-      -- CP-element group 108: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_update_completed_
-      -- CP-element group 108: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Update/ack
-      -- CP-element group 108: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_input_done_pipe_1985_Update/$exit
-      -- 
-    ack_4412_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 108_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_input_done_pipe_1985_inst_ack_1, ack => convolve_CP_4075_elements(108)); -- 
-    -- CP-element group 109:  join  transition  output  bypass  pipeline-parent 
-    -- CP-element group 109: predecessors 
-    -- CP-element group 109: 	87 
-    -- CP-element group 109: 	91 
-    -- CP-element group 109: 	83 
-    -- CP-element group 109: 	49 
-    -- CP-element group 109: marked-predecessors 
-    -- CP-element group 109: 	111 
-    -- CP-element group 109: successors 
-    -- CP-element group 109: 	111 
-    -- CP-element group 109:  members (3) 
-      -- CP-element group 109: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_sample_start_
-      -- CP-element group 109: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/$entry
-      -- CP-element group 109: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/rr
-      -- 
-    rr_4420_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4420_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(109), ack => slice_1990_inst_req_0); -- 
-    convolve_cp_element_group_109: block -- 
-      constant place_capacities: IntegerArray(0 to 4) := (0 => 1,1 => 1,2 => 1,3 => 15,4 => 1);
+      constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
       constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_109"; 
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_106"; 
       signal preds: BooleanArray(1 to 5); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(83) & convolve_CP_4075_elements(49) & convolve_CP_4075_elements(111);
-      gj_convolve_cp_element_group_109 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(109), clk => clk, reset => reset); --
+      preds <= convolve_CP_4075_elements(47) & convolve_CP_4075_elements(83) & convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(108);
+      gj_convolve_cp_element_group_106 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(106), clk => clk, reset => reset); --
     end block;
+    -- CP-element group 107:  join  transition  output  bypass  pipeline-parent 
+    -- CP-element group 107: predecessors 
+    -- CP-element group 107: marked-predecessors 
+    -- CP-element group 107: 	109 
+    -- CP-element group 107: 	120 
+    -- CP-element group 107: successors 
+    -- CP-element group 107: 	109 
+    -- CP-element group 107:  members (3) 
+      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Update/$entry
+      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Update/cr
+      -- CP-element group 107: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_update_start_
+      -- 
+    cr_4413_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4413_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(107), ack => slice_1986_inst_req_1); -- 
+    convolve_cp_element_group_107: block -- 
+      constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
+      constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
+      constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_107"; 
+      signal preds: BooleanArray(1 to 2); -- 
+    begin -- 
+      preds <= convolve_CP_4075_elements(109) & convolve_CP_4075_elements(120);
+      gj_convolve_cp_element_group_107 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(107), clk => clk, reset => reset); --
+    end block;
+    -- CP-element group 108:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 108: predecessors 
+    -- CP-element group 108: 	106 
+    -- CP-element group 108: successors 
+    -- CP-element group 108: marked-successors 
+    -- CP-element group 108: 	45 
+    -- CP-element group 108: 	106 
+    -- CP-element group 108: 	81 
+    -- CP-element group 108: 	85 
+    -- CP-element group 108: 	89 
+    -- CP-element group 108:  members (3) 
+      -- CP-element group 108: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Sample/ra
+      -- CP-element group 108: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_sample_completed_
+      -- CP-element group 108: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Sample/$exit
+      -- 
+    ra_4409_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 108_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => slice_1986_inst_ack_0, ack => convolve_CP_4075_elements(108)); -- 
+    -- CP-element group 109:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 109: predecessors 
+    -- CP-element group 109: 	107 
+    -- CP-element group 109: successors 
+    -- CP-element group 109: 	118 
+    -- CP-element group 109: marked-successors 
+    -- CP-element group 109: 	107 
+    -- CP-element group 109:  members (3) 
+      -- CP-element group 109: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Update/$exit
+      -- CP-element group 109: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_Update/ca
+      -- CP-element group 109: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1986_update_completed_
+      -- 
+    ca_4414_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 109_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => slice_1986_inst_ack_1, ack => convolve_CP_4075_elements(109)); -- 
     -- CP-element group 110:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 110: predecessors 
+    -- CP-element group 110: 	47 
+    -- CP-element group 110: 	83 
+    -- CP-element group 110: 	87 
+    -- CP-element group 110: 	91 
     -- CP-element group 110: marked-predecessors 
-    -- CP-element group 110: 	123 
     -- CP-element group 110: 	112 
     -- CP-element group 110: successors 
     -- CP-element group 110: 	112 
     -- CP-element group 110:  members (3) 
-      -- CP-element group 110: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/cr
-      -- CP-element group 110: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_update_start_
-      -- CP-element group 110: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/$entry
+      -- CP-element group 110: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/rr
+      -- CP-element group 110: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/$entry
+      -- CP-element group 110: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_sample_start_
       -- 
-    cr_4425_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4425_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(110), ack => slice_1990_inst_req_1); -- 
+    rr_4422_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4422_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(110), ack => slice_1990_inst_req_0); -- 
     convolve_cp_element_group_110: block -- 
+      constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1);
+      constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
+      constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_110"; 
+      signal preds: BooleanArray(1 to 5); -- 
+    begin -- 
+      preds <= convolve_CP_4075_elements(47) & convolve_CP_4075_elements(83) & convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(112);
+      gj_convolve_cp_element_group_110 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(110), clk => clk, reset => reset); --
+    end block;
+    -- CP-element group 111:  join  transition  output  bypass  pipeline-parent 
+    -- CP-element group 111: predecessors 
+    -- CP-element group 111: marked-predecessors 
+    -- CP-element group 111: 	113 
+    -- CP-element group 111: 	131 
+    -- CP-element group 111: successors 
+    -- CP-element group 111: 	113 
+    -- CP-element group 111:  members (3) 
+      -- CP-element group 111: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/$entry
+      -- CP-element group 111: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/cr
+      -- CP-element group 111: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_update_start_
+      -- 
+    cr_4427_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4427_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(111), ack => slice_1990_inst_req_1); -- 
+    convolve_cp_element_group_111: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
       constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_110"; 
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_111"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(123) & convolve_CP_4075_elements(112);
-      gj_convolve_cp_element_group_110 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(110), clk => clk, reset => reset); --
+      preds <= convolve_CP_4075_elements(113) & convolve_CP_4075_elements(131);
+      gj_convolve_cp_element_group_111 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(111), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 111:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 111: predecessors 
-    -- CP-element group 111: 	109 
-    -- CP-element group 111: successors 
-    -- CP-element group 111: marked-successors 
-    -- CP-element group 111: 	89 
-    -- CP-element group 111: 	81 
-    -- CP-element group 111: 	85 
-    -- CP-element group 111: 	45 
-    -- CP-element group 111: 	109 
-    -- CP-element group 111:  members (3) 
-      -- CP-element group 111: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_sample_completed_
-      -- CP-element group 111: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/$exit
-      -- CP-element group 111: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/ra
-      -- 
-    ra_4421_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 111_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => slice_1990_inst_ack_0, ack => convolve_CP_4075_elements(111)); -- 
     -- CP-element group 112:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 112: predecessors 
     -- CP-element group 112: 	110 
     -- CP-element group 112: successors 
-    -- CP-element group 112: 	121 
     -- CP-element group 112: marked-successors 
+    -- CP-element group 112: 	45 
     -- CP-element group 112: 	110 
+    -- CP-element group 112: 	81 
+    -- CP-element group 112: 	85 
+    -- CP-element group 112: 	89 
     -- CP-element group 112:  members (3) 
-      -- CP-element group 112: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/$exit
-      -- CP-element group 112: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/ca
-      -- CP-element group 112: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_update_completed_
+      -- CP-element group 112: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/$exit
+      -- CP-element group 112: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Sample/ra
+      -- CP-element group 112: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_sample_completed_
       -- 
-    ca_4426_symbol_link_from_dp: control_delay_element -- 
+    ra_4423_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 112_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => slice_1990_inst_ack_1, ack => convolve_CP_4075_elements(112)); -- 
-    -- CP-element group 113:  join  transition  output  bypass  pipeline-parent 
+      port map(clk => clk, reset => reset, req => slice_1990_inst_ack_0, ack => convolve_CP_4075_elements(112)); -- 
+    -- CP-element group 113:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 113: predecessors 
-    -- CP-element group 113: 	87 
-    -- CP-element group 113: 	91 
-    -- CP-element group 113: 	83 
-    -- CP-element group 113: 	49 
-    -- CP-element group 113: marked-predecessors 
-    -- CP-element group 113: 	115 
+    -- CP-element group 113: 	111 
     -- CP-element group 113: successors 
-    -- CP-element group 113: 	115 
+    -- CP-element group 113: 	129 
+    -- CP-element group 113: marked-successors 
+    -- CP-element group 113: 	111 
     -- CP-element group 113:  members (3) 
-      -- CP-element group 113: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_sample_start_
-      -- CP-element group 113: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Sample/$entry
-      -- CP-element group 113: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Sample/rr
+      -- CP-element group 113: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/$exit
+      -- CP-element group 113: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_Update/ca
+      -- CP-element group 113: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1990_update_completed_
       -- 
-    rr_4434_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4434_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(113), ack => slice_1994_inst_req_0); -- 
-    convolve_cp_element_group_113: block -- 
-      constant place_capacities: IntegerArray(0 to 4) := (0 => 1,1 => 1,2 => 1,3 => 15,4 => 1);
-      constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
-      constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_113"; 
-      signal preds: BooleanArray(1 to 5); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(87) & convolve_CP_4075_elements(91) & convolve_CP_4075_elements(83) & convolve_CP_4075_elements(49) & convolve_CP_4075_elements(115);
-      gj_convolve_cp_element_group_113 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(113), clk => clk, reset => reset); --
-    end block;
+    ca_4428_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 113_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => slice_1990_inst_ack_1, ack => convolve_CP_4075_elements(113)); -- 
     -- CP-element group 114:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 114: predecessors 
+    -- CP-element group 114: 	95 
+    -- CP-element group 114: 	30 
     -- CP-element group 114: marked-predecessors 
-    -- CP-element group 114: 	134 
     -- CP-element group 114: 	116 
     -- CP-element group 114: successors 
     -- CP-element group 114: 	116 
     -- CP-element group 114:  members (3) 
-      -- CP-element group 114: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_update_start_
-      -- CP-element group 114: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Update/$entry
-      -- CP-element group 114: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Update/cr
+      -- CP-element group 114: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_sample_start_
+      -- CP-element group 114: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Sample/$entry
+      -- CP-element group 114: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Sample/req
       -- 
-    cr_4439_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4439_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(114), ack => slice_1994_inst_req_1); -- 
+    req_4436_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4436_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(114), ack => W_next_sum_1965_delayed_1_0_1992_inst_req_0); -- 
     convolve_cp_element_group_114: block -- 
-      constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
-      constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
-      constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
+      constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 15,2 => 1);
+      constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
+      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
       constant joinName: string(1 to 29) := "convolve_cp_element_group_114"; 
-      signal preds: BooleanArray(1 to 2); -- 
+      signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(134) & convolve_CP_4075_elements(116);
-      gj_convolve_cp_element_group_114 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+      preds <= convolve_CP_4075_elements(95) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(116);
+      gj_convolve_cp_element_group_114 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(114), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 115:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 115:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 115: predecessors 
-    -- CP-element group 115: 	113 
+    -- CP-element group 115: marked-predecessors 
+    -- CP-element group 115: 	117 
+    -- CP-element group 115: 	120 
+    -- CP-element group 115: 	123 
     -- CP-element group 115: successors 
-    -- CP-element group 115: marked-successors 
-    -- CP-element group 115: 	89 
-    -- CP-element group 115: 	81 
-    -- CP-element group 115: 	85 
-    -- CP-element group 115: 	45 
-    -- CP-element group 115: 	113 
+    -- CP-element group 115: 	117 
     -- CP-element group 115:  members (3) 
-      -- CP-element group 115: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_sample_completed_
-      -- CP-element group 115: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Sample/$exit
-      -- CP-element group 115: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Sample/ra
+      -- CP-element group 115: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Update/req
+      -- CP-element group 115: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_update_start_
+      -- CP-element group 115: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Update/$entry
       -- 
-    ra_4435_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 115_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => slice_1994_inst_ack_0, ack => convolve_CP_4075_elements(115)); -- 
+    req_4441_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4441_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(115), ack => W_next_sum_1965_delayed_1_0_1992_inst_req_1); -- 
+    convolve_cp_element_group_115: block -- 
+      constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
+      constant place_markings: IntegerArray(0 to 2)  := (0 => 1,1 => 1,2 => 1);
+      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 0);
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_115"; 
+      signal preds: BooleanArray(1 to 3); -- 
+    begin -- 
+      preds <= convolve_CP_4075_elements(117) & convolve_CP_4075_elements(120) & convolve_CP_4075_elements(123);
+      gj_convolve_cp_element_group_115 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(115), clk => clk, reset => reset); --
+    end block;
     -- CP-element group 116:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 116: predecessors 
     -- CP-element group 116: 	114 
     -- CP-element group 116: successors 
-    -- CP-element group 116: 	132 
     -- CP-element group 116: marked-successors 
     -- CP-element group 116: 	114 
+    -- CP-element group 116: 	26 
+    -- CP-element group 116: 	93 
     -- CP-element group 116:  members (3) 
-      -- CP-element group 116: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_update_completed_
-      -- CP-element group 116: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Update/$exit
-      -- CP-element group 116: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/slice_1994_Update/ca
+      -- CP-element group 116: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_sample_completed_
+      -- CP-element group 116: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Sample/$exit
+      -- CP-element group 116: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Sample/ack
       -- 
-    ca_4440_symbol_link_from_dp: control_delay_element -- 
+    ack_4437_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 116_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => slice_1994_inst_ack_1, ack => convolve_CP_4075_elements(116)); -- 
-    -- CP-element group 117:  join  transition  output  bypass  pipeline-parent 
+      port map(clk => clk, reset => reset, req => W_next_sum_1965_delayed_1_0_1992_inst_ack_0, ack => convolve_CP_4075_elements(116)); -- 
+    -- CP-element group 117:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 117: predecessors 
-    -- CP-element group 117: 	30 
-    -- CP-element group 117: 	95 
-    -- CP-element group 117: marked-predecessors 
-    -- CP-element group 117: 	119 
+    -- CP-element group 117: 	115 
     -- CP-element group 117: successors 
-    -- CP-element group 117: 	119 
+    -- CP-element group 117: 	118 
+    -- CP-element group 117: 	122 
+    -- CP-element group 117: marked-successors 
+    -- CP-element group 117: 	115 
     -- CP-element group 117:  members (3) 
-      -- CP-element group 117: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Sample/$entry
-      -- CP-element group 117: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Sample/req
-      -- CP-element group 117: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_sample_start_
+      -- CP-element group 117: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Update/ack
+      -- CP-element group 117: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_update_completed_
+      -- CP-element group 117: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1994_Update/$exit
       -- 
-    req_4448_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4448_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(117), ack => W_next_sum_1969_delayed_1_0_1996_inst_req_0); -- 
-    convolve_cp_element_group_117: block -- 
-      constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 1,2 => 1);
-      constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
-      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_117"; 
-      signal preds: BooleanArray(1 to 3); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(30) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(119);
-      gj_convolve_cp_element_group_117 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(117), clk => clk, reset => reset); --
-    end block;
+    ack_4442_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 117_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => W_next_sum_1965_delayed_1_0_1992_inst_ack_1, ack => convolve_CP_4075_elements(117)); -- 
     -- CP-element group 118:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 118: predecessors 
+    -- CP-element group 118: 	117 
+    -- CP-element group 118: 	109 
     -- CP-element group 118: marked-predecessors 
-    -- CP-element group 118: 	126 
     -- CP-element group 118: 	120 
-    -- CP-element group 118: 	123 
     -- CP-element group 118: successors 
     -- CP-element group 118: 	120 
     -- CP-element group 118:  members (3) 
-      -- CP-element group 118: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Update/$entry
-      -- CP-element group 118: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_update_start_
-      -- CP-element group 118: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Update/req
+      -- CP-element group 118: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Sample/$entry
+      -- CP-element group 118: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_sample_start_
+      -- CP-element group 118: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Sample/rr
       -- 
-    req_4453_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4453_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(118), ack => W_next_sum_1969_delayed_1_0_1996_inst_req_1); -- 
+    rr_4450_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4450_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(118), ack => type_cast_1998_inst_req_0); -- 
     convolve_cp_element_group_118: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
-      constant place_markings: IntegerArray(0 to 2)  := (0 => 1,1 => 1,2 => 1);
-      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 0);
+      constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
+      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
       constant joinName: string(1 to 29) := "convolve_cp_element_group_118"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(126) & convolve_CP_4075_elements(120) & convolve_CP_4075_elements(123);
+      preds <= convolve_CP_4075_elements(117) & convolve_CP_4075_elements(109) & convolve_CP_4075_elements(120);
       gj_convolve_cp_element_group_118 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(118), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 119:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 119:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 119: predecessors 
-    -- CP-element group 119: 	117 
+    -- CP-element group 119: marked-predecessors 
+    -- CP-element group 119: 	121 
+    -- CP-element group 119: 	123 
     -- CP-element group 119: successors 
-    -- CP-element group 119: marked-successors 
-    -- CP-element group 119: 	26 
-    -- CP-element group 119: 	93 
-    -- CP-element group 119: 	117 
+    -- CP-element group 119: 	121 
     -- CP-element group 119:  members (3) 
-      -- CP-element group 119: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Sample/ack
-      -- CP-element group 119: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Sample/$exit
-      -- CP-element group 119: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_sample_completed_
+      -- CP-element group 119: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_update_start_
+      -- CP-element group 119: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Update/$entry
+      -- CP-element group 119: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Update/cr
       -- 
-    ack_4449_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 119_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => W_next_sum_1969_delayed_1_0_1996_inst_ack_0, ack => convolve_CP_4075_elements(119)); -- 
+    cr_4455_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4455_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(119), ack => type_cast_1998_inst_req_1); -- 
+    convolve_cp_element_group_119: block -- 
+      constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
+      constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
+      constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_119"; 
+      signal preds: BooleanArray(1 to 2); -- 
+    begin -- 
+      preds <= convolve_CP_4075_elements(121) & convolve_CP_4075_elements(123);
+      gj_convolve_cp_element_group_119 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(119), clk => clk, reset => reset); --
+    end block;
     -- CP-element group 120:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 120: predecessors 
     -- CP-element group 120: 	118 
     -- CP-element group 120: successors 
-    -- CP-element group 120: 	125 
-    -- CP-element group 120: 	121 
     -- CP-element group 120: marked-successors 
+    -- CP-element group 120: 	115 
     -- CP-element group 120: 	118 
+    -- CP-element group 120: 	107 
     -- CP-element group 120:  members (3) 
-      -- CP-element group 120: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_update_completed_
-      -- CP-element group 120: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Update/$exit
-      -- CP-element group 120: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_1998_Update/ack
+      -- CP-element group 120: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Sample/$exit
+      -- CP-element group 120: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_sample_completed_
+      -- CP-element group 120: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Sample/ra
       -- 
-    ack_4454_symbol_link_from_dp: control_delay_element -- 
+    ra_4451_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 120_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => W_next_sum_1969_delayed_1_0_1996_inst_ack_1, ack => convolve_CP_4075_elements(120)); -- 
-    -- CP-element group 121:  join  transition  output  bypass  pipeline-parent 
+      port map(clk => clk, reset => reset, req => type_cast_1998_inst_ack_0, ack => convolve_CP_4075_elements(120)); -- 
+    -- CP-element group 121:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 121: predecessors 
-    -- CP-element group 121: 	120 
-    -- CP-element group 121: 	112 
-    -- CP-element group 121: marked-predecessors 
-    -- CP-element group 121: 	123 
+    -- CP-element group 121: 	119 
     -- CP-element group 121: successors 
-    -- CP-element group 121: 	123 
+    -- CP-element group 121: 	122 
+    -- CP-element group 121: marked-successors 
+    -- CP-element group 121: 	119 
     -- CP-element group 121:  members (3) 
-      -- CP-element group 121: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Sample/$entry
-      -- CP-element group 121: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_sample_start_
-      -- CP-element group 121: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Sample/rr
+      -- CP-element group 121: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_update_completed_
+      -- CP-element group 121: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Update/ca
+      -- CP-element group 121: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_1998_Update/$exit
       -- 
-    rr_4462_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4462_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(121), ack => type_cast_2002_inst_req_0); -- 
-    convolve_cp_element_group_121: block -- 
-      constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
-      constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
-      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_121"; 
-      signal preds: BooleanArray(1 to 3); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(120) & convolve_CP_4075_elements(112) & convolve_CP_4075_elements(123);
-      gj_convolve_cp_element_group_121 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(121), clk => clk, reset => reset); --
-    end block;
+    ca_4456_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 121_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => type_cast_1998_inst_ack_1, ack => convolve_CP_4075_elements(121)); -- 
     -- CP-element group 122:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 122: predecessors 
+    -- CP-element group 122: 	117 
+    -- CP-element group 122: 	121 
     -- CP-element group 122: marked-predecessors 
-    -- CP-element group 122: 	126 
     -- CP-element group 122: 	124 
+    -- CP-element group 122: 	135 
     -- CP-element group 122: successors 
-    -- CP-element group 122: 	124 
+    -- CP-element group 122: 	123 
     -- CP-element group 122:  members (3) 
-      -- CP-element group 122: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Update/$entry
-      -- CP-element group 122: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_update_start_
-      -- CP-element group 122: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Update/cr
+      -- CP-element group 122: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Sample/$entry
+      -- CP-element group 122: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Sample/req
+      -- CP-element group 122: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_sample_start_
       -- 
-    cr_4467_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4467_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(122), ack => type_cast_2002_inst_req_1); -- 
+    req_4464_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4464_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(122), ack => WPIPE_maxpool_output_pipe_1996_inst_req_0); -- 
     convolve_cp_element_group_122: block -- 
-      constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
-      constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
-      constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_122"; 
-      signal preds: BooleanArray(1 to 2); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(126) & convolve_CP_4075_elements(124);
-      gj_convolve_cp_element_group_122 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(122), clk => clk, reset => reset); --
-    end block;
-    -- CP-element group 123:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 123: predecessors 
-    -- CP-element group 123: 	121 
-    -- CP-element group 123: successors 
-    -- CP-element group 123: marked-successors 
-    -- CP-element group 123: 	121 
-    -- CP-element group 123: 	110 
-    -- CP-element group 123: 	118 
-    -- CP-element group 123:  members (3) 
-      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Sample/$exit
-      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Sample/ra
-      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_sample_completed_
-      -- 
-    ra_4463_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 123_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => type_cast_2002_inst_ack_0, ack => convolve_CP_4075_elements(123)); -- 
-    -- CP-element group 124:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 124: predecessors 
-    -- CP-element group 124: 	122 
-    -- CP-element group 124: successors 
-    -- CP-element group 124: 	125 
-    -- CP-element group 124: marked-successors 
-    -- CP-element group 124: 	122 
-    -- CP-element group 124:  members (3) 
-      -- CP-element group 124: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Update/ca
-      -- CP-element group 124: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_Update/$exit
-      -- CP-element group 124: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2002_update_completed_
-      -- 
-    ca_4468_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 124_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => type_cast_2002_inst_ack_1, ack => convolve_CP_4075_elements(124)); -- 
-    -- CP-element group 125:  join  transition  output  bypass  pipeline-parent 
-    -- CP-element group 125: predecessors 
-    -- CP-element group 125: 	120 
-    -- CP-element group 125: 	124 
-    -- CP-element group 125: marked-predecessors 
-    -- CP-element group 125: 	127 
-    -- CP-element group 125: 	138 
-    -- CP-element group 125: successors 
-    -- CP-element group 125: 	126 
-    -- CP-element group 125:  members (3) 
-      -- CP-element group 125: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_sample_start_
-      -- CP-element group 125: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Sample/$entry
-      -- CP-element group 125: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Sample/req
-      -- 
-    req_4476_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4476_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(125), ack => WPIPE_maxpool_output_pipe_2000_inst_req_0); -- 
-    convolve_cp_element_group_125: block -- 
       constant place_capacities: IntegerArray(0 to 3) := (0 => 1,1 => 1,2 => 1,3 => 1);
       constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 0,2 => 1,3 => 1);
       constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_125"; 
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_122"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(120) & convolve_CP_4075_elements(124) & convolve_CP_4075_elements(127) & convolve_CP_4075_elements(138);
-      gj_convolve_cp_element_group_125 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(125), clk => clk, reset => reset); --
+      preds <= convolve_CP_4075_elements(117) & convolve_CP_4075_elements(121) & convolve_CP_4075_elements(124) & convolve_CP_4075_elements(135);
+      gj_convolve_cp_element_group_122 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(122), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 126:  fork  transition  input  output  bypass  pipeline-parent 
-    -- CP-element group 126: predecessors 
-    -- CP-element group 126: 	125 
-    -- CP-element group 126: successors 
-    -- CP-element group 126: 	127 
-    -- CP-element group 126: marked-successors 
-    -- CP-element group 126: 	122 
-    -- CP-element group 126: 	118 
-    -- CP-element group 126:  members (6) 
-      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Update/$entry
-      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_sample_completed_
-      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Update/req
-      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Sample/$exit
-      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_update_start_
-      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Sample/ack
+    -- CP-element group 123:  fork  transition  input  output  bypass  pipeline-parent 
+    -- CP-element group 123: predecessors 
+    -- CP-element group 123: 	122 
+    -- CP-element group 123: successors 
+    -- CP-element group 123: 	124 
+    -- CP-element group 123: marked-successors 
+    -- CP-element group 123: 	115 
+    -- CP-element group 123: 	119 
+    -- CP-element group 123:  members (6) 
+      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Sample/$exit
+      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Update/$entry
+      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_sample_completed_
+      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Sample/ack
+      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_update_start_
+      -- CP-element group 123: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Update/req
       -- 
-    ack_4477_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 126_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_2000_inst_ack_0, ack => convolve_CP_4075_elements(126)); -- 
-    req_4481_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4481_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(126), ack => WPIPE_maxpool_output_pipe_2000_inst_req_1); -- 
-    -- CP-element group 127:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 127: predecessors 
-    -- CP-element group 127: 	126 
-    -- CP-element group 127: successors 
-    -- CP-element group 127: 	136 
-    -- CP-element group 127: marked-successors 
-    -- CP-element group 127: 	125 
-    -- CP-element group 127:  members (3) 
-      -- CP-element group 127: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_update_completed_
-      -- CP-element group 127: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Update/$exit
-      -- CP-element group 127: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2000_Update/ack
+    ack_4465_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 123_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_1996_inst_ack_0, ack => convolve_CP_4075_elements(123)); -- 
+    req_4469_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4469_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(123), ack => WPIPE_maxpool_output_pipe_1996_inst_req_1); -- 
+    -- CP-element group 124:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 124: predecessors 
+    -- CP-element group 124: 	123 
+    -- CP-element group 124: successors 
+    -- CP-element group 124: 	133 
+    -- CP-element group 124: marked-successors 
+    -- CP-element group 124: 	122 
+    -- CP-element group 124:  members (3) 
+      -- CP-element group 124: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Update/ack
+      -- CP-element group 124: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_Update/$exit
+      -- CP-element group 124: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_1996_update_completed_
       -- 
-    ack_4482_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 127_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_2000_inst_ack_1, ack => convolve_CP_4075_elements(127)); -- 
-    -- CP-element group 128:  join  transition  output  bypass  pipeline-parent 
-    -- CP-element group 128: predecessors 
-    -- CP-element group 128: 	30 
-    -- CP-element group 128: 	95 
-    -- CP-element group 128: marked-predecessors 
-    -- CP-element group 128: 	130 
-    -- CP-element group 128: successors 
-    -- CP-element group 128: 	130 
-    -- CP-element group 128:  members (3) 
-      -- CP-element group 128: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Sample/$entry
-      -- CP-element group 128: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Sample/req
-      -- CP-element group 128: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_sample_start_
+    ack_4470_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 124_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_1996_inst_ack_1, ack => convolve_CP_4075_elements(124)); -- 
+    -- CP-element group 125:  join  transition  output  bypass  pipeline-parent 
+    -- CP-element group 125: predecessors 
+    -- CP-element group 125: 	95 
+    -- CP-element group 125: 	30 
+    -- CP-element group 125: marked-predecessors 
+    -- CP-element group 125: 	127 
+    -- CP-element group 125: successors 
+    -- CP-element group 125: 	127 
+    -- CP-element group 125:  members (3) 
+      -- CP-element group 125: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Sample/req
+      -- CP-element group 125: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_sample_start_
+      -- CP-element group 125: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Sample/$entry
       -- 
-    req_4490_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4490_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(128), ack => W_next_sum_1974_delayed_1_0_2004_inst_req_0); -- 
-    convolve_cp_element_group_128: block -- 
-      constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 1,2 => 1);
+    req_4478_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4478_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(125), ack => W_next_sum_1970_delayed_1_0_2000_inst_req_0); -- 
+    convolve_cp_element_group_125: block -- 
+      constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 15,2 => 1);
       constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
       constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_128"; 
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_125"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(30) & convolve_CP_4075_elements(95) & convolve_CP_4075_elements(130);
-      gj_convolve_cp_element_group_128 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(128), clk => clk, reset => reset); --
+      preds <= convolve_CP_4075_elements(95) & convolve_CP_4075_elements(30) & convolve_CP_4075_elements(127);
+      gj_convolve_cp_element_group_125 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(125), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 129:  join  transition  output  bypass  pipeline-parent 
-    -- CP-element group 129: predecessors 
-    -- CP-element group 129: marked-predecessors 
-    -- CP-element group 129: 	131 
-    -- CP-element group 129: 	134 
-    -- CP-element group 129: 	137 
-    -- CP-element group 129: successors 
-    -- CP-element group 129: 	131 
-    -- CP-element group 129:  members (3) 
-      -- CP-element group 129: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_update_start_
-      -- CP-element group 129: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Update/$entry
-      -- CP-element group 129: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Update/req
+    -- CP-element group 126:  join  transition  output  bypass  pipeline-parent 
+    -- CP-element group 126: predecessors 
+    -- CP-element group 126: marked-predecessors 
+    -- CP-element group 126: 	134 
+    -- CP-element group 126: 	128 
+    -- CP-element group 126: 	131 
+    -- CP-element group 126: successors 
+    -- CP-element group 126: 	128 
+    -- CP-element group 126:  members (3) 
+      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Update/req
+      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_update_start_
+      -- CP-element group 126: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Update/$entry
       -- 
-    req_4495_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4495_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(129), ack => W_next_sum_1974_delayed_1_0_2004_inst_req_1); -- 
-    convolve_cp_element_group_129: block -- 
+    req_4483_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4483_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(126), ack => W_next_sum_1970_delayed_1_0_2000_inst_req_1); -- 
+    convolve_cp_element_group_126: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
       constant place_markings: IntegerArray(0 to 2)  := (0 => 1,1 => 1,2 => 1);
       constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 0);
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_126"; 
+      signal preds: BooleanArray(1 to 3); -- 
+    begin -- 
+      preds <= convolve_CP_4075_elements(134) & convolve_CP_4075_elements(128) & convolve_CP_4075_elements(131);
+      gj_convolve_cp_element_group_126 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(126), clk => clk, reset => reset); --
+    end block;
+    -- CP-element group 127:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 127: predecessors 
+    -- CP-element group 127: 	125 
+    -- CP-element group 127: successors 
+    -- CP-element group 127: marked-successors 
+    -- CP-element group 127: 	125 
+    -- CP-element group 127: 	26 
+    -- CP-element group 127: 	93 
+    -- CP-element group 127:  members (3) 
+      -- CP-element group 127: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Sample/$exit
+      -- CP-element group 127: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Sample/ack
+      -- CP-element group 127: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_sample_completed_
+      -- 
+    ack_4479_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 127_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => W_next_sum_1970_delayed_1_0_2000_inst_ack_0, ack => convolve_CP_4075_elements(127)); -- 
+    -- CP-element group 128:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 128: predecessors 
+    -- CP-element group 128: 	126 
+    -- CP-element group 128: successors 
+    -- CP-element group 128: 	133 
+    -- CP-element group 128: 	129 
+    -- CP-element group 128: marked-successors 
+    -- CP-element group 128: 	126 
+    -- CP-element group 128:  members (3) 
+      -- CP-element group 128: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Update/$exit
+      -- CP-element group 128: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_Update/ack
+      -- CP-element group 128: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2002_update_completed_
+      -- 
+    ack_4484_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 128_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => W_next_sum_1970_delayed_1_0_2000_inst_ack_1, ack => convolve_CP_4075_elements(128)); -- 
+    -- CP-element group 129:  join  transition  output  bypass  pipeline-parent 
+    -- CP-element group 129: predecessors 
+    -- CP-element group 129: 	113 
+    -- CP-element group 129: 	128 
+    -- CP-element group 129: marked-predecessors 
+    -- CP-element group 129: 	131 
+    -- CP-element group 129: successors 
+    -- CP-element group 129: 	131 
+    -- CP-element group 129:  members (3) 
+      -- CP-element group 129: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_sample_start_
+      -- CP-element group 129: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Sample/$entry
+      -- CP-element group 129: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Sample/rr
+      -- 
+    rr_4492_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4492_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(129), ack => type_cast_2006_inst_req_0); -- 
+    convolve_cp_element_group_129: block -- 
+      constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
+      constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
+      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
       constant joinName: string(1 to 29) := "convolve_cp_element_group_129"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(131) & convolve_CP_4075_elements(134) & convolve_CP_4075_elements(137);
+      preds <= convolve_CP_4075_elements(113) & convolve_CP_4075_elements(128) & convolve_CP_4075_elements(131);
       gj_convolve_cp_element_group_129 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => convolve_CP_4075_elements(129), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 130:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 130:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 130: predecessors 
-    -- CP-element group 130: 	128 
+    -- CP-element group 130: marked-predecessors 
+    -- CP-element group 130: 	132 
+    -- CP-element group 130: 	134 
     -- CP-element group 130: successors 
-    -- CP-element group 130: marked-successors 
-    -- CP-element group 130: 	26 
-    -- CP-element group 130: 	128 
-    -- CP-element group 130: 	93 
+    -- CP-element group 130: 	132 
     -- CP-element group 130:  members (3) 
-      -- CP-element group 130: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_sample_completed_
-      -- CP-element group 130: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Sample/$exit
-      -- CP-element group 130: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Sample/ack
+      -- CP-element group 130: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_update_start_
+      -- CP-element group 130: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Update/$entry
+      -- CP-element group 130: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Update/cr
       -- 
-    ack_4491_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 130_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => W_next_sum_1974_delayed_1_0_2004_inst_ack_0, ack => convolve_CP_4075_elements(130)); -- 
+    cr_4497_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4497_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(130), ack => type_cast_2006_inst_req_1); -- 
+    convolve_cp_element_group_130: block -- 
+      constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
+      constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
+      constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_130"; 
+      signal preds: BooleanArray(1 to 2); -- 
+    begin -- 
+      preds <= convolve_CP_4075_elements(132) & convolve_CP_4075_elements(134);
+      gj_convolve_cp_element_group_130 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(130), clk => clk, reset => reset); --
+    end block;
     -- CP-element group 131:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 131: predecessors 
     -- CP-element group 131: 	129 
     -- CP-element group 131: successors 
-    -- CP-element group 131: 	132 
-    -- CP-element group 131: 	136 
     -- CP-element group 131: marked-successors 
+    -- CP-element group 131: 	111 
+    -- CP-element group 131: 	126 
     -- CP-element group 131: 	129 
     -- CP-element group 131:  members (3) 
-      -- CP-element group 131: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_update_completed_
-      -- CP-element group 131: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Update/$exit
-      -- CP-element group 131: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/assign_stmt_2006_Update/ack
+      -- CP-element group 131: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_sample_completed_
+      -- CP-element group 131: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Sample/$exit
+      -- CP-element group 131: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Sample/ra
       -- 
-    ack_4496_symbol_link_from_dp: control_delay_element -- 
+    ra_4493_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 131_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => W_next_sum_1974_delayed_1_0_2004_inst_ack_1, ack => convolve_CP_4075_elements(131)); -- 
-    -- CP-element group 132:  join  transition  output  bypass  pipeline-parent 
+      port map(clk => clk, reset => reset, req => type_cast_2006_inst_ack_0, ack => convolve_CP_4075_elements(131)); -- 
+    -- CP-element group 132:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 132: predecessors 
-    -- CP-element group 132: 	131 
-    -- CP-element group 132: 	116 
-    -- CP-element group 132: marked-predecessors 
-    -- CP-element group 132: 	134 
+    -- CP-element group 132: 	130 
     -- CP-element group 132: successors 
-    -- CP-element group 132: 	134 
+    -- CP-element group 132: 	133 
+    -- CP-element group 132: marked-successors 
+    -- CP-element group 132: 	130 
     -- CP-element group 132:  members (3) 
-      -- CP-element group 132: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Sample/rr
-      -- CP-element group 132: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_sample_start_
-      -- CP-element group 132: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Sample/$entry
+      -- CP-element group 132: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Update/ca
+      -- CP-element group 132: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_update_completed_
+      -- CP-element group 132: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2006_Update/$exit
       -- 
-    rr_4504_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4504_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(132), ack => type_cast_2010_inst_req_0); -- 
-    convolve_cp_element_group_132: block -- 
-      constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 1,2 => 1);
-      constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
-      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 1);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_132"; 
-      signal preds: BooleanArray(1 to 3); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(131) & convolve_CP_4075_elements(116) & convolve_CP_4075_elements(134);
-      gj_convolve_cp_element_group_132 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(132), clk => clk, reset => reset); --
-    end block;
+    ca_4498_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 132_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => type_cast_2006_inst_ack_1, ack => convolve_CP_4075_elements(132)); -- 
     -- CP-element group 133:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 133: predecessors 
+    -- CP-element group 133: 	124 
+    -- CP-element group 133: 	132 
+    -- CP-element group 133: 	128 
     -- CP-element group 133: marked-predecessors 
     -- CP-element group 133: 	135 
-    -- CP-element group 133: 	137 
     -- CP-element group 133: successors 
-    -- CP-element group 133: 	135 
+    -- CP-element group 133: 	134 
     -- CP-element group 133:  members (3) 
-      -- CP-element group 133: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Update/$entry
-      -- CP-element group 133: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Update/cr
-      -- CP-element group 133: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_update_start_
+      -- CP-element group 133: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_sample_start_
+      -- CP-element group 133: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Sample/$entry
+      -- CP-element group 133: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Sample/req
       -- 
-    cr_4509_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4509_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(133), ack => type_cast_2010_inst_req_1); -- 
+    req_4506_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4506_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(133), ack => WPIPE_maxpool_output_pipe_2004_inst_req_0); -- 
     convolve_cp_element_group_133: block -- 
-      constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
-      constant place_markings: IntegerArray(0 to 1)  := (0 => 1,1 => 1);
-      constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_133"; 
-      signal preds: BooleanArray(1 to 2); -- 
-    begin -- 
-      preds <= convolve_CP_4075_elements(135) & convolve_CP_4075_elements(137);
-      gj_convolve_cp_element_group_133 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(133), clk => clk, reset => reset); --
-    end block;
-    -- CP-element group 134:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 134: predecessors 
-    -- CP-element group 134: 	132 
-    -- CP-element group 134: successors 
-    -- CP-element group 134: marked-successors 
-    -- CP-element group 134: 	132 
-    -- CP-element group 134: 	129 
-    -- CP-element group 134: 	114 
-    -- CP-element group 134:  members (3) 
-      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Sample/ra
-      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_sample_completed_
-      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Sample/$exit
-      -- 
-    ra_4505_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 134_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => type_cast_2010_inst_ack_0, ack => convolve_CP_4075_elements(134)); -- 
-    -- CP-element group 135:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 135: predecessors 
-    -- CP-element group 135: 	133 
-    -- CP-element group 135: successors 
-    -- CP-element group 135: 	136 
-    -- CP-element group 135: marked-successors 
-    -- CP-element group 135: 	133 
-    -- CP-element group 135:  members (3) 
-      -- CP-element group 135: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_update_completed_
-      -- CP-element group 135: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Update/$exit
-      -- CP-element group 135: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/type_cast_2010_Update/ca
-      -- 
-    ca_4510_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 135_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => type_cast_2010_inst_ack_1, ack => convolve_CP_4075_elements(135)); -- 
-    -- CP-element group 136:  join  transition  output  bypass  pipeline-parent 
-    -- CP-element group 136: predecessors 
-    -- CP-element group 136: 	131 
-    -- CP-element group 136: 	135 
-    -- CP-element group 136: 	127 
-    -- CP-element group 136: marked-predecessors 
-    -- CP-element group 136: 	138 
-    -- CP-element group 136: successors 
-    -- CP-element group 136: 	137 
-    -- CP-element group 136:  members (3) 
-      -- CP-element group 136: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_sample_start_
-      -- CP-element group 136: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Sample/req
-      -- CP-element group 136: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Sample/$entry
-      -- 
-    req_4518_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4518_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(136), ack => WPIPE_maxpool_output_pipe_2008_inst_req_0); -- 
-    convolve_cp_element_group_136: block -- 
       constant place_capacities: IntegerArray(0 to 3) := (0 => 1,1 => 1,2 => 1,3 => 1);
       constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 0,2 => 0,3 => 1);
       constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_136"; 
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_133"; 
       signal preds: BooleanArray(1 to 4); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(131) & convolve_CP_4075_elements(135) & convolve_CP_4075_elements(127) & convolve_CP_4075_elements(138);
-      gj_convolve_cp_element_group_136 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(136), clk => clk, reset => reset); --
+      preds <= convolve_CP_4075_elements(124) & convolve_CP_4075_elements(132) & convolve_CP_4075_elements(128) & convolve_CP_4075_elements(135);
+      gj_convolve_cp_element_group_133 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(133), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 137:  fork  transition  input  output  bypass  pipeline-parent 
+    -- CP-element group 134:  fork  transition  input  output  bypass  pipeline-parent 
+    -- CP-element group 134: predecessors 
+    -- CP-element group 134: 	133 
+    -- CP-element group 134: successors 
+    -- CP-element group 134: 	135 
+    -- CP-element group 134: marked-successors 
+    -- CP-element group 134: 	126 
+    -- CP-element group 134: 	130 
+    -- CP-element group 134:  members (6) 
+      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Update/$entry
+      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_update_start_
+      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Sample/$exit
+      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Update/req
+      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Sample/ack
+      -- CP-element group 134: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_sample_completed_
+      -- 
+    ack_4507_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 134_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_2004_inst_ack_0, ack => convolve_CP_4075_elements(134)); -- 
+    req_4511_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4511_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(134), ack => WPIPE_maxpool_output_pipe_2004_inst_req_1); -- 
+    -- CP-element group 135:  fork  transition  input  bypass  pipeline-parent 
+    -- CP-element group 135: predecessors 
+    -- CP-element group 135: 	134 
+    -- CP-element group 135: successors 
+    -- CP-element group 135: 	137 
+    -- CP-element group 135: marked-successors 
+    -- CP-element group 135: 	122 
+    -- CP-element group 135: 	133 
+    -- CP-element group 135:  members (3) 
+      -- CP-element group 135: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Update/$exit
+      -- CP-element group 135: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_update_completed_
+      -- CP-element group 135: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2004_Update/ack
+      -- 
+    ack_4512_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 135_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_2004_inst_ack_1, ack => convolve_CP_4075_elements(135)); -- 
+    -- CP-element group 136:  transition  delay-element  bypass  pipeline-parent 
+    -- CP-element group 136: predecessors 
+    -- CP-element group 136: 	19 
+    -- CP-element group 136: successors 
+    -- CP-element group 136: 	20 
+    -- CP-element group 136:  members (1) 
+      -- CP-element group 136: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/loop_body_delay_to_condition_start
+      -- 
+    -- Element group convolve_CP_4075_elements(136) is a control-delay.
+    cp_element_136_delay: control_delay_element  generic map(name => " 136_delay", delay_value => 1)  port map(req => convolve_CP_4075_elements(19), ack => convolve_CP_4075_elements(136), clk => clk, reset =>reset);
+    -- CP-element group 137:  join  transition  bypass  pipeline-parent 
     -- CP-element group 137: predecessors 
-    -- CP-element group 137: 	136 
+    -- CP-element group 137: 	102 
+    -- CP-element group 137: 	105 
+    -- CP-element group 137: 	135 
     -- CP-element group 137: successors 
-    -- CP-element group 137: 	138 
-    -- CP-element group 137: marked-successors 
-    -- CP-element group 137: 	133 
-    -- CP-element group 137: 	129 
-    -- CP-element group 137:  members (6) 
-      -- CP-element group 137: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_sample_completed_
-      -- CP-element group 137: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Update/req
-      -- CP-element group 137: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Sample/ack
-      -- CP-element group 137: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_update_start_
-      -- CP-element group 137: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Update/$entry
-      -- CP-element group 137: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Sample/$exit
+    -- CP-element group 137: 	16 
+    -- CP-element group 137:  members (1) 
+      -- CP-element group 137: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/$exit
       -- 
-    ack_4519_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 137_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_2008_inst_ack_0, ack => convolve_CP_4075_elements(137)); -- 
-    req_4523_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4523_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(137), ack => WPIPE_maxpool_output_pipe_2008_inst_req_1); -- 
-    -- CP-element group 138:  fork  transition  input  bypass  pipeline-parent 
-    -- CP-element group 138: predecessors 
-    -- CP-element group 138: 	137 
-    -- CP-element group 138: successors 
-    -- CP-element group 138: 	140 
-    -- CP-element group 138: marked-successors 
-    -- CP-element group 138: 	136 
-    -- CP-element group 138: 	125 
-    -- CP-element group 138:  members (3) 
-      -- CP-element group 138: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Update/ack
-      -- CP-element group 138: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_update_completed_
-      -- CP-element group 138: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/WPIPE_maxpool_output_pipe_2008_Update/$exit
-      -- 
-    ack_4524_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 138_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_maxpool_output_pipe_2008_inst_ack_1, ack => convolve_CP_4075_elements(138)); -- 
-    -- CP-element group 139:  transition  delay-element  bypass  pipeline-parent 
-    -- CP-element group 139: predecessors 
-    -- CP-element group 139: 	19 
-    -- CP-element group 139: successors 
-    -- CP-element group 139: 	20 
-    -- CP-element group 139:  members (1) 
-      -- CP-element group 139: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/loop_body_delay_to_condition_start
-      -- 
-    -- Element group convolve_CP_4075_elements(139) is a control-delay.
-    cp_element_139_delay: control_delay_element  generic map(name => " 139_delay", delay_value => 1)  port map(req => convolve_CP_4075_elements(19), ack => convolve_CP_4075_elements(139), clk => clk, reset =>reset);
-    -- CP-element group 140:  join  transition  bypass  pipeline-parent 
-    -- CP-element group 140: predecessors 
-    -- CP-element group 140: 	138 
-    -- CP-element group 140: 	102 
-    -- CP-element group 140: 	105 
-    -- CP-element group 140: 	108 
-    -- CP-element group 140: successors 
-    -- CP-element group 140: 	16 
-    -- CP-element group 140:  members (1) 
-      -- CP-element group 140: 	 branch_block_stmt_1836/do_while_stmt_1861/do_while_stmt_1861_loop_body/$exit
-      -- 
-    convolve_cp_element_group_140: block -- 
-      constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 15,2 => 15,3 => 15);
-      constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 0,2 => 0,3 => 0);
-      constant place_delays: IntegerArray(0 to 3) := (0 => 0,1 => 0,2 => 0,3 => 0);
-      constant joinName: string(1 to 29) := "convolve_cp_element_group_140"; 
-      signal preds: BooleanArray(1 to 4); -- 
+    convolve_cp_element_group_137: block -- 
+      constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 15,2 => 15);
+      constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 0);
+      constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 0);
+      constant joinName: string(1 to 29) := "convolve_cp_element_group_137"; 
+      signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= convolve_CP_4075_elements(138) & convolve_CP_4075_elements(102) & convolve_CP_4075_elements(105) & convolve_CP_4075_elements(108);
-      gj_convolve_cp_element_group_140 : generic_join generic map(name => joinName, number_of_predecessors => 4, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => convolve_CP_4075_elements(140), clk => clk, reset => reset); --
+      preds <= convolve_CP_4075_elements(102) & convolve_CP_4075_elements(105) & convolve_CP_4075_elements(135);
+      gj_convolve_cp_element_group_137 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => convolve_CP_4075_elements(137), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 141:  transition  input  bypass  pipeline-parent 
+    -- CP-element group 138:  transition  input  bypass  pipeline-parent 
+    -- CP-element group 138: predecessors 
+    -- CP-element group 138: 	15 
+    -- CP-element group 138: successors 
+    -- CP-element group 138:  members (2) 
+      -- CP-element group 138: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_exit/ack
+      -- CP-element group 138: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_exit/$exit
+      -- 
+    ack_4517_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 138_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => do_while_stmt_1861_branch_ack_0, ack => convolve_CP_4075_elements(138)); -- 
+    -- CP-element group 139:  transition  input  bypass  pipeline-parent 
+    -- CP-element group 139: predecessors 
+    -- CP-element group 139: 	15 
+    -- CP-element group 139: successors 
+    -- CP-element group 139:  members (2) 
+      -- CP-element group 139: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_taken/ack
+      -- CP-element group 139: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_taken/$exit
+      -- 
+    ack_4521_symbol_link_from_dp: control_delay_element -- 
+      generic map(name => " 139_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => do_while_stmt_1861_branch_ack_1, ack => convolve_CP_4075_elements(139)); -- 
+    -- CP-element group 140:  transition  bypass  pipeline-parent 
+    -- CP-element group 140: predecessors 
+    -- CP-element group 140: 	13 
+    -- CP-element group 140: successors 
+    -- CP-element group 140: 	2 
+    -- CP-element group 140:  members (1) 
+      -- CP-element group 140: 	 branch_block_stmt_1836/do_while_stmt_1861/$exit
+      -- 
+    convolve_CP_4075_elements(140) <= convolve_CP_4075_elements(13);
+    -- CP-element group 141:  transition  input  output  bypass 
     -- CP-element group 141: predecessors 
-    -- CP-element group 141: 	15 
+    -- CP-element group 141: 	2 
     -- CP-element group 141: successors 
-    -- CP-element group 141:  members (2) 
-      -- CP-element group 141: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_exit/$exit
-      -- CP-element group 141: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_exit/ack
+    -- CP-element group 141: 	142 
+    -- CP-element group 141:  members (6) 
+      -- CP-element group 141: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Update/req
+      -- CP-element group 141: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_sample_completed_
+      -- CP-element group 141: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_update_start_
+      -- CP-element group 141: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Sample/$exit
+      -- CP-element group 141: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Sample/ack
+      -- CP-element group 141: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Update/$entry
       -- 
-    ack_4529_symbol_link_from_dp: control_delay_element -- 
+    ack_4534_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 141_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => do_while_stmt_1861_branch_ack_0, ack => convolve_CP_4075_elements(141)); -- 
-    -- CP-element group 142:  transition  input  bypass  pipeline-parent 
+      port map(clk => clk, reset => reset, req => WPIPE_input_done_pipe_2011_inst_ack_0, ack => convolve_CP_4075_elements(141)); -- 
+    req_4538_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4538_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(141), ack => WPIPE_input_done_pipe_2011_inst_req_1); -- 
+    -- CP-element group 142:  transition  place  input  bypass 
     -- CP-element group 142: predecessors 
-    -- CP-element group 142: 	15 
+    -- CP-element group 142: 	141 
     -- CP-element group 142: successors 
-    -- CP-element group 142:  members (2) 
-      -- CP-element group 142: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_taken/$exit
-      -- CP-element group 142: 	 branch_block_stmt_1836/do_while_stmt_1861/loop_taken/ack
+    -- CP-element group 142: 	143 
+    -- CP-element group 142:  members (8) 
+      -- CP-element group 142: 	 branch_block_stmt_1836/assign_stmt_2013__exit__
+      -- CP-element group 142: 	 branch_block_stmt_1836/loopback
+      -- CP-element group 142: 	 branch_block_stmt_1836/loopback_PhiReq/$entry
+      -- CP-element group 142: 	 branch_block_stmt_1836/loopback_PhiReq/$exit
+      -- CP-element group 142: 	 branch_block_stmt_1836/assign_stmt_2013/$exit
+      -- CP-element group 142: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Update/ack
+      -- CP-element group 142: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_Update/$exit
+      -- CP-element group 142: 	 branch_block_stmt_1836/assign_stmt_2013/WPIPE_input_done_pipe_2011_update_completed_
       -- 
-    ack_4533_symbol_link_from_dp: control_delay_element -- 
+    ack_4539_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 142_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => do_while_stmt_1861_branch_ack_1, ack => convolve_CP_4075_elements(142)); -- 
-    -- CP-element group 143:  transition  bypass  pipeline-parent 
+      port map(clk => clk, reset => reset, req => WPIPE_input_done_pipe_2011_inst_ack_1, ack => convolve_CP_4075_elements(142)); -- 
+    -- CP-element group 143:  merge  fork  transition  place  output  bypass 
     -- CP-element group 143: predecessors 
-    -- CP-element group 143: 	13 
+    -- CP-element group 143: 	0 
+    -- CP-element group 143: 	142 
     -- CP-element group 143: successors 
-    -- CP-element group 143: 	2 
-    -- CP-element group 143:  members (1) 
-      -- CP-element group 143: 	 branch_block_stmt_1836/do_while_stmt_1861/$exit
+    -- CP-element group 143: 	8 
+    -- CP-element group 143: 	10 
+    -- CP-element group 143: 	3 
+    -- CP-element group 143: 	5 
+    -- CP-element group 143:  members (19) 
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860__entry__
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Sample/rr
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/$entry
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_sample_start_
+      -- CP-element group 143: 	 branch_block_stmt_1836/merge_stmt_1837__exit__
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Sample/$entry
+      -- CP-element group 143: 	 branch_block_stmt_1836/merge_stmt_1837_PhiAck/dummy
+      -- CP-element group 143: 	 branch_block_stmt_1836/merge_stmt_1837_PhiReqMerge
+      -- CP-element group 143: 	 branch_block_stmt_1836/merge_stmt_1837_PhiAck/$entry
+      -- CP-element group 143: 	 branch_block_stmt_1836/merge_stmt_1837_PhiAck/$exit
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_sample_start_
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_Sample/$entry
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_Sample/rr
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_update_start_
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Update/$entry
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Update/cr
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_update_start_
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Update/$entry
+      -- CP-element group 143: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Update/cr
       -- 
-    convolve_CP_4075_elements(143) <= convolve_CP_4075_elements(13);
-    -- CP-element group 144:  merge  fork  transition  place  output  bypass 
-    -- CP-element group 144: predecessors 
-    -- CP-element group 144: 	2 
-    -- CP-element group 144: 	0 
-    -- CP-element group 144: successors 
-    -- CP-element group 144: 	3 
-    -- CP-element group 144: 	8 
-    -- CP-element group 144: 	5 
-    -- CP-element group 144: 	10 
-    -- CP-element group 144:  members (19) 
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860__entry__
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_sample_start_
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/$entry
-      -- CP-element group 144: 	 branch_block_stmt_1836/merge_stmt_1837__exit__
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Sample/$entry
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_num_out_pipe_1839_Sample/rr
-      -- CP-element group 144: 	 branch_block_stmt_1836/merge_stmt_1837_PhiAck/$entry
-      -- CP-element group 144: 	 branch_block_stmt_1836/merge_stmt_1837_PhiAck/$exit
-      -- CP-element group 144: 	 branch_block_stmt_1836/merge_stmt_1837_PhiAck/dummy
-      -- CP-element group 144: 	 branch_block_stmt_1836/merge_stmt_1837_PhiReqMerge
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_sample_start_
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_Sample/$entry
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/RPIPE_size_pipe_1842_Sample/rr
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_update_start_
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Update/$entry
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1846_Update/cr
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_update_start_
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Update/$entry
-      -- CP-element group 144: 	 branch_block_stmt_1836/assign_stmt_1840_to_assign_stmt_1860/slice_1850_Update/cr
-      -- 
-    rr_4100_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4100_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(144), ack => RPIPE_num_out_pipe_1839_inst_req_0); -- 
-    rr_4114_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4114_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(144), ack => RPIPE_size_pipe_1842_inst_req_0); -- 
-    cr_4133_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4133_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(144), ack => slice_1846_inst_req_1); -- 
-    cr_4147_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_4147_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(144), ack => slice_1850_inst_req_1); -- 
-    convolve_CP_4075_elements(144) <= OrReduce(convolve_CP_4075_elements(2) & convolve_CP_4075_elements(0));
-    convolve_do_while_stmt_1861_terminator_4534: loop_terminator -- 
-      generic map (name => " convolve_do_while_stmt_1861_terminator_4534", max_iterations_in_flight =>15) 
-      port map(loop_body_exit => convolve_CP_4075_elements(16),loop_continue => convolve_CP_4075_elements(142),loop_terminate => convolve_CP_4075_elements(141),loop_back => convolve_CP_4075_elements(14),loop_exit => convolve_CP_4075_elements(13),clk => clk, reset => reset); -- 
-    phi_stmt_1863_phi_seq_4212_block : block -- 
+    rr_4102_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4102_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(143), ack => RPIPE_num_out_pipe_1839_inst_req_0); -- 
+    rr_4116_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_4116_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(143), ack => RPIPE_size_pipe_1842_inst_req_0); -- 
+    cr_4135_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4135_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(143), ack => slice_1846_inst_req_1); -- 
+    cr_4149_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_4149_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => convolve_CP_4075_elements(143), ack => slice_1850_inst_req_1); -- 
+    convolve_CP_4075_elements(143) <= OrReduce(convolve_CP_4075_elements(0) & convolve_CP_4075_elements(142));
+    convolve_do_while_stmt_1861_terminator_4522: loop_terminator -- 
+      generic map (name => " convolve_do_while_stmt_1861_terminator_4522", max_iterations_in_flight =>15) 
+      port map(loop_body_exit => convolve_CP_4075_elements(16),loop_continue => convolve_CP_4075_elements(139),loop_terminate => convolve_CP_4075_elements(138),loop_back => convolve_CP_4075_elements(14),loop_exit => convolve_CP_4075_elements(13),clk => clk, reset => reset); -- 
+    phi_stmt_1863_phi_seq_4214_block : block -- 
       signal triggers, src_sample_reqs, src_sample_acks, src_update_reqs, src_update_acks : BooleanArray(0 to 1);
       signal phi_mux_reqs : BooleanArray(0 to 1); -- 
     begin -- 
@@ -22099,8 +22068,8 @@ begin --
       convolve_CP_4075_elements(41)<= src_update_reqs(1);
       src_update_acks(1)  <= convolve_CP_4075_elements(43);
       convolve_CP_4075_elements(32) <= phi_mux_reqs(1);
-      phi_stmt_1863_phi_seq_4212 : phi_sequencer_v2-- 
-        generic map (place_capacity => 15, ntriggers => 2, name => "phi_stmt_1863_phi_seq_4212") 
+      phi_stmt_1863_phi_seq_4214 : phi_sequencer_v2-- 
+        generic map (place_capacity => 15, ntriggers => 2, name => "phi_stmt_1863_phi_seq_4214") 
         port map ( -- 
           triggers => triggers, src_sample_starts => src_sample_reqs, 
           src_sample_completes => src_sample_acks, src_update_starts => src_update_reqs, 
@@ -22115,39 +22084,39 @@ begin --
         );
         -- 
     end block;
-    phi_stmt_1867_phi_seq_4256_block : block -- 
+    phi_stmt_1867_phi_seq_4258_block : block -- 
       signal triggers, src_sample_reqs, src_sample_acks, src_update_reqs, src_update_acks : BooleanArray(0 to 1);
       signal phi_mux_reqs : BooleanArray(0 to 1); -- 
     begin -- 
-      triggers(0)  <= convolve_CP_4075_elements(52);
-      convolve_CP_4075_elements(55)<= src_sample_reqs(0);
-      src_sample_acks(0)  <= convolve_CP_4075_elements(55);
-      convolve_CP_4075_elements(56)<= src_update_reqs(0);
-      src_update_acks(0)  <= convolve_CP_4075_elements(57);
-      convolve_CP_4075_elements(53) <= phi_mux_reqs(0);
-      triggers(1)  <= convolve_CP_4075_elements(50);
-      convolve_CP_4075_elements(59)<= src_sample_reqs(1);
-      src_sample_acks(1)  <= convolve_CP_4075_elements(61);
-      convolve_CP_4075_elements(60)<= src_update_reqs(1);
-      src_update_acks(1)  <= convolve_CP_4075_elements(62);
-      convolve_CP_4075_elements(51) <= phi_mux_reqs(1);
-      phi_stmt_1867_phi_seq_4256 : phi_sequencer_v2-- 
-        generic map (place_capacity => 15, ntriggers => 2, name => "phi_stmt_1867_phi_seq_4256") 
+      triggers(0)  <= convolve_CP_4075_elements(50);
+      convolve_CP_4075_elements(53)<= src_sample_reqs(0);
+      src_sample_acks(0)  <= convolve_CP_4075_elements(53);
+      convolve_CP_4075_elements(54)<= src_update_reqs(0);
+      src_update_acks(0)  <= convolve_CP_4075_elements(55);
+      convolve_CP_4075_elements(51) <= phi_mux_reqs(0);
+      triggers(1)  <= convolve_CP_4075_elements(48);
+      convolve_CP_4075_elements(57)<= src_sample_reqs(1);
+      src_sample_acks(1)  <= convolve_CP_4075_elements(59);
+      convolve_CP_4075_elements(58)<= src_update_reqs(1);
+      src_update_acks(1)  <= convolve_CP_4075_elements(60);
+      convolve_CP_4075_elements(49) <= phi_mux_reqs(1);
+      phi_stmt_1867_phi_seq_4258 : phi_sequencer_v2-- 
+        generic map (place_capacity => 15, ntriggers => 2, name => "phi_stmt_1867_phi_seq_4258") 
         port map ( -- 
           triggers => triggers, src_sample_starts => src_sample_reqs, 
           src_sample_completes => src_sample_acks, src_update_starts => src_update_reqs, 
           src_update_completes => src_update_acks,
           phi_mux_select_reqs => phi_mux_reqs, 
-          phi_sample_req => convolve_CP_4075_elements(46), 
-          phi_sample_ack => convolve_CP_4075_elements(47), 
-          phi_update_req => convolve_CP_4075_elements(48), 
-          phi_update_ack => convolve_CP_4075_elements(49), 
-          phi_mux_ack => convolve_CP_4075_elements(54), 
+          phi_sample_req => convolve_CP_4075_elements(21), 
+          phi_sample_ack => convolve_CP_4075_elements(46), 
+          phi_update_req => convolve_CP_4075_elements(23), 
+          phi_update_ack => convolve_CP_4075_elements(47), 
+          phi_mux_ack => convolve_CP_4075_elements(52), 
           clk => clk, reset => reset -- 
         );
         -- 
     end block;
-    phi_stmt_1871_phi_seq_4300_block : block -- 
+    phi_stmt_1871_phi_seq_4302_block : block -- 
       signal triggers, src_sample_reqs, src_sample_acks, src_update_reqs, src_update_acks : BooleanArray(0 to 1);
       signal phi_mux_reqs : BooleanArray(0 to 1); -- 
     begin -- 
@@ -22163,29 +22132,29 @@ begin --
       convolve_CP_4075_elements(77)<= src_update_reqs(1);
       src_update_acks(1)  <= convolve_CP_4075_elements(78);
       convolve_CP_4075_elements(70) <= phi_mux_reqs(1);
-      phi_stmt_1871_phi_seq_4300 : phi_sequencer_v2-- 
-        generic map (place_capacity => 15, ntriggers => 2, name => "phi_stmt_1871_phi_seq_4300") 
+      phi_stmt_1871_phi_seq_4302 : phi_sequencer_v2-- 
+        generic map (place_capacity => 15, ntriggers => 2, name => "phi_stmt_1871_phi_seq_4302") 
         port map ( -- 
           triggers => triggers, src_sample_starts => src_sample_reqs, 
           src_sample_completes => src_sample_acks, src_update_starts => src_update_reqs, 
           src_update_completes => src_update_acks,
           phi_mux_select_reqs => phi_mux_reqs, 
-          phi_sample_req => convolve_CP_4075_elements(21), 
-          phi_sample_ack => convolve_CP_4075_elements(65), 
-          phi_update_req => convolve_CP_4075_elements(23), 
+          phi_sample_req => convolve_CP_4075_elements(63), 
+          phi_sample_ack => convolve_CP_4075_elements(64), 
+          phi_update_req => convolve_CP_4075_elements(65), 
           phi_update_ack => convolve_CP_4075_elements(66), 
           phi_mux_ack => convolve_CP_4075_elements(71), 
           clk => clk, reset => reset -- 
         );
         -- 
     end block;
-    entry_tmerge_4164_block : block -- 
+    entry_tmerge_4166_block : block -- 
       signal preds : BooleanArray(0 to 1);
       begin -- 
         preds(0)  <= convolve_CP_4075_elements(17);
         preds(1)  <= convolve_CP_4075_elements(18);
-        entry_tmerge_4164 : transition_merge -- 
-          generic map(name => " entry_tmerge_4164")
+        entry_tmerge_4166 : transition_merge -- 
+          generic map(name => " entry_tmerge_4166")
           port map (preds => preds, symbol_out => convolve_CP_4075_elements(19));
           -- 
     end block;
@@ -22201,12 +22170,12 @@ begin --
     signal NOT_u1_u1_1923_1923_delayed_1_0_1946 : std_logic_vector(0 downto 0);
     signal NOT_u1_u1_1949_wire : std_logic_vector(0 downto 0);
     signal NOT_u1_u1_1955_wire : std_logic_vector(0 downto 0);
-    signal NOT_u1_u1_2014_wire : std_logic_vector(0 downto 0);
+    signal NOT_u1_u1_2010_wire : std_logic_vector(0 downto 0);
     signal SUB_u31_u31_1890_1890_delayed_1_0_1911 : std_logic_vector(30 downto 0);
     signal acc_1867 : std_logic_vector(15 downto 0);
     signal acc_val_1923 : std_logic_vector(15 downto 0);
-    signal acc_val_dn_1995 : std_logic_vector(7 downto 0);
-    signal acc_val_up_1991 : std_logic_vector(7 downto 0);
+    signal acc_val_dn_1991 : std_logic_vector(7 downto 0);
+    signal acc_val_up_1987 : std_logic_vector(7 downto 0);
     signal acc_var_1860 : std_logic_vector(15 downto 0);
     signal all_done_flag_1983 : std_logic_vector(0 downto 0);
     signal iread_1879 : std_logic_vector(15 downto 0);
@@ -22216,7 +22185,7 @@ begin --
     signal konst_1932_wire_constant : std_logic_vector(30 downto 0);
     signal konst_1934_wire_constant : std_logic_vector(30 downto 0);
     signal konst_1973_wire_constant : std_logic_vector(15 downto 0);
-    signal konst_1986_wire_constant : std_logic_vector(7 downto 0);
+    signal konst_2012_wire_constant : std_logic_vector(7 downto 0);
     signal kread_1897 : std_logic_vector(15 downto 0);
     signal kval_1901 : std_logic_vector(15 downto 0);
     signal mcount_var_1855 : std_logic_vector(30 downto 0);
@@ -22227,8 +22196,8 @@ begin --
     signal nacc_1929 : std_logic_vector(15 downto 0);
     signal nacc_1929_1870_buffered : std_logic_vector(15 downto 0);
     signal next_sum_1916 : std_logic_vector(0 downto 0);
-    signal next_sum_1969_delayed_1_0_1998 : std_logic_vector(0 downto 0);
-    signal next_sum_1974_delayed_1_0_2006 : std_logic_vector(0 downto 0);
+    signal next_sum_1965_delayed_1_0_1994 : std_logic_vector(0 downto 0);
+    signal next_sum_1970_delayed_1_0_2002 : std_logic_vector(0 downto 0);
     signal nmycount_1937 : std_logic_vector(30 downto 0);
     signal nmycount_1937_1866_buffered : std_logic_vector(30 downto 0);
     signal num_out_1840 : std_logic_vector(15 downto 0);
@@ -22245,8 +22214,8 @@ begin --
     signal type_cast_1919_wire : std_logic_vector(15 downto 0);
     signal type_cast_1921_wire : std_logic_vector(15 downto 0);
     signal type_cast_1971_wire_constant : std_logic_vector(15 downto 0);
-    signal type_cast_2002_wire : std_logic_vector(7 downto 0);
-    signal type_cast_2010_wire : std_logic_vector(7 downto 0);
+    signal type_cast_1998_wire : std_logic_vector(7 downto 0);
+    signal type_cast_2006_wire : std_logic_vector(7 downto 0);
     -- 
   begin -- 
     acc_var_1860 <= "0000000000000000";
@@ -22255,7 +22224,7 @@ begin --
     konst_1932_wire_constant <= "0000000000000000000000000000000";
     konst_1934_wire_constant <= "0000000000000000000000000000001";
     konst_1973_wire_constant <= "0000000000000001";
-    konst_1986_wire_constant <= "00000001";
+    konst_2012_wire_constant <= "00000001";
     mcount_var_1855 <= "0000000000000000000000000000000";
     type_cast_1875_wire_constant <= "0000000000000001";
     type_cast_1971_wire_constant <= "0000000000000001";
@@ -22359,6 +22328,18 @@ begin --
         port map( din => size_read_1843, dout => size_1851, sample_req => sample_req(0) , sample_ack => sample_ack(0) , update_req => update_req(0) , update_ack => update_ack(0) , clk => clk, reset => reset); -- 
       -- 
     end block;
+    slice_1986_inst_block : block -- 
+      signal sample_req, sample_ack, update_req, update_ack: BooleanArray(0 downto 0); 
+      -- 
+    begin -- 
+      sample_req(0) <= slice_1986_inst_req_0;
+      slice_1986_inst_ack_0<= sample_ack(0);
+      update_req(0) <= slice_1986_inst_req_1;
+      slice_1986_inst_ack_1<= update_ack(0);
+      slice_1986_inst: SliceSplitProtocol generic map(name => "slice_1986_inst", in_data_width => 16, high_index => 15, low_index => 8, buffering => 1, flow_through => false,  full_rate => true) -- 
+        port map( din => acc_val_1923, dout => acc_val_up_1987, sample_req => sample_req(0) , sample_ack => sample_ack(0) , update_req => update_req(0) , update_ack => update_ack(0) , clk => clk, reset => reset); -- 
+      -- 
+    end block;
     slice_1990_inst_block : block -- 
       signal sample_req, sample_ack, update_req, update_ack: BooleanArray(0 downto 0); 
       -- 
@@ -22367,32 +22348,20 @@ begin --
       slice_1990_inst_ack_0<= sample_ack(0);
       update_req(0) <= slice_1990_inst_req_1;
       slice_1990_inst_ack_1<= update_ack(0);
-      slice_1990_inst: SliceSplitProtocol generic map(name => "slice_1990_inst", in_data_width => 16, high_index => 15, low_index => 8, buffering => 1, flow_through => false,  full_rate => true) -- 
-        port map( din => acc_val_1923, dout => acc_val_up_1991, sample_req => sample_req(0) , sample_ack => sample_ack(0) , update_req => update_req(0) , update_ack => update_ack(0) , clk => clk, reset => reset); -- 
+      slice_1990_inst: SliceSplitProtocol generic map(name => "slice_1990_inst", in_data_width => 16, high_index => 7, low_index => 0, buffering => 1, flow_through => false,  full_rate => true) -- 
+        port map( din => acc_val_1923, dout => acc_val_dn_1991, sample_req => sample_req(0) , sample_ack => sample_ack(0) , update_req => update_req(0) , update_ack => update_ack(0) , clk => clk, reset => reset); -- 
       -- 
     end block;
-    slice_1994_inst_block : block -- 
-      signal sample_req, sample_ack, update_req, update_ack: BooleanArray(0 downto 0); 
-      -- 
-    begin -- 
-      sample_req(0) <= slice_1994_inst_req_0;
-      slice_1994_inst_ack_0<= sample_ack(0);
-      update_req(0) <= slice_1994_inst_req_1;
-      slice_1994_inst_ack_1<= update_ack(0);
-      slice_1994_inst: SliceSplitProtocol generic map(name => "slice_1994_inst", in_data_width => 16, high_index => 7, low_index => 0, buffering => 1, flow_through => false,  full_rate => true) -- 
-        port map( din => acc_val_1923, dout => acc_val_dn_1995, sample_req => sample_req(0) , sample_ack => sample_ack(0) , update_req => update_req(0) , update_ack => update_ack(0) , clk => clk, reset => reset); -- 
-      -- 
-    end block;
-    W_next_sum_1969_delayed_1_0_1996_inst_block: block -- 
+    W_next_sum_1965_delayed_1_0_1992_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
     begin -- 
-      wreq(0) <= W_next_sum_1969_delayed_1_0_1996_inst_req_0;
-      W_next_sum_1969_delayed_1_0_1996_inst_ack_0<= wack(0);
-      rreq(0) <= W_next_sum_1969_delayed_1_0_1996_inst_req_1;
-      W_next_sum_1969_delayed_1_0_1996_inst_ack_1<= rack(0);
-      W_next_sum_1969_delayed_1_0_1996_inst : InterlockBuffer generic map ( -- 
-        name => "W_next_sum_1969_delayed_1_0_1996_inst",
+      wreq(0) <= W_next_sum_1965_delayed_1_0_1992_inst_req_0;
+      W_next_sum_1965_delayed_1_0_1992_inst_ack_0<= wack(0);
+      rreq(0) <= W_next_sum_1965_delayed_1_0_1992_inst_req_1;
+      W_next_sum_1965_delayed_1_0_1992_inst_ack_1<= rack(0);
+      W_next_sum_1965_delayed_1_0_1992_inst : InterlockBuffer generic map ( -- 
+        name => "W_next_sum_1965_delayed_1_0_1992_inst",
         buffer_size => 1,
         flow_through =>  false ,
         cut_through =>  true ,
@@ -22406,21 +22375,21 @@ begin --
         write_data => next_sum_1916,
         read_req => rreq(0),  
         read_ack => rack(0), 
-        read_data => next_sum_1969_delayed_1_0_1998,
+        read_data => next_sum_1965_delayed_1_0_1994,
         clk => clk, reset => reset
         -- 
       );
       end block; -- 
-    W_next_sum_1974_delayed_1_0_2004_inst_block: block -- 
+    W_next_sum_1970_delayed_1_0_2000_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
     begin -- 
-      wreq(0) <= W_next_sum_1974_delayed_1_0_2004_inst_req_0;
-      W_next_sum_1974_delayed_1_0_2004_inst_ack_0<= wack(0);
-      rreq(0) <= W_next_sum_1974_delayed_1_0_2004_inst_req_1;
-      W_next_sum_1974_delayed_1_0_2004_inst_ack_1<= rack(0);
-      W_next_sum_1974_delayed_1_0_2004_inst : InterlockBuffer generic map ( -- 
-        name => "W_next_sum_1974_delayed_1_0_2004_inst",
+      wreq(0) <= W_next_sum_1970_delayed_1_0_2000_inst_req_0;
+      W_next_sum_1970_delayed_1_0_2000_inst_ack_0<= wack(0);
+      rreq(0) <= W_next_sum_1970_delayed_1_0_2000_inst_req_1;
+      W_next_sum_1970_delayed_1_0_2000_inst_ack_1<= rack(0);
+      W_next_sum_1970_delayed_1_0_2000_inst : InterlockBuffer generic map ( -- 
+        name => "W_next_sum_1970_delayed_1_0_2000_inst",
         buffer_size => 1,
         flow_through =>  false ,
         cut_through =>  true ,
@@ -22434,7 +22403,7 @@ begin --
         write_data => next_sum_1916,
         read_req => rreq(0),  
         read_ack => rack(0), 
-        read_data => next_sum_1974_delayed_1_0_2006,
+        read_data => next_sum_1970_delayed_1_0_2002,
         clk => clk, reset => reset
         -- 
       );
@@ -22555,7 +22524,7 @@ begin --
       tmp_var( 15 downto 0) := mul_val_1906(15 downto 0);
       type_cast_1921_wire <= tmp_var; -- 
     end process;
-    type_cast_2002_inst_block: block -- 
+    type_cast_1998_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       signal wreq_ug, wack_ug, rreq_ug, rack_ug: BooleanArray(0 downto 0); 
       signal guard_vector : std_logic_vector(0 downto 0); 
@@ -22563,12 +22532,12 @@ begin --
       constant guardFlags : BooleanArray(0 downto 0) := (0 => true);
       -- 
     begin -- 
-      wreq_ug(0) <= type_cast_2002_inst_req_0;
-      type_cast_2002_inst_ack_0<= wack_ug(0);
-      rreq_ug(0) <= type_cast_2002_inst_req_1;
-      type_cast_2002_inst_ack_1<= rack_ug(0);
-      guard_vector(0) <=  next_sum_1969_delayed_1_0_1998(0);
-      type_cast_2002_inst_gI: SplitGuardInterface generic map(name => "type_cast_2002_inst_gI", nreqs => 1, buffering => guardBuffering, use_guards => guardFlags,  sample_only => false,  update_only => false) -- 
+      wreq_ug(0) <= type_cast_1998_inst_req_0;
+      type_cast_1998_inst_ack_0<= wack_ug(0);
+      rreq_ug(0) <= type_cast_1998_inst_req_1;
+      type_cast_1998_inst_ack_1<= rack_ug(0);
+      guard_vector(0) <=  next_sum_1965_delayed_1_0_1994(0);
+      type_cast_1998_inst_gI: SplitGuardInterface generic map(name => "type_cast_1998_inst_gI", nreqs => 1, buffering => guardBuffering, use_guards => guardFlags,  sample_only => false,  update_only => false) -- 
         port map(clk => clk, reset => reset,
         sr_in => wreq_ug,
         sr_out => wreq,
@@ -22579,8 +22548,8 @@ begin --
         ca_in => rack,
         ca_out => rack_ug,
         guards => guard_vector); -- 
-      type_cast_2002_inst : InterlockBuffer generic map ( -- 
-        name => "type_cast_2002_inst",
+      type_cast_1998_inst : InterlockBuffer generic map ( -- 
+        name => "type_cast_1998_inst",
         buffer_size => 1,
         flow_through =>  false ,
         cut_through =>  false ,
@@ -22591,15 +22560,15 @@ begin --
       )port map ( -- 
         write_req => wreq(0), 
         write_ack => wack(0), 
-        write_data => acc_val_up_1991,
+        write_data => acc_val_up_1987,
         read_req => rreq(0),  
         read_ack => rack(0), 
-        read_data => type_cast_2002_wire,
+        read_data => type_cast_1998_wire,
         clk => clk, reset => reset
         -- 
       );
       end block; -- 
-    type_cast_2010_inst_block: block -- 
+    type_cast_2006_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       signal wreq_ug, wack_ug, rreq_ug, rack_ug: BooleanArray(0 downto 0); 
       signal guard_vector : std_logic_vector(0 downto 0); 
@@ -22607,12 +22576,12 @@ begin --
       constant guardFlags : BooleanArray(0 downto 0) := (0 => true);
       -- 
     begin -- 
-      wreq_ug(0) <= type_cast_2010_inst_req_0;
-      type_cast_2010_inst_ack_0<= wack_ug(0);
-      rreq_ug(0) <= type_cast_2010_inst_req_1;
-      type_cast_2010_inst_ack_1<= rack_ug(0);
-      guard_vector(0) <=  next_sum_1974_delayed_1_0_2006(0);
-      type_cast_2010_inst_gI: SplitGuardInterface generic map(name => "type_cast_2010_inst_gI", nreqs => 1, buffering => guardBuffering, use_guards => guardFlags,  sample_only => false,  update_only => false) -- 
+      wreq_ug(0) <= type_cast_2006_inst_req_0;
+      type_cast_2006_inst_ack_0<= wack_ug(0);
+      rreq_ug(0) <= type_cast_2006_inst_req_1;
+      type_cast_2006_inst_ack_1<= rack_ug(0);
+      guard_vector(0) <=  next_sum_1970_delayed_1_0_2002(0);
+      type_cast_2006_inst_gI: SplitGuardInterface generic map(name => "type_cast_2006_inst_gI", nreqs => 1, buffering => guardBuffering, use_guards => guardFlags,  sample_only => false,  update_only => false) -- 
         port map(clk => clk, reset => reset,
         sr_in => wreq_ug,
         sr_out => wreq,
@@ -22623,8 +22592,8 @@ begin --
         ca_in => rack,
         ca_out => rack_ug,
         guards => guard_vector); -- 
-      type_cast_2010_inst : InterlockBuffer generic map ( -- 
-        name => "type_cast_2010_inst",
+      type_cast_2006_inst : InterlockBuffer generic map ( -- 
+        name => "type_cast_2006_inst",
         buffer_size => 1,
         flow_through =>  false ,
         cut_through =>  false ,
@@ -22635,10 +22604,10 @@ begin --
       )port map ( -- 
         write_req => wreq(0), 
         write_ack => wack(0), 
-        write_data => acc_val_dn_1995,
+        write_data => acc_val_dn_1991,
         read_req => rreq(0),  
         read_ack => rack(0), 
-        read_data => type_cast_2010_wire,
+        read_data => type_cast_2006_wire,
         clk => clk, reset => reset
         -- 
       );
@@ -22647,7 +22616,7 @@ begin --
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
       begin 
-      condition_sig <= NOT_u1_u1_2014_wire;
+      condition_sig <= NOT_u1_u1_2010_wire;
       branch_instance: BranchBase -- 
         generic map( name => "do_while_stmt_1861_branch", condition_width => 1,  bypass_flag => true)
         port map( -- 
@@ -22803,12 +22772,12 @@ begin --
       SingleInputOperation("ApIntNot", out_done_flag_1942, tmp_var);
       NOT_u1_u1_1955_wire <= tmp_var; -- 
     end process;
-    -- unary operator NOT_u1_u1_2014_inst
+    -- unary operator NOT_u1_u1_2010_inst
     process(all_done_flag_1983) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
     begin -- 
       SingleInputOperation("ApIntNot", all_done_flag_1983, tmp_var);
-      NOT_u1_u1_2014_wire <= tmp_var; -- 
+      NOT_u1_u1_2010_wire <= tmp_var; -- 
     end process;
     -- shared split operator group (13) : SUB_u31_u31_1910_inst 
     ApIntSub_group_13: Block -- 
@@ -23097,7 +23066,7 @@ begin --
         ); -- 
       -- 
     end Block; -- inport group 4
-    -- shared outport operator group (0) : WPIPE_input_done_pipe_1985_inst 
+    -- shared outport operator group (0) : WPIPE_input_done_pipe_2011_inst 
     OutportGroup_0: Block -- 
       signal data_in: std_logic_vector(7 downto 0);
       signal sample_req, sample_ack : BooleanArray( 0 downto 0);
@@ -23106,16 +23075,16 @@ begin --
       signal update_req_unguarded, update_ack_unguarded : BooleanArray( 0 downto 0);
       signal guard_vector : std_logic_vector( 0 downto 0);
       constant inBUFs : IntegerArray(0 downto 0) := (0 => 0);
-      constant guardFlags : BooleanArray(0 downto 0) := (0 => true);
+      constant guardFlags : BooleanArray(0 downto 0) := (0 => false);
       constant guardBuffering: IntegerArray(0 downto 0)  := (0 => 2);
       -- 
     begin -- 
-      sample_req_unguarded(0) <= WPIPE_input_done_pipe_1985_inst_req_0;
-      WPIPE_input_done_pipe_1985_inst_ack_0 <= sample_ack_unguarded(0);
-      update_req_unguarded(0) <= WPIPE_input_done_pipe_1985_inst_req_1;
-      WPIPE_input_done_pipe_1985_inst_ack_1 <= update_ack_unguarded(0);
-      guard_vector(0)  <= all_done_flag_1983(0);
-      data_in <= konst_1986_wire_constant;
+      sample_req_unguarded(0) <= WPIPE_input_done_pipe_2011_inst_req_0;
+      WPIPE_input_done_pipe_2011_inst_ack_0 <= sample_ack_unguarded(0);
+      update_req_unguarded(0) <= WPIPE_input_done_pipe_2011_inst_req_1;
+      WPIPE_input_done_pipe_2011_inst_ack_1 <= update_ack_unguarded(0);
+      guard_vector(0)  <=  '1';
+      data_in <= konst_2012_wire_constant;
       input_done_pipe_write_0_gI: SplitGuardInterface generic map(name => "input_done_pipe_write_0_gI", nreqs => 1, buffering => guardBuffering, use_guards => guardFlags,  sample_only => true,  update_only => false) -- 
         port map(clk => clk, reset => reset,
         sr_in => sample_req_unguarded,
@@ -23128,7 +23097,7 @@ begin --
         ca_out => update_ack_unguarded,
         guards => guard_vector); -- 
       input_done_pipe_write_0: OutputPortRevised -- 
-        generic map ( name => "input_done_pipe", data_width => 8, num_reqs => 1, input_buffering => inBUFs, full_rate => true,
+        generic map ( name => "input_done_pipe", data_width => 8, num_reqs => 1, input_buffering => inBUFs, full_rate => false,
         no_arbitration => false)
         port map (--
           sample_req => sample_req , 
@@ -23235,7 +23204,7 @@ begin --
         );-- 
       -- 
     end Block; -- outport group 2
-    -- shared outport operator group (3) : WPIPE_maxpool_output_pipe_2000_inst WPIPE_maxpool_output_pipe_2008_inst 
+    -- shared outport operator group (3) : WPIPE_maxpool_output_pipe_1996_inst WPIPE_maxpool_output_pipe_2004_inst 
     OutportGroup_3: Block -- 
       signal data_in: std_logic_vector(15 downto 0);
       signal sample_req, sample_ack : BooleanArray( 1 downto 0);
@@ -23248,17 +23217,17 @@ begin --
       constant guardBuffering: IntegerArray(1 downto 0)  := (0 => 2, 1 => 2);
       -- 
     begin -- 
-      sample_req_unguarded(1) <= WPIPE_maxpool_output_pipe_2000_inst_req_0;
-      sample_req_unguarded(0) <= WPIPE_maxpool_output_pipe_2008_inst_req_0;
-      WPIPE_maxpool_output_pipe_2000_inst_ack_0 <= sample_ack_unguarded(1);
-      WPIPE_maxpool_output_pipe_2008_inst_ack_0 <= sample_ack_unguarded(0);
-      update_req_unguarded(1) <= WPIPE_maxpool_output_pipe_2000_inst_req_1;
-      update_req_unguarded(0) <= WPIPE_maxpool_output_pipe_2008_inst_req_1;
-      WPIPE_maxpool_output_pipe_2000_inst_ack_1 <= update_ack_unguarded(1);
-      WPIPE_maxpool_output_pipe_2008_inst_ack_1 <= update_ack_unguarded(0);
-      guard_vector(0)  <= next_sum_1974_delayed_1_0_2006(0);
-      guard_vector(1)  <= next_sum_1969_delayed_1_0_1998(0);
-      data_in <= type_cast_2002_wire & type_cast_2010_wire;
+      sample_req_unguarded(1) <= WPIPE_maxpool_output_pipe_1996_inst_req_0;
+      sample_req_unguarded(0) <= WPIPE_maxpool_output_pipe_2004_inst_req_0;
+      WPIPE_maxpool_output_pipe_1996_inst_ack_0 <= sample_ack_unguarded(1);
+      WPIPE_maxpool_output_pipe_2004_inst_ack_0 <= sample_ack_unguarded(0);
+      update_req_unguarded(1) <= WPIPE_maxpool_output_pipe_1996_inst_req_1;
+      update_req_unguarded(0) <= WPIPE_maxpool_output_pipe_2004_inst_req_1;
+      WPIPE_maxpool_output_pipe_1996_inst_ack_1 <= update_ack_unguarded(1);
+      WPIPE_maxpool_output_pipe_2004_inst_ack_1 <= update_ack_unguarded(0);
+      guard_vector(0)  <= next_sum_1970_delayed_1_0_2002(0);
+      guard_vector(1)  <= next_sum_1965_delayed_1_0_1994(0);
+      data_in <= type_cast_1998_wire & type_cast_2006_wire;
       maxpool_output_pipe_write_3_gI: SplitGuardInterface generic map(name => "maxpool_output_pipe_write_3_gI", nreqs => 2, buffering => guardBuffering, use_guards => guardFlags,  sample_only => true,  update_only => false) -- 
         port map(clk => clk, reset => reset,
         sr_in => sample_req_unguarded,
@@ -23578,11 +23547,11 @@ begin --
     -- CP-element group 0:  fork  transition  output  bypass 
     -- CP-element group 0: predecessors 
     -- CP-element group 0: successors 
-    -- CP-element group 0: 	6 
-    -- CP-element group 0: 	7 
+    -- CP-element group 0: 	2 
     -- CP-element group 0: 	4 
     -- CP-element group 0: 	1 
-    -- CP-element group 0: 	2 
+    -- CP-element group 0: 	7 
+    -- CP-element group 0: 	6 
     -- CP-element group 0:  members (29) 
       -- CP-element group 0: 	 $entry
       -- CP-element group 0: 	 assign_stmt_334_to_assign_stmt_358/$entry
@@ -23614,9 +23583,6 @@ begin --
       -- CP-element group 0: 	 assign_stmt_334_to_assign_stmt_358/RPIPE_input_done_pipe_357_Sample/$entry
       -- CP-element group 0: 	 assign_stmt_334_to_assign_stmt_358/RPIPE_input_done_pipe_357_Sample/rr
       -- 
-    rr_780_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_780_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(0), ack => RPIPE_input_done_pipe_357_inst_req_0); -- 
     cr_766_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_766_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(0), ack => ptr_deref_348_load_0_req_1); -- 
@@ -23629,6 +23595,9 @@ begin --
     req_706_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_706_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(0), ack => array_obj_ref_343_index_offset_req_1); -- 
+    rr_780_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_780_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(0), ack => RPIPE_input_done_pipe_357_inst_req_0); -- 
     -- CP-element group 1:  transition  input  bypass 
     -- CP-element group 1: predecessors 
     -- CP-element group 1: 	0 
@@ -23782,9 +23751,9 @@ begin --
       port map(clk => clk, reset => reset, req => RPIPE_input_done_pipe_357_inst_ack_1, ack => loadKernelChannel_CP_671_elements(8)); -- 
     -- CP-element group 9:  join  transition  place  bypass 
     -- CP-element group 9: predecessors 
-    -- CP-element group 9: 	6 
-    -- CP-element group 9: 	8 
     -- CP-element group 9: 	1 
+    -- CP-element group 9: 	8 
+    -- CP-element group 9: 	6 
     -- CP-element group 9: successors 
     -- CP-element group 9: 	11 
     -- CP-element group 9:  members (4) 
@@ -23800,7 +23769,7 @@ begin --
       constant joinName: string(1 to 36) := "loadKernelChannel_cp_element_group_9"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(6) & loadKernelChannel_CP_671_elements(8) & loadKernelChannel_CP_671_elements(1);
+      preds <= loadKernelChannel_CP_671_elements(1) & loadKernelChannel_CP_671_elements(8) & loadKernelChannel_CP_671_elements(6);
       gj_loadKernelChannel_cp_element_group_9 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(9), clk => clk, reset => reset); --
     end block;
@@ -23859,8 +23828,8 @@ begin --
     -- CP-element group 14: predecessors 
     -- CP-element group 14: 	19 
     -- CP-element group 14: successors 
-    -- CP-element group 14: 	92 
     -- CP-element group 14: 	91 
+    -- CP-element group 14: 	92 
     -- CP-element group 14:  members (3) 
       -- CP-element group 14: 	 branch_block_stmt_359/do_while_stmt_360/loop_exit/$entry
       -- CP-element group 14: 	 branch_block_stmt_359/do_while_stmt_360/loop_taken/$entry
@@ -23879,8 +23848,8 @@ begin --
     -- CP-element group 16: predecessors 
     -- CP-element group 16: 	13 
     -- CP-element group 16: successors 
-    -- CP-element group 16: 	28 
     -- CP-element group 16: 	47 
+    -- CP-element group 16: 	30 
     -- CP-element group 16:  members (1) 
       -- CP-element group 16: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/back_edge_to_loop_body
       -- 
@@ -23889,8 +23858,8 @@ begin --
     -- CP-element group 17: predecessors 
     -- CP-element group 17: 	11 
     -- CP-element group 17: successors 
-    -- CP-element group 17: 	30 
     -- CP-element group 17: 	49 
+    -- CP-element group 17: 	32 
     -- CP-element group 17:  members (1) 
       -- CP-element group 17: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/first_time_through_loop_body
       -- 
@@ -23898,13 +23867,13 @@ begin --
     -- CP-element group 18:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 18: predecessors 
     -- CP-element group 18: successors 
-    -- CP-element group 18: 	67 
     -- CP-element group 18: 	68 
+    -- CP-element group 18: 	44 
+    -- CP-element group 18: 	43 
     -- CP-element group 18: 	24 
     -- CP-element group 18: 	25 
+    -- CP-element group 18: 	67 
     -- CP-element group 18: 	89 
-    -- CP-element group 18: 	41 
-    -- CP-element group 18: 	42 
     -- CP-element group 18:  members (2) 
       -- CP-element group 18: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/$entry
       -- CP-element group 18: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/loop_body_start
@@ -23912,9 +23881,9 @@ begin --
     -- Element group loadKernelChannel_CP_671_elements(18) is bound as output of CP function.
     -- CP-element group 19:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 19: predecessors 
-    -- CP-element group 19: 	27 
-    -- CP-element group 19: 	89 
     -- CP-element group 19: 	23 
+    -- CP-element group 19: 	29 
+    -- CP-element group 19: 	89 
     -- CP-element group 19: successors 
     -- CP-element group 19: 	14 
     -- CP-element group 19:  members (1) 
@@ -23930,21 +23899,21 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_19"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(27) & loadKernelChannel_CP_671_elements(89) & loadKernelChannel_CP_671_elements(23);
+      preds <= loadKernelChannel_CP_671_elements(23) & loadKernelChannel_CP_671_elements(29) & loadKernelChannel_CP_671_elements(89);
       gj_loadKernelChannel_cp_element_group_19 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(19), clk => clk, reset => reset); --
     end block;
     -- CP-element group 20:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 20: predecessors 
+    -- CP-element group 20: 	43 
     -- CP-element group 20: 	24 
-    -- CP-element group 20: 	41 
     -- CP-element group 20: marked-predecessors 
     -- CP-element group 20: 	23 
     -- CP-element group 20: successors 
-    -- CP-element group 20: 	43 
+    -- CP-element group 20: 	26 
     -- CP-element group 20:  members (2) 
+      -- CP-element group 20: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_sample_start__ps
       -- CP-element group 20: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/aggregated_phi_sample_req
-      -- CP-element group 20: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_sample_start__ps
       -- 
     loadKernelChannel_cp_element_group_20: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 15,2 => 1);
@@ -23953,22 +23922,22 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_20"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(24) & loadKernelChannel_CP_671_elements(41) & loadKernelChannel_CP_671_elements(23);
+      preds <= loadKernelChannel_CP_671_elements(43) & loadKernelChannel_CP_671_elements(24) & loadKernelChannel_CP_671_elements(23);
       gj_loadKernelChannel_cp_element_group_20 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(20), clk => clk, reset => reset); --
     end block;
     -- CP-element group 21:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 21: predecessors 
-    -- CP-element group 21: 	26 
-    -- CP-element group 21: 	44 
+    -- CP-element group 21: 	45 
+    -- CP-element group 21: 	27 
     -- CP-element group 21: successors 
-    -- CP-element group 21: 	78 
-    -- CP-element group 21: 	86 
     -- CP-element group 21: 	90 
     -- CP-element group 21: 	82 
+    -- CP-element group 21: 	86 
+    -- CP-element group 21: 	78 
     -- CP-element group 21: marked-successors 
+    -- CP-element group 21: 	43 
     -- CP-element group 21: 	24 
-    -- CP-element group 21: 	41 
     -- CP-element group 21:  members (3) 
       -- CP-element group 21: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_sample_completed_
       -- CP-element group 21: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/aggregated_phi_sample_ack
@@ -23981,19 +23950,19 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_21"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(26) & loadKernelChannel_CP_671_elements(44);
+      preds <= loadKernelChannel_CP_671_elements(45) & loadKernelChannel_CP_671_elements(27);
       gj_loadKernelChannel_cp_element_group_21 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(21), clk => clk, reset => reset); --
     end block;
     -- CP-element group 22:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 22: predecessors 
+    -- CP-element group 22: 	44 
     -- CP-element group 22: 	25 
-    -- CP-element group 22: 	42 
     -- CP-element group 22: successors 
-    -- CP-element group 22: 	45 
+    -- CP-element group 22: 	28 
     -- CP-element group 22:  members (2) 
+      -- CP-element group 22: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_update_start__ps
       -- CP-element group 22: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/aggregated_phi_update_req
-      -- CP-element group 22: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_update_start__ps
       -- 
     loadKernelChannel_cp_element_group_22: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 15);
@@ -24002,14 +23971,14 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_22"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(25) & loadKernelChannel_CP_671_elements(42);
+      preds <= loadKernelChannel_CP_671_elements(44) & loadKernelChannel_CP_671_elements(25);
       gj_loadKernelChannel_cp_element_group_22 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(22), clk => clk, reset => reset); --
     end block;
     -- CP-element group 23:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 23: predecessors 
-    -- CP-element group 23: 	27 
     -- CP-element group 23: 	46 
+    -- CP-element group 23: 	29 
     -- CP-element group 23: successors 
     -- CP-element group 23: 	19 
     -- CP-element group 23: marked-successors 
@@ -24024,7 +23993,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_23"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(27) & loadKernelChannel_CP_671_elements(46);
+      preds <= loadKernelChannel_CP_671_elements(46) & loadKernelChannel_CP_671_elements(29);
       gj_loadKernelChannel_cp_element_group_23 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(23), clk => clk, reset => reset); --
     end block;
@@ -24053,11 +24022,11 @@ begin --
     -- CP-element group 25: predecessors 
     -- CP-element group 25: 	18 
     -- CP-element group 25: marked-predecessors 
-    -- CP-element group 25: 	75 
     -- CP-element group 25: 	69 
-    -- CP-element group 25: 	61 
+    -- CP-element group 25: 	29 
     -- CP-element group 25: 	64 
-    -- CP-element group 25: 	27 
+    -- CP-element group 25: 	61 
+    -- CP-element group 25: 	75 
     -- CP-element group 25: 	83 
     -- CP-element group 25: successors 
     -- CP-element group 25: 	22 
@@ -24067,292 +24036,292 @@ begin --
     loadKernelChannel_cp_element_group_25: block -- 
       constant place_capacities: IntegerArray(0 to 6) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1,5 => 1,6 => 1);
       constant place_markings: IntegerArray(0 to 6)  := (0 => 0,1 => 1,2 => 1,3 => 1,4 => 1,5 => 1,6 => 1);
-      constant place_delays: IntegerArray(0 to 6) := (0 => 0,1 => 0,2 => 1,3 => 0,4 => 0,5 => 0,6 => 0);
+      constant place_delays: IntegerArray(0 to 6) := (0 => 0,1 => 1,2 => 0,3 => 0,4 => 0,5 => 0,6 => 0);
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_25"; 
       signal preds: BooleanArray(1 to 7); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(75) & loadKernelChannel_CP_671_elements(69) & loadKernelChannel_CP_671_elements(61) & loadKernelChannel_CP_671_elements(64) & loadKernelChannel_CP_671_elements(27) & loadKernelChannel_CP_671_elements(83);
+      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(69) & loadKernelChannel_CP_671_elements(29) & loadKernelChannel_CP_671_elements(64) & loadKernelChannel_CP_671_elements(61) & loadKernelChannel_CP_671_elements(75) & loadKernelChannel_CP_671_elements(83);
       gj_loadKernelChannel_cp_element_group_25 : generic_join generic map(name => joinName, number_of_predecessors => 7, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(25), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 26:  join  transition  bypass  pipeline-parent 
+    -- CP-element group 26:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 26: predecessors 
+    -- CP-element group 26: 	20 
     -- CP-element group 26: successors 
-    -- CP-element group 26: 	21 
     -- CP-element group 26:  members (1) 
-      -- CP-element group 26: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_sample_completed__ps
+      -- CP-element group 26: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_sample_start__ps
       -- 
-    -- Element group loadKernelChannel_CP_671_elements(26) is bound as output of CP function.
-    -- CP-element group 27:  fork  transition  output  bypass  pipeline-parent 
+    loadKernelChannel_CP_671_elements(26) <= loadKernelChannel_CP_671_elements(20);
+    -- CP-element group 27:  join  transition  bypass  pipeline-parent 
     -- CP-element group 27: predecessors 
     -- CP-element group 27: successors 
-    -- CP-element group 27: 	69 
-    -- CP-element group 27: 	73 
-    -- CP-element group 27: 	63 
-    -- CP-element group 27: 	81 
-    -- CP-element group 27: 	60 
-    -- CP-element group 27: 	19 
-    -- CP-element group 27: 	23 
-    -- CP-element group 27: marked-successors 
-    -- CP-element group 27: 	25 
-    -- CP-element group 27:  members (15) 
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_final_index_sum_regn_Sample/$entry
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_final_index_sum_regn_Sample/req
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resized_1
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scaled_1
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_computed_1
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/$entry
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/scale_rename_ack
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/$exit
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/index_resize_req
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/index_resize_ack
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/$entry
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/$exit
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/scale_rename_req
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_update_completed_
-      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_update_completed__ps
+    -- CP-element group 27: 	21 
+    -- CP-element group 27:  members (1) 
+      -- CP-element group 27: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_sample_completed__ps
       -- 
-    req_974_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_974_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(27), ack => array_obj_ref_412_index_offset_req_0); -- 
     -- Element group loadKernelChannel_CP_671_elements(27) is bound as output of CP function.
     -- CP-element group 28:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 28: predecessors 
-    -- CP-element group 28: 	16 
+    -- CP-element group 28: 	22 
     -- CP-element group 28: successors 
     -- CP-element group 28:  members (1) 
-      -- CP-element group 28: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_loopback_trigger
+      -- CP-element group 28: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_update_start__ps
       -- 
-    loadKernelChannel_CP_671_elements(28) <= loadKernelChannel_CP_671_elements(16);
+    loadKernelChannel_CP_671_elements(28) <= loadKernelChannel_CP_671_elements(22);
     -- CP-element group 29:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 29: predecessors 
     -- CP-element group 29: successors 
-    -- CP-element group 29:  members (2) 
-      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_loopback_sample_req
-      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_loopback_sample_req_ps
+    -- CP-element group 29: 	69 
+    -- CP-element group 29: 	19 
+    -- CP-element group 29: 	23 
+    -- CP-element group 29: 	60 
+    -- CP-element group 29: 	63 
+    -- CP-element group 29: 	73 
+    -- CP-element group 29: 	81 
+    -- CP-element group 29: marked-successors 
+    -- CP-element group 29: 	25 
+    -- CP-element group 29:  members (15) 
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_final_index_sum_regn_Sample/$entry
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_final_index_sum_regn_Sample/req
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resized_1
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scaled_1
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_computed_1
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/$entry
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/scale_rename_ack
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/$exit
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/index_resize_req
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_resize_1/index_resize_ack
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/$entry
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/$exit
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/array_obj_ref_412_index_scale_1/scale_rename_req
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_update_completed_
+      -- CP-element group 29: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_update_completed__ps
       -- 
-    phi_stmt_362_loopback_sample_req_823_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_362_loopback_sample_req_823_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(29), ack => phi_stmt_362_req_0); -- 
+    req_974_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_974_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(29), ack => array_obj_ref_412_index_offset_req_0); -- 
     -- Element group loadKernelChannel_CP_671_elements(29) is bound as output of CP function.
     -- CP-element group 30:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 30: predecessors 
-    -- CP-element group 30: 	17 
+    -- CP-element group 30: 	16 
     -- CP-element group 30: successors 
     -- CP-element group 30:  members (1) 
-      -- CP-element group 30: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_entry_trigger
+      -- CP-element group 30: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_loopback_trigger
       -- 
-    loadKernelChannel_CP_671_elements(30) <= loadKernelChannel_CP_671_elements(17);
+    loadKernelChannel_CP_671_elements(30) <= loadKernelChannel_CP_671_elements(16);
     -- CP-element group 31:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 31: predecessors 
     -- CP-element group 31: successors 
     -- CP-element group 31:  members (2) 
-      -- CP-element group 31: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_entry_sample_req
-      -- CP-element group 31: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_entry_sample_req_ps
+      -- CP-element group 31: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_loopback_sample_req
+      -- CP-element group 31: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_loopback_sample_req_ps
+      -- 
+    phi_stmt_362_loopback_sample_req_823_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_362_loopback_sample_req_823_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(31), ack => phi_stmt_362_req_0); -- 
+    -- Element group loadKernelChannel_CP_671_elements(31) is bound as output of CP function.
+    -- CP-element group 32:  fork  transition  bypass  pipeline-parent 
+    -- CP-element group 32: predecessors 
+    -- CP-element group 32: 	17 
+    -- CP-element group 32: successors 
+    -- CP-element group 32:  members (1) 
+      -- CP-element group 32: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_entry_trigger
+      -- 
+    loadKernelChannel_CP_671_elements(32) <= loadKernelChannel_CP_671_elements(17);
+    -- CP-element group 33:  fork  transition  output  bypass  pipeline-parent 
+    -- CP-element group 33: predecessors 
+    -- CP-element group 33: successors 
+    -- CP-element group 33:  members (2) 
+      -- CP-element group 33: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_entry_sample_req
+      -- CP-element group 33: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_entry_sample_req_ps
       -- 
     phi_stmt_362_entry_sample_req_826_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_362_entry_sample_req_826_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(31), ack => phi_stmt_362_req_1); -- 
-    -- Element group loadKernelChannel_CP_671_elements(31) is bound as output of CP function.
-    -- CP-element group 32:  join  transition  input  bypass  pipeline-parent 
-    -- CP-element group 32: predecessors 
-    -- CP-element group 32: successors 
-    -- CP-element group 32:  members (2) 
-      -- CP-element group 32: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_phi_mux_ack
-      -- CP-element group 32: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_phi_mux_ack_ps
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(33), ack => phi_stmt_362_req_1); -- 
+    -- Element group loadKernelChannel_CP_671_elements(33) is bound as output of CP function.
+    -- CP-element group 34:  join  transition  input  bypass  pipeline-parent 
+    -- CP-element group 34: predecessors 
+    -- CP-element group 34: successors 
+    -- CP-element group 34:  members (2) 
+      -- CP-element group 34: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_phi_mux_ack
+      -- CP-element group 34: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_362_phi_mux_ack_ps
       -- 
     phi_stmt_362_phi_mux_ack_829_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 32_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => phi_stmt_362_ack_0, ack => loadKernelChannel_CP_671_elements(32)); -- 
-    -- CP-element group 33:  join  fork  transition  output  bypass  pipeline-parent 
-    -- CP-element group 33: predecessors 
-    -- CP-element group 33: successors 
-    -- CP-element group 33: 	35 
-    -- CP-element group 33:  members (4) 
-      -- CP-element group 33: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_start__ps
-      -- CP-element group 33: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_start_
-      -- CP-element group 33: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/$entry
-      -- CP-element group 33: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/req
+      generic map(name => " 34_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => phi_stmt_362_ack_0, ack => loadKernelChannel_CP_671_elements(34)); -- 
+    -- CP-element group 35:  join  fork  transition  output  bypass  pipeline-parent 
+    -- CP-element group 35: predecessors 
+    -- CP-element group 35: successors 
+    -- CP-element group 35: 	37 
+    -- CP-element group 35:  members (4) 
+      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_start__ps
+      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_start_
+      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/$entry
+      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/req
       -- 
     req_842_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_842_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(33), ack => nmycount_384_364_buf_req_0); -- 
-    -- Element group loadKernelChannel_CP_671_elements(33) is bound as output of CP function.
-    -- CP-element group 34:  join  fork  transition  output  bypass  pipeline-parent 
-    -- CP-element group 34: predecessors 
-    -- CP-element group 34: successors 
-    -- CP-element group 34: 	36 
-    -- CP-element group 34:  members (4) 
-      -- CP-element group 34: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_start__ps
-      -- CP-element group 34: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_start_
-      -- CP-element group 34: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/$entry
-      -- CP-element group 34: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/req
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(35), ack => nmycount_384_364_buf_req_0); -- 
+    -- Element group loadKernelChannel_CP_671_elements(35) is bound as output of CP function.
+    -- CP-element group 36:  join  fork  transition  output  bypass  pipeline-parent 
+    -- CP-element group 36: predecessors 
+    -- CP-element group 36: successors 
+    -- CP-element group 36: 	38 
+    -- CP-element group 36:  members (4) 
+      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_start__ps
+      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_start_
+      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/$entry
+      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/req
       -- 
     req_847_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_847_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(34), ack => nmycount_384_364_buf_req_1); -- 
-    -- Element group loadKernelChannel_CP_671_elements(34) is bound as output of CP function.
-    -- CP-element group 35:  join  transition  input  bypass  pipeline-parent 
-    -- CP-element group 35: predecessors 
-    -- CP-element group 35: 	33 
-    -- CP-element group 35: successors 
-    -- CP-element group 35:  members (4) 
-      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_completed__ps
-      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_completed_
-      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/$exit
-      -- CP-element group 35: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/ack
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(36), ack => nmycount_384_364_buf_req_1); -- 
+    -- Element group loadKernelChannel_CP_671_elements(36) is bound as output of CP function.
+    -- CP-element group 37:  join  transition  input  bypass  pipeline-parent 
+    -- CP-element group 37: predecessors 
+    -- CP-element group 37: 	35 
+    -- CP-element group 37: successors 
+    -- CP-element group 37:  members (4) 
+      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_completed__ps
+      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_sample_completed_
+      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/$exit
+      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Sample/ack
       -- 
     ack_843_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 35_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => nmycount_384_364_buf_ack_0, ack => loadKernelChannel_CP_671_elements(35)); -- 
-    -- CP-element group 36:  join  transition  input  bypass  pipeline-parent 
-    -- CP-element group 36: predecessors 
-    -- CP-element group 36: 	34 
-    -- CP-element group 36: successors 
-    -- CP-element group 36:  members (4) 
-      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_completed__ps
-      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_completed_
-      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/$exit
-      -- CP-element group 36: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/ack
+      generic map(name => " 37_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => nmycount_384_364_buf_ack_0, ack => loadKernelChannel_CP_671_elements(37)); -- 
+    -- CP-element group 38:  join  transition  input  bypass  pipeline-parent 
+    -- CP-element group 38: predecessors 
+    -- CP-element group 38: 	36 
+    -- CP-element group 38: successors 
+    -- CP-element group 38:  members (4) 
+      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_completed__ps
+      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_update_completed_
+      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/$exit
+      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_nmycount_364_Update/ack
       -- 
     ack_848_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 36_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => nmycount_384_364_buf_ack_1, ack => loadKernelChannel_CP_671_elements(36)); -- 
-    -- CP-element group 37:  join  fork  transition  output  bypass  pipeline-parent 
-    -- CP-element group 37: predecessors 
-    -- CP-element group 37: successors 
-    -- CP-element group 37: 	39 
-    -- CP-element group 37:  members (4) 
-      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_start__ps
-      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_start_
-      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/$entry
-      -- CP-element group 37: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/req
+      generic map(name => " 38_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => nmycount_384_364_buf_ack_1, ack => loadKernelChannel_CP_671_elements(38)); -- 
+    -- CP-element group 39:  join  fork  transition  output  bypass  pipeline-parent 
+    -- CP-element group 39: predecessors 
+    -- CP-element group 39: successors 
+    -- CP-element group 39: 	41 
+    -- CP-element group 39:  members (4) 
+      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_start__ps
+      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_start_
+      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/$entry
+      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/req
       -- 
     req_860_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_860_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(37), ack => start_add_365_buf_req_0); -- 
-    -- Element group loadKernelChannel_CP_671_elements(37) is bound as output of CP function.
-    -- CP-element group 38:  join  fork  transition  output  bypass  pipeline-parent 
-    -- CP-element group 38: predecessors 
-    -- CP-element group 38: successors 
-    -- CP-element group 38: 	40 
-    -- CP-element group 38:  members (4) 
-      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/req
-      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_start__ps
-      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_start_
-      -- CP-element group 38: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/$entry
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(39), ack => start_add_365_buf_req_0); -- 
+    -- Element group loadKernelChannel_CP_671_elements(39) is bound as output of CP function.
+    -- CP-element group 40:  join  fork  transition  output  bypass  pipeline-parent 
+    -- CP-element group 40: predecessors 
+    -- CP-element group 40: successors 
+    -- CP-element group 40: 	42 
+    -- CP-element group 40:  members (4) 
+      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/req
+      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_start__ps
+      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_start_
+      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/$entry
       -- 
     req_865_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_865_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(38), ack => start_add_365_buf_req_1); -- 
-    -- Element group loadKernelChannel_CP_671_elements(38) is bound as output of CP function.
-    -- CP-element group 39:  join  transition  input  bypass  pipeline-parent 
-    -- CP-element group 39: predecessors 
-    -- CP-element group 39: 	37 
-    -- CP-element group 39: successors 
-    -- CP-element group 39:  members (4) 
-      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_completed__ps
-      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_completed_
-      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/$exit
-      -- CP-element group 39: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/ack
+      port map(clk => clk, reset => reset, req => loadKernelChannel_CP_671_elements(40), ack => start_add_365_buf_req_1); -- 
+    -- Element group loadKernelChannel_CP_671_elements(40) is bound as output of CP function.
+    -- CP-element group 41:  join  transition  input  bypass  pipeline-parent 
+    -- CP-element group 41: predecessors 
+    -- CP-element group 41: 	39 
+    -- CP-element group 41: successors 
+    -- CP-element group 41:  members (4) 
+      -- CP-element group 41: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_completed__ps
+      -- CP-element group 41: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_sample_completed_
+      -- CP-element group 41: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/$exit
+      -- CP-element group 41: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Sample/ack
       -- 
     ack_861_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 39_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => start_add_365_buf_ack_0, ack => loadKernelChannel_CP_671_elements(39)); -- 
-    -- CP-element group 40:  join  transition  input  bypass  pipeline-parent 
-    -- CP-element group 40: predecessors 
-    -- CP-element group 40: 	38 
-    -- CP-element group 40: successors 
-    -- CP-element group 40:  members (4) 
-      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/ack
-      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/$exit
-      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_completed__ps
-      -- CP-element group 40: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_completed_
+      generic map(name => " 41_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => start_add_365_buf_ack_0, ack => loadKernelChannel_CP_671_elements(41)); -- 
+    -- CP-element group 42:  join  transition  input  bypass  pipeline-parent 
+    -- CP-element group 42: predecessors 
+    -- CP-element group 42: 	40 
+    -- CP-element group 42: successors 
+    -- CP-element group 42:  members (4) 
+      -- CP-element group 42: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/ack
+      -- CP-element group 42: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_Update/$exit
+      -- CP-element group 42: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_completed__ps
+      -- CP-element group 42: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/R_start_add_365_update_completed_
       -- 
     ack_866_symbol_link_from_dp: control_delay_element -- 
-      generic map(name => " 40_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => start_add_365_buf_ack_1, ack => loadKernelChannel_CP_671_elements(40)); -- 
-    -- CP-element group 41:  join  transition  bypass  pipeline-parent 
-    -- CP-element group 41: predecessors 
-    -- CP-element group 41: 	18 
-    -- CP-element group 41: marked-predecessors 
-    -- CP-element group 41: 	84 
-    -- CP-element group 41: 	88 
-    -- CP-element group 41: 	80 
-    -- CP-element group 41: 	21 
-    -- CP-element group 41: successors 
-    -- CP-element group 41: 	20 
-    -- CP-element group 41:  members (1) 
-      -- CP-element group 41: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_sample_start_
+      generic map(name => " 42_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => start_add_365_buf_ack_1, ack => loadKernelChannel_CP_671_elements(42)); -- 
+    -- CP-element group 43:  join  transition  bypass  pipeline-parent 
+    -- CP-element group 43: predecessors 
+    -- CP-element group 43: 	18 
+    -- CP-element group 43: marked-predecessors 
+    -- CP-element group 43: 	80 
+    -- CP-element group 43: 	21 
+    -- CP-element group 43: 	88 
+    -- CP-element group 43: 	84 
+    -- CP-element group 43: successors 
+    -- CP-element group 43: 	20 
+    -- CP-element group 43:  members (1) 
+      -- CP-element group 43: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_sample_start_
       -- 
-    loadKernelChannel_cp_element_group_41: block -- 
+    loadKernelChannel_cp_element_group_43: block -- 
       constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 1,2 => 1,3 => 1,4 => 1);
-      constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 1);
-      constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_41"; 
+      constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 1,3 => 0,4 => 0);
+      constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_43"; 
       signal preds: BooleanArray(1 to 5); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(84) & loadKernelChannel_CP_671_elements(88) & loadKernelChannel_CP_671_elements(80) & loadKernelChannel_CP_671_elements(21);
-      gj_loadKernelChannel_cp_element_group_41 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(41), clk => clk, reset => reset); --
+      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(80) & loadKernelChannel_CP_671_elements(21) & loadKernelChannel_CP_671_elements(88) & loadKernelChannel_CP_671_elements(84);
+      gj_loadKernelChannel_cp_element_group_43 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(43), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 42:  join  transition  bypass  pipeline-parent 
-    -- CP-element group 42: predecessors 
-    -- CP-element group 42: 	18 
-    -- CP-element group 42: marked-predecessors 
-    -- CP-element group 42: 	61 
-    -- CP-element group 42: 	64 
-    -- CP-element group 42: 	87 
-    -- CP-element group 42: 	46 
-    -- CP-element group 42: successors 
-    -- CP-element group 42: 	22 
-    -- CP-element group 42:  members (1) 
-      -- CP-element group 42: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_update_start_
+    -- CP-element group 44:  join  transition  bypass  pipeline-parent 
+    -- CP-element group 44: predecessors 
+    -- CP-element group 44: 	18 
+    -- CP-element group 44: marked-predecessors 
+    -- CP-element group 44: 	46 
+    -- CP-element group 44: 	64 
+    -- CP-element group 44: 	61 
+    -- CP-element group 44: 	87 
+    -- CP-element group 44: successors 
+    -- CP-element group 44: 	22 
+    -- CP-element group 44:  members (1) 
+      -- CP-element group 44: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_update_start_
       -- 
-    loadKernelChannel_cp_element_group_42: block -- 
+    loadKernelChannel_cp_element_group_44: block -- 
       constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 1,2 => 1,3 => 1,4 => 1);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 1,2 => 1,3 => 1,4 => 1);
       constant place_delays: IntegerArray(0 to 4) := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
-      constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_42"; 
+      constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_44"; 
       signal preds: BooleanArray(1 to 5); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(61) & loadKernelChannel_CP_671_elements(64) & loadKernelChannel_CP_671_elements(87) & loadKernelChannel_CP_671_elements(46);
-      gj_loadKernelChannel_cp_element_group_42 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(42), clk => clk, reset => reset); --
+      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(46) & loadKernelChannel_CP_671_elements(64) & loadKernelChannel_CP_671_elements(61) & loadKernelChannel_CP_671_elements(87);
+      gj_loadKernelChannel_cp_element_group_44 : generic_join generic map(name => joinName, number_of_predecessors => 5, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
+        port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(44), clk => clk, reset => reset); --
     end block;
-    -- CP-element group 43:  fork  transition  bypass  pipeline-parent 
-    -- CP-element group 43: predecessors 
-    -- CP-element group 43: 	20 
-    -- CP-element group 43: successors 
-    -- CP-element group 43:  members (1) 
-      -- CP-element group 43: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_sample_start__ps
-      -- 
-    loadKernelChannel_CP_671_elements(43) <= loadKernelChannel_CP_671_elements(20);
-    -- CP-element group 44:  join  transition  bypass  pipeline-parent 
-    -- CP-element group 44: predecessors 
-    -- CP-element group 44: successors 
-    -- CP-element group 44: 	21 
-    -- CP-element group 44:  members (1) 
-      -- CP-element group 44: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_sample_completed__ps
-      -- 
-    -- Element group loadKernelChannel_CP_671_elements(44) is bound as output of CP function.
-    -- CP-element group 45:  fork  transition  bypass  pipeline-parent 
+    -- CP-element group 45:  join  transition  bypass  pipeline-parent 
     -- CP-element group 45: predecessors 
-    -- CP-element group 45: 	22 
     -- CP-element group 45: successors 
+    -- CP-element group 45: 	21 
     -- CP-element group 45:  members (1) 
-      -- CP-element group 45: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_update_start__ps
+      -- CP-element group 45: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_sample_completed__ps
       -- 
-    loadKernelChannel_CP_671_elements(45) <= loadKernelChannel_CP_671_elements(22);
+    -- Element group loadKernelChannel_CP_671_elements(45) is bound as output of CP function.
     -- CP-element group 46:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 46: predecessors 
     -- CP-element group 46: successors 
+    -- CP-element group 46: 	23 
+    -- CP-element group 46: 	60 
     -- CP-element group 46: 	63 
     -- CP-element group 46: 	85 
-    -- CP-element group 46: 	60 
-    -- CP-element group 46: 	23 
     -- CP-element group 46: marked-successors 
-    -- CP-element group 46: 	42 
+    -- CP-element group 46: 	44 
     -- CP-element group 46:  members (2) 
       -- CP-element group 46: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_update_completed__ps
       -- CP-element group 46: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/phi_stmt_366_update_completed_
@@ -24516,8 +24485,8 @@ begin --
       port map(clk => clk, reset => reset, req => my_fetch_349_369_buf_ack_1, ack => loadKernelChannel_CP_671_elements(59)); -- 
     -- CP-element group 60:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 60: predecessors 
-    -- CP-element group 60: 	27 
     -- CP-element group 60: 	46 
+    -- CP-element group 60: 	29 
     -- CP-element group 60: marked-predecessors 
     -- CP-element group 60: 	62 
     -- CP-element group 60: successors 
@@ -24537,7 +24506,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_60"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(27) & loadKernelChannel_CP_671_elements(46) & loadKernelChannel_CP_671_elements(62);
+      preds <= loadKernelChannel_CP_671_elements(46) & loadKernelChannel_CP_671_elements(29) & loadKernelChannel_CP_671_elements(62);
       gj_loadKernelChannel_cp_element_group_60 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(60), clk => clk, reset => reset); --
     end block;
@@ -24547,8 +24516,8 @@ begin --
     -- CP-element group 61: successors 
     -- CP-element group 61: 	62 
     -- CP-element group 61: marked-successors 
+    -- CP-element group 61: 	44 
     -- CP-element group 61: 	25 
-    -- CP-element group 61: 	42 
     -- CP-element group 61:  members (6) 
       -- CP-element group 61: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/WPIPE_kernel_pipe1_392_update_start_
       -- CP-element group 61: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/WPIPE_kernel_pipe1_392_Sample/$exit
@@ -24580,8 +24549,8 @@ begin --
       port map(clk => clk, reset => reset, req => WPIPE_kernel_pipe1_392_inst_ack_1, ack => loadKernelChannel_CP_671_elements(62)); -- 
     -- CP-element group 63:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 63: predecessors 
-    -- CP-element group 63: 	27 
     -- CP-element group 63: 	46 
+    -- CP-element group 63: 	29 
     -- CP-element group 63: marked-predecessors 
     -- CP-element group 63: 	65 
     -- CP-element group 63: successors 
@@ -24601,7 +24570,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_63"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(27) & loadKernelChannel_CP_671_elements(46) & loadKernelChannel_CP_671_elements(65);
+      preds <= loadKernelChannel_CP_671_elements(46) & loadKernelChannel_CP_671_elements(29) & loadKernelChannel_CP_671_elements(65);
       gj_loadKernelChannel_cp_element_group_63 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(63), clk => clk, reset => reset); --
     end block;
@@ -24611,8 +24580,8 @@ begin --
     -- CP-element group 64: successors 
     -- CP-element group 64: 	65 
     -- CP-element group 64: marked-successors 
+    -- CP-element group 64: 	44 
     -- CP-element group 64: 	25 
-    -- CP-element group 64: 	42 
     -- CP-element group 64:  members (6) 
       -- CP-element group 64: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/WPIPE_kernel_pipe2_396_Sample/$exit
       -- CP-element group 64: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/WPIPE_kernel_pipe2_396_Update/req
@@ -24672,8 +24641,8 @@ begin --
     -- CP-element group 67: predecessors 
     -- CP-element group 67: 	18 
     -- CP-element group 67: marked-predecessors 
-    -- CP-element group 67: 	72 
     -- CP-element group 67: 	79 
+    -- CP-element group 67: 	72 
     -- CP-element group 67: successors 
     -- CP-element group 67: 	72 
     -- CP-element group 67:  members (3) 
@@ -24691,7 +24660,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_67"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(72) & loadKernelChannel_CP_671_elements(79);
+      preds <= loadKernelChannel_CP_671_elements(18) & loadKernelChannel_CP_671_elements(79) & loadKernelChannel_CP_671_elements(72);
       gj_loadKernelChannel_cp_element_group_67 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(67), clk => clk, reset => reset); --
     end block;
@@ -24724,7 +24693,7 @@ begin --
     end block;
     -- CP-element group 69:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 69: predecessors 
-    -- CP-element group 69: 	27 
+    -- CP-element group 69: 	29 
     -- CP-element group 69: successors 
     -- CP-element group 69: 	90 
     -- CP-element group 69: marked-successors 
@@ -24762,8 +24731,8 @@ begin --
     -- CP-element group 71: 	66 
     -- CP-element group 71: successors 
     -- CP-element group 71: marked-successors 
-    -- CP-element group 71: 	66 
     -- CP-element group 71: 	68 
+    -- CP-element group 71: 	66 
     -- CP-element group 71:  members (3) 
       -- CP-element group 71: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/addr_of_413_sample_completed_
       -- CP-element group 71: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/addr_of_413_request/$exit
@@ -24805,7 +24774,7 @@ begin --
       port map(clk => clk, reset => reset, req => addr_of_413_final_reg_ack_1, ack => loadKernelChannel_CP_671_elements(72)); -- 
     -- CP-element group 73:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 73: predecessors 
-    -- CP-element group 73: 	27 
+    -- CP-element group 73: 	29 
     -- CP-element group 73: marked-predecessors 
     -- CP-element group 73: 	75 
     -- CP-element group 73: successors 
@@ -24825,15 +24794,15 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_73"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(27) & loadKernelChannel_CP_671_elements(75);
+      preds <= loadKernelChannel_CP_671_elements(29) & loadKernelChannel_CP_671_elements(75);
       gj_loadKernelChannel_cp_element_group_73 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(73), clk => clk, reset => reset); --
     end block;
     -- CP-element group 74:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 74: predecessors 
     -- CP-element group 74: marked-predecessors 
-    -- CP-element group 74: 	76 
     -- CP-element group 74: 	79 
+    -- CP-element group 74: 	76 
     -- CP-element group 74: successors 
     -- CP-element group 74: 	76 
     -- CP-element group 74:  members (3) 
@@ -24851,7 +24820,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_74"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(76) & loadKernelChannel_CP_671_elements(79);
+      preds <= loadKernelChannel_CP_671_elements(79) & loadKernelChannel_CP_671_elements(76);
       gj_loadKernelChannel_cp_element_group_74 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(74), clk => clk, reset => reset); --
     end block;
@@ -24860,8 +24829,8 @@ begin --
     -- CP-element group 75: 	73 
     -- CP-element group 75: successors 
     -- CP-element group 75: marked-successors 
-    -- CP-element group 75: 	73 
     -- CP-element group 75: 	25 
+    -- CP-element group 75: 	73 
     -- CP-element group 75:  members (3) 
       -- CP-element group 75: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_417_Sample/ack
       -- CP-element group 75: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_417_sample_completed_
@@ -24887,8 +24856,8 @@ begin --
       port map(clk => clk, reset => reset, req => W_fn_403_delayed_7_0_415_inst_ack_1, ack => loadKernelChannel_CP_671_elements(76)); -- 
     -- CP-element group 77:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 77: predecessors 
-    -- CP-element group 77: 	76 
     -- CP-element group 77: 	72 
+    -- CP-element group 77: 	76 
     -- CP-element group 77: marked-predecessors 
     -- CP-element group 77: 	79 
     -- CP-element group 77: successors 
@@ -24910,7 +24879,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_77"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(76) & loadKernelChannel_CP_671_elements(72) & loadKernelChannel_CP_671_elements(79);
+      preds <= loadKernelChannel_CP_671_elements(72) & loadKernelChannel_CP_671_elements(76) & loadKernelChannel_CP_671_elements(79);
       gj_loadKernelChannel_cp_element_group_77 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(77), clk => clk, reset => reset); --
     end block;
@@ -24947,9 +24916,9 @@ begin --
     -- CP-element group 79: 	77 
     -- CP-element group 79: successors 
     -- CP-element group 79: marked-successors 
+    -- CP-element group 79: 	67 
     -- CP-element group 79: 	74 
     -- CP-element group 79: 	77 
-    -- CP-element group 79: 	67 
     -- CP-element group 79:  members (5) 
       -- CP-element group 79: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/ptr_deref_421_sample_completed_
       -- CP-element group 79: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/ptr_deref_421_Sample/$exit
@@ -24966,8 +24935,8 @@ begin --
     -- CP-element group 80: successors 
     -- CP-element group 80: 	90 
     -- CP-element group 80: marked-successors 
+    -- CP-element group 80: 	43 
     -- CP-element group 80: 	78 
-    -- CP-element group 80: 	41 
     -- CP-element group 80:  members (9) 
       -- CP-element group 80: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/ptr_deref_421_Update/word_access_complete/word_0/ca
       -- CP-element group 80: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/ptr_deref_421_Update/$exit
@@ -24984,7 +24953,7 @@ begin --
       port map(clk => clk, reset => reset, req => ptr_deref_421_load_0_ack_1, ack => loadKernelChannel_CP_671_elements(80)); -- 
     -- CP-element group 81:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 81: predecessors 
-    -- CP-element group 81: 	27 
+    -- CP-element group 81: 	29 
     -- CP-element group 81: marked-predecessors 
     -- CP-element group 81: 	83 
     -- CP-element group 81: successors 
@@ -25004,7 +24973,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_81"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(27) & loadKernelChannel_CP_671_elements(83);
+      preds <= loadKernelChannel_CP_671_elements(29) & loadKernelChannel_CP_671_elements(83);
       gj_loadKernelChannel_cp_element_group_81 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(81), clk => clk, reset => reset); --
     end block;
@@ -25055,8 +25024,8 @@ begin --
     -- CP-element group 84: successors 
     -- CP-element group 84: 	90 
     -- CP-element group 84: marked-successors 
+    -- CP-element group 84: 	43 
     -- CP-element group 84: 	82 
-    -- CP-element group 84: 	41 
     -- CP-element group 84:  members (3) 
       -- CP-element group 84: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_425_update_completed_
       -- CP-element group 84: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_425_Update/$exit
@@ -25122,8 +25091,8 @@ begin --
     -- CP-element group 87: 	85 
     -- CP-element group 87: successors 
     -- CP-element group 87: marked-successors 
+    -- CP-element group 87: 	44 
     -- CP-element group 87: 	85 
-    -- CP-element group 87: 	42 
     -- CP-element group 87:  members (3) 
       -- CP-element group 87: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_428_Sample/$exit
       -- CP-element group 87: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_428_sample_completed_
@@ -25138,8 +25107,8 @@ begin --
     -- CP-element group 88: successors 
     -- CP-element group 88: 	90 
     -- CP-element group 88: marked-successors 
+    -- CP-element group 88: 	43 
     -- CP-element group 88: 	86 
-    -- CP-element group 88: 	41 
     -- CP-element group 88:  members (3) 
       -- CP-element group 88: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_428_Update/$exit
       -- CP-element group 88: 	 branch_block_stmt_359/do_while_stmt_360/do_while_stmt_360_loop_body/assign_stmt_428_update_completed_
@@ -25160,13 +25129,13 @@ begin --
     cp_element_89_delay: control_delay_element  generic map(name => " 89_delay", delay_value => 1)  port map(req => loadKernelChannel_CP_671_elements(18), ack => loadKernelChannel_CP_671_elements(89), clk => clk, reset =>reset);
     -- CP-element group 90:  join  transition  bypass  pipeline-parent 
     -- CP-element group 90: predecessors 
-    -- CP-element group 90: 	69 
-    -- CP-element group 90: 	62 
-    -- CP-element group 90: 	65 
-    -- CP-element group 90: 	84 
-    -- CP-element group 90: 	88 
     -- CP-element group 90: 	80 
+    -- CP-element group 90: 	69 
     -- CP-element group 90: 	21 
+    -- CP-element group 90: 	65 
+    -- CP-element group 90: 	62 
+    -- CP-element group 90: 	88 
+    -- CP-element group 90: 	84 
     -- CP-element group 90: successors 
     -- CP-element group 90: 	15 
     -- CP-element group 90:  members (1) 
@@ -25179,7 +25148,7 @@ begin --
       constant joinName: string(1 to 37) := "loadKernelChannel_cp_element_group_90"; 
       signal preds: BooleanArray(1 to 7); -- 
     begin -- 
-      preds <= loadKernelChannel_CP_671_elements(69) & loadKernelChannel_CP_671_elements(62) & loadKernelChannel_CP_671_elements(65) & loadKernelChannel_CP_671_elements(84) & loadKernelChannel_CP_671_elements(88) & loadKernelChannel_CP_671_elements(80) & loadKernelChannel_CP_671_elements(21);
+      preds <= loadKernelChannel_CP_671_elements(80) & loadKernelChannel_CP_671_elements(69) & loadKernelChannel_CP_671_elements(21) & loadKernelChannel_CP_671_elements(65) & loadKernelChannel_CP_671_elements(62) & loadKernelChannel_CP_671_elements(88) & loadKernelChannel_CP_671_elements(84);
       gj_loadKernelChannel_cp_element_group_90 : generic_join generic map(name => joinName, number_of_predecessors => 7, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
         port map(preds => preds, symbol_out => loadKernelChannel_CP_671_elements(90), clk => clk, reset => reset); --
     end block;
@@ -25285,18 +25254,18 @@ begin --
       signal triggers, src_sample_reqs, src_sample_acks, src_update_reqs, src_update_acks : BooleanArray(0 to 1);
       signal phi_mux_reqs : BooleanArray(0 to 1); -- 
     begin -- 
-      triggers(0)  <= loadKernelChannel_CP_671_elements(28);
-      loadKernelChannel_CP_671_elements(33)<= src_sample_reqs(0);
-      src_sample_acks(0)  <= loadKernelChannel_CP_671_elements(35);
-      loadKernelChannel_CP_671_elements(34)<= src_update_reqs(0);
-      src_update_acks(0)  <= loadKernelChannel_CP_671_elements(36);
-      loadKernelChannel_CP_671_elements(29) <= phi_mux_reqs(0);
-      triggers(1)  <= loadKernelChannel_CP_671_elements(30);
-      loadKernelChannel_CP_671_elements(37)<= src_sample_reqs(1);
-      src_sample_acks(1)  <= loadKernelChannel_CP_671_elements(39);
-      loadKernelChannel_CP_671_elements(38)<= src_update_reqs(1);
-      src_update_acks(1)  <= loadKernelChannel_CP_671_elements(40);
-      loadKernelChannel_CP_671_elements(31) <= phi_mux_reqs(1);
+      triggers(0)  <= loadKernelChannel_CP_671_elements(30);
+      loadKernelChannel_CP_671_elements(35)<= src_sample_reqs(0);
+      src_sample_acks(0)  <= loadKernelChannel_CP_671_elements(37);
+      loadKernelChannel_CP_671_elements(36)<= src_update_reqs(0);
+      src_update_acks(0)  <= loadKernelChannel_CP_671_elements(38);
+      loadKernelChannel_CP_671_elements(31) <= phi_mux_reqs(0);
+      triggers(1)  <= loadKernelChannel_CP_671_elements(32);
+      loadKernelChannel_CP_671_elements(39)<= src_sample_reqs(1);
+      src_sample_acks(1)  <= loadKernelChannel_CP_671_elements(41);
+      loadKernelChannel_CP_671_elements(40)<= src_update_reqs(1);
+      src_update_acks(1)  <= loadKernelChannel_CP_671_elements(42);
+      loadKernelChannel_CP_671_elements(33) <= phi_mux_reqs(1);
       phi_stmt_362_phi_seq_867 : phi_sequencer_v2-- 
         generic map (place_capacity => 15, ntriggers => 2, name => "phi_stmt_362_phi_seq_867") 
         port map ( -- 
@@ -25304,11 +25273,11 @@ begin --
           src_sample_completes => src_sample_acks, src_update_starts => src_update_reqs, 
           src_update_completes => src_update_acks,
           phi_mux_select_reqs => phi_mux_reqs, 
-          phi_sample_req => loadKernelChannel_CP_671_elements(20), 
-          phi_sample_ack => loadKernelChannel_CP_671_elements(26), 
-          phi_update_req => loadKernelChannel_CP_671_elements(22), 
-          phi_update_ack => loadKernelChannel_CP_671_elements(27), 
-          phi_mux_ack => loadKernelChannel_CP_671_elements(32), 
+          phi_sample_req => loadKernelChannel_CP_671_elements(26), 
+          phi_sample_ack => loadKernelChannel_CP_671_elements(27), 
+          phi_update_req => loadKernelChannel_CP_671_elements(28), 
+          phi_update_ack => loadKernelChannel_CP_671_elements(29), 
+          phi_mux_ack => loadKernelChannel_CP_671_elements(34), 
           clk => clk, reset => reset -- 
         );
         -- 
@@ -25336,9 +25305,9 @@ begin --
           src_sample_completes => src_sample_acks, src_update_starts => src_update_reqs, 
           src_update_completes => src_update_acks,
           phi_mux_select_reqs => phi_mux_reqs, 
-          phi_sample_req => loadKernelChannel_CP_671_elements(43), 
-          phi_sample_ack => loadKernelChannel_CP_671_elements(44), 
-          phi_update_req => loadKernelChannel_CP_671_elements(45), 
+          phi_sample_req => loadKernelChannel_CP_671_elements(20), 
+          phi_sample_ack => loadKernelChannel_CP_671_elements(45), 
+          phi_update_req => loadKernelChannel_CP_671_elements(22), 
           phi_update_ack => loadKernelChannel_CP_671_elements(46), 
           phi_mux_ack => loadKernelChannel_CP_671_elements(51), 
           clk => clk, reset => reset -- 
@@ -26717,8 +26686,8 @@ begin --
     -- CP-element group 0:  fork  transition  output  bypass 
     -- CP-element group 0: predecessors 
     -- CP-element group 0: successors 
-    -- CP-element group 0: 	3 
     -- CP-element group 0: 	1 
+    -- CP-element group 0: 	3 
     -- CP-element group 0:  members (8) 
       -- CP-element group 0: 	 $entry
       -- CP-element group 0: 	 assign_stmt_321_to_assign_stmt_324/$entry
@@ -26984,28 +26953,28 @@ architecture timerDaemon_arch of timerDaemon is --
   signal input_sample_reenable_symbol: Boolean;
   -- input port buffer signals
   -- output port buffer signals
-  signal timerDaemon_CP_4911_start: Boolean;
-  signal timerDaemon_CP_4911_symbol: Boolean;
+  signal timerDaemon_CP_4916_start: Boolean;
+  signal timerDaemon_CP_4916_symbol: Boolean;
   -- volatile/operator module components. 
   -- links between control-path and data-path
-  signal do_while_stmt_2170_branch_req_0 : boolean;
-  signal phi_stmt_2172_req_0 : boolean;
-  signal phi_stmt_2172_req_1 : boolean;
-  signal phi_stmt_2172_ack_0 : boolean;
-  signal nCOUNTER_2185_2174_buf_req_0 : boolean;
-  signal nCOUNTER_2185_2174_buf_ack_0 : boolean;
-  signal nCOUNTER_2185_2174_buf_req_1 : boolean;
-  signal nCOUNTER_2185_2174_buf_ack_1 : boolean;
-  signal RPIPE_timer_req_2179_inst_req_0 : boolean;
-  signal RPIPE_timer_req_2179_inst_ack_0 : boolean;
-  signal RPIPE_timer_req_2179_inst_req_1 : boolean;
-  signal RPIPE_timer_req_2179_inst_ack_1 : boolean;
-  signal WPIPE_timer_resp_2187_inst_req_0 : boolean;
-  signal WPIPE_timer_resp_2187_inst_ack_0 : boolean;
-  signal WPIPE_timer_resp_2187_inst_req_1 : boolean;
-  signal WPIPE_timer_resp_2187_inst_ack_1 : boolean;
-  signal do_while_stmt_2170_branch_ack_0 : boolean;
-  signal do_while_stmt_2170_branch_ack_1 : boolean;
+  signal do_while_stmt_2169_branch_req_0 : boolean;
+  signal phi_stmt_2171_req_0 : boolean;
+  signal phi_stmt_2171_req_1 : boolean;
+  signal phi_stmt_2171_ack_0 : boolean;
+  signal nCOUNTER_2184_2173_buf_req_0 : boolean;
+  signal nCOUNTER_2184_2173_buf_ack_0 : boolean;
+  signal nCOUNTER_2184_2173_buf_req_1 : boolean;
+  signal nCOUNTER_2184_2173_buf_ack_1 : boolean;
+  signal RPIPE_timer_req_2178_inst_req_0 : boolean;
+  signal RPIPE_timer_req_2178_inst_ack_0 : boolean;
+  signal RPIPE_timer_req_2178_inst_req_1 : boolean;
+  signal RPIPE_timer_req_2178_inst_ack_1 : boolean;
+  signal WPIPE_timer_resp_2186_inst_req_0 : boolean;
+  signal WPIPE_timer_resp_2186_inst_ack_0 : boolean;
+  signal WPIPE_timer_resp_2186_inst_req_1 : boolean;
+  signal WPIPE_timer_resp_2186_inst_ack_1 : boolean;
+  signal do_while_stmt_2169_branch_ack_0 : boolean;
+  signal do_while_stmt_2169_branch_ack_1 : boolean;
   -- 
 begin --  
   -- input handling ------------------------------------------------
@@ -27037,7 +27006,7 @@ begin --
       port map(preds => preds, symbol_out => in_buffer_unload_req_symbol, clk => clk, reset => reset); --
   end block;
   -- join of all unload_ack_symbols.. used to trigger CP.
-  timerDaemon_CP_4911_start <= in_buffer_unload_ack_symbol;
+  timerDaemon_CP_4916_start <= in_buffer_unload_ack_symbol;
   -- output handling  -------------------------------------------------------
   out_buffer: ReceiveBuffer -- 
     generic map(name => "timerDaemon_out_buffer", -- 
@@ -27060,7 +27029,7 @@ begin --
     constant joinName: string(1 to 32) := "out_buffer_write_req_symbol_join"; 
     signal preds: BooleanArray(1 to 3); -- 
   begin -- 
-    preds <= timerDaemon_CP_4911_symbol & out_buffer_write_ack_symbol & tag_ilock_read_ack_symbol;
+    preds <= timerDaemon_CP_4916_symbol & out_buffer_write_ack_symbol & tag_ilock_read_ack_symbol;
     gj_out_buffer_write_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
       port map(preds => preds, symbol_out => out_buffer_write_req_symbol, clk => clk, reset => reset); --
   end block;
@@ -27092,7 +27061,7 @@ begin --
     constant joinName: string(1 to 31) := "tag_ilock_write_req_symbol_join"; 
     signal preds: BooleanArray(1 to 2); -- 
   begin -- 
-    preds <= timerDaemon_CP_4911_start & tag_ilock_write_ack_symbol;
+    preds <= timerDaemon_CP_4916_start & tag_ilock_write_ack_symbol;
     gj_tag_ilock_write_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
       port map(preds => preds, symbol_out => tag_ilock_write_req_symbol, clk => clk, reset => reset); --
   end block;
@@ -27103,28 +27072,28 @@ begin --
     constant joinName: string(1 to 30) := "tag_ilock_read_req_symbol_join"; 
     signal preds: BooleanArray(1 to 3); -- 
   begin -- 
-    preds <= timerDaemon_CP_4911_start & tag_ilock_read_ack_symbol & out_buffer_write_ack_symbol;
+    preds <= timerDaemon_CP_4916_start & tag_ilock_read_ack_symbol & out_buffer_write_ack_symbol;
     gj_tag_ilock_read_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
       port map(preds => preds, symbol_out => tag_ilock_read_req_symbol, clk => clk, reset => reset); --
   end block;
   -- the control path --------------------------------------------------
   always_true_symbol <= true; 
   default_zero_sig <= '0';
-  timerDaemon_CP_4911: Block -- control-path 
-    signal timerDaemon_CP_4911_elements: BooleanArray(44 downto 0);
+  timerDaemon_CP_4916: Block -- control-path 
+    signal timerDaemon_CP_4916_elements: BooleanArray(44 downto 0);
     -- 
   begin -- 
-    timerDaemon_CP_4911_elements(0) <= timerDaemon_CP_4911_start;
-    timerDaemon_CP_4911_symbol <= timerDaemon_CP_4911_elements(1);
+    timerDaemon_CP_4916_elements(0) <= timerDaemon_CP_4916_start;
+    timerDaemon_CP_4916_symbol <= timerDaemon_CP_4916_elements(1);
     -- CP-element group 0:  transition  place  bypass 
     -- CP-element group 0: predecessors 
     -- CP-element group 0: successors 
     -- CP-element group 0: 	2 
     -- CP-element group 0:  members (4) 
       -- CP-element group 0: 	 $entry
-      -- CP-element group 0: 	 branch_block_stmt_2169/$entry
-      -- CP-element group 0: 	 branch_block_stmt_2169/branch_block_stmt_2169__entry__
-      -- CP-element group 0: 	 branch_block_stmt_2169/do_while_stmt_2170__entry__
+      -- CP-element group 0: 	 branch_block_stmt_2168/$entry
+      -- CP-element group 0: 	 branch_block_stmt_2168/branch_block_stmt_2168__entry__
+      -- CP-element group 0: 	 branch_block_stmt_2168/do_while_stmt_2169__entry__
       -- 
     -- CP-element group 1:  transition  place  bypass 
     -- CP-element group 1: predecessors 
@@ -27132,89 +27101,89 @@ begin --
     -- CP-element group 1: successors 
     -- CP-element group 1:  members (4) 
       -- CP-element group 1: 	 $exit
-      -- CP-element group 1: 	 branch_block_stmt_2169/$exit
-      -- CP-element group 1: 	 branch_block_stmt_2169/branch_block_stmt_2169__exit__
-      -- CP-element group 1: 	 branch_block_stmt_2169/do_while_stmt_2170__exit__
+      -- CP-element group 1: 	 branch_block_stmt_2168/$exit
+      -- CP-element group 1: 	 branch_block_stmt_2168/branch_block_stmt_2168__exit__
+      -- CP-element group 1: 	 branch_block_stmt_2168/do_while_stmt_2169__exit__
       -- 
-    timerDaemon_CP_4911_elements(1) <= timerDaemon_CP_4911_elements(44);
+    timerDaemon_CP_4916_elements(1) <= timerDaemon_CP_4916_elements(44);
     -- CP-element group 2:  transition  place  bypass  pipeline-parent 
     -- CP-element group 2: predecessors 
     -- CP-element group 2: 	0 
     -- CP-element group 2: successors 
     -- CP-element group 2: 	8 
     -- CP-element group 2:  members (2) 
-      -- CP-element group 2: 	 branch_block_stmt_2169/do_while_stmt_2170/$entry
-      -- CP-element group 2: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170__entry__
+      -- CP-element group 2: 	 branch_block_stmt_2168/do_while_stmt_2169/$entry
+      -- CP-element group 2: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169__entry__
       -- 
-    timerDaemon_CP_4911_elements(2) <= timerDaemon_CP_4911_elements(0);
+    timerDaemon_CP_4916_elements(2) <= timerDaemon_CP_4916_elements(0);
     -- CP-element group 3:  merge  place  bypass  pipeline-parent 
     -- CP-element group 3: predecessors 
     -- CP-element group 3: successors 
     -- CP-element group 3: 	44 
     -- CP-element group 3:  members (1) 
-      -- CP-element group 3: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170__exit__
+      -- CP-element group 3: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169__exit__
       -- 
-    -- Element group timerDaemon_CP_4911_elements(3) is bound as output of CP function.
+    -- Element group timerDaemon_CP_4916_elements(3) is bound as output of CP function.
     -- CP-element group 4:  merge  place  bypass  pipeline-parent 
     -- CP-element group 4: predecessors 
     -- CP-element group 4: successors 
     -- CP-element group 4: 	7 
     -- CP-element group 4:  members (1) 
-      -- CP-element group 4: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_back
+      -- CP-element group 4: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_back
       -- 
-    -- Element group timerDaemon_CP_4911_elements(4) is bound as output of CP function.
+    -- Element group timerDaemon_CP_4916_elements(4) is bound as output of CP function.
     -- CP-element group 5:  branch  transition  place  bypass  pipeline-parent 
     -- CP-element group 5: predecessors 
     -- CP-element group 5: 	10 
     -- CP-element group 5: successors 
-    -- CP-element group 5: 	43 
     -- CP-element group 5: 	42 
+    -- CP-element group 5: 	43 
     -- CP-element group 5:  members (3) 
-      -- CP-element group 5: 	 branch_block_stmt_2169/do_while_stmt_2170/condition_done
-      -- CP-element group 5: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_exit/$entry
-      -- CP-element group 5: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_taken/$entry
+      -- CP-element group 5: 	 branch_block_stmt_2168/do_while_stmt_2169/condition_done
+      -- CP-element group 5: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_exit/$entry
+      -- CP-element group 5: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_taken/$entry
       -- 
-    timerDaemon_CP_4911_elements(5) <= timerDaemon_CP_4911_elements(10);
+    timerDaemon_CP_4916_elements(5) <= timerDaemon_CP_4916_elements(10);
     -- CP-element group 6:  branch  place  bypass  pipeline-parent 
     -- CP-element group 6: predecessors 
     -- CP-element group 6: 	41 
     -- CP-element group 6: successors 
     -- CP-element group 6:  members (1) 
-      -- CP-element group 6: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_body_done
+      -- CP-element group 6: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_body_done
       -- 
-    timerDaemon_CP_4911_elements(6) <= timerDaemon_CP_4911_elements(41);
+    timerDaemon_CP_4916_elements(6) <= timerDaemon_CP_4916_elements(41);
     -- CP-element group 7:  transition  bypass  pipeline-parent 
     -- CP-element group 7: predecessors 
     -- CP-element group 7: 	4 
     -- CP-element group 7: successors 
     -- CP-element group 7: 	19 
     -- CP-element group 7:  members (1) 
-      -- CP-element group 7: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/back_edge_to_loop_body
+      -- CP-element group 7: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/back_edge_to_loop_body
       -- 
-    timerDaemon_CP_4911_elements(7) <= timerDaemon_CP_4911_elements(4);
+    timerDaemon_CP_4916_elements(7) <= timerDaemon_CP_4916_elements(4);
     -- CP-element group 8:  transition  bypass  pipeline-parent 
     -- CP-element group 8: predecessors 
     -- CP-element group 8: 	2 
     -- CP-element group 8: successors 
     -- CP-element group 8: 	21 
     -- CP-element group 8:  members (1) 
-      -- CP-element group 8: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/first_time_through_loop_body
+      -- CP-element group 8: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/first_time_through_loop_body
       -- 
-    timerDaemon_CP_4911_elements(8) <= timerDaemon_CP_4911_elements(2);
+    timerDaemon_CP_4916_elements(8) <= timerDaemon_CP_4916_elements(2);
     -- CP-element group 9:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 9: predecessors 
     -- CP-element group 9: successors 
-    -- CP-element group 9: 	32 
-    -- CP-element group 9: 	11 
     -- CP-element group 9: 	15 
     -- CP-element group 9: 	16 
+    -- CP-element group 9: 	32 
+    -- CP-element group 9: 	11 
     -- CP-element group 9: 	40 
     -- CP-element group 9:  members (3) 
-      -- CP-element group 9: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/$entry
-      -- CP-element group 9: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/loop_body_start
-      -- CP-element group 9: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2177_sample_start_
+      -- CP-element group 9: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/$entry
+      -- CP-element group 9: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/loop_body_start
+      -- CP-element group 9: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2176_sample_start_
       -- 
-    -- Element group timerDaemon_CP_4911_elements(9) is bound as output of CP function.
+    -- Element group timerDaemon_CP_4916_elements(9) is bound as output of CP function.
     -- CP-element group 10:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 10: predecessors 
     -- CP-element group 10: 	14 
@@ -27222,11 +27191,11 @@ begin --
     -- CP-element group 10: successors 
     -- CP-element group 10: 	5 
     -- CP-element group 10:  members (1) 
-      -- CP-element group 10: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/condition_evaluated
+      -- CP-element group 10: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/condition_evaluated
       -- 
-    condition_evaluated_4935_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " condition_evaluated_4935_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(10), ack => do_while_stmt_2170_branch_req_0); -- 
+    condition_evaluated_4940_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " condition_evaluated_4940_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(10), ack => do_while_stmt_2169_branch_req_0); -- 
     timerDaemon_cp_element_group_10: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 7,1 => 7);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 0);
@@ -27234,66 +27203,66 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_10"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(14) & timerDaemon_CP_4911_elements(40);
+      preds <= timerDaemon_CP_4916_elements(14) & timerDaemon_CP_4916_elements(40);
       gj_timerDaemon_cp_element_group_10 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(10), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(10), clk => clk, reset => reset); --
     end block;
     -- CP-element group 11:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 11: predecessors 
-    -- CP-element group 11: 	9 
     -- CP-element group 11: 	15 
+    -- CP-element group 11: 	9 
     -- CP-element group 11: marked-predecessors 
     -- CP-element group 11: 	14 
     -- CP-element group 11: successors 
     -- CP-element group 11: 	33 
     -- CP-element group 11:  members (2) 
-      -- CP-element group 11: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/aggregated_phi_sample_req
-      -- CP-element group 11: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_sample_start__ps
+      -- CP-element group 11: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/aggregated_phi_sample_req
+      -- CP-element group 11: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_sample_start__ps
       -- 
     timerDaemon_cp_element_group_11: block -- 
-      constant place_capacities: IntegerArray(0 to 2) := (0 => 7,1 => 1,2 => 1);
+      constant place_capacities: IntegerArray(0 to 2) := (0 => 1,1 => 7,2 => 1);
       constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
       constant place_delays: IntegerArray(0 to 2) := (0 => 0,1 => 0,2 => 0);
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_11"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(9) & timerDaemon_CP_4911_elements(15) & timerDaemon_CP_4911_elements(14);
+      preds <= timerDaemon_CP_4916_elements(15) & timerDaemon_CP_4916_elements(9) & timerDaemon_CP_4916_elements(14);
       gj_timerDaemon_cp_element_group_11 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(11), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(11), clk => clk, reset => reset); --
     end block;
     -- CP-element group 12:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 12: predecessors 
-    -- CP-element group 12: 	35 
     -- CP-element group 12: 	17 
+    -- CP-element group 12: 	35 
     -- CP-element group 12: successors 
     -- CP-element group 12: 	41 
     -- CP-element group 12: marked-successors 
     -- CP-element group 12: 	15 
     -- CP-element group 12:  members (3) 
-      -- CP-element group 12: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/aggregated_phi_sample_ack
-      -- CP-element group 12: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_sample_completed_
-      -- CP-element group 12: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2177_sample_completed_
+      -- CP-element group 12: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/aggregated_phi_sample_ack
+      -- CP-element group 12: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_sample_completed_
+      -- CP-element group 12: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2176_sample_completed_
       -- 
     timerDaemon_cp_element_group_12: block -- 
-      constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 7);
+      constant place_capacities: IntegerArray(0 to 1) := (0 => 7,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 0);
       constant place_delays: IntegerArray(0 to 1) := (0 => 0,1 => 0);
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_12"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(35) & timerDaemon_CP_4911_elements(17);
+      preds <= timerDaemon_CP_4916_elements(17) & timerDaemon_CP_4916_elements(35);
       gj_timerDaemon_cp_element_group_12 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(12), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(12), clk => clk, reset => reset); --
     end block;
     -- CP-element group 13:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 13: predecessors 
-    -- CP-element group 13: 	32 
     -- CP-element group 13: 	16 
+    -- CP-element group 13: 	32 
     -- CP-element group 13: successors 
     -- CP-element group 13: 	34 
     -- CP-element group 13:  members (2) 
-      -- CP-element group 13: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/aggregated_phi_update_req
-      -- CP-element group 13: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_update_start__ps
+      -- CP-element group 13: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/aggregated_phi_update_req
+      -- CP-element group 13: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_update_start__ps
       -- 
     timerDaemon_cp_element_group_13: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
@@ -27302,9 +27271,9 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_13"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(32) & timerDaemon_CP_4911_elements(16);
+      preds <= timerDaemon_CP_4916_elements(16) & timerDaemon_CP_4916_elements(32);
       gj_timerDaemon_cp_element_group_13 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(13), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(13), clk => clk, reset => reset); --
     end block;
     -- CP-element group 14:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 14: predecessors 
@@ -27315,7 +27284,7 @@ begin --
     -- CP-element group 14: marked-successors 
     -- CP-element group 14: 	11 
     -- CP-element group 14:  members (1) 
-      -- CP-element group 14: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/aggregated_phi_update_ack
+      -- CP-element group 14: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/aggregated_phi_update_ack
       -- 
     timerDaemon_cp_element_group_14: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 7,1 => 1);
@@ -27324,9 +27293,9 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_14"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(18) & timerDaemon_CP_4911_elements(36);
+      preds <= timerDaemon_CP_4916_elements(18) & timerDaemon_CP_4916_elements(36);
       gj_timerDaemon_cp_element_group_14 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(14), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(14), clk => clk, reset => reset); --
     end block;
     -- CP-element group 15:  join  transition  bypass  pipeline-parent 
     -- CP-element group 15: predecessors 
@@ -27336,7 +27305,7 @@ begin --
     -- CP-element group 15: successors 
     -- CP-element group 15: 	11 
     -- CP-element group 15:  members (1) 
-      -- CP-element group 15: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_sample_start_
+      -- CP-element group 15: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_sample_start_
       -- 
     timerDaemon_cp_element_group_15: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 7,1 => 1);
@@ -27345,9 +27314,9 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_15"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(9) & timerDaemon_CP_4911_elements(12);
+      preds <= timerDaemon_CP_4916_elements(9) & timerDaemon_CP_4916_elements(12);
       gj_timerDaemon_cp_element_group_15 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(15), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(15), clk => clk, reset => reset); --
     end block;
     -- CP-element group 16:  join  transition  bypass  pipeline-parent 
     -- CP-element group 16: predecessors 
@@ -27357,7 +27326,7 @@ begin --
     -- CP-element group 16: successors 
     -- CP-element group 16: 	13 
     -- CP-element group 16:  members (1) 
-      -- CP-element group 16: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_update_start_
+      -- CP-element group 16: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_update_start_
       -- 
     timerDaemon_cp_element_group_16: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 7,1 => 1);
@@ -27366,167 +27335,167 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_16"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(9) & timerDaemon_CP_4911_elements(38);
+      preds <= timerDaemon_CP_4916_elements(9) & timerDaemon_CP_4916_elements(38);
       gj_timerDaemon_cp_element_group_16 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(16), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(16), clk => clk, reset => reset); --
     end block;
     -- CP-element group 17:  join  transition  bypass  pipeline-parent 
     -- CP-element group 17: predecessors 
     -- CP-element group 17: successors 
     -- CP-element group 17: 	12 
     -- CP-element group 17:  members (1) 
-      -- CP-element group 17: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_sample_completed__ps
+      -- CP-element group 17: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_sample_completed__ps
       -- 
-    -- Element group timerDaemon_CP_4911_elements(17) is bound as output of CP function.
+    -- Element group timerDaemon_CP_4916_elements(17) is bound as output of CP function.
     -- CP-element group 18:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 18: predecessors 
     -- CP-element group 18: successors 
     -- CP-element group 18: 	14 
     -- CP-element group 18: 	37 
     -- CP-element group 18:  members (2) 
-      -- CP-element group 18: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_update_completed_
-      -- CP-element group 18: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_update_completed__ps
+      -- CP-element group 18: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_update_completed_
+      -- CP-element group 18: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_update_completed__ps
       -- 
-    -- Element group timerDaemon_CP_4911_elements(18) is bound as output of CP function.
+    -- Element group timerDaemon_CP_4916_elements(18) is bound as output of CP function.
     -- CP-element group 19:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 19: predecessors 
     -- CP-element group 19: 	7 
     -- CP-element group 19: successors 
     -- CP-element group 19:  members (1) 
-      -- CP-element group 19: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_loopback_trigger
+      -- CP-element group 19: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_loopback_trigger
       -- 
-    timerDaemon_CP_4911_elements(19) <= timerDaemon_CP_4911_elements(7);
+    timerDaemon_CP_4916_elements(19) <= timerDaemon_CP_4916_elements(7);
     -- CP-element group 20:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 20: predecessors 
     -- CP-element group 20: successors 
     -- CP-element group 20:  members (2) 
-      -- CP-element group 20: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_loopback_sample_req
-      -- CP-element group 20: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_loopback_sample_req_ps
+      -- CP-element group 20: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_loopback_sample_req
+      -- CP-element group 20: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_loopback_sample_req_ps
       -- 
-    phi_stmt_2172_loopback_sample_req_4950_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_2172_loopback_sample_req_4950_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(20), ack => phi_stmt_2172_req_0); -- 
-    -- Element group timerDaemon_CP_4911_elements(20) is bound as output of CP function.
+    phi_stmt_2171_loopback_sample_req_4955_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_2171_loopback_sample_req_4955_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(20), ack => phi_stmt_2171_req_0); -- 
+    -- Element group timerDaemon_CP_4916_elements(20) is bound as output of CP function.
     -- CP-element group 21:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 21: predecessors 
     -- CP-element group 21: 	8 
     -- CP-element group 21: successors 
     -- CP-element group 21:  members (1) 
-      -- CP-element group 21: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_entry_trigger
+      -- CP-element group 21: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_entry_trigger
       -- 
-    timerDaemon_CP_4911_elements(21) <= timerDaemon_CP_4911_elements(8);
+    timerDaemon_CP_4916_elements(21) <= timerDaemon_CP_4916_elements(8);
     -- CP-element group 22:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 22: predecessors 
     -- CP-element group 22: successors 
     -- CP-element group 22:  members (2) 
-      -- CP-element group 22: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_entry_sample_req
-      -- CP-element group 22: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_entry_sample_req_ps
+      -- CP-element group 22: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_entry_sample_req
+      -- CP-element group 22: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_entry_sample_req_ps
       -- 
-    phi_stmt_2172_entry_sample_req_4953_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " phi_stmt_2172_entry_sample_req_4953_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(22), ack => phi_stmt_2172_req_1); -- 
-    -- Element group timerDaemon_CP_4911_elements(22) is bound as output of CP function.
+    phi_stmt_2171_entry_sample_req_4958_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " phi_stmt_2171_entry_sample_req_4958_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(22), ack => phi_stmt_2171_req_1); -- 
+    -- Element group timerDaemon_CP_4916_elements(22) is bound as output of CP function.
     -- CP-element group 23:  join  transition  input  bypass  pipeline-parent 
     -- CP-element group 23: predecessors 
     -- CP-element group 23: successors 
     -- CP-element group 23:  members (2) 
-      -- CP-element group 23: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_phi_mux_ack
-      -- CP-element group 23: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2172_phi_mux_ack_ps
+      -- CP-element group 23: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_phi_mux_ack
+      -- CP-element group 23: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2171_phi_mux_ack_ps
       -- 
-    phi_stmt_2172_phi_mux_ack_4956_symbol_link_from_dp: control_delay_element -- 
+    phi_stmt_2171_phi_mux_ack_4961_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 23_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => phi_stmt_2172_ack_0, ack => timerDaemon_CP_4911_elements(23)); -- 
+      port map(clk => clk, reset => reset, req => phi_stmt_2171_ack_0, ack => timerDaemon_CP_4916_elements(23)); -- 
     -- CP-element group 24:  join  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 24: predecessors 
     -- CP-element group 24: successors 
     -- CP-element group 24: 	26 
     -- CP-element group 24:  members (4) 
-      -- CP-element group 24: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_sample_start__ps
-      -- CP-element group 24: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_sample_start_
-      -- CP-element group 24: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Sample/$entry
-      -- CP-element group 24: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Sample/req
+      -- CP-element group 24: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_sample_start__ps
+      -- CP-element group 24: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_sample_start_
+      -- CP-element group 24: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Sample/$entry
+      -- CP-element group 24: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Sample/req
       -- 
-    req_4969_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4969_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(24), ack => nCOUNTER_2185_2174_buf_req_0); -- 
-    -- Element group timerDaemon_CP_4911_elements(24) is bound as output of CP function.
+    req_4974_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4974_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(24), ack => nCOUNTER_2184_2173_buf_req_0); -- 
+    -- Element group timerDaemon_CP_4916_elements(24) is bound as output of CP function.
     -- CP-element group 25:  join  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 25: predecessors 
     -- CP-element group 25: successors 
     -- CP-element group 25: 	27 
     -- CP-element group 25:  members (4) 
-      -- CP-element group 25: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_update_start__ps
-      -- CP-element group 25: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_update_start_
-      -- CP-element group 25: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Update/$entry
-      -- CP-element group 25: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Update/req
+      -- CP-element group 25: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_update_start__ps
+      -- CP-element group 25: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_update_start_
+      -- CP-element group 25: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Update/$entry
+      -- CP-element group 25: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Update/req
       -- 
-    req_4974_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_4974_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(25), ack => nCOUNTER_2185_2174_buf_req_1); -- 
-    -- Element group timerDaemon_CP_4911_elements(25) is bound as output of CP function.
+    req_4979_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_4979_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(25), ack => nCOUNTER_2184_2173_buf_req_1); -- 
+    -- Element group timerDaemon_CP_4916_elements(25) is bound as output of CP function.
     -- CP-element group 26:  join  transition  input  bypass  pipeline-parent 
     -- CP-element group 26: predecessors 
     -- CP-element group 26: 	24 
     -- CP-element group 26: successors 
     -- CP-element group 26:  members (4) 
-      -- CP-element group 26: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_sample_completed__ps
-      -- CP-element group 26: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_sample_completed_
-      -- CP-element group 26: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Sample/$exit
-      -- CP-element group 26: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Sample/ack
+      -- CP-element group 26: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_sample_completed__ps
+      -- CP-element group 26: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_sample_completed_
+      -- CP-element group 26: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Sample/$exit
+      -- CP-element group 26: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Sample/ack
       -- 
-    ack_4970_symbol_link_from_dp: control_delay_element -- 
+    ack_4975_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 26_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => nCOUNTER_2185_2174_buf_ack_0, ack => timerDaemon_CP_4911_elements(26)); -- 
+      port map(clk => clk, reset => reset, req => nCOUNTER_2184_2173_buf_ack_0, ack => timerDaemon_CP_4916_elements(26)); -- 
     -- CP-element group 27:  join  transition  input  bypass  pipeline-parent 
     -- CP-element group 27: predecessors 
     -- CP-element group 27: 	25 
     -- CP-element group 27: successors 
     -- CP-element group 27:  members (4) 
-      -- CP-element group 27: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_update_completed__ps
-      -- CP-element group 27: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_update_completed_
-      -- CP-element group 27: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Update/$exit
-      -- CP-element group 27: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/R_nCOUNTER_2174_Update/ack
+      -- CP-element group 27: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_update_completed__ps
+      -- CP-element group 27: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_update_completed_
+      -- CP-element group 27: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Update/$exit
+      -- CP-element group 27: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/R_nCOUNTER_2173_Update/ack
       -- 
-    ack_4975_symbol_link_from_dp: control_delay_element -- 
+    ack_4980_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 27_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => nCOUNTER_2185_2174_buf_ack_1, ack => timerDaemon_CP_4911_elements(27)); -- 
+      port map(clk => clk, reset => reset, req => nCOUNTER_2184_2173_buf_ack_1, ack => timerDaemon_CP_4916_elements(27)); -- 
     -- CP-element group 28:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 28: predecessors 
     -- CP-element group 28: successors 
     -- CP-element group 28:  members (4) 
-      -- CP-element group 28: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_sample_start__ps
-      -- CP-element group 28: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_sample_completed__ps
-      -- CP-element group 28: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_sample_start_
-      -- CP-element group 28: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_sample_completed_
+      -- CP-element group 28: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_sample_start__ps
+      -- CP-element group 28: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_sample_completed__ps
+      -- CP-element group 28: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_sample_start_
+      -- CP-element group 28: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_sample_completed_
       -- 
-    -- Element group timerDaemon_CP_4911_elements(28) is bound as output of CP function.
+    -- Element group timerDaemon_CP_4916_elements(28) is bound as output of CP function.
     -- CP-element group 29:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 29: predecessors 
     -- CP-element group 29: successors 
     -- CP-element group 29: 	31 
     -- CP-element group 29:  members (2) 
-      -- CP-element group 29: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_update_start__ps
-      -- CP-element group 29: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_update_start_
+      -- CP-element group 29: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_update_start__ps
+      -- CP-element group 29: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_update_start_
       -- 
-    -- Element group timerDaemon_CP_4911_elements(29) is bound as output of CP function.
+    -- Element group timerDaemon_CP_4916_elements(29) is bound as output of CP function.
     -- CP-element group 30:  join  transition  bypass  pipeline-parent 
     -- CP-element group 30: predecessors 
     -- CP-element group 30: 	31 
     -- CP-element group 30: successors 
     -- CP-element group 30:  members (1) 
-      -- CP-element group 30: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_update_completed__ps
+      -- CP-element group 30: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_update_completed__ps
       -- 
-    timerDaemon_CP_4911_elements(30) <= timerDaemon_CP_4911_elements(31);
+    timerDaemon_CP_4916_elements(30) <= timerDaemon_CP_4916_elements(31);
     -- CP-element group 31:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 31: predecessors 
     -- CP-element group 31: 	29 
     -- CP-element group 31: successors 
     -- CP-element group 31: 	30 
     -- CP-element group 31:  members (1) 
-      -- CP-element group 31: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/type_cast_2176_update_completed_
+      -- CP-element group 31: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/type_cast_2175_update_completed_
       -- 
-    -- Element group timerDaemon_CP_4911_elements(31) is a control-delay.
-    cp_element_31_delay: control_delay_element  generic map(name => " 31_delay", delay_value => 1)  port map(req => timerDaemon_CP_4911_elements(29), ack => timerDaemon_CP_4911_elements(31), clk => clk, reset =>reset);
+    -- Element group timerDaemon_CP_4916_elements(31) is a control-delay.
+    cp_element_31_delay: control_delay_element  generic map(name => " 31_delay", delay_value => 1)  port map(req => timerDaemon_CP_4916_elements(29), ack => timerDaemon_CP_4916_elements(31), clk => clk, reset =>reset);
     -- CP-element group 32:  join  transition  bypass  pipeline-parent 
     -- CP-element group 32: predecessors 
     -- CP-element group 32: 	9 
@@ -27535,7 +27504,7 @@ begin --
     -- CP-element group 32: successors 
     -- CP-element group 32: 	13 
     -- CP-element group 32:  members (1) 
-      -- CP-element group 32: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2177_update_start_
+      -- CP-element group 32: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2176_update_start_
       -- 
     timerDaemon_cp_element_group_32: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 7,1 => 1);
@@ -27544,9 +27513,9 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_32"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(9) & timerDaemon_CP_4911_elements(38);
+      preds <= timerDaemon_CP_4916_elements(9) & timerDaemon_CP_4916_elements(38);
       gj_timerDaemon_cp_element_group_32 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(32), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(32), clk => clk, reset => reset); --
     end block;
     -- CP-element group 33:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 33: predecessors 
@@ -27556,13 +27525,13 @@ begin --
     -- CP-element group 33: successors 
     -- CP-element group 33: 	35 
     -- CP-element group 33:  members (3) 
-      -- CP-element group 33: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_sample_start_
-      -- CP-element group 33: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Sample/$entry
-      -- CP-element group 33: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Sample/rr
+      -- CP-element group 33: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_sample_start_
+      -- CP-element group 33: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Sample/$entry
+      -- CP-element group 33: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Sample/rr
       -- 
-    rr_4996_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " rr_4996_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(33), ack => RPIPE_timer_req_2179_inst_req_0); -- 
+    rr_5001_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " rr_5001_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(33), ack => RPIPE_timer_req_2178_inst_req_0); -- 
     timerDaemon_cp_element_group_33: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -27570,24 +27539,24 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_33"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(11) & timerDaemon_CP_4911_elements(36);
+      preds <= timerDaemon_CP_4916_elements(11) & timerDaemon_CP_4916_elements(36);
       gj_timerDaemon_cp_element_group_33 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(33), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(33), clk => clk, reset => reset); --
     end block;
     -- CP-element group 34:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 34: predecessors 
-    -- CP-element group 34: 	35 
     -- CP-element group 34: 	13 
+    -- CP-element group 34: 	35 
     -- CP-element group 34: successors 
     -- CP-element group 34: 	36 
     -- CP-element group 34:  members (3) 
-      -- CP-element group 34: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_update_start_
-      -- CP-element group 34: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Update/$entry
-      -- CP-element group 34: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Update/cr
+      -- CP-element group 34: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_update_start_
+      -- CP-element group 34: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Update/$entry
+      -- CP-element group 34: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Update/cr
       -- 
-    cr_5001_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " cr_5001_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(34), ack => RPIPE_timer_req_2179_inst_req_1); -- 
+    cr_5006_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " cr_5006_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(34), ack => RPIPE_timer_req_2178_inst_req_1); -- 
     timerDaemon_cp_element_group_34: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 1,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 0);
@@ -27595,24 +27564,24 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_34"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(35) & timerDaemon_CP_4911_elements(13);
+      preds <= timerDaemon_CP_4916_elements(13) & timerDaemon_CP_4916_elements(35);
       gj_timerDaemon_cp_element_group_34 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(34), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(34), clk => clk, reset => reset); --
     end block;
     -- CP-element group 35:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 35: predecessors 
     -- CP-element group 35: 	33 
     -- CP-element group 35: successors 
-    -- CP-element group 35: 	34 
     -- CP-element group 35: 	12 
+    -- CP-element group 35: 	34 
     -- CP-element group 35:  members (3) 
-      -- CP-element group 35: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_sample_completed_
-      -- CP-element group 35: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Sample/$exit
-      -- CP-element group 35: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Sample/ra
+      -- CP-element group 35: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_sample_completed_
+      -- CP-element group 35: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Sample/$exit
+      -- CP-element group 35: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Sample/ra
       -- 
-    ra_4997_symbol_link_from_dp: control_delay_element -- 
+    ra_5002_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 35_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => RPIPE_timer_req_2179_inst_ack_0, ack => timerDaemon_CP_4911_elements(35)); -- 
+      port map(clk => clk, reset => reset, req => RPIPE_timer_req_2178_inst_ack_0, ack => timerDaemon_CP_4916_elements(35)); -- 
     -- CP-element group 36:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 36: predecessors 
     -- CP-element group 36: 	34 
@@ -27622,14 +27591,14 @@ begin --
     -- CP-element group 36: marked-successors 
     -- CP-element group 36: 	33 
     -- CP-element group 36:  members (4) 
-      -- CP-element group 36: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/phi_stmt_2177_update_completed_
-      -- CP-element group 36: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_update_completed_
-      -- CP-element group 36: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Update/$exit
-      -- CP-element group 36: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/RPIPE_timer_req_2179_Update/ca
+      -- CP-element group 36: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/phi_stmt_2176_update_completed_
+      -- CP-element group 36: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_update_completed_
+      -- CP-element group 36: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Update/$exit
+      -- CP-element group 36: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/RPIPE_timer_req_2178_Update/ca
       -- 
-    ca_5002_symbol_link_from_dp: control_delay_element -- 
+    ca_5007_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 36_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => RPIPE_timer_req_2179_inst_ack_1, ack => timerDaemon_CP_4911_elements(36)); -- 
+      port map(clk => clk, reset => reset, req => RPIPE_timer_req_2178_inst_ack_1, ack => timerDaemon_CP_4916_elements(36)); -- 
     -- CP-element group 37:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 37: predecessors 
     -- CP-element group 37: 	18 
@@ -27639,13 +27608,13 @@ begin --
     -- CP-element group 37: successors 
     -- CP-element group 37: 	38 
     -- CP-element group 37:  members (3) 
-      -- CP-element group 37: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_sample_start_
-      -- CP-element group 37: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Sample/$entry
-      -- CP-element group 37: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Sample/req
+      -- CP-element group 37: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_sample_start_
+      -- CP-element group 37: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Sample/$entry
+      -- CP-element group 37: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Sample/req
       -- 
-    req_5010_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_5010_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(37), ack => WPIPE_timer_resp_2187_inst_req_0); -- 
+    req_5015_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_5015_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(37), ack => WPIPE_timer_resp_2186_inst_req_0); -- 
     timerDaemon_cp_element_group_37: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 7,1 => 1,2 => 1);
       constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 0,2 => 1);
@@ -27653,9 +27622,9 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_37"; 
       signal preds: BooleanArray(1 to 3); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(18) & timerDaemon_CP_4911_elements(36) & timerDaemon_CP_4911_elements(39);
+      preds <= timerDaemon_CP_4916_elements(18) & timerDaemon_CP_4916_elements(36) & timerDaemon_CP_4916_elements(39);
       gj_timerDaemon_cp_element_group_37 : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(37), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(37), clk => clk, reset => reset); --
     end block;
     -- CP-element group 38:  fork  transition  input  output  bypass  pipeline-parent 
     -- CP-element group 38: predecessors 
@@ -27663,22 +27632,22 @@ begin --
     -- CP-element group 38: successors 
     -- CP-element group 38: 	39 
     -- CP-element group 38: marked-successors 
-    -- CP-element group 38: 	32 
     -- CP-element group 38: 	16 
+    -- CP-element group 38: 	32 
     -- CP-element group 38:  members (6) 
-      -- CP-element group 38: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_sample_completed_
-      -- CP-element group 38: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_update_start_
-      -- CP-element group 38: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Sample/$exit
-      -- CP-element group 38: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Sample/ack
-      -- CP-element group 38: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Update/$entry
-      -- CP-element group 38: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Update/req
+      -- CP-element group 38: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_sample_completed_
+      -- CP-element group 38: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_update_start_
+      -- CP-element group 38: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Sample/$exit
+      -- CP-element group 38: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Sample/ack
+      -- CP-element group 38: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Update/$entry
+      -- CP-element group 38: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Update/req
       -- 
-    ack_5011_symbol_link_from_dp: control_delay_element -- 
+    ack_5016_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 38_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_timer_resp_2187_inst_ack_0, ack => timerDaemon_CP_4911_elements(38)); -- 
-    req_5015_symbol_link_to_dp: control_delay_element -- 
-      generic map(name => " req_5015_symbol_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => timerDaemon_CP_4911_elements(38), ack => WPIPE_timer_resp_2187_inst_req_1); -- 
+      port map(clk => clk, reset => reset, req => WPIPE_timer_resp_2186_inst_ack_0, ack => timerDaemon_CP_4916_elements(38)); -- 
+    req_5020_symbol_link_to_dp: control_delay_element -- 
+      generic map(name => " req_5020_symbol_delay",delay_value => 0)
+      port map(clk => clk, reset => reset, req => timerDaemon_CP_4916_elements(38), ack => WPIPE_timer_resp_2186_inst_req_1); -- 
     -- CP-element group 39:  fork  transition  input  bypass  pipeline-parent 
     -- CP-element group 39: predecessors 
     -- CP-element group 39: 	38 
@@ -27687,23 +27656,23 @@ begin --
     -- CP-element group 39: marked-successors 
     -- CP-element group 39: 	37 
     -- CP-element group 39:  members (3) 
-      -- CP-element group 39: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_update_completed_
-      -- CP-element group 39: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Update/$exit
-      -- CP-element group 39: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/WPIPE_timer_resp_2187_Update/ack
+      -- CP-element group 39: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_update_completed_
+      -- CP-element group 39: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Update/$exit
+      -- CP-element group 39: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/WPIPE_timer_resp_2186_Update/ack
       -- 
-    ack_5016_symbol_link_from_dp: control_delay_element -- 
+    ack_5021_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 39_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => WPIPE_timer_resp_2187_inst_ack_1, ack => timerDaemon_CP_4911_elements(39)); -- 
+      port map(clk => clk, reset => reset, req => WPIPE_timer_resp_2186_inst_ack_1, ack => timerDaemon_CP_4916_elements(39)); -- 
     -- CP-element group 40:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 40: predecessors 
     -- CP-element group 40: 	9 
     -- CP-element group 40: successors 
     -- CP-element group 40: 	10 
     -- CP-element group 40:  members (1) 
-      -- CP-element group 40: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/loop_body_delay_to_condition_start
+      -- CP-element group 40: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/loop_body_delay_to_condition_start
       -- 
-    -- Element group timerDaemon_CP_4911_elements(40) is a control-delay.
-    cp_element_40_delay: control_delay_element  generic map(name => " 40_delay", delay_value => 1)  port map(req => timerDaemon_CP_4911_elements(9), ack => timerDaemon_CP_4911_elements(40), clk => clk, reset =>reset);
+    -- Element group timerDaemon_CP_4916_elements(40) is a control-delay.
+    cp_element_40_delay: control_delay_element  generic map(name => " 40_delay", delay_value => 1)  port map(req => timerDaemon_CP_4916_elements(9), ack => timerDaemon_CP_4916_elements(40), clk => clk, reset =>reset);
     -- CP-element group 41:  join  transition  bypass  pipeline-parent 
     -- CP-element group 41: predecessors 
     -- CP-element group 41: 	12 
@@ -27711,7 +27680,7 @@ begin --
     -- CP-element group 41: successors 
     -- CP-element group 41: 	6 
     -- CP-element group 41:  members (1) 
-      -- CP-element group 41: 	 branch_block_stmt_2169/do_while_stmt_2170/do_while_stmt_2170_loop_body/$exit
+      -- CP-element group 41: 	 branch_block_stmt_2168/do_while_stmt_2169/do_while_stmt_2169_loop_body/$exit
       -- 
     timerDaemon_cp_element_group_41: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 7,1 => 7);
@@ -27720,84 +27689,84 @@ begin --
       constant joinName: string(1 to 31) := "timerDaemon_cp_element_group_41"; 
       signal preds: BooleanArray(1 to 2); -- 
     begin -- 
-      preds <= timerDaemon_CP_4911_elements(12) & timerDaemon_CP_4911_elements(39);
+      preds <= timerDaemon_CP_4916_elements(12) & timerDaemon_CP_4916_elements(39);
       gj_timerDaemon_cp_element_group_41 : generic_join generic map(name => joinName, number_of_predecessors => 2, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
-        port map(preds => preds, symbol_out => timerDaemon_CP_4911_elements(41), clk => clk, reset => reset); --
+        port map(preds => preds, symbol_out => timerDaemon_CP_4916_elements(41), clk => clk, reset => reset); --
     end block;
     -- CP-element group 42:  transition  input  bypass  pipeline-parent 
     -- CP-element group 42: predecessors 
     -- CP-element group 42: 	5 
     -- CP-element group 42: successors 
     -- CP-element group 42:  members (2) 
-      -- CP-element group 42: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_exit/$exit
-      -- CP-element group 42: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_exit/ack
+      -- CP-element group 42: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_exit/$exit
+      -- CP-element group 42: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_exit/ack
       -- 
-    ack_5021_symbol_link_from_dp: control_delay_element -- 
+    ack_5026_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 42_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => do_while_stmt_2170_branch_ack_0, ack => timerDaemon_CP_4911_elements(42)); -- 
+      port map(clk => clk, reset => reset, req => do_while_stmt_2169_branch_ack_0, ack => timerDaemon_CP_4916_elements(42)); -- 
     -- CP-element group 43:  transition  input  bypass  pipeline-parent 
     -- CP-element group 43: predecessors 
     -- CP-element group 43: 	5 
     -- CP-element group 43: successors 
     -- CP-element group 43:  members (2) 
-      -- CP-element group 43: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_taken/$exit
-      -- CP-element group 43: 	 branch_block_stmt_2169/do_while_stmt_2170/loop_taken/ack
+      -- CP-element group 43: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_taken/$exit
+      -- CP-element group 43: 	 branch_block_stmt_2168/do_while_stmt_2169/loop_taken/ack
       -- 
-    ack_5025_symbol_link_from_dp: control_delay_element -- 
+    ack_5030_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 43_delay",delay_value => 0)
-      port map(clk => clk, reset => reset, req => do_while_stmt_2170_branch_ack_1, ack => timerDaemon_CP_4911_elements(43)); -- 
+      port map(clk => clk, reset => reset, req => do_while_stmt_2169_branch_ack_1, ack => timerDaemon_CP_4916_elements(43)); -- 
     -- CP-element group 44:  transition  bypass  pipeline-parent 
     -- CP-element group 44: predecessors 
     -- CP-element group 44: 	3 
     -- CP-element group 44: successors 
     -- CP-element group 44: 	1 
     -- CP-element group 44:  members (1) 
-      -- CP-element group 44: 	 branch_block_stmt_2169/do_while_stmt_2170/$exit
+      -- CP-element group 44: 	 branch_block_stmt_2168/do_while_stmt_2169/$exit
       -- 
-    timerDaemon_CP_4911_elements(44) <= timerDaemon_CP_4911_elements(3);
-    timerDaemon_do_while_stmt_2170_terminator_5026: loop_terminator -- 
-      generic map (name => " timerDaemon_do_while_stmt_2170_terminator_5026", max_iterations_in_flight =>7) 
-      port map(loop_body_exit => timerDaemon_CP_4911_elements(6),loop_continue => timerDaemon_CP_4911_elements(43),loop_terminate => timerDaemon_CP_4911_elements(42),loop_back => timerDaemon_CP_4911_elements(4),loop_exit => timerDaemon_CP_4911_elements(3),clk => clk, reset => reset); -- 
-    phi_stmt_2172_phi_seq_4984_block : block -- 
+    timerDaemon_CP_4916_elements(44) <= timerDaemon_CP_4916_elements(3);
+    timerDaemon_do_while_stmt_2169_terminator_5031: loop_terminator -- 
+      generic map (name => " timerDaemon_do_while_stmt_2169_terminator_5031", max_iterations_in_flight =>7) 
+      port map(loop_body_exit => timerDaemon_CP_4916_elements(6),loop_continue => timerDaemon_CP_4916_elements(43),loop_terminate => timerDaemon_CP_4916_elements(42),loop_back => timerDaemon_CP_4916_elements(4),loop_exit => timerDaemon_CP_4916_elements(3),clk => clk, reset => reset); -- 
+    phi_stmt_2171_phi_seq_4989_block : block -- 
       signal triggers, src_sample_reqs, src_sample_acks, src_update_reqs, src_update_acks : BooleanArray(0 to 1);
       signal phi_mux_reqs : BooleanArray(0 to 1); -- 
     begin -- 
-      triggers(0)  <= timerDaemon_CP_4911_elements(19);
-      timerDaemon_CP_4911_elements(24)<= src_sample_reqs(0);
-      src_sample_acks(0)  <= timerDaemon_CP_4911_elements(26);
-      timerDaemon_CP_4911_elements(25)<= src_update_reqs(0);
-      src_update_acks(0)  <= timerDaemon_CP_4911_elements(27);
-      timerDaemon_CP_4911_elements(20) <= phi_mux_reqs(0);
-      triggers(1)  <= timerDaemon_CP_4911_elements(21);
-      timerDaemon_CP_4911_elements(28)<= src_sample_reqs(1);
-      src_sample_acks(1)  <= timerDaemon_CP_4911_elements(28);
-      timerDaemon_CP_4911_elements(29)<= src_update_reqs(1);
-      src_update_acks(1)  <= timerDaemon_CP_4911_elements(30);
-      timerDaemon_CP_4911_elements(22) <= phi_mux_reqs(1);
-      phi_stmt_2172_phi_seq_4984 : phi_sequencer_v2-- 
-        generic map (place_capacity => 7, ntriggers => 2, name => "phi_stmt_2172_phi_seq_4984") 
+      triggers(0)  <= timerDaemon_CP_4916_elements(19);
+      timerDaemon_CP_4916_elements(24)<= src_sample_reqs(0);
+      src_sample_acks(0)  <= timerDaemon_CP_4916_elements(26);
+      timerDaemon_CP_4916_elements(25)<= src_update_reqs(0);
+      src_update_acks(0)  <= timerDaemon_CP_4916_elements(27);
+      timerDaemon_CP_4916_elements(20) <= phi_mux_reqs(0);
+      triggers(1)  <= timerDaemon_CP_4916_elements(21);
+      timerDaemon_CP_4916_elements(28)<= src_sample_reqs(1);
+      src_sample_acks(1)  <= timerDaemon_CP_4916_elements(28);
+      timerDaemon_CP_4916_elements(29)<= src_update_reqs(1);
+      src_update_acks(1)  <= timerDaemon_CP_4916_elements(30);
+      timerDaemon_CP_4916_elements(22) <= phi_mux_reqs(1);
+      phi_stmt_2171_phi_seq_4989 : phi_sequencer_v2-- 
+        generic map (place_capacity => 7, ntriggers => 2, name => "phi_stmt_2171_phi_seq_4989") 
         port map ( -- 
           triggers => triggers, src_sample_starts => src_sample_reqs, 
           src_sample_completes => src_sample_acks, src_update_starts => src_update_reqs, 
           src_update_completes => src_update_acks,
           phi_mux_select_reqs => phi_mux_reqs, 
-          phi_sample_req => timerDaemon_CP_4911_elements(11), 
-          phi_sample_ack => timerDaemon_CP_4911_elements(17), 
-          phi_update_req => timerDaemon_CP_4911_elements(13), 
-          phi_update_ack => timerDaemon_CP_4911_elements(18), 
-          phi_mux_ack => timerDaemon_CP_4911_elements(23), 
+          phi_sample_req => timerDaemon_CP_4916_elements(11), 
+          phi_sample_ack => timerDaemon_CP_4916_elements(17), 
+          phi_update_req => timerDaemon_CP_4916_elements(13), 
+          phi_update_ack => timerDaemon_CP_4916_elements(18), 
+          phi_mux_ack => timerDaemon_CP_4916_elements(23), 
           clk => clk, reset => reset -- 
         );
         -- 
     end block;
-    entry_tmerge_4936_block : block -- 
+    entry_tmerge_4941_block : block -- 
       signal preds : BooleanArray(0 to 1);
       begin -- 
-        preds(0)  <= timerDaemon_CP_4911_elements(7);
-        preds(1)  <= timerDaemon_CP_4911_elements(8);
-        entry_tmerge_4936 : transition_merge -- 
-          generic map(name => " entry_tmerge_4936")
-          port map (preds => preds, symbol_out => timerDaemon_CP_4911_elements(9));
+        preds(0)  <= timerDaemon_CP_4916_elements(7);
+        preds(1)  <= timerDaemon_CP_4916_elements(8);
+        entry_tmerge_4941 : transition_merge -- 
+          generic map(name => " entry_tmerge_4941")
+          port map (preds => preds, symbol_out => timerDaemon_CP_4916_elements(9));
           -- 
     end block;
     --  hookup: inputs to control-path 
@@ -27806,51 +27775,51 @@ begin --
   end Block; -- control-path
   -- the data path
   data_path: Block -- 
-    signal COUNTER_2172 : std_logic_vector(63 downto 0);
-    signal RPIPE_timer_req_2179_wire : std_logic_vector(0 downto 0);
-    signal konst_2183_wire_constant : std_logic_vector(63 downto 0);
-    signal konst_2191_wire_constant : std_logic_vector(0 downto 0);
-    signal nCOUNTER_2185 : std_logic_vector(63 downto 0);
-    signal nCOUNTER_2185_2174_buffered : std_logic_vector(63 downto 0);
-    signal req_2177 : std_logic_vector(0 downto 0);
-    signal type_cast_2176_wire_constant : std_logic_vector(63 downto 0);
+    signal COUNTER_2171 : std_logic_vector(63 downto 0);
+    signal RPIPE_timer_req_2178_wire : std_logic_vector(0 downto 0);
+    signal konst_2182_wire_constant : std_logic_vector(63 downto 0);
+    signal konst_2190_wire_constant : std_logic_vector(0 downto 0);
+    signal nCOUNTER_2184 : std_logic_vector(63 downto 0);
+    signal nCOUNTER_2184_2173_buffered : std_logic_vector(63 downto 0);
+    signal req_2176 : std_logic_vector(0 downto 0);
+    signal type_cast_2175_wire_constant : std_logic_vector(63 downto 0);
     -- 
   begin -- 
-    konst_2183_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000001";
-    konst_2191_wire_constant <= "1";
-    type_cast_2176_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000000";
-    phi_stmt_2172: Block -- phi operator 
+    konst_2182_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000001";
+    konst_2190_wire_constant <= "1";
+    type_cast_2175_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000000";
+    phi_stmt_2171: Block -- phi operator 
       signal idata: std_logic_vector(127 downto 0);
       signal req: BooleanArray(1 downto 0);
       --
     begin -- 
-      idata <= nCOUNTER_2185_2174_buffered & type_cast_2176_wire_constant;
-      req <= phi_stmt_2172_req_0 & phi_stmt_2172_req_1;
+      idata <= nCOUNTER_2184_2173_buffered & type_cast_2175_wire_constant;
+      req <= phi_stmt_2171_req_0 & phi_stmt_2171_req_1;
       phi: PhiBase -- 
         generic map( -- 
-          name => "phi_stmt_2172",
+          name => "phi_stmt_2171",
           num_reqs => 2,
           bypass_flag => true,
           data_width => 64) -- 
         port map( -- 
           req => req, 
-          ack => phi_stmt_2172_ack_0,
+          ack => phi_stmt_2171_ack_0,
           idata => idata,
-          odata => COUNTER_2172,
+          odata => COUNTER_2171,
           clk => clk,
           reset => reset ); -- 
       -- 
-    end Block; -- phi operator phi_stmt_2172
-    nCOUNTER_2185_2174_buf_block: block -- 
+    end Block; -- phi operator phi_stmt_2171
+    nCOUNTER_2184_2173_buf_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
     begin -- 
-      wreq(0) <= nCOUNTER_2185_2174_buf_req_0;
-      nCOUNTER_2185_2174_buf_ack_0<= wack(0);
-      rreq(0) <= nCOUNTER_2185_2174_buf_req_1;
-      nCOUNTER_2185_2174_buf_ack_1<= rack(0);
-      nCOUNTER_2185_2174_buf : InterlockBuffer generic map ( -- 
-        name => "nCOUNTER_2185_2174_buf",
+      wreq(0) <= nCOUNTER_2184_2173_buf_req_0;
+      nCOUNTER_2184_2173_buf_ack_0<= wack(0);
+      rreq(0) <= nCOUNTER_2184_2173_buf_req_1;
+      nCOUNTER_2184_2173_buf_ack_1<= rack(0);
+      nCOUNTER_2184_2173_buf : InterlockBuffer generic map ( -- 
+        name => "nCOUNTER_2184_2173_buf",
         buffer_size => 1,
         flow_through =>  false ,
         cut_through =>  false ,
@@ -27861,46 +27830,46 @@ begin --
       )port map ( -- 
         write_req => wreq(0), 
         write_ack => wack(0), 
-        write_data => nCOUNTER_2185,
+        write_data => nCOUNTER_2184,
         read_req => rreq(0),  
         read_ack => rack(0), 
-        read_data => nCOUNTER_2185_2174_buffered,
+        read_data => nCOUNTER_2184_2173_buffered,
         clk => clk, reset => reset
         -- 
       );
       end block; -- 
-    -- interlock ssrc_phi_stmt_2177
-    process(RPIPE_timer_req_2179_wire) -- 
+    -- interlock ssrc_phi_stmt_2176
+    process(RPIPE_timer_req_2178_wire) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
     begin -- 
       tmp_var := (others => '0'); 
-      tmp_var( 0 downto 0) := RPIPE_timer_req_2179_wire(0 downto 0);
-      req_2177 <= tmp_var; -- 
+      tmp_var( 0 downto 0) := RPIPE_timer_req_2178_wire(0 downto 0);
+      req_2176 <= tmp_var; -- 
     end process;
-    do_while_stmt_2170_branch: Block -- 
+    do_while_stmt_2169_branch: Block -- 
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
       begin 
-      condition_sig <= konst_2191_wire_constant;
+      condition_sig <= konst_2190_wire_constant;
       branch_instance: BranchBase -- 
-        generic map( name => "do_while_stmt_2170_branch", condition_width => 1,  bypass_flag => true)
+        generic map( name => "do_while_stmt_2169_branch", condition_width => 1,  bypass_flag => true)
         port map( -- 
           condition => condition_sig,
-          req => do_while_stmt_2170_branch_req_0,
-          ack0 => do_while_stmt_2170_branch_ack_0,
-          ack1 => do_while_stmt_2170_branch_ack_1,
+          req => do_while_stmt_2169_branch_req_0,
+          ack0 => do_while_stmt_2169_branch_ack_0,
+          ack1 => do_while_stmt_2169_branch_ack_1,
           clk => clk,
           reset => reset); -- 
       --
     end Block; -- branch-block
-    -- binary operator ADD_u64_u64_2184_inst
-    process(COUNTER_2172) -- 
+    -- binary operator ADD_u64_u64_2183_inst
+    process(COUNTER_2171) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
     begin -- 
-      ApIntAdd_proc(COUNTER_2172, konst_2183_wire_constant, tmp_var);
-      nCOUNTER_2185 <= tmp_var; --
+      ApIntAdd_proc(COUNTER_2171, konst_2182_wire_constant, tmp_var);
+      nCOUNTER_2184 <= tmp_var; --
     end process;
-    -- shared inport operator group (0) : RPIPE_timer_req_2179_inst 
+    -- shared inport operator group (0) : RPIPE_timer_req_2178_inst 
     InportGroup_0: Block -- 
       signal data_out: std_logic_vector(0 downto 0);
       signal reqL, ackL, reqR, ackR : BooleanArray( 0 downto 0);
@@ -27912,12 +27881,12 @@ begin --
       constant guardBuffering: IntegerArray(0 downto 0)  := (0 => 2);
       -- 
     begin -- 
-      reqL_unguarded(0) <= RPIPE_timer_req_2179_inst_req_0;
-      RPIPE_timer_req_2179_inst_ack_0 <= ackL_unguarded(0);
-      reqR_unguarded(0) <= RPIPE_timer_req_2179_inst_req_1;
-      RPIPE_timer_req_2179_inst_ack_1 <= ackR_unguarded(0);
+      reqL_unguarded(0) <= RPIPE_timer_req_2178_inst_req_0;
+      RPIPE_timer_req_2178_inst_ack_0 <= ackL_unguarded(0);
+      reqR_unguarded(0) <= RPIPE_timer_req_2178_inst_req_1;
+      RPIPE_timer_req_2178_inst_ack_1 <= ackR_unguarded(0);
       guard_vector(0)  <=  '1';
-      RPIPE_timer_req_2179_wire <= data_out(0 downto 0);
+      RPIPE_timer_req_2178_wire <= data_out(0 downto 0);
       timer_req_read_0_gI: SplitGuardInterface generic map(name => "timer_req_read_0_gI", nreqs => 1, buffering => guardBuffering, use_guards => guardFlags,  sample_only => false,  update_only => true) -- 
         port map(clk => clk, reset => reset,
         sr_in => reqL_unguarded,
@@ -27944,7 +27913,7 @@ begin --
         ); -- 
       -- 
     end Block; -- inport group 0
-    -- shared outport operator group (0) : WPIPE_timer_resp_2187_inst 
+    -- shared outport operator group (0) : WPIPE_timer_resp_2186_inst 
     OutportGroup_0: Block -- 
       signal data_in: std_logic_vector(63 downto 0);
       signal sample_req, sample_ack : BooleanArray( 0 downto 0);
@@ -27957,12 +27926,12 @@ begin --
       constant guardBuffering: IntegerArray(0 downto 0)  := (0 => 2);
       -- 
     begin -- 
-      sample_req_unguarded(0) <= WPIPE_timer_resp_2187_inst_req_0;
-      WPIPE_timer_resp_2187_inst_ack_0 <= sample_ack_unguarded(0);
-      update_req_unguarded(0) <= WPIPE_timer_resp_2187_inst_req_1;
-      WPIPE_timer_resp_2187_inst_ack_1 <= update_ack_unguarded(0);
-      guard_vector(0)  <= req_2177(0);
-      data_in <= COUNTER_2172;
+      sample_req_unguarded(0) <= WPIPE_timer_resp_2186_inst_req_0;
+      WPIPE_timer_resp_2186_inst_ack_0 <= sample_ack_unguarded(0);
+      update_req_unguarded(0) <= WPIPE_timer_resp_2186_inst_req_1;
+      WPIPE_timer_resp_2186_inst_ack_1 <= update_ack_unguarded(0);
+      guard_vector(0)  <= req_2176(0);
+      data_in <= COUNTER_2171;
       timer_resp_write_0_gI: SplitGuardInterface generic map(name => "timer_resp_write_0_gI", nreqs => 1, buffering => guardBuffering, use_guards => guardFlags,  sample_only => true,  update_only => false) -- 
         port map(clk => clk, reset => reset,
         sr_in => sample_req_unguarded,

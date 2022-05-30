@@ -7,7 +7,7 @@
 #include <signal.h>
 
 #include "sized_tensor.h"
-#include "convolution.h"
+#include "convolution_multipipe.h"
  
 #ifdef SW
 #include <pipeHandler.h>
@@ -209,7 +209,14 @@ int main(int argc, char**argv){
 
 	printf("If no message is printed after this one, there is no error!!\n");
 #ifndef SW
-	uint64_t time_taken = read_uint64("elapsed_time_pipe");
+	uint64_t time_taken = read_uint8("maxpool_output_pipe");
+	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
+	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
+	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
+	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
+	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
+	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
+	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
 	fprintf(stderr,"Time taken is %lu\n",time_taken);
 #endif
 	system("cmp COutFile.txt OctaveOutFile.txt");

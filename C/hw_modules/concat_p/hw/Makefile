@@ -32,7 +32,7 @@ SW: src/prog.c testbench.c
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
 C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
-AA2VHDL: aa2vc vc2vhdl vhdlsim
+AA2VHDL: aalink aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
 c2llvmbc: src/prog.c src/concat.h
@@ -45,8 +45,8 @@ llvmbc2aa:  prog.opt.o
 	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
 
 # link and optimize
-aalink: prog.aa  timer.aa
-	AaLinkExtMem prog.aa timer.aa | vcFormat > prog.linked.aa
+aalink: concat.aa  timer.aa
+	AaLinkExtMem concat.aa timer.aa | vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 

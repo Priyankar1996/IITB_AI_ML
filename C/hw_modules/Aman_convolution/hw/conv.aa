@@ -191,7 +191,7 @@ $is
         kval1 := ($bitcast ($int<16>) kread1)
         kval2 := ($bitcast ($int<16>) kread2)
         kval3 := ($bitcast ($int<16>) kread3)
-        
+
         mul_val1 := ($bitcast ($int<16>) (kval1*ival1))
         mul_val2 := ($bitcast ($int<16>) (kval2*ival2))
         mul_val3 := ($bitcast ($int<16>) (kval3*ival3))
@@ -215,9 +215,10 @@ $is
         $volatile n_row := ($mux row_done (row+1) row)
         $volatile nacc := ($mux num_done 0 acc_val)
         
-        $split (acc_val 8 8) (acc_val_up acc_val_dn)
+        //$split (acc_val 8 8) (acc_val_up acc_val_dn)
         //$guard (num_done) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_up)
         //$guard (num_done) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_dn)
+        //send_val := ($mux (acc_val < 0) 0 acc_val)
         $guard (num_done) output_pipe := ($bitcast ($uint<16>) acc_val)
         
         $while (~all_done_flag)

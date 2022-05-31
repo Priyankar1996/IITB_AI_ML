@@ -130,7 +130,7 @@ int main(int argc,char **argv)
     for(ii = 0; ii < out_size; ii++)
     {
         val = read_uint8 ("Concat_output_pipe");
-        fprintf(stderr,"%lu\n",val);
+        fprintf(stderr,"%hu\n",val);
     }
     fprintf(stderr,"Read back the values from hardware\n");
 	fclose(input_file);

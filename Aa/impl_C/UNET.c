@@ -87,72 +87,57 @@ uint32_t str_dec[2] = {2,2};
 SizedTensor_8M    T;
 SizedTensor_1024  K;
 SizedTensor_8M    S;
-SizedTensor_8M    R[num_iters];
+SizedTensor_8M    R0, R1, R2;
 SizedTensor_1024  beta, gamma, moving_mean, moving_variance;
 
-// Read the elements of T from an input FIFO
-#define __InsertIntoSizedTensorDataArray__(T, iter, input_data) ({\
-	T.data_array[iter] = input_data;\
-})
+#define EncodingIteration(K,S,T,stride,pad,R,dim_to_pool) {\
+		__readSizedTensorFromInputDataPipe__(K);\
+		__convTensors__(T,K,S,stride,pad);\
+		__unaryOperateOnTensor__(S,RELU_OP);\
+		__readSizedTensorFromInputDataPipe__(K);\
+		__convTensors__(S,K,R,stride,pad);\
+		__unaryOperateOnTensor__(R, RELU_OP);\
+		__maxPoolOfTensors__(R, T, 2, 2, 2, dim_to_pool, 0);}
 
-#define __readSizedTensorFromInputDataPipe__(T)  ({\
-	int ne = __NumberOfElementsInSizedTensor__(T);\
-	int I;\
-	for(I = 0; I < ne; I++)\
-	{\
-		uint64_t w = read_uint64 ("input_data_pipe");\
-		__InsertIntoSizedTensorDataArray__(T,I,w);\
-	}})
+#define DecodingIteration(K,S,T,decode_stride, stride,pad,R) {\
+		__readSizedTensorFromInputDataPipe__(K);\
+		__dilateTensor__(T,K,S, decode_stride);\
+		__depadTensor(S,T, deconv_pad);\
+		__convTensors__(T,K,S, stride, pad);\
+		__concatTensorsAlongDim(S,R, T, 2);\
+		__readSizedTensorFromInputDataPipe__(K);\
+		__convTensors__(T,K,S, stride, pad);\
+		__unaryOperateOnTensor__(S, RELU_OP);\
+		__readSizedTensorFromInputDataPipe__(K);\
+		__convTensors__(S,K,T, stride, pad);\
+		__unaryOperateOnTensor__(T, RELU_OP);}
 
+int main_revised()
+{
+	__readSizedTensorFromInputDataPipe__(T);
+	EncodingIteration (K,S,T,stride,pad,R0);
+	EncodingIteration (K,S,T,stride,pad,R1);
+	EncodingIteration (K,S,T,stride,pad,R2);
 
-#define __convTensors__(X, Y, RESULT, stride, pad) ({\
-		// size of the result tensor is calculated here.
-	})
+	__readSizedTensorFromInputDataPipe__(K);
+	__convTensors__(T,K,S,stride,pad);
+	__unaryOperateOnTensor__(S, RELU_OP);
+	__readSizedTensorFromInputDataPipe__(K);
+	__convTensors__(S,K,T,stride,pad);
+	__unaryOperateOnTensor__(T, RELU_OP);
 
-#define __batch__(X, gamma, beta, moving_mean, moving_variance, iter) ({\
-	})
+	DecodingIteration(K,S,T,decode_stride,stride,pad,R2);
+	DecodingIteration(K,S,T,decode_stride,stride,pad,R1);
+	DecodingIteration(K,S,T,decode_stride,stride,pad,R0);
 
-#define __unaryOperateOnTensor__(X, operation) ({\
-	})
-
-#define __maxPoolOfTensors__(Tensor_IN, Tensor_OUT, length, stride, num_dims_to_pool, dims, mode) ({\
-	})
-
-#define __dilateTensors__(Tensor_IN, Tensor_KERNEL, Tensor_OUT, stride) ({\
-	})
-
-#define __depadTensors__(Tensor_IN, Tensor_OUT, pad) ({\
-	})
-
-#define __concatTensors__(Tensor_IN1,Tensor_IN2,Tensor_OUT,dims)({\
-	})
-
-/*
-void fooT(T*)
-
-	fooT(&tT);
-
-void fooS(S*)
-
-	fooS(&tS);
-
->>>>> what we want >>>>>>>>>>	tT and tS are kept in different memory spaces.
-
-
-void foo(T*)
-
-	foo (&tT);
-	foo (&tS);
->>>> we want to avoid this >>>>>   tT, tS are forced into the same memory space.
-
-*/
-
-	
+	__readSizedTensorFromInputDataPipe__(K);
+	__convTensors__(T,K,S, stride, pad);
+	__writeTensorToOutputDataPipe__(S);
+}
 
 int main()
 {
 	__readSizedTensorFromInputDataPipe__(T);
-
 	//encoding loop
 	for(int i=0;i<num_iters;i++)
 	{
@@ -226,6 +211,5 @@ int main()
 
 	__readSizedTensorFromInputDataPipe__(K);
 	__convTensors__(T,K,S, stride, pad);
-
 	__writeTensorToOutputDataPipe__(S);
 }

@@ -1,11 +1,11 @@
 //$record [structx_x__SizedTensorCustom] < $array [16384] $of $uint<64> > 
 //$storage T:structx_x__SizedTensorCustom
-$pipe kernel_pipe1 : $uint<16> $depth 100
-$pipe kernel_pipe2 : $uint<16> $depth 100
-$pipe input_pipe1 : $uint<16> $depth 100
+$pipe kernel_pipe1 : $uint<16> $depth 400
+$pipe kernel_pipe2 : $uint<16> $depth 400
+$pipe input_pipe1 : $uint<16> $depth 400
 $pipe size_pipe : $uint<32> $depth 1
 $pipe kernel_done_pipe : $uint<1> $depth 1
-$pipe input_done_pipe : $uint<1> $depth 1
+$pipe input_done_pipe : $uint<8> $depth 1
 
 // Load the kernel channel into the kernel pipes
 $module [loadKernelChannel]
@@ -129,11 +129,45 @@ $is
         $guard (send_back2) kernel_pipe2 := kread
         n_out_count := ($mux next_sum ($mux out_done_flag ($bitcast ($uint<16>) 1) (out_count + 1)) out_count)
         all_done_flag := (out_done_flag & next_sum)
-        $guard (all_done_flag) input_done_pipe := 1
-        $split (acc_val 8 8) (acc_val_up acc_val_dn)
-        $guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_up)
-        $guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_dn)
-        $while (~all_done_flag)
+        //$split (acc_val 8 8) (acc_val_up acc_val_dn)
+        //$guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_up)
+        //$guard (next_sum) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_dn)
+        $guard (next_sum) output_pipe := ($bitcast ($uint<16>) acc_val)
+                $while (~all_done_flag)
+        input_done_pipe := 1
         $place [loopback]
+    }
+}
+$module [sendModule] $in () $out () $is
+{
+    $branchblock [sendBlock]{
+        rb := output_pipe
+        cb := output_pipe
+        chl_out := output_pipe
+        max_count := ($bitcast ($uint<32>) (rb*cb))
+
+        $dopipeline $depth 15 $buffering 2 $fullrate
+        $merge $entry $loopback
+        $phi address := ($bitcast ($uint<32>) 0) $on $entry n_address $on $loopback
+        $phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
+        $phi count := ($bitcast ($uint<32>) 0) $on $entry n_count $on $loopback
+        $endmerge
+        $volatile chl_change := (count == (max_count - 1))
+        $volatile n_chl := ($mux chl_change (chl+1) chl)
+        $volatile n_address := ($mux chl_change ($bitcast ($uint<32>) n_chl) (address + ($bitcast ($uint<32>) chl_out)))
+        $volatile n_count := ($mux chl_change 0 (count + 1))
+        fetch_addr := @(B[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (address >> 2))])
+        fetch_val := ->(fetch_addr)
+        output_data := output_pipe
+        $split (fetch_val 16 16 16 16) (w1 w2 w3 w4)
+        $volatile location := ($bitcast ($uint<2>) (address&3))
+        wb1 := ($mux (location == 0) output_data w1)
+        wb2 := ($mux (location == 1) output_data w2)
+        wb3 := ($mux (location == 2) output_data w3)
+        wb4 := ($mux (location == 3) output_data w4)
+        ->(fetch_addr) := ($concat wb1 wb2 wb3 wb4)
+        continue_flag := ((chl < (chl_out - 1)) | (~chl_change))
+        $while continue_flag
+        input_done_pipe := 1
     }
 }

@@ -92,9 +92,11 @@ SizedTensor_1024  beta, gamma, moving_mean, moving_variance;
 
 #define EncodingIteration(K,S,T,stride,pad,R,dim_to_pool) {\
 		__readSizedTensorFromInputDataPipe__(K);\
+		?? ZERO PAD ??\
 		__convTensors__(T,K,S,stride,pad);\
 		__unaryOperateOnTensor__(S,RELU_OP);\
 		__readSizedTensorFromInputDataPipe__(K);\
+		?? ZERO PAD ??\
 		__convTensors__(S,K,R,stride,pad);\
 		__unaryOperateOnTensor__(R, RELU_OP);\
 		__maxPoolOfTensors__(R, T, 2, 2, 2, dim_to_pool, 0);}
@@ -103,12 +105,15 @@ SizedTensor_1024  beta, gamma, moving_mean, moving_variance;
 		__readSizedTensorFromInputDataPipe__(K);\
 		__dilateTensor__(T,K,S, decode_stride);\
 		__depadTensor(S,T, deconv_pad);\
+		?? ZERO PAD ??\
 		__convTensors__(T,K,S, stride, pad);\
 		__concatTensorsAlongDim(S,R, T, 2);\
 		__readSizedTensorFromInputDataPipe__(K);\
+		?? ZERO PAD ??\
 		__convTensors__(T,K,S, stride, pad);\
 		__unaryOperateOnTensor__(S, RELU_OP);\
 		__readSizedTensorFromInputDataPipe__(K);\
+		?? ZERO PAD ??\
 		__convTensors__(S,K,T, stride, pad);\
 		__unaryOperateOnTensor__(T, RELU_OP);}
 

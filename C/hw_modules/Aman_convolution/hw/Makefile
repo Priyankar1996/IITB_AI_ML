@@ -12,6 +12,9 @@ VHDL_LIB=$(AHIR_RELEASE)/vhdl
 
 FPGA=../../../../fpga/Aman_convolution/ahir
 
+CONVH_FILE=convolution_multipipe.h
+CONVAA_FILE=conv.aa
+
 SIZED_TENSOR=../../../primitives/include
 
 all: SW HW 
@@ -21,7 +24,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T convolution3D -T convolve
+TOPMODULES=-T timerDaemon -T convolution3D -T convolve -T sendModule
 
 
 # compile with SW defined.
@@ -38,7 +41,7 @@ fpga : c2llvmbc llvmbc2aa  aalink aa2vc  fpga_vc2vhdl
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c src/convolution.h
+c2llvmbc: src/prog.c src/$(CONVH_FILE)
 	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o
@@ -48,8 +51,8 @@ llvmbc2aa:  prog.opt.o
 	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
 
 # link and optimize
-aalink:  timer.aa prog.aa memory.aa
-	AaLinkExtMem timer.aa prog.aa memory.aa| vcFormat > prog.linked.aa
+aalink:  timer.aa prog.aa $(CONVAA_FILE)
+	AaLinkExtMem timer.aa prog.aa $(CONVAA_FILE)| vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 

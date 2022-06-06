@@ -1,0 +1,6 @@
+        
+        fetch_addr##num := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) address##num )])
+        $volatile n_row##num := ($mux next_row (row##num + N_ROWS_S) row##num )
+        $volatile n_address##num := (address##num + ($mux next_row (m_factor + mycounter ) 1))
+        $volatile send_flag##num := (row##num < row_in)
+        $guard (send_flag##num ) input_pipe##num := ->(fetch_addr##num )

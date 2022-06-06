@@ -71,7 +71,6 @@ void sendOutput(size)
     }
 }
 
-
 void zeropad3D_A()
 {
     uint8_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high,pad;
@@ -283,46 +282,51 @@ void zeropad3D_A()
 //     #endif
 //     write_uint8 ("Block7_complete", 1);
 // }
-
-
+    
 void zeropad3D()
 {
-    uint8_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high,pad;
+    uint16_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high;
+    uint8_t pad;
     // des_inp.data_type = i16;
-    uint8_t row_major_form = read_uint8 ("zeropad_input_pipe");
-    uint8_t number_of_dimensions = read_uint8 ("zeropad_input_pipe");
+    uint16_t row_major_form = read_uint8 ("zeropad_input_pipe");
+    row_major_form = (row_major_form << 8) + read_uint8 ("zeropad_input_pipe");
+    uint16_t number_of_dimensions = read_uint8 ("zeropad_input_pipe");
+    number_of_dimensions = (number_of_dimensions << 8) + read_uint8 ("zeropad_input_pipe");
     int i;
     // for(i = 0;i < des_inp.number_of_dimensions;i++){
     //     des_inp.dimensions[i] = read_uint8 ("zeropad_input_pipe");
     // }
     row_high = read_uint8 ("zeropad_input_pipe");
+    row_high = (row_high << 8) + read_uint8 ("zeropad_input_pipe");
     col_high = read_uint8 ("zeropad_input_pipe");
+    col_high = (col_high << 8) + read_uint8 ("zeropad_input_pipe");
     depth_high = read_uint8 ("zeropad_input_pipe");
+    depth_high = (depth_high << 8) + read_uint8 ("zeropad_input_pipe");
 
     pad = read_uint8 ("zeropad_input_pipe");
     
 	out_row_high = read_uint8 ("zeropad_input_pipe");
+    out_row_high = (out_row_high << 8) + read_uint8 ("zeropad_input_pipe");
     out_col_high = read_uint8 ("zeropad_input_pipe");
+    out_col_high = (out_col_high << 8) + read_uint8 ("zeropad_input_pipe");
     out_depth_high = read_uint8 ("zeropad_input_pipe");
+    out_depth_high = (out_depth_high << 8) + read_uint8 ("zeropad_input_pipe");
     
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
     uint64_t input_size = row_high*col_high*depth_high;
-
-    for(i = 0; i < (input_size >> 2); i ++)
+    
+    for(i = 0; i < (input_size >> 3); i ++)
     {
         uint64_t element;
-        // __get4xi16__ reads 4 16-bit numbers from
-		// maxpool_input_pipe, and packs them into 
-		// a 64 bit number
         __get4xi16__(element);
-
         T.data_array[i] = element;
     }
-    __aa_barrier__();
 
-    #ifndef SW
-	    uint64_t start_time = timer();
-    #endif
+#ifndef SW
+    __aa_barrier__();
+    uint64_t start_time = timer();
+    __aa_barrier__();
+#endif
     write_uint8("Block0_starting", row_high);
     write_uint8("Block0_starting", col_high);
     write_uint8("Block0_starting", depth_high);
@@ -387,7 +391,7 @@ void zeropad3D()
     // write_uint8("Block7_starting", out_depth_high);
     // write_uint8("Block7_starting", pad);
 
-    // __aa_barrier__();
+    __aa_barrier__();
 
     uint16_t s0 = read_uint8("Block0_complete");
     // uint16_t s1 = read_uint8("Block1_complete");
@@ -396,15 +400,40 @@ void zeropad3D()
     // uint16_t s4 = read_uint8("Block4_complete");
     // uint16_t s5 = read_uint8("Block5_complete");
     // uint16_t s6 = read_uint8("Block6_complete");
-    // uint16_t s7 = read_uint8("Block7_complete");   
+    // uint16_t s7 = read_uint8("Block7_complete"); 
+
+
     __aa_barrier__();
-    
-    #ifndef SW
-	    uint64_t stop_time = timer();
-	    uint64_t elapsed_time = stop_time - start_time;
-	    write_uint64("elapsed_time_pipe", elapsed_time);
-    #endif
+#ifndef SW
+    uint64_t stop_time = timer();
+    uint64_t elapsed_time = stop_time - start_time;
+    __aa_barrier__();
+	uint8_t time_data[8];
+	time_data[7] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[6] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[5] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+    time_data[4] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[3] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[2] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+    time_data[1] = elapsed_time & 0xFF;
+	elapsed_time>>=8;
+	time_data[0] = elapsed_time & 0xFF;
+	write_uint8 ("zeropad_output_pipe",time_data[0]);
+	write_uint8 ("zeropad_output_pipe",time_data[1]);
+	write_uint8 ("zeropad_output_pipe",time_data[2]);
+	write_uint8 ("zeropad_output_pipe",time_data[3]);
+    write_uint8 ("zeropad_output_pipe",time_data[4]);
+	write_uint8 ("zeropad_output_pipe",time_data[5]);
+	write_uint8 ("zeropad_output_pipe",time_data[6]);
+	write_uint8 ("zeropad_output_pipe",time_data[7]);
+#endif    
     __aa_barrier__();
 
-    sendOutput(out_row_high * out_col_high * out_depth_high);
+    sendOutput(out_row_high * out_col_high * out_depth_high); 
 }

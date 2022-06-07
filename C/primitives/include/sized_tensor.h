@@ -44,8 +44,10 @@ typedef struct __SizedTensor_4K {
 typedef struct __SizedTensor_16K {
 	uint64_t data_array[4096 * 4];
 } SizedTensor_16K;
+typedef struct __SizedTensor_64K {
+	uint64_t data_array[4096 * 16];
+} SizedTensor_64K;
 typedef struct __SizedTensor_256K {
-	SizedTensorDescriptor descriptor;
 	uint64_t data_array[1024 * 256];
 } SizedTensor_256K;
 typedef struct __SizedTensor_1M {

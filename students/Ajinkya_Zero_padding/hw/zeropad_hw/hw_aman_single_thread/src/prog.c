@@ -289,7 +289,7 @@ void zeropad3D()
 {
     uint8_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high,pad;
     // des_inp.data_type = i16;
-    uint8_t row_major_form = read_uint8 ("zeropad_input_pipe");;
+    uint8_t row_major_form = read_uint8 ("zeropad_input_pipe");
     uint8_t number_of_dimensions = read_uint8 ("zeropad_input_pipe");
     int i;
     // for(i = 0;i < des_inp.number_of_dimensions;i++){

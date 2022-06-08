@@ -1,0 +1,70 @@
+// Access the input tensor and write to iput pipe
+$module [access_T]
+$in()
+$out()
+$is
+{
+    $branchblock [access_block]
+    {
+        row_in := input_module_pipe
+        ct := input_module_pipe
+        chl_in := input_module_pipe
+        chl_out := input_module_pipe
+
+        m_factor := ($bitcast ($uint<32>) (ct * chl_in))
+        m2_factor := (m_factor << 1)
+        m3_factor := (m2_factor+m_factor)
+        m4_factor := (m_factor << 2)
+
+        $merge $entry loopback
+        $phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on loopback
+        $endmerge
+        
+            // Pipeline for sending inputs
+            $dopipeline $depth 15 $buffering 2 $fullrate
+            $merge $entry $loopback
+            $phi address1 := ($bitcast ($uint<32>) 0) $on $entry n_address1 $on $loopback
+            $phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+            $phi address2 := ($bitcast ($uint<32>) m_factor) $on $entry n_address2 $on $loopback
+            $phi row2 := ($bitcast ($uint<16>) 0) $on $entry n_row2 $on $loopback
+            $phi address3 := ($bitcast ($uint<32>) m2_factor) $on $entry n_address3 $on $loopback
+            $phi row3 := ($bitcast ($uint<16>) 0) $on $entry n_row3 $on $loopback
+            $phi address4 := ($bitcast ($uint<32>) m3_factor) $on $entry n_address4 $on $loopback
+            $phi row4 := ($bitcast ($uint<16>) 1) $on $entry n_row4 $on $loopback
+            $phi address5 := ($bitcast ($uint<32>) m4_factor) $on $entry n_address5 $on $loopback
+            $phi row5 := ($bitcast ($uint<16>) 2) $on $entry n_row5 $on $loopback
+            $phi address6 := ($bitcast ($uint<32>) (m4_factor+m_factor)) $on $entry n_address6 $on $loopback
+            $phi row6 := ($bitcast ($uint<16>) 3) $on $entry n_row6 $on $loopback
+            $phi start := ($bitcast ($uint<1>) 1) $on $entry n_start $on $loopback
+            $phi mycounter := ($bitcast ($uint<32>) m_factor) $on $entry n_mycounter $on $loopback
+            $endmerge
+            
+            $volatile next_row := (mycounter == 1)
+            $volatile n_start := next_row
+            $volatile tmp_cnt := (mycounter - 1)
+            $volatile n_mycounter := ($mux next_row m_factor tmp_cnt )
+
+            #define num 1
+            #include macro_file1.aa
+            #define num 2
+            #include macro_file1.aa
+            #define num 3
+            #include macro_file1.aa
+            #define num 4
+            #include macro_file1.aa
+            #define num 5
+            #include macro_file1.aa
+            #define num 6
+            #include macro_file1.aa
+
+            $volatile continue_flag1 := (n_row1 < row_in)
+
+
+            $while continue_flag1
+
+        //maxpool_output_pipe := ($bitcast ($uint<8>) 50)
+        n_chl_num := (chl_num + 1)
+        //maxpool_output_pipe := 126
+        $if (n_chl_num != chl_out) $then $place [loopback] $endif
+    }
+}

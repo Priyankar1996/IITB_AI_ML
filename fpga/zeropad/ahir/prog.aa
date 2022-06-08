@@ -337,7 +337,6 @@ $is
     $barrier 
     $call timer ()  (call133)
     conv134 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) call133) )
-    $barrier 
     Block0_starting := call21
     Block0_starting := call30
     Block0_starting := call39
@@ -345,13 +344,11 @@ $is
     Block0_starting := call58
     Block0_starting := call67
     Block0_starting := call43
-    $barrier 
     call149 := Block0_complete
     $barrier 
     $call timer ()  (call152)
     conv153 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) call152) )
     sub := (conv153 - conv134)
-    $barrier 
     conv159 := ($cast ($uint<8>) sub)
     shr162 := (sub >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000001000 ) )
     conv165 := ($cast ($uint<8>) shr162)

@@ -25,31 +25,29 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 #define __dim2__(td) ({td.dimensions[2];})
 
 #define __zero_pad_opt__(row_low,row_high,col_low,col_high,z_low,z_high,tx,ty,tz,rx,ry,rz,T,pad,R) ({\
-	__dt__ k = 0,j1 = col_low,i = row_low,pad_reg = pad,dim2T = tz,\
+	uint16_t k = 0,j1 = col_low,i = row_low,pad_reg = pad,dim2T = tz,\
 			dim1T = ty,dim0T = tx,dim2R = rz,\
 			dim1R = ry,dim0R = rx,dim21T = dim2T*dim1T,\
 			dim21R = dim2R*dim1R,j = j1,break_flag;\
 	while (1) {\
+		__loop_pipeline_var__\
+		break_flag = __Check_break_flag__(i,j,k,row_high,col_high,dim2T,j1,pad_reg);\
+		__dt__ dest_data_array_idx = (k + dim2R*(j) + dim21R*(i)),img_data_array_idx = (k + dim2T*(j-pad_reg) + dim21T*(i-pad_reg));\
 		if((i < (pad_reg)) || (i >= (row_high+pad_reg)) || (j < (pad_reg)) || (j >= (col_high+pad_reg))){\
-			int dest_data_array_idx = k + dim2R*j + dim21R*i;\
-            R.data_array[dest_data_array_idx >> 2] = 0 ;\
+            R.data_array[dest_data_array_idx >> 3] = 0 ;\
             }\
         else{\
-			int img_data_array_idx = (k + dim2T*(j-pad_reg) + dim21T*(i-pad_reg));\
-			int dest_data_array_idx = (k + dim2R*(j) + dim21R*(i));\
-			R.data_array[dest_data_array_idx >> 2] = T.data_array[img_data_array_idx >> 2];\
+			R.data_array[dest_data_array_idx >> 3] = T.data_array[img_data_array_idx >> 3];\
 			}\
-		break_flag = __Check_break_flag__(i,j,k,row_high,col_high,dim2T,j1,pad_reg);\
 		if(break_flag)\
 			break;\
-	__loop_pipeline_var__\
 	}\
 })
 
 #define __Check_break_flag__(i,j,k,row_high,col_high,dim2T,j1,pad_reg) ({\
-	__dt__ flag = 0;\
-	if((k+4) < dim2T)\
-		k+=4;\
+	__dt__ flag = 0,dim2T_dif = dim2T - 8;\
+	if(k <= dim2T_dif)\
+		k+=8;\
 	else {\
 		k = 0;\
 		j++;\

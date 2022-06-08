@@ -322,10 +322,11 @@ void zeropad3D()
         T.data_array[i] = element;
     }
 
+    __aa_barrier__();
 #ifndef SW
-    __aa_barrier__();
+    // __aa_barrier__();
     uint64_t start_time = timer();
-    __aa_barrier__();
+    // __aa_barrier__();
 #endif
     write_uint8("Block0_starting", row_high);
     write_uint8("Block0_starting", col_high);
@@ -391,7 +392,7 @@ void zeropad3D()
     // write_uint8("Block7_starting", out_depth_high);
     // write_uint8("Block7_starting", pad);
 
-    __aa_barrier__();
+    // __aa_barrier__();
 
     uint16_t s0 = read_uint8("Block0_complete");
     // uint16_t s1 = read_uint8("Block1_complete");
@@ -407,7 +408,6 @@ void zeropad3D()
 #ifndef SW
     uint64_t stop_time = timer();
     uint64_t elapsed_time = stop_time - start_time;
-    __aa_barrier__();
 	uint8_t time_data[8];
 	time_data[7] = elapsed_time & 0xFF;
 	elapsed_time>>=8;

@@ -1,0 +1,52 @@
+$pipe sparseMult_in_pipe : $uint<17> $depth 10
+$pipe sparseMult_out_pipe : $uint<8> $depth 10
+$pipe input_pipe : $uint<64> $depth 10
+$pipe output_pipe : $uint<64> $depth 10
+
+$module [sparseMult] $in() $out() $is
+{
+	$branchblock [no_name]
+	{
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi acc := ($bitcast ($int<8>) 0) $on $entry nacc $on $loopback
+		$endmerge
+		val := sparseMult_in_pipe
+		$split (val 1 8 8) (flag val1 val2)
+		$volatile nacc := ($mux flag 0 (acc + ($bitcast ($int<8>) (val1*val2))))
+		$guard (flag) sparseMult_out_pipe := ($bitcast ($uint<8>) acc)
+		$while 1
+	}
+}
+
+$module [main_module] $in() $out() $is
+{
+	$branchblock [main]
+	{
+		$call timer () (start_time)
+		output_pipe := start_time
+		
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi count := ($bitcast ($uint<8>) 0) $on $entry ncount $on $loopback
+		$endmerge
+		in_value := input_pipe
+		$split (in_value 8 8 8 8 8 8 8 8) (a1 m1 a2 m2 a3 m3 a4 m4)
+		send1 := (a1 != 0)
+		send2 := (a2 != 0)
+		send3 := (a3 != 0)
+		send4 := (a4 != 0)
+		$guard (send1) sparseMult_in_pipe := ($concat $zero<1> a1 m1)
+		$guard (send2) sparseMult_in_pipe := ($concat $zero<1> a2 m2)
+		$guard (send3) sparseMult_in_pipe := ($concat $zero<1> a3 m3)
+		$guard (send4) sparseMult_in_pipe := ($concat $one<1> a4 m4)
+		ncount := (count + 1)
+		$while (count < 99)
+		
+		$call timer () (end_time)
+		out_val := sparseMult_out_pipe
+		$call timer () (end_time2)
+		output_pipe := (end_time - start_time)
+		output_pipe := (end_time2 - start_time)
+	}
+}

@@ -33,7 +33,7 @@
 
 #ifdef SW
 DEFINE_THREAD(zeropad3D);
-DEFINE_THREAD(zeropad3D_A);
+// DEFINE_THREAD(zeropad3D_A);
 // DEFINE_THREAD(zeropad3D_B);
 // DEFINE_THREAD(zeropad3D_C);
 // DEFINE_THREAD(zeropad3D_D);
@@ -74,8 +74,8 @@ int main(int argc,char **argv)
         init_pipe_handler();
         register_pipe ("zeropad_input_pipe",2,8,PIPE_FIFO_MODE);
         register_pipe ("zeropad_output_pipe",2,8,PIPE_FIFO_MODE);
-		register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
+		// register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block1_starting",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block1_complete",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block2_starting",1,8,PIPE_FIFO_MODE);
@@ -93,7 +93,7 @@ int main(int argc,char **argv)
 
         
 		PTHREAD_DECL(zeropad3D);
-		PTHREAD_DECL(zeropad3D_A);
+		// PTHREAD_DECL(zeropad3D_A);
 		// PTHREAD_DECL(zeropad3D_B);
 		// PTHREAD_DECL(zeropad3D_C);
 		// PTHREAD_DECL(zeropad3D_D);
@@ -104,7 +104,7 @@ int main(int argc,char **argv)
 
 		
 		PTHREAD_CREATE(zeropad3D);
-		PTHREAD_CREATE(zeropad3D_A);
+		// PTHREAD_CREATE(zeropad3D_A);
 		// PTHREAD_CREATE(zeropad3D_B);
 		// PTHREAD_CREATE(zeropad3D_C);
 		// PTHREAD_CREATE(zeropad3D_D);
@@ -226,7 +226,7 @@ int main(int argc,char **argv)
 
     #ifdef SW
 	    PTHREAD_CANCEL(zeropad3D);
-		PTHREAD_CANCEL(zeropad3D_A);
+		// PTHREAD_CANCEL(zeropad3D_A);
 		// PTHREAD_CANCEL(zeropad3D_B);
 		// PTHREAD_CANCEL(zeropad3D_C);
 		// PTHREAD_CANCEL(zeropad3D_D);

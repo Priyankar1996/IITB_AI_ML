@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T zeropad3D -T zeropad3D_A -T timerDaemon
+TOPMODULES=-T zeropad3D -T timerDaemon
 
 
 # compile with SW defined.

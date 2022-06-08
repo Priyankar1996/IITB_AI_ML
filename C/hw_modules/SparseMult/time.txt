@@ -1,0 +1,7 @@
+100 inputs of size 4
+
+For none sent: time = 413, 419
+For only one sent: time = 493
+For all sent : time = 793 (also seen 591, 597)
+
+No guard statements, then time taken is 209.

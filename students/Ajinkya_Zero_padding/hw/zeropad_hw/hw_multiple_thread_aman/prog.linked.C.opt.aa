@@ -1,0 +1,831 @@
+$record [structx_x__SizedTensor_16K]  < $array[16384] $of $uint<64> > 
+$record [structx_x__TensorDescriptor]  < $uint<32> >  < $uint<32> >  < $uint<32> >  < $array[64] $of $uint<32> > 
+$pipe  Block0_complete : $uint<8>  $depth 1 
+// can point into 
+$pipe  Block0_starting : $uint<8>  $depth 1 
+// can point into 
+$pipe  Block1_complete : $uint<8>  $depth 1 
+// can point into 
+$pipe  Block1_starting : $uint<8>  $depth 1 
+// can point into 
+$pipe  Block2_complete : $uint<8>  $depth 1 
+// can point into 
+$pipe  Block2_starting : $uint<8>  $depth 1 
+// can point into 
+$pipe  Block3_complete : $uint<8>  $depth 1 
+// can point into 
+$pipe  Block3_starting : $uint<8>  $depth 1 
+// can point into 
+$storage  R :  structx_x__SizedTensor_16K  // memory space index = 0  base address = 0  word size = 64
+// can point into 
+$storage  T :  structx_x__SizedTensor_16K  // memory space index = 1  base address = 0  word size = 64
+// can point into 
+$storage  count : $uint<64> // memory space index = 2  base address = 0  word size = 64
+// can point into 
+$pipe  elapsed_time_pipe : $uint<64>  $depth 1 
+// can point into 
+$pipe  zeropad_input_pipe : $uint<8>  $depth 2 
+// can point into 
+$pipe  zeropad_output_pipe : $uint<8>  $depth 2 
+// can point into 
+$module [progx_xoptx_xo_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $null
+  $attribute initializer 
+}
+$module [global_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $parallelblock[pb]
+  {
+    $call progx_xoptx_xo_storage_initializer_ () () 
+  }
+}
+$module [sendOutput]
+$in ( size : $uint<32>  )
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    $volatile shr67 := ($bitcast ($uint<32>) (($bitcast ($int<32>) size ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $volatile cmp68 := (($bitcast ($int<32>) shr67 ) > ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) )) $buffering 1
+    $if cmp68 $then 
+    $place[entry_bbx_xnph]
+    $else 
+    $place[entry_forx_xend]
+    $endif
+    $merge entry_bbx_xnph 
+    $endmerge
+    tmp1 := ($cast ($uint<64>) shr67 ) $buffering 1// bits of buffering = 64. 
+    $place[bbx_xnph_forx_xbody]
+    $merge bbx_xnph_forx_xbody forx_xbody_forx_xbody 
+    $phi indvar := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph_forx_xbody 			  ($cast ($uint<64>) indvarx_xnext ) $on   forx_xbody_forx_xbody 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar]) $buffering 1// bits of buffering = 32. 
+    tmp4 := ->(arrayidx) $buffering 1// bits of buffering = 64. 
+    conv := ($cast ($uint<8>) tmp4 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr9 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    conv12 := ($cast ($uint<8>) shr9 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr15 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000010000  )) $buffering 1
+    conv18 := ($cast ($uint<8>) shr15 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr21 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000011000  )) $buffering 1
+    conv24 := ($cast ($uint<8>) shr21 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr27 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000100000  )) $buffering 1
+    conv30 := ($cast ($uint<8>) shr27 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr33 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000101000  )) $buffering 1
+    conv36 := ($cast ($uint<8>) shr33 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr39 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000110000  )) $buffering 1
+    conv42 := ($cast ($uint<8>) shr39 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr45 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000111000  )) $buffering 1
+    conv48 := ($cast ($uint<8>) shr45 ) $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv48 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv42 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv36 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv30 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv24 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv18 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv12 $buffering 1// bits of buffering = 8. 
+    zeropad_output_pipe := conv $buffering 1// bits of buffering = 8. 
+    $volatile indvarx_xnext := (indvar + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile exitcond2 := (indvarx_xnext == tmp1) $buffering 1
+    $if exitcond2 $then 
+    $place[forx_xbody_forx_xendx_xloopexit]
+    $else 
+    $place[forx_xbody_forx_xbody]
+    $endif
+    $merge forx_xbody_forx_xendx_xloopexit 
+    $endmerge
+    $place[forx_xendx_xloopexit_forx_xend]
+    $merge entry_forx_xend forx_xendx_xloopexit_forx_xend 
+    $endmerge
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [timer]
+$in ()
+$out ( c : $uint<64>  )
+$is
+{
+  c := count $buffering 1// bits of buffering = 64. 
+}
+$module [timerDaemon]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    $dopipeline $depth 3 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi ncount := 			  (ncount + 1 ) $on   $loopback 			  ($bitcast ($uint<64>) 0  ) $on   $entry 
+    // type of target is $uint<64>
+    $endmerge
+    count := ncount $buffering 1// bits of buffering = 64. 
+    $while 1 
+  }
+}
+$module [zeropad3D]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call1 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call2 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call3 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call4 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call5 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call6 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call7 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    call8 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv := ($cast ($uint<64>) call2 ) $buffering 1// bits of buffering = 64. 
+    conv10 := ($cast ($uint<64>) call3 ) $buffering 1// bits of buffering = 64. 
+    conv12 := ($cast ($uint<64>) call4 ) $buffering 1// bits of buffering = 64. 
+    $volatile mul := (conv10 * conv) $buffering 1
+    $volatile mul13 := (mul * conv12) $buffering 1
+    $volatile shr125x_xmask := (mul13 & ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000111111111111111111111100  )) $buffering 1
+    $volatile cmp126 := (shr125x_xmask == ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  )) $buffering 1
+    $if cmp126 $then 
+    $place[entry_forx_xend]
+    $else 
+    $place[entry_bbx_xnph]
+    $endif
+    $merge entry_bbx_xnph 
+    $endmerge
+    tmp := ($cast ($uint<64>) call3 ) $buffering 1// bits of buffering = 64. 
+    tmp1 := ($cast ($uint<64>) call2 ) $buffering 1// bits of buffering = 64. 
+    $volatile tmp2 := (tmp * tmp1) $buffering 1
+    tmp3 := ($cast ($uint<64>) call4 ) $buffering 1// bits of buffering = 64. 
+    $volatile tmp4 := (tmp2 * tmp3) $buffering 1
+    $volatile tmp5 := (tmp4 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000010  )) $buffering 1
+    $volatile tmp6 := (tmp5 > ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile umax7 := ( $mux tmp6 tmp5  ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  ) )  $buffering 1
+    $place[bbx_xnph_forx_xbody]
+    $merge bbx_xnph_forx_xbody forx_xbody_forx_xbody 
+    $phi indvar := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph_forx_xbody 			  ($cast ($uint<64>) indvarx_xnext ) $on   forx_xbody_forx_xbody 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar]) $buffering 1// bits of buffering = 32. 
+    call20 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv21 := ($cast ($uint<64>) call20 ) $buffering 1// bits of buffering = 64. 
+    $volatile shl := (conv21 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call23 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv25 := ($cast ($uint<64>) call23 ) $buffering 1// bits of buffering = 64. 
+    $volatile add := (shl | conv25) $buffering 1
+    $volatile shl27 := (add << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call28 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv30 := ($cast ($uint<64>) call28 ) $buffering 1// bits of buffering = 64. 
+    $volatile add31 := (shl27 | conv30) $buffering 1
+    $volatile shl33 := (add31 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call34 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv36 := ($cast ($uint<64>) call34 ) $buffering 1// bits of buffering = 64. 
+    $volatile add37 := (shl33 | conv36) $buffering 1
+    $volatile shl39 := (add37 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call40 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv42 := ($cast ($uint<64>) call40 ) $buffering 1// bits of buffering = 64. 
+    $volatile add43 := (shl39 | conv42) $buffering 1
+    $volatile shl45 := (add43 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call46 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv48 := ($cast ($uint<64>) call46 ) $buffering 1// bits of buffering = 64. 
+    $volatile add49 := (shl45 | conv48) $buffering 1
+    $volatile shl51 := (add49 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call52 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv54 := ($cast ($uint<64>) call52 ) $buffering 1// bits of buffering = 64. 
+    $volatile add55 := (shl51 | conv54) $buffering 1
+    $volatile shl57 := (add55 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call58 := zeropad_input_pipe $buffering 1// bits of buffering = 8. 
+    conv60 := ($cast ($uint<64>) call58 ) $buffering 1// bits of buffering = 64. 
+    $volatile add61 := (shl57 | conv60) $buffering 1
+    ->(arrayidx) := add61 $buffering 1// bits of buffering = 64. 
+    $volatile indvarx_xnext := (indvar + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile exitcond8 := (indvarx_xnext == umax7) $buffering 1
+    $if exitcond8 $then 
+    $place[forx_xbody_forx_xendx_xloopexit]
+    $else 
+    $place[forx_xbody_forx_xbody]
+    $endif
+    $merge forx_xbody_forx_xendx_xloopexit 
+    $endmerge
+    $place[forx_xendx_xloopexit_forx_xend]
+    $merge entry_forx_xend forx_xendx_xloopexit_forx_xend 
+    $endmerge
+    $barrier
+    $call timer () (call66 ) 
+    conv67 := ($bitcast ($uint<64>) ($cast ($int<64>) call66 ) ) $buffering 1// bits of buffering = 64. 
+    Block0_starting := call2 $buffering 1// bits of buffering = 8. 
+    Block0_starting := call3 $buffering 1// bits of buffering = 8. 
+    Block0_starting := call4 $buffering 1// bits of buffering = 8. 
+    Block0_starting := call6 $buffering 1// bits of buffering = 8. 
+    Block0_starting := call7 $buffering 1// bits of buffering = 8. 
+    Block0_starting := call8 $buffering 1// bits of buffering = 8. 
+    Block0_starting := call5 $buffering 1// bits of buffering = 8. 
+    Block1_starting := call2 $buffering 1// bits of buffering = 8. 
+    Block1_starting := call3 $buffering 1// bits of buffering = 8. 
+    Block1_starting := call4 $buffering 1// bits of buffering = 8. 
+    Block1_starting := call6 $buffering 1// bits of buffering = 8. 
+    Block1_starting := call7 $buffering 1// bits of buffering = 8. 
+    Block1_starting := call8 $buffering 1// bits of buffering = 8. 
+    Block1_starting := call5 $buffering 1// bits of buffering = 8. 
+    Block2_starting := call2 $buffering 1// bits of buffering = 8. 
+    Block2_starting := call3 $buffering 1// bits of buffering = 8. 
+    Block2_starting := call4 $buffering 1// bits of buffering = 8. 
+    Block2_starting := call6 $buffering 1// bits of buffering = 8. 
+    Block2_starting := call7 $buffering 1// bits of buffering = 8. 
+    Block2_starting := call8 $buffering 1// bits of buffering = 8. 
+    Block2_starting := call5 $buffering 1// bits of buffering = 8. 
+    Block3_starting := call2 $buffering 1// bits of buffering = 8. 
+    Block3_starting := call3 $buffering 1// bits of buffering = 8. 
+    Block3_starting := call4 $buffering 1// bits of buffering = 8. 
+    Block3_starting := call6 $buffering 1// bits of buffering = 8. 
+    Block3_starting := call7 $buffering 1// bits of buffering = 8. 
+    Block3_starting := call8 $buffering 1// bits of buffering = 8. 
+    Block3_starting := call5 $buffering 1// bits of buffering = 8. 
+    call97 := Block0_complete $buffering 1// bits of buffering = 8. 
+    call100 := Block1_complete $buffering 1// bits of buffering = 8. 
+    call103 := Block2_complete $buffering 1// bits of buffering = 8. 
+    call106 := Block3_complete $buffering 1// bits of buffering = 8. 
+    $barrier
+    $call timer () (call109 ) 
+    conv110 := ($bitcast ($uint<64>) ($cast ($int<64>) call109 ) ) $buffering 1// bits of buffering = 64. 
+    $volatile sub := (conv110 - conv67) $buffering 1
+    elapsed_time_pipe := sub $buffering 1// bits of buffering = 64. 
+    $barrier
+    conv116 := ($cast ($uint<32>) call6 ) $buffering 1// bits of buffering = 32. 
+    conv118 := ($cast ($uint<32>) call7 ) $buffering 1// bits of buffering = 32. 
+    conv121 := ($cast ($uint<32>) call8 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul119 := (conv118 * conv116) $buffering 1
+    $volatile mul122 := (mul119 * conv121) $buffering 1
+    $call sendOutput (mul122 ) () 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_A]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block0_starting $buffering 1// bits of buffering = 8. 
+    call1 := Block0_starting $buffering 1// bits of buffering = 8. 
+    call2 := Block0_starting $buffering 1// bits of buffering = 8. 
+    call3 := Block0_starting $buffering 1// bits of buffering = 8. 
+    call4 := Block0_starting $buffering 1// bits of buffering = 8. 
+    call5 := Block0_starting $buffering 1// bits of buffering = 8. 
+    call6 := Block0_starting $buffering 1// bits of buffering = 8. 
+    $barrier
+    conv27 := ($cast ($uint<32>) call2 ) $buffering 1// bits of buffering = 32. 
+    conv29 := ($cast ($uint<32>) call1 ) $buffering 1// bits of buffering = 32. 
+    conv33 := ($cast ($uint<32>) call5 ) $buffering 1// bits of buffering = 32. 
+    conv35 := ($cast ($uint<32>) call4 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul36 := (conv35 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext := (mul36 * conv33) $buffering 1
+    $volatile conv90 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv104 := ($cast ($uint<32>) call6 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul := (conv29 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext171 := (mul * conv27) $buffering 1
+    $volatile conv108 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext171 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv126 := ($cast ($uint<32>) call ) $buffering 1// bits of buffering = 32. 
+    $volatile div127 := (conv126 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add130 := (conv104 + div127) $buffering 1
+    $volatile div145 := (conv29 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add148 := (conv104 + div145) $buffering 1
+    $volatile shl := (conv104 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add58 := (shl + div145) $buffering 1
+    $volatile add73 := (shl + div127) $buffering 1
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody 
+    $phi kx_x1_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi ix_x2_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    $dopipeline $depth 15 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi kx_x1 := 			  ($cast ($uint<16>) kx_x0 ) $on   $loopback 			  kx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $phi ix_x2 := 			  ($cast ($uint<16>) ix_x1 ) $on   $loopback 			  ix_x2_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) jx_x0 ) $on   $loopback 			  jx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $endmerge
+    conv43 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $volatile add := (conv43 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1
+    $volatile cmp := (($bitcast ($int<32>) add ) < ($bitcast ($int<32>) conv27 )) $buffering 1
+    $volatile whilex_xbody_ifx_xthen_taken := cmp $buffering 1
+    $volatile whilex_xbody_ifx_xelse_taken := ( ~ cmp ) $buffering 1
+    $volatile ifx_xelse_exec_guard := whilex_xbody_ifx_xelse_taken $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    $guard (ifx_xelse_exec_guard) conv53 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp59 := (conv53 == add58) $buffering 1
+    $guard (ifx_xelse_exec_guard) inc64 := ($cast ($uint<16>) cmp59 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xelse_exec_guard) $volatile inc64x_xix_x2 := (inc64 + ix_x2) $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile jx_x2 := ( $mux cmp59 ($bitcast ($uint<16>) _b0000000000000000  )  inc )  $buffering 1
+    $guard (ifx_xelse_exec_guard) conv66 := ($bitcast ($uint<32>) ($cast ($int<32>) inc64x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp74 := (conv66 == add73) $buffering 1
+    $volatile ifx_xelse_ifx_xthen76_taken := (ifx_xelse_exec_guard & cmp74) $buffering 1
+    $volatile ifx_xelse_ifx_xend78_taken := (ifx_xelse_exec_guard & ( ~ cmp74 )) $buffering 1
+    $volatile ifx_xthen76_exec_guard := ifx_xelse_ifx_xthen76_taken $buffering 1
+    $volatile ifx_xthen76_ifx_xend78_taken := ifx_xthen76_exec_guard $buffering 1
+    $volatile ifx_xthen_exec_guard := whilex_xbody_ifx_xthen_taken $buffering 1
+    $guard (ifx_xthen_exec_guard) $volatile add49 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1
+    $volatile ifx_xthen_ifx_xend78_taken := ifx_xthen_exec_guard $buffering 1
+    $volatile ifx_xend78_exec_guard := (ifx_xelse_ifx_xend78_taken | (ifx_xthen_ifx_xend78_taken | ifx_xthen76_ifx_xend78_taken)) $buffering 1
+    $volatile kx_x0 := ( $mux ifx_xthen_ifx_xend78_taken ($bitcast ($uint<16>) add49 )  ( $mux ifx_xthen76_ifx_xend78_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xelse_ifx_xend78_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile ix_x1 := ( $mux ifx_xthen_ifx_xend78_taken ($bitcast ($uint<16>) ix_x2 )  ( $mux ifx_xthen76_ifx_xend78_taken ($bitcast ($uint<16>) inc64x_xix_x2 )  ( $mux ifx_xelse_ifx_xend78_taken ($bitcast ($uint<16>) inc64x_xix_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile jx_x0 := ( $mux ifx_xthen_ifx_xend78_taken ($bitcast ($uint<16>) jx_x1 )  ( $mux ifx_xthen76_ifx_xend78_taken ($bitcast ($uint<16>) jx_x2 )  ( $mux ifx_xelse_ifx_xend78_taken ($bitcast ($uint<16>) jx_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile flagx_x0 := ( $mux ifx_xthen_ifx_xend78_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xthen76_ifx_xend78_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000001  ) )  ( $mux ifx_xelse_ifx_xend78_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $guard (ifx_xend78_exec_guard) conv82170 := ($cast ($uint<32>) kx_x0 ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend78_exec_guard) conv86 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x0 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend78_exec_guard) $volatile mul87 := (conv86 * conv33) $buffering 1
+    $guard (ifx_xend78_exec_guard) conv92 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend78_exec_guard) $volatile mul93 := (conv92 * conv90) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile add88 := (mul93 + conv82170) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile add94 := (add88 + mul87) $buffering 1
+    $guard (ifx_xend78_exec_guard) conv95 := ($cast ($uint<16>) add94 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xend78_exec_guard) $volatile sub := (conv86 - conv104) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile mul105 := (sub * conv27) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile sub113 := (conv92 - conv104) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile mul114 := (sub113 * conv108) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile add106 := (mul114 + conv82170) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile add115 := (add106 + mul105) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile cmp121 := (($bitcast ($int<32>) conv92 ) < ($bitcast ($int<32>) conv104 )) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile cmp121x_xnot := (cmp121 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile cmp131 := (($bitcast ($int<32>) conv92 ) < ($bitcast ($int<32>) add130 )) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile orx_xcond := (cmp121x_xnot & cmp131) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile orx_xcondx_xnot := (orx_xcond ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile cmp138 := (($bitcast ($int<32>) conv86 ) < ($bitcast ($int<32>) conv104 )) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile orx_xcond175 := (orx_xcondx_xnot | cmp138) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile orx_xcond175x_xnot := (orx_xcond175 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile cmp149 := (($bitcast ($int<32>) conv86 ) < ($bitcast ($int<32>) add148 )) $buffering 1
+    $guard (ifx_xend78_exec_guard) $volatile orx_xcond176 := (orx_xcond175x_xnot & cmp149) $buffering 1
+    $volatile ifx_xend78_ifx_xelse154_taken := (ifx_xend78_exec_guard & orx_xcond176) $buffering 1
+    $volatile ifx_xend78_ifx_xthen151_taken := (ifx_xend78_exec_guard & ( ~ orx_xcond176 )) $buffering 1
+    $volatile ifx_xthen151_exec_guard := ifx_xend78_ifx_xthen151_taken $buffering 1
+    $guard (ifx_xthen151_exec_guard) conv153 := ($bitcast ($uint<32>) ($cast ($int<32>) conv95 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen151_exec_guard) $volatile shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv153 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xthen151_exec_guard) idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen151_exec_guard) ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $volatile ifx_xelse154_exec_guard := ifx_xend78_ifx_xelse154_taken $buffering 1
+    $guard (ifx_xelse154_exec_guard) $volatile sext173 := (add115 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $guard (ifx_xelse154_exec_guard) $volatile shr157 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext173 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010010  ) )) ) $buffering 1
+    $guard (ifx_xelse154_exec_guard) idxprom158 := ($bitcast ($uint<64>) ($cast ($int<64>) shr157 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx159 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom158]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse154_exec_guard) tmp160 := ->(arrayidx159) $buffering 1// bits of buffering = 64. 
+    $guard (ifx_xelse154_exec_guard) conv162 := ($bitcast ($uint<32>) ($cast ($int<32>) conv95 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse154_exec_guard) $volatile shr163 := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv162 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xelse154_exec_guard) idxprom164 := ($bitcast ($uint<64>) ($cast ($int<64>) shr163 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx165 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom164]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse154_exec_guard) ->(arrayidx165) := tmp160 $buffering 1// bits of buffering = 64. 
+    $volatile tobool := (flagx_x0 == ($bitcast ($uint<16>) _b0000000000000000  )) $buffering 1
+    $volatile ifx_xend166_whilex_xend_taken := ( ~ tobool ) $buffering 1
+    $while tobool
+    $if ifx_xend166_whilex_xend_taken $then 
+    $place[ifx_xend166_whilex_xend]
+    $endif
+    $merge ifx_xend166_whilex_xend 
+    $endmerge
+    $barrier
+    Block0_complete := ($bitcast ($uint<8>) _b00000001  ) $buffering 1// bits of buffering = 8. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_B]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block1_starting $buffering 1// bits of buffering = 8. 
+    call1 := Block1_starting $buffering 1// bits of buffering = 8. 
+    call2 := Block1_starting $buffering 1// bits of buffering = 8. 
+    call3 := Block1_starting $buffering 1// bits of buffering = 8. 
+    call4 := Block1_starting $buffering 1// bits of buffering = 8. 
+    call5 := Block1_starting $buffering 1// bits of buffering = 8. 
+    call6 := Block1_starting $buffering 1// bits of buffering = 8. 
+    $barrier
+    conv := ($cast ($uint<16>) call1 ) $buffering 1// bits of buffering = 16. 
+    $volatile div := (conv >> ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    conv32 := ($cast ($uint<32>) call2 ) $buffering 1// bits of buffering = 32. 
+    conv34 := ($cast ($uint<32>) call1 ) $buffering 1// bits of buffering = 32. 
+    conv38 := ($cast ($uint<32>) call5 ) $buffering 1// bits of buffering = 32. 
+    conv40 := ($cast ($uint<32>) call4 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul41 := (conv40 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext := (mul41 * conv38) $buffering 1
+    $volatile conv95 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv109 := ($cast ($uint<32>) call6 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul := (conv34 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext175 := (mul * conv32) $buffering 1
+    $volatile conv113 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext175 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv131 := ($cast ($uint<32>) call ) $buffering 1// bits of buffering = 32. 
+    $volatile div132 := (conv131 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add135 := (conv109 + div132) $buffering 1
+    $volatile add152 := (conv109 + conv34) $buffering 1
+    $volatile shl := (conv109 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add63 := (shl + conv34) $buffering 1
+    $volatile add78 := (shl + div132) $buffering 1
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody 
+    $phi kx_x1_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi ix_x2_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1_at_entry := 			  ($cast ($uint<16>) div ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    $dopipeline $depth 15 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi kx_x1 := 			  ($cast ($uint<16>) kx_x0 ) $on   $loopback 			  kx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $phi ix_x2 := 			  ($cast ($uint<16>) ix_x1 ) $on   $loopback 			  ix_x2_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) jx_x0 ) $on   $loopback 			  jx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $endmerge
+    conv48 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $volatile add := (conv48 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1
+    $volatile cmp := (($bitcast ($int<32>) add ) < ($bitcast ($int<32>) conv32 )) $buffering 1
+    $volatile whilex_xbody_ifx_xthen_taken := cmp $buffering 1
+    $volatile whilex_xbody_ifx_xelse_taken := ( ~ cmp ) $buffering 1
+    $volatile ifx_xelse_exec_guard := whilex_xbody_ifx_xelse_taken $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    $guard (ifx_xelse_exec_guard) conv58 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp64 := (conv58 == add63) $buffering 1
+    $guard (ifx_xelse_exec_guard) inc69 := ($cast ($uint<16>) cmp64 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xelse_exec_guard) $volatile inc69x_xix_x2 := (inc69 + ix_x2) $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile jx_x2 := ( $mux cmp64 div  inc )  $buffering 1
+    $guard (ifx_xelse_exec_guard) conv71 := ($bitcast ($uint<32>) ($cast ($int<32>) inc69x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp79 := (conv71 == add78) $buffering 1
+    $volatile ifx_xelse_ifx_xthen81_taken := (ifx_xelse_exec_guard & cmp79) $buffering 1
+    $volatile ifx_xelse_ifx_xend83_taken := (ifx_xelse_exec_guard & ( ~ cmp79 )) $buffering 1
+    $volatile ifx_xthen81_exec_guard := ifx_xelse_ifx_xthen81_taken $buffering 1
+    $volatile ifx_xthen81_ifx_xend83_taken := ifx_xthen81_exec_guard $buffering 1
+    $volatile ifx_xthen_exec_guard := whilex_xbody_ifx_xthen_taken $buffering 1
+    $guard (ifx_xthen_exec_guard) $volatile add54 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1
+    $volatile ifx_xthen_ifx_xend83_taken := ifx_xthen_exec_guard $buffering 1
+    $volatile ifx_xend83_exec_guard := (ifx_xelse_ifx_xend83_taken | (ifx_xthen_ifx_xend83_taken | ifx_xthen81_ifx_xend83_taken)) $buffering 1
+    $volatile kx_x0 := ( $mux ifx_xthen_ifx_xend83_taken ($bitcast ($uint<16>) add54 )  ( $mux ifx_xthen81_ifx_xend83_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xelse_ifx_xend83_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile ix_x1 := ( $mux ifx_xthen_ifx_xend83_taken ($bitcast ($uint<16>) ix_x2 )  ( $mux ifx_xthen81_ifx_xend83_taken ($bitcast ($uint<16>) inc69x_xix_x2 )  ( $mux ifx_xelse_ifx_xend83_taken ($bitcast ($uint<16>) inc69x_xix_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile jx_x0 := ( $mux ifx_xthen_ifx_xend83_taken ($bitcast ($uint<16>) jx_x1 )  ( $mux ifx_xthen81_ifx_xend83_taken ($bitcast ($uint<16>) jx_x2 )  ( $mux ifx_xelse_ifx_xend83_taken ($bitcast ($uint<16>) jx_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile flagx_x0 := ( $mux ifx_xthen_ifx_xend83_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xthen81_ifx_xend83_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000001  ) )  ( $mux ifx_xelse_ifx_xend83_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $guard (ifx_xend83_exec_guard) conv87174 := ($cast ($uint<32>) kx_x0 ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend83_exec_guard) conv91 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x0 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend83_exec_guard) $volatile mul92 := (conv91 * conv38) $buffering 1
+    $guard (ifx_xend83_exec_guard) conv97 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend83_exec_guard) $volatile mul98 := (conv97 * conv95) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile add93 := (mul98 + conv87174) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile add99 := (add93 + mul92) $buffering 1
+    $guard (ifx_xend83_exec_guard) conv100 := ($cast ($uint<16>) add99 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xend83_exec_guard) $volatile sub := (conv91 - conv109) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile mul110 := (sub * conv32) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile sub118 := (conv97 - conv109) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile mul119 := (sub118 * conv113) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile add111 := (mul119 + conv87174) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile add120 := (add111 + mul110) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile cmp126 := (($bitcast ($int<32>) conv97 ) < ($bitcast ($int<32>) conv109 )) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile cmp126x_xnot := (cmp126 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile cmp136 := (($bitcast ($int<32>) conv97 ) < ($bitcast ($int<32>) add135 )) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile orx_xcond := (cmp126x_xnot & cmp136) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile orx_xcondx_xnot := (orx_xcond ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile cmp143 := (($bitcast ($int<32>) conv91 ) < ($bitcast ($int<32>) conv109 )) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile orx_xcond179 := (orx_xcondx_xnot | cmp143) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile orx_xcond179x_xnot := (orx_xcond179 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile cmp153 := (($bitcast ($int<32>) conv91 ) < ($bitcast ($int<32>) add152 )) $buffering 1
+    $guard (ifx_xend83_exec_guard) $volatile orx_xcond180 := (orx_xcond179x_xnot & cmp153) $buffering 1
+    $volatile ifx_xend83_ifx_xelse158_taken := (ifx_xend83_exec_guard & orx_xcond180) $buffering 1
+    $volatile ifx_xend83_ifx_xthen155_taken := (ifx_xend83_exec_guard & ( ~ orx_xcond180 )) $buffering 1
+    $volatile ifx_xthen155_exec_guard := ifx_xend83_ifx_xthen155_taken $buffering 1
+    $guard (ifx_xthen155_exec_guard) conv157 := ($bitcast ($uint<32>) ($cast ($int<32>) conv100 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen155_exec_guard) $volatile shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv157 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xthen155_exec_guard) idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen155_exec_guard) ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $volatile ifx_xelse158_exec_guard := ifx_xend83_ifx_xelse158_taken $buffering 1
+    $guard (ifx_xelse158_exec_guard) $volatile sext177 := (add120 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $guard (ifx_xelse158_exec_guard) $volatile shr161 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext177 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010010  ) )) ) $buffering 1
+    $guard (ifx_xelse158_exec_guard) idxprom162 := ($bitcast ($uint<64>) ($cast ($int<64>) shr161 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx163 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom162]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse158_exec_guard) tmp164 := ->(arrayidx163) $buffering 1// bits of buffering = 64. 
+    $guard (ifx_xelse158_exec_guard) conv166 := ($bitcast ($uint<32>) ($cast ($int<32>) conv100 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse158_exec_guard) $volatile shr167 := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv166 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xelse158_exec_guard) idxprom168 := ($bitcast ($uint<64>) ($cast ($int<64>) shr167 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx169 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom168]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse158_exec_guard) ->(arrayidx169) := tmp164 $buffering 1// bits of buffering = 64. 
+    $volatile tobool := (flagx_x0 == ($bitcast ($uint<16>) _b0000000000000000  )) $buffering 1
+    $volatile ifx_xend170_whilex_xend_taken := ( ~ tobool ) $buffering 1
+    $while tobool
+    $if ifx_xend170_whilex_xend_taken $then 
+    $place[ifx_xend170_whilex_xend]
+    $endif
+    $merge ifx_xend170_whilex_xend 
+    $endmerge
+    $barrier
+    Block1_complete := ($bitcast ($uint<8>) _b00000001  ) $buffering 1// bits of buffering = 8. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_C]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block2_starting $buffering 1// bits of buffering = 8. 
+    call1 := Block2_starting $buffering 1// bits of buffering = 8. 
+    call2 := Block2_starting $buffering 1// bits of buffering = 8. 
+    call3 := Block2_starting $buffering 1// bits of buffering = 8. 
+    call4 := Block2_starting $buffering 1// bits of buffering = 8. 
+    call5 := Block2_starting $buffering 1// bits of buffering = 8. 
+    call6 := Block2_starting $buffering 1// bits of buffering = 8. 
+    $barrier
+    conv := ($cast ($uint<16>) call ) $buffering 1// bits of buffering = 16. 
+    $volatile div := (conv >> ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    conv31 := ($cast ($uint<32>) call2 ) $buffering 1// bits of buffering = 32. 
+    conv33 := ($cast ($uint<32>) call1 ) $buffering 1// bits of buffering = 32. 
+    conv37 := ($cast ($uint<32>) call5 ) $buffering 1// bits of buffering = 32. 
+    conv39 := ($cast ($uint<32>) call4 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul40 := (conv39 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext := (mul40 * conv37) $buffering 1
+    $volatile conv94 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv108 := ($cast ($uint<32>) call6 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul := (conv33 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext174 := (mul * conv31) $buffering 1
+    $volatile conv112 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext174 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv130 := ($cast ($uint<32>) call ) $buffering 1// bits of buffering = 32. 
+    $volatile add133 := (conv108 + conv130) $buffering 1
+    $volatile div148 := (conv33 >> ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add151 := (conv108 + div148) $buffering 1
+    $volatile shl := (conv108 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add63 := (shl + div148) $buffering 1
+    $volatile add77 := (shl + conv130) $buffering 1
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody 
+    $phi kx_x1_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi ix_x2_at_entry := 			  ($cast ($uint<16>) div ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    $dopipeline $depth 15 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi kx_x1 := 			  ($cast ($uint<16>) kx_x0 ) $on   $loopback 			  kx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $phi ix_x2 := 			  ix_x2_at_entry $on   $entry 			  ($cast ($uint<16>) ix_x1 ) $on   $loopback 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) jx_x0 ) $on   $loopback 			  jx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $endmerge
+    conv47 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $volatile add := (conv47 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1
+    $volatile cmp := (($bitcast ($int<32>) add ) < ($bitcast ($int<32>) conv31 )) $buffering 1
+    $volatile whilex_xbody_ifx_xthen_taken := cmp $buffering 1
+    $volatile whilex_xbody_ifx_xelse_taken := ( ~ cmp ) $buffering 1
+    $volatile ifx_xelse_exec_guard := whilex_xbody_ifx_xelse_taken $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    $guard (ifx_xelse_exec_guard) conv57 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp64 := (conv57 == add63) $buffering 1
+    $guard (ifx_xelse_exec_guard) inc69 := ($cast ($uint<16>) cmp64 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xelse_exec_guard) $volatile inc69x_xix_x2 := (inc69 + ix_x2) $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile jx_x2 := ( $mux cmp64 ($bitcast ($uint<16>) _b0000000000000000  )  inc )  $buffering 1
+    $guard (ifx_xelse_exec_guard) conv71 := ($bitcast ($uint<32>) ($cast ($int<32>) inc69x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp78 := (conv71 == add77) $buffering 1
+    $volatile ifx_xelse_ifx_xthen80_taken := (ifx_xelse_exec_guard & cmp78) $buffering 1
+    $volatile ifx_xelse_ifx_xend82_taken := (ifx_xelse_exec_guard & ( ~ cmp78 )) $buffering 1
+    $volatile ifx_xthen80_exec_guard := ifx_xelse_ifx_xthen80_taken $buffering 1
+    $volatile ifx_xthen80_ifx_xend82_taken := ifx_xthen80_exec_guard $buffering 1
+    $volatile ifx_xthen_exec_guard := whilex_xbody_ifx_xthen_taken $buffering 1
+    $guard (ifx_xthen_exec_guard) $volatile add53 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1
+    $volatile ifx_xthen_ifx_xend82_taken := ifx_xthen_exec_guard $buffering 1
+    $volatile ifx_xend82_exec_guard := (ifx_xelse_ifx_xend82_taken | (ifx_xthen_ifx_xend82_taken | ifx_xthen80_ifx_xend82_taken)) $buffering 1
+    $volatile kx_x0 := ( $mux ifx_xthen_ifx_xend82_taken ($bitcast ($uint<16>) add53 )  ( $mux ifx_xthen80_ifx_xend82_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xelse_ifx_xend82_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile ix_x1 := ( $mux ifx_xthen_ifx_xend82_taken ($bitcast ($uint<16>) ix_x2 )  ( $mux ifx_xthen80_ifx_xend82_taken ($bitcast ($uint<16>) inc69x_xix_x2 )  ( $mux ifx_xelse_ifx_xend82_taken ($bitcast ($uint<16>) inc69x_xix_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile jx_x0 := ( $mux ifx_xthen_ifx_xend82_taken ($bitcast ($uint<16>) jx_x1 )  ( $mux ifx_xthen80_ifx_xend82_taken ($bitcast ($uint<16>) jx_x2 )  ( $mux ifx_xelse_ifx_xend82_taken ($bitcast ($uint<16>) jx_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile flagx_x0 := ( $mux ifx_xthen_ifx_xend82_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xthen80_ifx_xend82_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000001  ) )  ( $mux ifx_xelse_ifx_xend82_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $guard (ifx_xend82_exec_guard) conv86173 := ($cast ($uint<32>) kx_x0 ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend82_exec_guard) conv90 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x0 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend82_exec_guard) $volatile mul91 := (conv90 * conv37) $buffering 1
+    $guard (ifx_xend82_exec_guard) conv96 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend82_exec_guard) $volatile mul97 := (conv96 * conv94) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile add92 := (mul97 + conv86173) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile add98 := (add92 + mul91) $buffering 1
+    $guard (ifx_xend82_exec_guard) conv99 := ($cast ($uint<16>) add98 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xend82_exec_guard) $volatile sub := (conv90 - conv108) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile mul109 := (sub * conv31) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile sub117 := (conv96 - conv108) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile mul118 := (sub117 * conv112) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile add110 := (mul118 + conv86173) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile add119 := (add110 + mul109) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile cmp125 := (($bitcast ($int<32>) conv96 ) < ($bitcast ($int<32>) conv108 )) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile cmp125x_xnot := (cmp125 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile cmp134 := (($bitcast ($int<32>) conv96 ) < ($bitcast ($int<32>) add133 )) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile orx_xcond := (cmp125x_xnot & cmp134) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile orx_xcondx_xnot := (orx_xcond ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile cmp141 := (($bitcast ($int<32>) conv90 ) < ($bitcast ($int<32>) conv108 )) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile orx_xcond178 := (orx_xcondx_xnot | cmp141) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile orx_xcond178x_xnot := (orx_xcond178 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile cmp152 := (($bitcast ($int<32>) conv90 ) < ($bitcast ($int<32>) add151 )) $buffering 1
+    $guard (ifx_xend82_exec_guard) $volatile orx_xcond179 := (orx_xcond178x_xnot & cmp152) $buffering 1
+    $volatile ifx_xend82_ifx_xelse157_taken := (ifx_xend82_exec_guard & orx_xcond179) $buffering 1
+    $volatile ifx_xend82_ifx_xthen154_taken := (ifx_xend82_exec_guard & ( ~ orx_xcond179 )) $buffering 1
+    $volatile ifx_xthen154_exec_guard := ifx_xend82_ifx_xthen154_taken $buffering 1
+    $guard (ifx_xthen154_exec_guard) conv156 := ($bitcast ($uint<32>) ($cast ($int<32>) conv99 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen154_exec_guard) $volatile shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv156 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xthen154_exec_guard) idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen154_exec_guard) ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $volatile ifx_xelse157_exec_guard := ifx_xend82_ifx_xelse157_taken $buffering 1
+    $guard (ifx_xelse157_exec_guard) $volatile sext176 := (add119 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $guard (ifx_xelse157_exec_guard) $volatile shr160 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext176 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010010  ) )) ) $buffering 1
+    $guard (ifx_xelse157_exec_guard) idxprom161 := ($bitcast ($uint<64>) ($cast ($int<64>) shr160 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx162 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom161]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse157_exec_guard) tmp163 := ->(arrayidx162) $buffering 1// bits of buffering = 64. 
+    $guard (ifx_xelse157_exec_guard) conv165 := ($bitcast ($uint<32>) ($cast ($int<32>) conv99 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse157_exec_guard) $volatile shr166 := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv165 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xelse157_exec_guard) idxprom167 := ($bitcast ($uint<64>) ($cast ($int<64>) shr166 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx168 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom167]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse157_exec_guard) ->(arrayidx168) := tmp163 $buffering 1// bits of buffering = 64. 
+    $volatile tobool := (flagx_x0 == ($bitcast ($uint<16>) _b0000000000000000  )) $buffering 1
+    $volatile ifx_xend169_whilex_xend_taken := ( ~ tobool ) $buffering 1
+    $while tobool
+    $if ifx_xend169_whilex_xend_taken $then 
+    $place[ifx_xend169_whilex_xend]
+    $endif
+    $merge ifx_xend169_whilex_xend 
+    $endmerge
+    $barrier
+    Block2_complete := ($bitcast ($uint<8>) _b00000001  ) $buffering 1// bits of buffering = 8. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [zeropad3D_D]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := Block3_starting $buffering 1// bits of buffering = 8. 
+    call1 := Block3_starting $buffering 1// bits of buffering = 8. 
+    call2 := Block3_starting $buffering 1// bits of buffering = 8. 
+    call3 := Block3_starting $buffering 1// bits of buffering = 8. 
+    call4 := Block3_starting $buffering 1// bits of buffering = 8. 
+    call5 := Block3_starting $buffering 1// bits of buffering = 8. 
+    call6 := Block3_starting $buffering 1// bits of buffering = 8. 
+    $barrier
+    conv := ($cast ($uint<16>) call1 ) $buffering 1// bits of buffering = 16. 
+    $volatile div := (conv >> ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    conv10 := ($cast ($uint<16>) call ) $buffering 1// bits of buffering = 16. 
+    $volatile div11 := (conv10 >> ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    conv36 := ($cast ($uint<32>) call2 ) $buffering 1// bits of buffering = 32. 
+    conv38 := ($cast ($uint<32>) call1 ) $buffering 1// bits of buffering = 32. 
+    conv42 := ($cast ($uint<32>) call5 ) $buffering 1// bits of buffering = 32. 
+    conv44 := ($cast ($uint<32>) call4 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul45 := (conv44 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext := (mul45 * conv42) $buffering 1
+    $volatile conv98 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv112 := ($cast ($uint<32>) call6 ) $buffering 1// bits of buffering = 32. 
+    $volatile mul := (conv38 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $volatile sext177 := (mul * conv36) $buffering 1
+    $volatile conv116 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext177 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010000  ) )) ) $buffering 1
+    conv134 := ($cast ($uint<32>) call ) $buffering 1// bits of buffering = 32. 
+    $volatile add137 := (conv112 + conv134) $buffering 1
+    $volatile add154 := (conv112 + conv38) $buffering 1
+    $volatile shl := (conv112 << ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile add67 := (shl + conv38) $buffering 1
+    $volatile add81 := (shl + conv134) $buffering 1
+    $place[entry_whilex_xbody]
+    $merge entry_whilex_xbody 
+    $phi kx_x1_at_entry := 			  ($cast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi ix_x2_at_entry := 			  ($cast ($uint<16>) div11 ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $phi jx_x1_at_entry := 			  ($cast ($uint<16>) div ) $on   entry_whilex_xbody 
+    // type of target is $uint<16>
+    $endmerge
+    $dopipeline $depth 15 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi kx_x1 := 			  ($cast ($uint<16>) kx_x0 ) $on   $loopback 			  kx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $phi ix_x2 := 			  ($cast ($uint<16>) ix_x1 ) $on   $loopback 			  ix_x2_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $phi jx_x1 := 			  ($cast ($uint<16>) jx_x0 ) $on   $loopback 			  jx_x1_at_entry $on   $entry 
+    // type of target is $uint<16>
+    $endmerge
+    conv52 := ($bitcast ($uint<32>) ($cast ($int<32>) kx_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $volatile add := (conv52 + ($bitcast ($uint<32>) _b00000000000000000000000000000100  )) $buffering 1
+    $volatile cmp := (($bitcast ($int<32>) add ) < ($bitcast ($int<32>) conv36 )) $buffering 1
+    $volatile whilex_xbody_ifx_xthen_taken := cmp $buffering 1
+    $volatile whilex_xbody_ifx_xelse_taken := ( ~ cmp ) $buffering 1
+    $volatile ifx_xelse_exec_guard := whilex_xbody_ifx_xelse_taken $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile inc := (jx_x1 + ($bitcast ($uint<16>) _b0000000000000001  )) $buffering 1
+    $guard (ifx_xelse_exec_guard) conv62 := ($bitcast ($uint<32>) ($cast ($int<32>) inc ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp68 := (conv62 == add67) $buffering 1
+    $guard (ifx_xelse_exec_guard) inc73 := ($cast ($uint<16>) cmp68 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xelse_exec_guard) $volatile inc73x_xix_x2 := (inc73 + ix_x2) $buffering 1
+    $guard (ifx_xelse_exec_guard) $volatile jx_x2 := ( $mux cmp68 div  inc )  $buffering 1
+    $guard (ifx_xelse_exec_guard) conv75 := ($bitcast ($uint<32>) ($cast ($int<32>) inc73x_xix_x2 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse_exec_guard) $volatile cmp82 := (conv75 == add81) $buffering 1
+    $volatile ifx_xelse_ifx_xthen84_taken := (ifx_xelse_exec_guard & cmp82) $buffering 1
+    $volatile ifx_xelse_ifx_xend86_taken := (ifx_xelse_exec_guard & ( ~ cmp82 )) $buffering 1
+    $volatile ifx_xthen84_exec_guard := ifx_xelse_ifx_xthen84_taken $buffering 1
+    $volatile ifx_xthen84_ifx_xend86_taken := ifx_xthen84_exec_guard $buffering 1
+    $volatile ifx_xthen_exec_guard := whilex_xbody_ifx_xthen_taken $buffering 1
+    $guard (ifx_xthen_exec_guard) $volatile add58 := (kx_x1 + ($bitcast ($uint<16>) _b0000000000000100  )) $buffering 1
+    $volatile ifx_xthen_ifx_xend86_taken := ifx_xthen_exec_guard $buffering 1
+    $volatile ifx_xend86_exec_guard := (ifx_xelse_ifx_xend86_taken | (ifx_xthen_ifx_xend86_taken | ifx_xthen84_ifx_xend86_taken)) $buffering 1
+    $volatile kx_x0 := ( $mux ifx_xthen_ifx_xend86_taken ($bitcast ($uint<16>) add58 )  ( $mux ifx_xthen84_ifx_xend86_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xelse_ifx_xend86_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile ix_x1 := ( $mux ifx_xthen_ifx_xend86_taken ($bitcast ($uint<16>) ix_x2 )  ( $mux ifx_xthen84_ifx_xend86_taken ($bitcast ($uint<16>) inc73x_xix_x2 )  ( $mux ifx_xelse_ifx_xend86_taken ($bitcast ($uint<16>) inc73x_xix_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile jx_x0 := ( $mux ifx_xthen_ifx_xend86_taken ($bitcast ($uint<16>) jx_x1 )  ( $mux ifx_xthen84_ifx_xend86_taken ($bitcast ($uint<16>) jx_x2 )  ( $mux ifx_xelse_ifx_xend86_taken ($bitcast ($uint<16>) jx_x2 )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $volatile flagx_x0 := ( $mux ifx_xthen_ifx_xend86_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ( $mux ifx_xthen84_ifx_xend86_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000001  ) )  ( $mux ifx_xelse_ifx_xend86_taken ($bitcast ($uint<16>) ($bitcast ($uint<16>) _b0000000000000000  ) )  ($bitcast ($uint<16>) 0  ) )  )  )  $buffering 1
+    $guard (ifx_xend86_exec_guard) conv90176 := ($cast ($uint<32>) kx_x0 ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend86_exec_guard) conv94 := ($bitcast ($uint<32>) ($cast ($int<32>) jx_x0 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend86_exec_guard) $volatile mul95 := (conv94 * conv42) $buffering 1
+    $guard (ifx_xend86_exec_guard) conv100 := ($bitcast ($uint<32>) ($cast ($int<32>) ix_x1 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xend86_exec_guard) $volatile mul101 := (conv100 * conv98) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile add96 := (mul101 + conv90176) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile add102 := (add96 + mul95) $buffering 1
+    $guard (ifx_xend86_exec_guard) conv103 := ($cast ($uint<16>) add102 ) $buffering 1// bits of buffering = 16. 
+    $guard (ifx_xend86_exec_guard) $volatile sub := (conv94 - conv112) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile mul113 := (sub * conv36) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile sub121 := (conv100 - conv112) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile mul122 := (sub121 * conv116) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile add114 := (mul122 + conv90176) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile add123 := (add114 + mul113) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile cmp129 := (($bitcast ($int<32>) conv100 ) < ($bitcast ($int<32>) conv112 )) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile cmp129x_xnot := (cmp129 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile cmp138 := (($bitcast ($int<32>) conv100 ) < ($bitcast ($int<32>) add137 )) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile orx_xcond := (cmp129x_xnot & cmp138) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile orx_xcondx_xnot := (orx_xcond ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile cmp145 := (($bitcast ($int<32>) conv94 ) < ($bitcast ($int<32>) conv112 )) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile orx_xcond181 := (orx_xcondx_xnot | cmp145) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile orx_xcond181x_xnot := (orx_xcond181 ^ ($bitcast ($uint<1>) _b1  )) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile cmp155 := (($bitcast ($int<32>) conv94 ) < ($bitcast ($int<32>) add154 )) $buffering 1
+    $guard (ifx_xend86_exec_guard) $volatile orx_xcond182 := (orx_xcond181x_xnot & cmp155) $buffering 1
+    $volatile ifx_xend86_ifx_xelse160_taken := (ifx_xend86_exec_guard & orx_xcond182) $buffering 1
+    $volatile ifx_xend86_ifx_xthen157_taken := (ifx_xend86_exec_guard & ( ~ orx_xcond182 )) $buffering 1
+    $volatile ifx_xthen157_exec_guard := ifx_xend86_ifx_xthen157_taken $buffering 1
+    $guard (ifx_xthen157_exec_guard) conv159 := ($bitcast ($uint<32>) ($cast ($int<32>) conv103 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen157_exec_guard) $volatile shr := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv159 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xthen157_exec_guard) idxprom := ($bitcast ($uint<64>) ($cast ($int<64>) shr ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xthen157_exec_guard) ->(arrayidx) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $volatile ifx_xelse160_exec_guard := ifx_xend86_ifx_xelse160_taken $buffering 1
+    $guard (ifx_xelse160_exec_guard) $volatile sext179 := (add123 << ($bitcast ($uint<32>) _b00000000000000000000000000010000  )) $buffering 1
+    $guard (ifx_xelse160_exec_guard) $volatile shr163 := ($bitcast ($uint<32>) (($bitcast ($int<32>) sext179 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000010010  ) )) ) $buffering 1
+    $guard (ifx_xelse160_exec_guard) idxprom164 := ($bitcast ($uint<64>) ($cast ($int<64>) shr163 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx165 := @(T[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom164]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse160_exec_guard) tmp166 := ->(arrayidx165) $buffering 1// bits of buffering = 64. 
+    $guard (ifx_xelse160_exec_guard) conv168 := ($bitcast ($uint<32>) ($cast ($int<32>) conv103 ) ) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse160_exec_guard) $volatile shr169 := ($bitcast ($uint<32>) (($bitcast ($int<32>) conv168 ) >> ($bitcast ($int<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000010  ) )) ) $buffering 1
+    $guard (ifx_xelse160_exec_guard) idxprom170 := ($bitcast ($uint<64>) ($cast ($int<64>) shr169 ) ) $buffering 1// bits of buffering = 64. 
+    arrayidx171 := @(R[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][idxprom170]) $buffering 1// bits of buffering = 32. 
+    $guard (ifx_xelse160_exec_guard) ->(arrayidx171) := tmp166 $buffering 1// bits of buffering = 64. 
+    $volatile tobool := (flagx_x0 == ($bitcast ($uint<16>) _b0000000000000000  )) $buffering 1
+    $volatile ifx_xend172_whilex_xend_taken := ( ~ tobool ) $buffering 1
+    $while tobool
+    $if ifx_xend172_whilex_xend_taken $then 
+    $place[ifx_xend172_whilex_xend]
+    $endif
+    $merge ifx_xend172_whilex_xend 
+    $endmerge
+    $barrier
+    Block3_complete := ($bitcast ($uint<8>) _b00000001  ) $buffering 1// bits of buffering = 8. 
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+// Memory space 0: R 
+// Memory space 1: T 
+// Memory space 2: count 
+// use of gated clocks in modules 

@@ -33,7 +33,7 @@
 
 #ifdef SW
 DEFINE_THREAD(zeropad3D);
-// DEFINE_THREAD(zeropad3D_A);
+DEFINE_THREAD(zeropad3D_A);
 // DEFINE_THREAD(zeropad3D_B);
 // DEFINE_THREAD(zeropad3D_C);
 // DEFINE_THREAD(zeropad3D_D);
@@ -63,7 +63,7 @@ int main(int argc,char **argv)
         fprintf(stderr,"Input parameter file error\n");
         exit(-1);
     }
-    
+
     if ((out_file = fopen("CoutFile.txt","w")) == NULL){
 		fprintf(stderr,"Output File error\n");
 		exit(-1);
@@ -74,8 +74,8 @@ int main(int argc,char **argv)
         init_pipe_handler();
         register_pipe ("zeropad_input_pipe",2,8,PIPE_FIFO_MODE);
         register_pipe ("zeropad_output_pipe",2,8,PIPE_FIFO_MODE);
-		// register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
-		// register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block1_starting",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block1_complete",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block2_starting",1,8,PIPE_FIFO_MODE);
@@ -91,9 +91,9 @@ int main(int argc,char **argv)
 		// register_pipe ("Block7_starting",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block7_complete",1,8,PIPE_FIFO_MODE);
 
-        
+
 		PTHREAD_DECL(zeropad3D);
-		// PTHREAD_DECL(zeropad3D_A);
+		PTHREAD_DECL(zeropad3D_A);
 		// PTHREAD_DECL(zeropad3D_B);
 		// PTHREAD_DECL(zeropad3D_C);
 		// PTHREAD_DECL(zeropad3D_D);
@@ -102,9 +102,9 @@ int main(int argc,char **argv)
 		// PTHREAD_DECL(zeropad3D_G);
 		// PTHREAD_DECL(zeropad3D_H);
 
-		
+
 		PTHREAD_CREATE(zeropad3D);
-		// PTHREAD_CREATE(zeropad3D_A);
+		PTHREAD_CREATE(zeropad3D_A);
 		// PTHREAD_CREATE(zeropad3D_B);
 		// PTHREAD_CREATE(zeropad3D_C);
 		// PTHREAD_CREATE(zeropad3D_D);
@@ -118,7 +118,7 @@ int main(int argc,char **argv)
     fprintf(stderr,"Reading files\n");
     uint16_t rand_input_data, rand_kernel_data;
 	fscanf(input_file,"%hhd",&rand_input_data);
-    
+
     //Take datatype as input
     #ifdef __U8
 		des_inp.data_type = u8;
@@ -158,7 +158,7 @@ int main(int argc,char **argv)
 
 	fscanf(param_file,"%d",&pad);
 	write_uint8("zeropad_input_pipe",pad);
-	
+
 	fprintf(stderr,"Read pad value:%d\n",pad);
 
 	__UpdateOutputDescriptorZeropadTensors__(des_inp,pad,des_out);
@@ -181,13 +181,13 @@ int main(int argc,char **argv)
 			if ((ii&7)==7) T.data_array[ii/8] = *(uint64_t*)temp;
 		}
 		T.data_array[ii/8] = *(uint64_t*)temp;
-		
+
 	}	
 	else{
 		fprintf(stderr,"Error. Datatypes mismatch.\n");
 	}
 	fprintf(stderr,"Wrote all input values\n");
-	
+
     fprintf(stderr,"Reading the output values from hardware\n");
 	fprintf(out_file,"\n");
 	int size = des_out.dimensions[0]*des_out.dimensions[1]*des_out.dimensions[2];
@@ -226,7 +226,7 @@ int main(int argc,char **argv)
 
     #ifdef SW
 	    PTHREAD_CANCEL(zeropad3D);
-		// PTHREAD_CANCEL(zeropad3D_A);
+		PTHREAD_CANCEL(zeropad3D_A);
 		// PTHREAD_CANCEL(zeropad3D_B);
 		// PTHREAD_CANCEL(zeropad3D_C);
 		// PTHREAD_CANCEL(zeropad3D_D);

@@ -71,30 +71,30 @@ void sendOutput(size)
     }
 }
 
-// void zeropad3D_A()
-// {
-//     uint8_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high,pad;
-//     row_high = read_uint8 ("Block0_starting");
-//     col_high = read_uint8 ("Block0_starting");
-//     depth_high = read_uint8 ("Block0_starting");    
-// 	out_row_high = read_uint8 ("Block0_starting");
-//     out_col_high = read_uint8 ("Block0_starting");
-//     out_depth_high = read_uint8 ("Block0_starting");
-//     pad = read_uint8 ("Block0_starting");
-//     #ifdef SW
-//         fprintf(stderr,"Block-0 started.\n");
-//     #endif
-//     __aa_barrier__();
-//     __zero_pad_opt__(0,(row_high),
-//                                0,(col_high),0,depth_high,row_high,
-//                                col_high,depth_high,out_row_high,
-//                                  out_col_high,out_depth_high,T,pad,R);
-//     __aa_barrier__();
-//     #ifdef SW
-// 	    fprintf(stderr,"Block-0 done.\n");
-//     #endif
-// 	write_uint8 ("Block0_complete", 1);
-// }
+void zeropad3D_A()
+{
+    uint8_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high,pad;
+    row_high = read_uint8 ("Block0_starting");
+    col_high = read_uint8 ("Block0_starting");
+    depth_high = read_uint8 ("Block0_starting");    
+	out_row_high = read_uint8 ("Block0_starting");
+    out_col_high = read_uint8 ("Block0_starting");
+    out_depth_high = read_uint8 ("Block0_starting");
+    pad = read_uint8 ("Block0_starting");
+    #ifdef SW
+        fprintf(stderr,"Block-0 started.\n");
+    #endif
+    __aa_barrier__();
+    __zero_pad_opt__(0,(row_high),
+                               0,(col_high),0,depth_high,row_high,
+                               col_high,depth_high,out_row_high,
+                                 out_col_high,out_depth_high,T,pad,R);
+    __aa_barrier__();
+    #ifdef SW
+	    fprintf(stderr,"Block-0 done.\n");
+    #endif
+	write_uint8 ("Block0_complete", 1);
+}
 
 // void zeropad3D_B()
 // {
@@ -282,7 +282,7 @@ void sendOutput(size)
 //     #endif
 //     write_uint8 ("Block7_complete", 1);
 // }
-    
+
 void zeropad3D()
 {
     uint16_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high;
@@ -304,17 +304,17 @@ void zeropad3D()
     depth_high = (depth_high << 8) + read_uint8 ("zeropad_input_pipe");
 
     pad = read_uint8 ("zeropad_input_pipe");
-    
+
 	out_row_high = read_uint8 ("zeropad_input_pipe");
     out_row_high = (out_row_high << 8) + read_uint8 ("zeropad_input_pipe");
     out_col_high = read_uint8 ("zeropad_input_pipe");
     out_col_high = (out_col_high << 8) + read_uint8 ("zeropad_input_pipe");
     out_depth_high = read_uint8 ("zeropad_input_pipe");
     out_depth_high = (out_depth_high << 8) + read_uint8 ("zeropad_input_pipe");
-    
+
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
     uint64_t input_size = row_high*col_high*depth_high;
-    
+
     for(i = 0; i < (input_size >> 3); i ++)
     {
         uint64_t element;
@@ -322,25 +322,19 @@ void zeropad3D()
         T.data_array[i] = element;
     }
 
-    __aa_barrier__();
 #ifndef SW
-    // __aa_barrier__();
+    __aa_barrier__();
     uint64_t start_time = timer();
-    // __aa_barrier__();
+    __aa_barrier__();
 #endif
+    write_uint8("Block0_starting", row_high);
+    write_uint8("Block0_starting", col_high);
+    write_uint8("Block0_starting", depth_high);
+    write_uint8("Block0_starting", out_row_high);
+    write_uint8("Block0_starting", out_col_high);
+    write_uint8("Block0_starting", out_depth_high);
+    write_uint8("Block0_starting", pad);
 
-    __zero_pad_opt__(0,(row_high),
-                               0,(col_high),0,depth_high,row_high,
-                               col_high,depth_high,out_row_high,
-                                 out_col_high,out_depth_high,T,pad,R);
-    // write_uint8("Block0_starting", row_high);
-    // write_uint8("Block0_starting", col_high);
-    // write_uint8("Block0_starting", depth_high);
-    // write_uint8("Block0_starting", out_row_high);
-    // write_uint8("Block0_starting", out_col_high);
-    // write_uint8("Block0_starting", out_depth_high);
-    // write_uint8("Block0_starting", pad);
-    
     // write_uint8("Block1_starting", row_high);
     // write_uint8("Block1_starting", col_high);
     // write_uint8("Block1_starting", depth_high);
@@ -397,9 +391,9 @@ void zeropad3D()
     // write_uint8("Block7_starting", out_depth_high);
     // write_uint8("Block7_starting", pad);
 
-    // __aa_barrier__();
+    __aa_barrier__();
 
-    // uint16_t s0 = read_uint8("Block0_complete");
+    uint16_t s0 = read_uint8("Block0_complete");
     // uint16_t s1 = read_uint8("Block1_complete");
     // uint16_t s2 = read_uint8("Block2_complete");
     // uint16_t s3 = read_uint8("Block3_complete");
@@ -413,6 +407,7 @@ void zeropad3D()
 #ifndef SW
     uint64_t stop_time = timer();
     uint64_t elapsed_time = stop_time - start_time;
+    __aa_barrier__();
 	uint8_t time_data[8];
 	time_data[7] = elapsed_time & 0xFF;
 	elapsed_time>>=8;

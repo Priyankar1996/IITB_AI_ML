@@ -38,12 +38,24 @@ architecture VhpiLink of ahir_system_Test_Bench is --
   end component;
   signal clk: std_logic := '0';
   signal reset: std_logic := '1';
+  signal timerDaemon_tag_in: std_logic_vector(1 downto 0);
+  signal timerDaemon_tag_out: std_logic_vector(1 downto 0);
+  signal timerDaemon_start_req : std_logic := '0';
+  signal timerDaemon_start_ack : std_logic := '0';
+  signal timerDaemon_fin_req   : std_logic := '0';
+  signal timerDaemon_fin_ack   : std_logic := '0';
   signal zeropad3D_tag_in: std_logic_vector(1 downto 0);
   signal zeropad3D_tag_out: std_logic_vector(1 downto 0);
   signal zeropad3D_start_req : std_logic := '0';
   signal zeropad3D_start_ack : std_logic := '0';
   signal zeropad3D_fin_req   : std_logic := '0';
   signal zeropad3D_fin_ack   : std_logic := '0';
+  signal zeropad3D_A_tag_in: std_logic_vector(1 downto 0);
+  signal zeropad3D_A_tag_out: std_logic_vector(1 downto 0);
+  signal zeropad3D_A_start_req : std_logic := '0';
+  signal zeropad3D_A_start_ack : std_logic := '0';
+  signal zeropad3D_A_fin_req   : std_logic := '0';
+  signal zeropad3D_A_fin_ack   : std_logic := '0';
   -- write to pipe zeropad_input_pipe
   signal zeropad_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
   signal zeropad_input_pipe_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');

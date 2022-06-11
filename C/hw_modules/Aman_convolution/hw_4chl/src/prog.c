@@ -73,48 +73,15 @@ void fill_T(uint64_t i);
 })
 
 // printf("val = 0%" PRIx64 "\n",element);
-uint64_t getRemainingElements(uint8_t ne){
-	uint64_t element = 0;
-	for (uint8_t n = 0 ; n < ne; n++){
-		element += read_uint8("maxpool_input_pipe");
-		element <<= 8;
-	}
-	element <<= 8*(7-ne);
-	return element;
-}
-
-void sendRemainingElements(uint32_t addr, uint8_t ne){
-	uint64_t element = B.data_array[addr];
-	uint8_t out_data[7];
-	element>>=8;
-	out_data[6] = element & 0xFF;
-	element>>=8;
-	out_data[5] = element & 0xFF;
-	element>>=8;
-	out_data[4] = element & 0xFF;
-	element>>=8;
-	out_data[3] = element & 0xFF;
-	element>>=8;
-	out_data[2] = element & 0xFF;
-	element>>=8;
-	out_data[1] = element & 0xFF;
-	element>>=8;
-	out_data[0] = element & 0xFF;
-	for (int n = 0; n < ne; n++)
-	{
-		write_uint8 ("maxpool_output_pipe",out_data[n]);
-	}
-}
 
 // this sends B...
 void sendB(uint32_t size)
 {
 	uint32_t i;
-	for(i=0; i < (size>>3); i++)
+	for(i=0; i < (size); i++)
 	{
 		__set8xi8__(i);
 	}
-	if (size & 7) sendRemainingElements(i,size&7);
 }
 
 
@@ -155,6 +122,7 @@ void convolution3D()
 		K.data_array[i] = element;
 	}
 	chl_in >>= 3;
+	chl_out >>= 3;
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();
@@ -162,8 +130,22 @@ void convolution3D()
 	write_uint16("output_pipe",rb);
 	write_uint16("output_pipe",cb);
 	write_uint16("output_pipe",chl_out);
-	write_uint16("num_out_pipe",rb);
-	write_uint16("num_out_pipe",cb);
+	write_uint16("num_out_pipe1",rb);
+	write_uint16("num_out_pipe1",cb);
+	write_uint16("num_out_pipe2",rb);
+	write_uint16("num_out_pipe2",cb);
+	write_uint16("num_out_pipe3",rb);
+	write_uint16("num_out_pipe3",cb);
+	write_uint16("num_out_pipe4",rb);
+	write_uint16("num_out_pipe4",cb);
+	write_uint16("num_out_pipe5",rb);
+	write_uint16("num_out_pipe5",cb);
+	write_uint16("num_out_pipe6",rb);
+	write_uint16("num_out_pipe6",cb);
+	write_uint16("num_out_pipe7",rb);
+	write_uint16("num_out_pipe7",cb);
+	write_uint16("num_out_pipe8",rb);
+	write_uint16("num_out_pipe8",cb);
 	write_uint16("kernel_module_pipe",chl_in);
 	write_uint16("kernel_module_pipe",chl_out);
 	write_uint16("input_module_pipe",rb);

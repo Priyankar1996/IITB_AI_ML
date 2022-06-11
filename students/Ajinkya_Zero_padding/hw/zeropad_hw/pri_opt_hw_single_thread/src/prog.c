@@ -282,7 +282,7 @@ void zeropad3D_A()
 //     #endif
 //     write_uint8 ("Block7_complete", 1);
 // }
-    
+
 void zeropad3D()
 {
     uint16_t row_high,col_high,depth_high,out_row_high,out_col_high,out_depth_high;
@@ -304,17 +304,17 @@ void zeropad3D()
     depth_high = (depth_high << 8) + read_uint8 ("zeropad_input_pipe");
 
     pad = read_uint8 ("zeropad_input_pipe");
-    
+
 	out_row_high = read_uint8 ("zeropad_input_pipe");
     out_row_high = (out_row_high << 8) + read_uint8 ("zeropad_input_pipe");
     out_col_high = read_uint8 ("zeropad_input_pipe");
     out_col_high = (out_col_high << 8) + read_uint8 ("zeropad_input_pipe");
     out_depth_high = read_uint8 ("zeropad_input_pipe");
     out_depth_high = (out_depth_high << 8) + read_uint8 ("zeropad_input_pipe");
-    
+
 	// uint64_t input_size = __NumberOfElementsInSizedTensor__(T);
     uint64_t input_size = row_high*col_high*depth_high;
-    
+
     for(i = 0; i < (input_size >> 3); i ++)
     {
         uint64_t element;
@@ -334,7 +334,7 @@ void zeropad3D()
     write_uint8("Block0_starting", out_col_high);
     write_uint8("Block0_starting", out_depth_high);
     write_uint8("Block0_starting", pad);
-    
+
     // write_uint8("Block1_starting", row_high);
     // write_uint8("Block1_starting", col_high);
     // write_uint8("Block1_starting", depth_high);

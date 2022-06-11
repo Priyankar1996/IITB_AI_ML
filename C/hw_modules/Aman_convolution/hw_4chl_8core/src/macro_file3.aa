@@ -1,0 +1,11 @@
+
+        mul_val1_##mul_num := ($bitcast ($int<8>) (kval1_##k_num * ival1_##in_num )) 
+        mul_val2_##mul_num := ($bitcast ($int<8>) (kval2_##k_num * ival2_##in_num )) 
+        mul_val3_##mul_num := ($bitcast ($int<8>) (kval3_##k_num * ival3_##in_num )) 
+        mul_val4_##mul_num := ($bitcast ($int<8>) (kval4_##k_num * ival4_##in_num )) 
+        mul_val5_##mul_num := ($bitcast ($int<8>) (kval5_##k_num * ival5_##in_num )) 
+        mul_val6_##mul_num := ($bitcast ($int<8>) (kval6_##k_num * ival6_##in_num )) 
+        mul_val7_##mul_num := ($bitcast ($int<8>) (kval7_##k_num * ival7_##in_num )) 
+        mul_val8_##mul_num := ($bitcast ($int<8>) (kval8_##k_num * ival8_##in_num )) 
+
+        t_acc_val##mul_num := (((mul_val1_##mul_num + mul_val2_##mul_num ) + (mul_val3_##mul_num + mul_val4_##mul_num )) + ((mul_val5_##mul_num + mul_val6_##mul_num ) + (mul_val7_##mul_num + mul_val8_##mul_num )))

@@ -1,22 +1,22 @@
-$pipe  Concat1_input_pipe : $uint<16>  $depth 2 
+$pipe  Concat3_input_pipe : $uint<16>  $depth 2 
 
-$module [concat1]
+$module [concat3]
 $in ()
 $out ()
 $is
 {
   $branchblock [body]
   {
-	input1_dim0 := Concat1_input_pipe
-    input1_dim1 := Concat1_input_pipe
-    input1_dim2 := Concat1_input_pipe
+	input1_dim0 := Concat3_input_pipe
+    input1_dim1 := Concat3_input_pipe
+    input1_dim2 := Concat3_input_pipe
 
-    input2_dim0 := Concat1_input_pipe
-    input2_dim1 := Concat1_input_pipe
-    input2_dim2 := Concat1_input_pipe
-    out_dim0  := Concat1_input_pipe
-    out_dim1 := Concat1_input_pipe
-    out_dim2 := Concat1_input_pipe
+    input2_dim0 := Concat3_input_pipe
+    input2_dim1 := Concat3_input_pipe
+    input2_dim2 := Concat3_input_pipe
+    out_dim0  := Concat3_input_pipe
+    out_dim1 := Concat3_input_pipe
+    out_dim2 := Concat3_input_pipe
 
     input1_count := (input1_dim2 >> 3)
 	input2_count := (input2_dim2 >> 3)
@@ -41,13 +41,13 @@ $is
     // type of target is $uint<16>
     $endmerge
     $volatile cmp := (count_inp1 < input1_count) $buffering 1
-    iv1 := @(CE1_2[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_inp1 )]) $buffering 1// bits of buffering = 32. 
+    iv1 := @(CE3_2[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_inp1 )]) $buffering 1// bits of buffering = 32. 
     cmp_816_delayed_6_0 := cmp $buffering 6 $cut_through // bits of buffering = 6. 
     $guard (cmp_816_delayed_6_0) i1 := ->(iv1) $buffering 1// bits of buffering = 64. 
-    iv2 := @(T_1[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_inp2 )]) $buffering 1// bits of buffering = 32. 
+    iv2 := @(T3[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_inp2 )]) $buffering 1// bits of buffering = 32. 
     cmp_829_delayed_6_0 := cmp $buffering 6 $cut_through // bits of buffering = 6. 
     $guard (~cmp_829_delayed_6_0) i2 := ->(iv2) $buffering 1// bits of buffering = 64. 
-    ov := @(CO1[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_out )]) $buffering 1// bits of buffering = 32. 
+    ov := @(CO3[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_out )]) $buffering 1// bits of buffering = 32. 
     ov_842_delayed_7_0 := ov $buffering 7 $cut_through // bits of buffering = 224. 
     cmp_844_delayed_12_0 := cmp $buffering 12 $cut_through // bits of buffering = 12. 
     ->(ov_842_delayed_7_0) := ( $mux cmp_844_delayed_12_0 i1  i2 )  $buffering 1// bits of buffering = 64. 

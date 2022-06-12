@@ -15,6 +15,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
+library GhdlLink;
+use GhdlLink.LogUtilities.all;
 library work;
 use work.ahir_system_global_package.all;
 library GhdlLink;

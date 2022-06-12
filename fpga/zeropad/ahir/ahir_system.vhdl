@@ -16,6 +16,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
+library GhdlLink;
+use GhdlLink.LogUtilities.all;
 library work;
 use work.ahir_system_global_package.all;
 entity timer is -- 
@@ -73,8 +75,21 @@ architecture timer_arch of timer is --
   signal LOAD_count_26_load_0_ack_0 : boolean;
   signal LOAD_count_26_load_0_req_1 : boolean;
   signal LOAD_count_26_load_0_ack_1 : boolean;
+  signal global_clock_cycle_count: integer := 0;
   -- 
 begin --  
+  ---------------------------------------------------------- 
+  process(clk)  
+  begin -- 
+    if(clk'event and clk = '1') then -- 
+      if(reset = '1') then -- 
+        global_clock_cycle_count <= 0; --
+      else -- 
+        global_clock_cycle_count <= global_clock_cycle_count + 1; -- 
+      end if; --
+    end if; --
+  end process;
+  ---------------------------------------------------------- 
   -- input handling ------------------------------------------------
   in_buffer: UnloadBuffer -- 
     generic map(name => "timer_input_buffer", -- 
@@ -176,6 +191,9 @@ begin --
     gj_tag_ilock_read_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
       port map(preds => preds, symbol_out => tag_ilock_read_req_symbol, clk => clk, reset => reset); --
   end block;
+  --- logging ------------------------------------------------------
+  LogCPEvent(clk,reset,global_clock_cycle_count,timer_CP_26_start,"timer cp_entry_symbol ");
+  LogCPEvent(clk,reset,global_clock_cycle_count,timer_CP_26_symbol, "timer cp_exit_symbol ");
   -- the control path --------------------------------------------------
   always_true_symbol <= true; 
   default_zero_sig <= '0';
@@ -206,6 +224,16 @@ begin --
       -- CP-element group 0: 	 assign_stmt_27/LOAD_count_26_Update/word_access_complete/word_0/$entry
       -- CP-element group 0: 	 assign_stmt_27/LOAD_count_26_Update/word_access_complete/word_0/cr
       -- 
+    -- logger for CP element group timer_CP_26_elements(0)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timer_CP_26_elements(0)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timer:CP:timer_CP_26_elements(0) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timer:CP:LOAD_count_26_load_0_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timer:CP:LOAD_count_26_load_0_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     cr_58_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_58_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timer_CP_26_elements(0), ack => LOAD_count_26_load_0_req_1); -- 
@@ -223,6 +251,15 @@ begin --
       -- CP-element group 1: 	 assign_stmt_27/LOAD_count_26_Sample/word_access_start/word_0/$exit
       -- CP-element group 1: 	 assign_stmt_27/LOAD_count_26_Sample/word_access_start/word_0/ra
       -- 
+    -- logger for CP element group timer_CP_26_elements(1)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timer_CP_26_elements(1)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timer:CP:timer_CP_26_elements(1) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timer:CP:LOAD_count_26_load_0_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_48_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 1_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => LOAD_count_26_load_0_ack_0, ack => timer_CP_26_elements(1)); -- 
@@ -243,6 +280,15 @@ begin --
       -- CP-element group 2: 	 assign_stmt_27/LOAD_count_26_Update/LOAD_count_26_Merge/merge_req
       -- CP-element group 2: 	 assign_stmt_27/LOAD_count_26_Update/LOAD_count_26_Merge/merge_ack
       -- 
+    -- logger for CP element group timer_CP_26_elements(2)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timer_CP_26_elements(2)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timer:CP:timer_CP_26_elements(2) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timer:CP:LOAD_count_26_load_0_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_59_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 2_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => LOAD_count_26_load_0_ack_1, ack => timer_CP_26_elements(2)); -- 
@@ -257,6 +303,13 @@ begin --
     -- 
   begin -- 
     LOAD_count_26_word_address_0 <= "0";
+    -- logger for operator LOAD_count_26_gather_scatter flow-through 
+    process(c_buffer) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:timer:DP:LOAD_count_26_gather_scatter:flowthrough  inputs: " & " LOAD_count_26_data_0 = "& Convert_SLV_To_Hex_String(LOAD_count_26_data_0) & "outputs: " & " c_buffer= "  & Convert_SLV_To_Hex_String(c_buffer));
+      --
+    end process; 
     -- equivalence LOAD_count_26_gather_scatter
     process(LOAD_count_26_data_0) --
       variable iv : std_logic_vector(63 downto 0);
@@ -269,6 +322,22 @@ begin --
       c_buffer <= ov(63 downto 0);
       --
     end process;
+    -- logger for split-operator LOAD_count_26_load_0
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if LOAD_count_26_load_0_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:timer:DP:LOAD_count_26_load_0:started:   inputs: " & " LOAD_count_26_word_address_0 = "& Convert_SLV_To_Hex_String(LOAD_count_26_word_address_0));
+          --
+        end if; 
+        if LOAD_count_26_load_0_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:timer:DP:LOAD_count_26_load_0:finished:  outputs: " & " LOAD_count_26_data_0= "  & Convert_SLV_To_Hex_String(LOAD_count_26_data_0));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared load operator group (0) : LOAD_count_26_load_0 
     LoadGroup0: Block -- 
       signal data_in: std_logic_vector(0 downto 0);
@@ -283,6 +352,19 @@ begin --
       constant guardBuffering: IntegerArray(0 downto 0)  := (0 => 2);
       -- 
     begin -- 
+      -- logging on!
+      LogMemRead(clk, reset, global_clock_cycle_count,-- 
+        LOAD_count_26_load_0_req_0,
+        LOAD_count_26_load_0_ack_0,
+        LOAD_count_26_load_0_req_1,
+        LOAD_count_26_load_0_ack_1,
+        "LOAD_count_26_load_0",
+        "memory_space_2" ,
+        LOAD_count_26_data_0,
+        LOAD_count_26_word_address_0,
+        "LOAD_count_26_data_0",
+        "LOAD_count_26_word_address_0" -- 
+      );
       reqL_unguarded(0) <= LOAD_count_26_load_0_req_0;
       LOAD_count_26_load_0_ack_0 <= ackL_unguarded(0);
       reqR_unguarded(0) <= LOAD_count_26_load_0_req_1;
@@ -361,6 +443,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
+library GhdlLink;
+use GhdlLink.LogUtilities.all;
 library work;
 use work.ahir_system_global_package.all;
 entity timerDaemon is -- 
@@ -425,8 +509,21 @@ architecture timerDaemon_arch of timerDaemon is --
   signal STORE_count_41_store_0_ack_1 : boolean;
   signal do_while_stmt_31_branch_ack_0 : boolean;
   signal do_while_stmt_31_branch_ack_1 : boolean;
+  signal global_clock_cycle_count: integer := 0;
   -- 
 begin --  
+  ---------------------------------------------------------- 
+  process(clk)  
+  begin -- 
+    if(clk'event and clk = '1') then -- 
+      if(reset = '1') then -- 
+        global_clock_cycle_count <= 0; --
+      else -- 
+        global_clock_cycle_count <= global_clock_cycle_count + 1; -- 
+      end if; --
+    end if; --
+  end process;
+  ---------------------------------------------------------- 
   -- input handling ------------------------------------------------
   in_buffer: UnloadBuffer -- 
     generic map(name => "timerDaemon_input_buffer", -- 
@@ -526,6 +623,9 @@ begin --
     gj_tag_ilock_read_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
       port map(preds => preds, symbol_out => tag_ilock_read_req_symbol, clk => clk, reset => reset); --
   end block;
+  --- logging ------------------------------------------------------
+  LogCPEvent(clk,reset,global_clock_cycle_count,timerDaemon_CP_65_start,"timerDaemon cp_entry_symbol ");
+  LogCPEvent(clk,reset,global_clock_cycle_count,timerDaemon_CP_65_symbol, "timerDaemon cp_exit_symbol ");
   -- the control path --------------------------------------------------
   always_true_symbol <= true; 
   default_zero_sig <= '0';
@@ -545,6 +645,14 @@ begin --
       -- CP-element group 0: 	 branch_block_stmt_30/branch_block_stmt_30__entry__
       -- CP-element group 0: 	 branch_block_stmt_30/do_while_stmt_31__entry__
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(0)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(0)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(0) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- CP-element group 1:  transition  place  bypass 
     -- CP-element group 1: predecessors 
     -- CP-element group 1: 	39 
@@ -555,6 +663,14 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_30/branch_block_stmt_30__exit__
       -- CP-element group 1: 	 branch_block_stmt_30/do_while_stmt_31__exit__
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(1)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(1)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(1) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(1) <= timerDaemon_CP_65_elements(39);
     -- CP-element group 2:  transition  place  bypass  pipeline-parent 
     -- CP-element group 2: predecessors 
@@ -565,6 +681,14 @@ begin --
       -- CP-element group 2: 	 branch_block_stmt_30/do_while_stmt_31/$entry
       -- CP-element group 2: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31__entry__
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(2)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(2)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(2) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(2) <= timerDaemon_CP_65_elements(0);
     -- CP-element group 3:  merge  place  bypass  pipeline-parent 
     -- CP-element group 3: predecessors 
@@ -573,6 +697,14 @@ begin --
     -- CP-element group 3:  members (1) 
       -- CP-element group 3: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31__exit__
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(3)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(3)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(3) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(3) is bound as output of CP function.
     -- CP-element group 4:  merge  place  bypass  pipeline-parent 
     -- CP-element group 4: predecessors 
@@ -581,6 +713,14 @@ begin --
     -- CP-element group 4:  members (1) 
       -- CP-element group 4: 	 branch_block_stmt_30/do_while_stmt_31/loop_back
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(4)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(4)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(4) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(4) is bound as output of CP function.
     -- CP-element group 5:  branch  transition  place  bypass  pipeline-parent 
     -- CP-element group 5: predecessors 
@@ -593,6 +733,14 @@ begin --
       -- CP-element group 5: 	 branch_block_stmt_30/do_while_stmt_31/loop_exit/$entry
       -- CP-element group 5: 	 branch_block_stmt_30/do_while_stmt_31/loop_taken/$entry
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(5)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(5)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(5) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(5) <= timerDaemon_CP_65_elements(10);
     -- CP-element group 6:  branch  place  bypass  pipeline-parent 
     -- CP-element group 6: predecessors 
@@ -601,6 +749,14 @@ begin --
     -- CP-element group 6:  members (1) 
       -- CP-element group 6: 	 branch_block_stmt_30/do_while_stmt_31/loop_body_done
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(6)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(6)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(6) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(6) <= timerDaemon_CP_65_elements(36);
     -- CP-element group 7:  transition  bypass  pipeline-parent 
     -- CP-element group 7: predecessors 
@@ -610,6 +766,14 @@ begin --
     -- CP-element group 7:  members (1) 
       -- CP-element group 7: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/back_edge_to_loop_body
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(7)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(7)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(7) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(7) <= timerDaemon_CP_65_elements(4);
     -- CP-element group 8:  transition  bypass  pipeline-parent 
     -- CP-element group 8: predecessors 
@@ -619,6 +783,14 @@ begin --
     -- CP-element group 8:  members (1) 
       -- CP-element group 8: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/first_time_through_loop_body
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(8)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(8)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(8) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(8) <= timerDaemon_CP_65_elements(2);
     -- CP-element group 9:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 9: predecessors 
@@ -633,6 +805,14 @@ begin --
       -- CP-element group 9: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_word_address_calculated
       -- CP-element group 9: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_root_address_calculated
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(9)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(9)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(9) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(9) is bound as output of CP function.
     -- CP-element group 10:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 10: predecessors 
@@ -643,6 +823,15 @@ begin --
     -- CP-element group 10:  members (1) 
       -- CP-element group 10: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/condition_evaluated
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(10)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(10)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(10) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:do_while_stmt_31_branch_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     condition_evaluated_89_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " condition_evaluated_89_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timerDaemon_CP_65_elements(10), ack => do_while_stmt_31_branch_req_0); -- 
@@ -667,6 +856,14 @@ begin --
       -- CP-element group 11: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/aggregated_phi_sample_req
       -- CP-element group 11: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_sample_start__ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(11)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(11)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(11) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_cp_element_group_11: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 3,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -688,6 +885,14 @@ begin --
     -- CP-element group 12:  members (1) 
       -- CP-element group 12: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_sample_start_
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(12)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(12)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(12) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_cp_element_group_12: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 3,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -710,6 +915,14 @@ begin --
       -- CP-element group 13: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_update_start_
       -- CP-element group 13: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_update_start__ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(13)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(13)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(13) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_cp_element_group_13: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 3,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -732,6 +945,14 @@ begin --
       -- CP-element group 14: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_sample_completed_
       -- CP-element group 14: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_sample_completed__ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(14)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(14)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(14) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(14) is bound as output of CP function.
     -- CP-element group 15:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 15: predecessors 
@@ -745,6 +966,14 @@ begin --
       -- CP-element group 15: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_update_completed_
       -- CP-element group 15: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_update_completed__ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(15)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(15)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(15) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(15) is bound as output of CP function.
     -- CP-element group 16:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 16: predecessors 
@@ -753,6 +982,14 @@ begin --
     -- CP-element group 16:  members (1) 
       -- CP-element group 16: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_loopback_trigger
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(16)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(16)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(16) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(16) <= timerDaemon_CP_65_elements(7);
     -- CP-element group 17:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 17: predecessors 
@@ -761,6 +998,15 @@ begin --
       -- CP-element group 17: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_loopback_sample_req
       -- CP-element group 17: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_loopback_sample_req_ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(17)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(17)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(17) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:phi_stmt_33_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_33_loopback_sample_req_104_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_33_loopback_sample_req_104_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timerDaemon_CP_65_elements(17), ack => phi_stmt_33_req_0); -- 
@@ -772,6 +1018,14 @@ begin --
     -- CP-element group 18:  members (1) 
       -- CP-element group 18: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_entry_trigger
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(18)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(18)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(18) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(18) <= timerDaemon_CP_65_elements(8);
     -- CP-element group 19:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 19: predecessors 
@@ -780,6 +1034,15 @@ begin --
       -- CP-element group 19: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_entry_sample_req
       -- CP-element group 19: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_entry_sample_req_ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(19)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(19)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(19) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:phi_stmt_33_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_33_entry_sample_req_107_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_33_entry_sample_req_107_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timerDaemon_CP_65_elements(19), ack => phi_stmt_33_req_1); -- 
@@ -791,6 +1054,15 @@ begin --
       -- CP-element group 20: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_phi_mux_ack
       -- CP-element group 20: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/phi_stmt_33_phi_mux_ack_ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(20)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(20)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(20) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:phi_stmt_33_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_33_phi_mux_ack_110_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 20_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_33_ack_0, ack => timerDaemon_CP_65_elements(20)); -- 
@@ -801,6 +1073,14 @@ begin --
     -- CP-element group 21:  members (1) 
       -- CP-element group 21: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_sample_start__ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(21)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(21)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(21) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(21) is bound as output of CP function.
     -- CP-element group 22:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 22: predecessors 
@@ -809,6 +1089,14 @@ begin --
     -- CP-element group 22:  members (1) 
       -- CP-element group 22: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_update_start__ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(22)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(22)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(22) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(22) is bound as output of CP function.
     -- CP-element group 23:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 23: predecessors 
@@ -822,6 +1110,15 @@ begin --
       -- CP-element group 23: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Sample/$entry
       -- CP-element group 23: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Sample/rr
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(23)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(23)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(23) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:ADD_u64_u64_37_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_123_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_123_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timerDaemon_CP_65_elements(23), ack => ADD_u64_u64_37_inst_req_0); -- 
@@ -848,6 +1145,15 @@ begin --
       -- CP-element group 24: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Update/$entry
       -- CP-element group 24: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Update/cr
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(24)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(24)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(24) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:ADD_u64_u64_37_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     cr_128_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_128_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timerDaemon_CP_65_elements(24), ack => ADD_u64_u64_37_inst_req_1); -- 
@@ -874,6 +1180,15 @@ begin --
       -- CP-element group 25: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Sample/$exit
       -- CP-element group 25: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Sample/ra
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(25)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(25)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(25) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:ADD_u64_u64_37_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_124_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 25_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ADD_u64_u64_37_inst_ack_0, ack => timerDaemon_CP_65_elements(25)); -- 
@@ -889,6 +1204,15 @@ begin --
       -- CP-element group 26: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Update/$exit
       -- CP-element group 26: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/ADD_u64_u64_37_Update/ca
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(26)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(26)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(26) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:ADD_u64_u64_37_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_129_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 26_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ADD_u64_u64_37_inst_ack_1, ack => timerDaemon_CP_65_elements(26)); -- 
@@ -901,6 +1225,14 @@ begin --
       -- CP-element group 27: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/type_cast_39_sample_start_
       -- CP-element group 27: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/type_cast_39_sample_completed_
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(27)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(27)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(27) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(27) is bound as output of CP function.
     -- CP-element group 28:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 28: predecessors 
@@ -910,6 +1242,14 @@ begin --
       -- CP-element group 28: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/type_cast_39_update_start__ps
       -- CP-element group 28: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/type_cast_39_update_start_
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(28)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(28)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(28) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(28) is bound as output of CP function.
     -- CP-element group 29:  join  transition  bypass  pipeline-parent 
     -- CP-element group 29: predecessors 
@@ -918,6 +1258,14 @@ begin --
     -- CP-element group 29:  members (1) 
       -- CP-element group 29: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/type_cast_39_update_completed__ps
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(29)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(29)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(29) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(29) <= timerDaemon_CP_65_elements(30);
     -- CP-element group 30:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 30: predecessors 
@@ -927,6 +1275,14 @@ begin --
     -- CP-element group 30:  members (1) 
       -- CP-element group 30: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/type_cast_39_update_completed_
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(30)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(30)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(30) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(30) is a control-delay.
     cp_element_30_delay: control_delay_element  generic map(name => " 30_delay", delay_value => 1)  port map(req => timerDaemon_CP_65_elements(28), ack => timerDaemon_CP_65_elements(30), clk => clk, reset =>reset);
     -- CP-element group 31:  join  transition  output  bypass  pipeline-parent 
@@ -948,6 +1304,15 @@ begin --
       -- CP-element group 31: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Sample/word_access_start/word_0/$entry
       -- CP-element group 31: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Sample/word_access_start/word_0/rr
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(31)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(31)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(31) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:STORE_count_41_store_0_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_159_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_159_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timerDaemon_CP_65_elements(31), ack => STORE_count_41_store_0_req_0); -- 
@@ -975,6 +1340,15 @@ begin --
       -- CP-element group 32: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Update/word_access_complete/word_0/$entry
       -- CP-element group 32: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Update/word_access_complete/word_0/cr
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(32)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(32)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(32) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:STORE_count_41_store_0_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     cr_170_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_170_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => timerDaemon_CP_65_elements(32), ack => STORE_count_41_store_0_req_1); -- 
@@ -1003,6 +1377,15 @@ begin --
       -- CP-element group 33: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Sample/word_access_start/word_0/$exit
       -- CP-element group 33: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Sample/word_access_start/word_0/ra
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(33)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(33)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(33) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:STORE_count_41_store_0_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_160_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 33_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => STORE_count_41_store_0_ack_0, ack => timerDaemon_CP_65_elements(33)); -- 
@@ -1020,6 +1403,15 @@ begin --
       -- CP-element group 34: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Update/word_access_complete/word_0/$exit
       -- CP-element group 34: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/STORE_count_41_Update/word_access_complete/word_0/ca
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(34)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(34)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(34) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:STORE_count_41_store_0_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_171_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 34_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => STORE_count_41_store_0_ack_1, ack => timerDaemon_CP_65_elements(34)); -- 
@@ -1031,6 +1423,14 @@ begin --
     -- CP-element group 35:  members (1) 
       -- CP-element group 35: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/loop_body_delay_to_condition_start
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(35)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(35)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(35) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group timerDaemon_CP_65_elements(35) is a control-delay.
     cp_element_35_delay: control_delay_element  generic map(name => " 35_delay", delay_value => 1)  port map(req => timerDaemon_CP_65_elements(9), ack => timerDaemon_CP_65_elements(35), clk => clk, reset =>reset);
     -- CP-element group 36:  join  transition  bypass  pipeline-parent 
@@ -1042,6 +1442,14 @@ begin --
     -- CP-element group 36:  members (1) 
       -- CP-element group 36: 	 branch_block_stmt_30/do_while_stmt_31/do_while_stmt_31_loop_body/$exit
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(36)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(36)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(36) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_cp_element_group_36: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 3,1 => 3);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 0);
@@ -1061,6 +1469,15 @@ begin --
       -- CP-element group 37: 	 branch_block_stmt_30/do_while_stmt_31/loop_exit/$exit
       -- CP-element group 37: 	 branch_block_stmt_30/do_while_stmt_31/loop_exit/ack
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(37)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(37)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(37) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:do_while_stmt_31_branch_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_176_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 37_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => do_while_stmt_31_branch_ack_0, ack => timerDaemon_CP_65_elements(37)); -- 
@@ -1072,6 +1489,15 @@ begin --
       -- CP-element group 38: 	 branch_block_stmt_30/do_while_stmt_31/loop_taken/$exit
       -- CP-element group 38: 	 branch_block_stmt_30/do_while_stmt_31/loop_taken/ack
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(38)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(38)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(38) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:do_while_stmt_31_branch_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_180_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 38_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => do_while_stmt_31_branch_ack_1, ack => timerDaemon_CP_65_elements(38)); -- 
@@ -1083,6 +1509,14 @@ begin --
     -- CP-element group 39:  members (1) 
       -- CP-element group 39: 	 branch_block_stmt_30/do_while_stmt_31/$exit
       -- 
+    -- logger for CP element group timerDaemon_CP_65_elements(39)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and timerDaemon_CP_65_elements(39)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:timerDaemon:CP:timerDaemon_CP_65_elements(39) fired."); 
+        -- 
+      end if; --
+    end process; 
     timerDaemon_CP_65_elements(39) <= timerDaemon_CP_65_elements(3);
     timerDaemon_do_while_stmt_31_terminator_181: loop_terminator -- 
       generic map (name => " timerDaemon_do_while_stmt_31_terminator_181", max_iterations_in_flight =>3) 
@@ -1148,6 +1582,30 @@ begin --
     konst_36_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000001";
     konst_45_wire_constant <= "1";
     type_cast_39_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000000";
+    -- logger for phi phi_stmt_33
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_33_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:timerDaemon:DP:phi_stmt_33:input-0 ADD_u64_u64_37_wire= " & Convert_SLV_To_Hex_String(ADD_u64_u64_37_wire));
+          --
+        end if;
+        if phi_stmt_33_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:timerDaemon:DP:phi_stmt_33:input-1 type_cast_39_wire_constant= " & Convert_SLV_To_Hex_String(type_cast_39_wire_constant));
+          --
+        end if;
+        if phi_stmt_33_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:timerDaemon:DP:phi_stmt_33:sample-completed");
+          --
+        end if;
+        if phi_stmt_33_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:timerDaemon:DP:phi_stmt_33:output ncount_33= " & Convert_SLV_To_Hex_String(ncount_33));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_33: Block -- phi operator 
       signal idata: std_logic_vector(127 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -1170,6 +1628,13 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_33
+    -- logger for operator STORE_count_41_gather_scatter flow-through 
+    process(STORE_count_41_data_0) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:timerDaemon:DP:STORE_count_41_gather_scatter:flowthrough  inputs: " & " ncount_33 = "& Convert_SLV_To_Hex_String(ncount_33) & "outputs: " & " STORE_count_41_data_0= "  & Convert_SLV_To_Hex_String(STORE_count_41_data_0));
+      --
+    end process; 
     -- equivalence STORE_count_41_gather_scatter
     process(ncount_33) --
       variable iv : std_logic_vector(63 downto 0);
@@ -1182,6 +1647,9 @@ begin --
       STORE_count_41_data_0 <= ov(63 downto 0);
       --
     end process;
+    LogCPEvent(clk, reset, global_clock_cycle_count,do_while_stmt_31_branch_req_0," req0 do_while_stmt_31_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,do_while_stmt_31_branch_ack_0," ack0 do_while_stmt_31_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,do_while_stmt_31_branch_ack_1," ack1 do_while_stmt_31_branch");
     do_while_stmt_31_branch: Block -- 
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
@@ -1198,6 +1666,22 @@ begin --
           reset => reset); -- 
       --
     end Block; -- branch-block
+    -- logger for split-operator ADD_u64_u64_37_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if ADD_u64_u64_37_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:timerDaemon:DP:ADD_u64_u64_37_inst:started:   inputs: " & " ncount_33 = "& Convert_SLV_To_Hex_String(ncount_33) & " konst_36_wire_constant = "& Convert_SLV_To_Hex_String(konst_36_wire_constant));
+          --
+        end if; 
+        if ADD_u64_u64_37_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:timerDaemon:DP:ADD_u64_u64_37_inst:finished:  outputs: " & " ADD_u64_u64_37_wire= "  & Convert_SLV_To_Hex_String(ADD_u64_u64_37_wire));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared split operator group (0) : ADD_u64_u64_37_inst 
     ApIntAdd_group_0: Block -- 
       signal data_in: std_logic_vector(63 downto 0);
@@ -1265,6 +1749,35 @@ begin --
           reset => reset); -- 
       -- 
     end Block; -- split operator group 0
+    -- logger for split-operator STORE_count_41_store_0
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if STORE_count_41_store_0_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:timerDaemon:DP:STORE_count_41_store_0:started:   inputs: " & " STORE_count_41_word_address_0 = "& Convert_SLV_To_Hex_String(STORE_count_41_word_address_0) & " STORE_count_41_data_0 = "& Convert_SLV_To_Hex_String(STORE_count_41_data_0));
+          --
+        end if; 
+        if STORE_count_41_store_0_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:timerDaemon:DP:STORE_count_41_store_0:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logging on!
+    LogMemWrite(clk, reset,global_clock_cycle_count,  -- 
+      STORE_count_41_store_0_req_0,
+      STORE_count_41_store_0_ack_0,
+      STORE_count_41_store_0_req_1,
+      STORE_count_41_store_0_ack_1,
+      "STORE_count_41_store_0",
+      "memory_space_2" ,
+      STORE_count_41_data_0,
+      STORE_count_41_word_address_0,
+      "STORE_count_41_data_0",
+      "STORE_count_41_word_address_0" -- 
+    );
     -- shared store operator group (0) : STORE_count_41_store_0 
     StoreGroup0: Block -- 
       signal addr_in: std_logic_vector(0 downto 0);
@@ -1358,6 +1871,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
+library GhdlLink;
+use GhdlLink.LogUtilities.all;
 library work;
 use work.ahir_system_global_package.all;
 entity zeropad3D is -- 
@@ -1904,8 +2419,21 @@ architecture zeropad3D_arch of zeropad3D is --
   signal WPIPE_zeropad_output_pipe_777_inst_ack_0 : boolean;
   signal WPIPE_zeropad_output_pipe_777_inst_req_1 : boolean;
   signal WPIPE_zeropad_output_pipe_777_inst_ack_1 : boolean;
+  signal global_clock_cycle_count: integer := 0;
   -- 
 begin --  
+  ---------------------------------------------------------- 
+  process(clk)  
+  begin -- 
+    if(clk'event and clk = '1') then -- 
+      if(reset = '1') then -- 
+        global_clock_cycle_count <= 0; --
+      else -- 
+        global_clock_cycle_count <= global_clock_cycle_count + 1; -- 
+      end if; --
+    end if; --
+  end process;
+  ---------------------------------------------------------- 
   -- input handling ------------------------------------------------
   in_buffer: UnloadBuffer -- 
     generic map(name => "zeropad3D_input_buffer", -- 
@@ -2005,6 +2533,9 @@ begin --
     gj_tag_ilock_read_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
       port map(preds => preds, symbol_out => tag_ilock_read_req_symbol, clk => clk, reset => reset); --
   end block;
+  --- logging ------------------------------------------------------
+  LogCPEvent(clk,reset,global_clock_cycle_count,zeropad3D_CP_182_start,"zeropad3D cp_entry_symbol ");
+  LogCPEvent(clk,reset,global_clock_cycle_count,zeropad3D_CP_182_symbol, "zeropad3D cp_exit_symbol ");
   -- the control path --------------------------------------------------
   always_true_symbol <= true; 
   default_zero_sig <= '0';
@@ -2096,6 +2627,32 @@ begin --
       -- CP-element group 0: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Update/$entry
       -- CP-element group 0: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(0)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(0)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(0) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_51_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_230_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_239_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_67_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_80_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_92_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_105_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_117_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_130_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_142_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_155_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_167_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_180_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_192_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_205_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_217_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_243_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_247_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_246_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_246_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(0), ack => RPIPE_zeropad_input_pipe_51_inst_req_0); -- 
@@ -2163,6 +2720,16 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_51_Update/$entry
       -- CP-element group 1: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_51_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(1)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(1)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(1) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_51_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_51_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_247_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 1_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_51_inst_ack_0, ack => zeropad3D_CP_182_elements(1)); -- 
@@ -2182,6 +2749,16 @@ begin --
       -- CP-element group 2: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_54_Sample/$entry
       -- CP-element group 2: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_54_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(2)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(2)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(2) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_51_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_54_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_252_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 2_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_51_inst_ack_1, ack => zeropad3D_CP_182_elements(2)); -- 
@@ -2201,6 +2778,16 @@ begin --
       -- CP-element group 3: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_54_Update/$entry
       -- CP-element group 3: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_54_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(3)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(3)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(3) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_54_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_54_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_261_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 3_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_54_inst_ack_0, ack => zeropad3D_CP_182_elements(3)); -- 
@@ -2220,6 +2807,16 @@ begin --
       -- CP-element group 4: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_54_Update/ca
       -- CP-element group 4: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_57_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(4)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(4)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(4) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_54_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_57_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_266_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 4_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_54_inst_ack_1, ack => zeropad3D_CP_182_elements(4)); -- 
@@ -2239,6 +2836,16 @@ begin --
       -- CP-element group 5: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_57_Update/cr
       -- CP-element group 5: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_57_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(5)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(5)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(5) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_57_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_57_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_275_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 5_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_57_inst_ack_0, ack => zeropad3D_CP_182_elements(5)); -- 
@@ -2258,6 +2865,16 @@ begin --
       -- CP-element group 6: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_60_Sample/$entry
       -- CP-element group 6: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_60_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(6)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(6)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(6) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_57_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_60_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_280_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 6_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_57_inst_ack_1, ack => zeropad3D_CP_182_elements(6)); -- 
@@ -2277,6 +2894,16 @@ begin --
       -- CP-element group 7: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_60_Update/$entry
       -- CP-element group 7: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_60_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(7)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(7)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(7) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_60_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_60_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_289_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 7_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_60_inst_ack_0, ack => zeropad3D_CP_182_elements(7)); -- 
@@ -2296,6 +2923,16 @@ begin --
       -- CP-element group 8: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_63_Sample/$entry
       -- CP-element group 8: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_63_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(8)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(8)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(8) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_60_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_63_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_294_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 8_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_60_inst_ack_1, ack => zeropad3D_CP_182_elements(8)); -- 
@@ -2315,6 +2952,16 @@ begin --
       -- CP-element group 9: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_63_Update/$entry
       -- CP-element group 9: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_63_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(9)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(9)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(9) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_63_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_63_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_303_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 9_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_63_inst_ack_0, ack => zeropad3D_CP_182_elements(9)); -- 
@@ -2338,6 +2985,17 @@ begin --
       -- CP-element group 10: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_76_Sample/$entry
       -- CP-element group 10: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_76_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(10)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(10)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(10) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_63_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_67_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_76_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_308_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 10_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_63_inst_ack_1, ack => zeropad3D_CP_182_elements(10)); -- 
@@ -2356,6 +3014,15 @@ begin --
       -- CP-element group 11: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_67_Sample/$exit
       -- CP-element group 11: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_67_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(11)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(11)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(11) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_67_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_317_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 11_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_67_inst_ack_0, ack => zeropad3D_CP_182_elements(11)); -- 
@@ -2369,6 +3036,15 @@ begin --
       -- CP-element group 12: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_67_Update/$exit
       -- CP-element group 12: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_67_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(12)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(12)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(12) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_67_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_322_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 12_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_67_inst_ack_1, ack => zeropad3D_CP_182_elements(12)); -- 
@@ -2385,6 +3061,16 @@ begin --
       -- CP-element group 13: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_76_Update/$entry
       -- CP-element group 13: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_76_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(13)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(13)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(13) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_76_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_76_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_331_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 13_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_76_inst_ack_0, ack => zeropad3D_CP_182_elements(13)); -- 
@@ -2408,6 +3094,17 @@ begin --
       -- CP-element group 14: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_88_Sample/$entry
       -- CP-element group 14: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_88_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(14)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(14)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(14) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_76_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_80_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_88_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_336_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 14_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_76_inst_ack_1, ack => zeropad3D_CP_182_elements(14)); -- 
@@ -2426,6 +3123,15 @@ begin --
       -- CP-element group 15: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_80_Sample/$exit
       -- CP-element group 15: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_80_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(15)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(15)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(15) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_80_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_345_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 15_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_80_inst_ack_0, ack => zeropad3D_CP_182_elements(15)); -- 
@@ -2439,6 +3145,15 @@ begin --
       -- CP-element group 16: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_80_Update/$exit
       -- CP-element group 16: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_80_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(16)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(16)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(16) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_80_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_350_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 16_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_80_inst_ack_1, ack => zeropad3D_CP_182_elements(16)); -- 
@@ -2455,6 +3170,16 @@ begin --
       -- CP-element group 17: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_88_Update/$entry
       -- CP-element group 17: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_88_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(17)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(17)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(17) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_88_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_88_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_359_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 17_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_88_inst_ack_0, ack => zeropad3D_CP_182_elements(17)); -- 
@@ -2478,6 +3203,17 @@ begin --
       -- CP-element group 18: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_101_Sample/$entry
       -- CP-element group 18: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_101_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(18)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(18)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(18) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_88_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_92_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_101_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_364_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 18_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_88_inst_ack_1, ack => zeropad3D_CP_182_elements(18)); -- 
@@ -2496,6 +3232,15 @@ begin --
       -- CP-element group 19: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_92_Sample/$exit
       -- CP-element group 19: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_92_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(19)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(19)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(19) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_92_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_373_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 19_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_92_inst_ack_0, ack => zeropad3D_CP_182_elements(19)); -- 
@@ -2509,6 +3254,15 @@ begin --
       -- CP-element group 20: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_92_Update/$exit
       -- CP-element group 20: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_92_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(20)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(20)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(20) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_92_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_378_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 20_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_92_inst_ack_1, ack => zeropad3D_CP_182_elements(20)); -- 
@@ -2525,6 +3279,16 @@ begin --
       -- CP-element group 21: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_101_Update/$entry
       -- CP-element group 21: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_101_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(21)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(21)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(21) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_101_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_101_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_387_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 21_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_101_inst_ack_0, ack => zeropad3D_CP_182_elements(21)); -- 
@@ -2548,6 +3312,17 @@ begin --
       -- CP-element group 22: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_113_Sample/$entry
       -- CP-element group 22: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_113_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(22)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(22)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(22) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_101_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_105_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_113_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_392_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 22_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_101_inst_ack_1, ack => zeropad3D_CP_182_elements(22)); -- 
@@ -2566,6 +3341,15 @@ begin --
       -- CP-element group 23: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_105_Sample/$exit
       -- CP-element group 23: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_105_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(23)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(23)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(23) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_105_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_401_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 23_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_105_inst_ack_0, ack => zeropad3D_CP_182_elements(23)); -- 
@@ -2579,6 +3363,15 @@ begin --
       -- CP-element group 24: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_105_Update/$exit
       -- CP-element group 24: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_105_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(24)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(24)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(24) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_105_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_406_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 24_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_105_inst_ack_1, ack => zeropad3D_CP_182_elements(24)); -- 
@@ -2595,6 +3388,16 @@ begin --
       -- CP-element group 25: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_113_Update/$entry
       -- CP-element group 25: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_113_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(25)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(25)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(25) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_113_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_113_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_415_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 25_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_113_inst_ack_0, ack => zeropad3D_CP_182_elements(25)); -- 
@@ -2618,6 +3421,17 @@ begin --
       -- CP-element group 26: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_126_Sample/$entry
       -- CP-element group 26: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_126_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(26)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(26)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(26) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_113_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_126_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_117_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_420_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 26_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_113_inst_ack_1, ack => zeropad3D_CP_182_elements(26)); -- 
@@ -2636,6 +3450,15 @@ begin --
       -- CP-element group 27: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_117_Sample/$exit
       -- CP-element group 27: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_117_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(27)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(27)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(27) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_117_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_429_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 27_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_117_inst_ack_0, ack => zeropad3D_CP_182_elements(27)); -- 
@@ -2649,6 +3472,15 @@ begin --
       -- CP-element group 28: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_117_Update/$exit
       -- CP-element group 28: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_117_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(28)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(28)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(28) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_117_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_434_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 28_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_117_inst_ack_1, ack => zeropad3D_CP_182_elements(28)); -- 
@@ -2665,6 +3497,16 @@ begin --
       -- CP-element group 29: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_126_Update/$entry
       -- CP-element group 29: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_126_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(29)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(29)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(29) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_126_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_126_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_443_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 29_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_126_inst_ack_0, ack => zeropad3D_CP_182_elements(29)); -- 
@@ -2688,6 +3530,17 @@ begin --
       -- CP-element group 30: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_138_Sample/$entry
       -- CP-element group 30: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_138_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(30)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(30)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(30) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_126_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_130_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_138_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_448_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 30_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_126_inst_ack_1, ack => zeropad3D_CP_182_elements(30)); -- 
@@ -2706,6 +3559,15 @@ begin --
       -- CP-element group 31: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_130_Sample/$exit
       -- CP-element group 31: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_130_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(31)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(31)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(31) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_130_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_457_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 31_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_130_inst_ack_0, ack => zeropad3D_CP_182_elements(31)); -- 
@@ -2719,6 +3581,15 @@ begin --
       -- CP-element group 32: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_130_Update/$exit
       -- CP-element group 32: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_130_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(32)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(32)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(32) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_130_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_462_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 32_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_130_inst_ack_1, ack => zeropad3D_CP_182_elements(32)); -- 
@@ -2735,6 +3606,16 @@ begin --
       -- CP-element group 33: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_138_Update/$entry
       -- CP-element group 33: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_138_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(33)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(33)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(33) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_138_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_138_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_471_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 33_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_138_inst_ack_0, ack => zeropad3D_CP_182_elements(33)); -- 
@@ -2758,6 +3639,17 @@ begin --
       -- CP-element group 34: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_151_Sample/$entry
       -- CP-element group 34: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_151_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(34)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(34)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(34) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_138_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_151_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_142_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_476_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 34_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_138_inst_ack_1, ack => zeropad3D_CP_182_elements(34)); -- 
@@ -2776,6 +3668,15 @@ begin --
       -- CP-element group 35: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_142_Sample/$exit
       -- CP-element group 35: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_142_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(35)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(35)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(35) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_142_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_485_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 35_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_142_inst_ack_0, ack => zeropad3D_CP_182_elements(35)); -- 
@@ -2789,6 +3690,15 @@ begin --
       -- CP-element group 36: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_142_Update/$exit
       -- CP-element group 36: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_142_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(36)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(36)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(36) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_142_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_490_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 36_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_142_inst_ack_1, ack => zeropad3D_CP_182_elements(36)); -- 
@@ -2805,6 +3715,16 @@ begin --
       -- CP-element group 37: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_151_Update/$entry
       -- CP-element group 37: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_151_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(37)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(37)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(37) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_151_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_151_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_499_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 37_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_151_inst_ack_0, ack => zeropad3D_CP_182_elements(37)); -- 
@@ -2828,6 +3748,17 @@ begin --
       -- CP-element group 38: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_163_Sample/$entry
       -- CP-element group 38: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_163_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(38)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(38)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(38) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_151_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_163_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_155_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_504_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 38_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_151_inst_ack_1, ack => zeropad3D_CP_182_elements(38)); -- 
@@ -2846,6 +3777,15 @@ begin --
       -- CP-element group 39: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_155_Sample/$exit
       -- CP-element group 39: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_155_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(39)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(39)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(39) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_155_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_513_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 39_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_155_inst_ack_0, ack => zeropad3D_CP_182_elements(39)); -- 
@@ -2859,6 +3799,15 @@ begin --
       -- CP-element group 40: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_155_Update/$exit
       -- CP-element group 40: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_155_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(40)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(40)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(40) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_155_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_518_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 40_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_155_inst_ack_1, ack => zeropad3D_CP_182_elements(40)); -- 
@@ -2875,6 +3824,16 @@ begin --
       -- CP-element group 41: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_163_Update/$entry
       -- CP-element group 41: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_163_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(41)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(41)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(41) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_163_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_163_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_527_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 41_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_163_inst_ack_0, ack => zeropad3D_CP_182_elements(41)); -- 
@@ -2898,6 +3857,17 @@ begin --
       -- CP-element group 42: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_176_Sample/$entry
       -- CP-element group 42: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_176_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(42)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(42)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(42) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_163_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_167_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_176_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_532_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 42_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_163_inst_ack_1, ack => zeropad3D_CP_182_elements(42)); -- 
@@ -2916,6 +3886,15 @@ begin --
       -- CP-element group 43: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_167_Sample/$exit
       -- CP-element group 43: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_167_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(43)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(43)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(43) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_167_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_541_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 43_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_167_inst_ack_0, ack => zeropad3D_CP_182_elements(43)); -- 
@@ -2929,6 +3908,15 @@ begin --
       -- CP-element group 44: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_167_Update/$exit
       -- CP-element group 44: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_167_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(44)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(44)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(44) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_167_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_546_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 44_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_167_inst_ack_1, ack => zeropad3D_CP_182_elements(44)); -- 
@@ -2945,6 +3933,16 @@ begin --
       -- CP-element group 45: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_176_Update/$entry
       -- CP-element group 45: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_176_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(45)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(45)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(45) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_176_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_176_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_555_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 45_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_176_inst_ack_0, ack => zeropad3D_CP_182_elements(45)); -- 
@@ -2968,6 +3966,17 @@ begin --
       -- CP-element group 46: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_188_Sample/$entry
       -- CP-element group 46: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_188_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(46)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(46)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(46) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_176_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_180_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_188_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_560_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 46_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_176_inst_ack_1, ack => zeropad3D_CP_182_elements(46)); -- 
@@ -2986,6 +3995,15 @@ begin --
       -- CP-element group 47: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_180_Sample/$exit
       -- CP-element group 47: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_180_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(47)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(47)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(47) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_180_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_569_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 47_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_180_inst_ack_0, ack => zeropad3D_CP_182_elements(47)); -- 
@@ -2999,6 +4017,15 @@ begin --
       -- CP-element group 48: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_180_Update/$exit
       -- CP-element group 48: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_180_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(48)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(48)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(48) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_180_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_574_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 48_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_180_inst_ack_1, ack => zeropad3D_CP_182_elements(48)); -- 
@@ -3015,6 +4042,16 @@ begin --
       -- CP-element group 49: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_188_Update/$entry
       -- CP-element group 49: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_188_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(49)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(49)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(49) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_188_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_188_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_583_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 49_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_188_inst_ack_0, ack => zeropad3D_CP_182_elements(49)); -- 
@@ -3038,6 +4075,17 @@ begin --
       -- CP-element group 50: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_201_Sample/$entry
       -- CP-element group 50: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_201_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(50)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(50)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(50) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_188_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_192_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_201_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_588_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 50_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_188_inst_ack_1, ack => zeropad3D_CP_182_elements(50)); -- 
@@ -3056,6 +4104,15 @@ begin --
       -- CP-element group 51: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_192_Sample/$exit
       -- CP-element group 51: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_192_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(51)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(51)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(51) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_192_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_597_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 51_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_192_inst_ack_0, ack => zeropad3D_CP_182_elements(51)); -- 
@@ -3069,6 +4126,15 @@ begin --
       -- CP-element group 52: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_192_Update/$exit
       -- CP-element group 52: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_192_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(52)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(52)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(52) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_192_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_602_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 52_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_192_inst_ack_1, ack => zeropad3D_CP_182_elements(52)); -- 
@@ -3085,6 +4151,16 @@ begin --
       -- CP-element group 53: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_201_Update/$entry
       -- CP-element group 53: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_201_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(53)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(53)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(53) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_201_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_201_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_611_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 53_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_201_inst_ack_0, ack => zeropad3D_CP_182_elements(53)); -- 
@@ -3108,6 +4184,17 @@ begin --
       -- CP-element group 54: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_213_Sample/$entry
       -- CP-element group 54: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_213_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(54)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(54)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(54) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_201_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_205_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_213_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_616_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 54_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_201_inst_ack_1, ack => zeropad3D_CP_182_elements(54)); -- 
@@ -3126,6 +4213,15 @@ begin --
       -- CP-element group 55: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_205_Sample/$exit
       -- CP-element group 55: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_205_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(55)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(55)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(55) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_205_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_625_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 55_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_205_inst_ack_0, ack => zeropad3D_CP_182_elements(55)); -- 
@@ -3139,6 +4235,15 @@ begin --
       -- CP-element group 56: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_205_Update/$exit
       -- CP-element group 56: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_205_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(56)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(56)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(56) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_205_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_630_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 56_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_205_inst_ack_1, ack => zeropad3D_CP_182_elements(56)); -- 
@@ -3155,6 +4260,16 @@ begin --
       -- CP-element group 57: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_213_Update/$entry
       -- CP-element group 57: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_213_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(57)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(57)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(57) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_213_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_213_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_639_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 57_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_213_inst_ack_0, ack => zeropad3D_CP_182_elements(57)); -- 
@@ -3178,6 +4293,17 @@ begin --
       -- CP-element group 58: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_226_Sample/$entry
       -- CP-element group 58: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_226_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(58)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(58)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(58) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_213_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_217_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_226_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_644_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 58_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_213_inst_ack_1, ack => zeropad3D_CP_182_elements(58)); -- 
@@ -3196,6 +4322,15 @@ begin --
       -- CP-element group 59: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_217_Sample/$exit
       -- CP-element group 59: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_217_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(59)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(59)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(59) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_217_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_653_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 59_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_217_inst_ack_0, ack => zeropad3D_CP_182_elements(59)); -- 
@@ -3209,6 +4344,15 @@ begin --
       -- CP-element group 60: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_217_Update/$exit
       -- CP-element group 60: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_217_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(60)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(60)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(60) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_217_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_658_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 60_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_217_inst_ack_1, ack => zeropad3D_CP_182_elements(60)); -- 
@@ -3225,6 +4369,16 @@ begin --
       -- CP-element group 61: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_226_Update/$entry
       -- CP-element group 61: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_226_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(61)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(61)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(61) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_226_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_226_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_667_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 61_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_226_inst_ack_0, ack => zeropad3D_CP_182_elements(61)); -- 
@@ -3244,6 +4398,16 @@ begin --
       -- CP-element group 62: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_226_Update/$exit
       -- CP-element group 62: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/RPIPE_zeropad_input_pipe_226_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(62)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(62)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(62) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_226_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_230_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_672_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 62_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_226_inst_ack_1, ack => zeropad3D_CP_182_elements(62)); -- 
@@ -3259,6 +4423,15 @@ begin --
       -- CP-element group 63: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_230_Sample/$exit
       -- CP-element group 63: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_230_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(63)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(63)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(63) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_230_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_681_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 63_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_230_inst_ack_0, ack => zeropad3D_CP_182_elements(63)); -- 
@@ -3272,6 +4445,15 @@ begin --
       -- CP-element group 64: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_230_Update/$exit
       -- CP-element group 64: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_230_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(64)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(64)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(64) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_230_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_686_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 64_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_230_inst_ack_1, ack => zeropad3D_CP_182_elements(64)); -- 
@@ -3286,6 +4468,15 @@ begin --
       -- CP-element group 65: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_239_Sample/$entry
       -- CP-element group 65: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_239_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(65)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(65)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(65) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_239_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_694_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_694_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(65), ack => type_cast_239_inst_req_0); -- 
@@ -3309,6 +4500,15 @@ begin --
       -- CP-element group 66: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_239_Sample/$exit
       -- CP-element group 66: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_239_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(66)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(66)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(66) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_239_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_695_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 66_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_239_inst_ack_0, ack => zeropad3D_CP_182_elements(66)); -- 
@@ -3322,6 +4522,15 @@ begin --
       -- CP-element group 67: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_239_Update/$exit
       -- CP-element group 67: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_239_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(67)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(67)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(67) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_239_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_700_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 67_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_239_inst_ack_1, ack => zeropad3D_CP_182_elements(67)); -- 
@@ -3336,6 +4545,15 @@ begin --
       -- CP-element group 68: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_243_Sample/$entry
       -- CP-element group 68: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_243_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(68)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(68)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(68) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_243_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_708_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_708_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(68), ack => type_cast_243_inst_req_0); -- 
@@ -3359,6 +4577,15 @@ begin --
       -- CP-element group 69: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_243_Sample/$exit
       -- CP-element group 69: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_243_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(69)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(69)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(69) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_243_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_709_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 69_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_243_inst_ack_0, ack => zeropad3D_CP_182_elements(69)); -- 
@@ -3372,6 +4599,15 @@ begin --
       -- CP-element group 70: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_243_Update/$exit
       -- CP-element group 70: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_243_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(70)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(70)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(70) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_243_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_714_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 70_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_243_inst_ack_1, ack => zeropad3D_CP_182_elements(70)); -- 
@@ -3386,6 +4622,15 @@ begin --
       -- CP-element group 71: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Sample/$entry
       -- CP-element group 71: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(71)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(71)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(71) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_247_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_722_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_722_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(71), ack => type_cast_247_inst_req_0); -- 
@@ -3409,6 +4654,15 @@ begin --
       -- CP-element group 72: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Sample/$exit
       -- CP-element group 72: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(72)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(72)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(72) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_247_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_723_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 72_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_247_inst_ack_0, ack => zeropad3D_CP_182_elements(72)); -- 
@@ -3422,6 +4676,15 @@ begin --
       -- CP-element group 73: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Update/$exit
       -- CP-element group 73: 	 branch_block_stmt_49/assign_stmt_52_to_assign_stmt_281/type_cast_247_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(73)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(73)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(73) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_247_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_728_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 73_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_247_inst_ack_1, ack => zeropad3D_CP_182_elements(73)); -- 
@@ -3453,6 +4716,15 @@ begin --
       -- CP-element group 74: 	 branch_block_stmt_49/if_stmt_282_if_link/$entry
       -- CP-element group 74: 	 branch_block_stmt_49/if_stmt_282_else_link/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(74)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(74)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(74) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_282_branch_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     branch_req_736_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " branch_req_736_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(74), ack => if_stmt_282_branch_req_0); -- 
@@ -3492,6 +4764,15 @@ begin --
       -- CP-element group 75: 	 branch_block_stmt_49/merge_stmt_288_PhiAck/$exit
       -- CP-element group 75: 	 branch_block_stmt_49/merge_stmt_288_PhiAck/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(75)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(75)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(75) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_282_branch_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     if_choice_transition_741_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 75_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_282_branch_ack_1, ack => zeropad3D_CP_182_elements(75)); -- 
@@ -3507,6 +4788,15 @@ begin --
       -- CP-element group 76: 	 branch_block_stmt_49/if_stmt_282_else_link/else_choice_transition
       -- CP-element group 76: 	 branch_block_stmt_49/entry_forx_xend
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(76)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(76)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(76) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_282_branch_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     else_choice_transition_745_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 76_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_282_branch_ack_0, ack => zeropad3D_CP_182_elements(76)); -- 
@@ -3520,6 +4810,15 @@ begin --
       -- CP-element group 77: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/array_obj_ref_322_final_index_sum_regn_Sample/$exit
       -- CP-element group 77: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/array_obj_ref_322_final_index_sum_regn_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(77)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(77)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(77) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_322_index_offset_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_779_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 77_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_322_index_offset_ack_0, ack => zeropad3D_CP_182_elements(77)); -- 
@@ -3541,6 +4840,16 @@ begin --
       -- CP-element group 78: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/addr_of_323_request/$entry
       -- CP-element group 78: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/addr_of_323_request/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(78)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(78)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(78) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_322_index_offset_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_323_final_reg_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_784_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 78_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_322_index_offset_ack_1, ack => zeropad3D_CP_182_elements(78)); -- 
@@ -3556,6 +4865,15 @@ begin --
       -- CP-element group 79: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/addr_of_323_request/$exit
       -- CP-element group 79: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/addr_of_323_request/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(79)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(79)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(79) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_323_final_reg_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_794_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 79_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_323_final_reg_ack_0, ack => zeropad3D_CP_182_elements(79)); -- 
@@ -3585,6 +4903,15 @@ begin --
       -- CP-element group 80: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/addr_of_323_complete/$exit
       -- CP-element group 80: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/addr_of_323_complete/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(80)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(80)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(80) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_323_final_reg_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_799_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 80_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_323_final_reg_ack_1, ack => zeropad3D_CP_182_elements(80)); -- 
@@ -3601,6 +4928,16 @@ begin --
       -- CP-element group 81: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_326_Update/$entry
       -- CP-element group 81: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_326_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(81)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(81)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(81) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_326_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_326_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_808_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 81_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_326_inst_ack_0, ack => zeropad3D_CP_182_elements(81)); -- 
@@ -3624,6 +4961,17 @@ begin --
       -- CP-element group 82: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_339_Sample/$entry
       -- CP-element group 82: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_339_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(82)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(82)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(82) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_326_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_330_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_339_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_813_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 82_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_326_inst_ack_1, ack => zeropad3D_CP_182_elements(82)); -- 
@@ -3642,6 +4990,15 @@ begin --
       -- CP-element group 83: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_330_Sample/$exit
       -- CP-element group 83: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_330_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(83)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(83)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(83) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_330_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_822_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 83_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_330_inst_ack_0, ack => zeropad3D_CP_182_elements(83)); -- 
@@ -3655,6 +5012,15 @@ begin --
       -- CP-element group 84: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_330_Update/$exit
       -- CP-element group 84: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_330_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(84)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(84)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(84) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_330_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_827_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 84_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_330_inst_ack_1, ack => zeropad3D_CP_182_elements(84)); -- 
@@ -3671,6 +5037,16 @@ begin --
       -- CP-element group 85: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_339_Update/$entry
       -- CP-element group 85: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_339_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(85)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(85)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(85) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_339_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_339_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_836_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 85_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_339_inst_ack_0, ack => zeropad3D_CP_182_elements(85)); -- 
@@ -3694,6 +5070,17 @@ begin --
       -- CP-element group 86: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_357_Sample/$entry
       -- CP-element group 86: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_357_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(86)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(86)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(86) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_339_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_343_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_357_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_841_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 86_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_339_inst_ack_1, ack => zeropad3D_CP_182_elements(86)); -- 
@@ -3712,6 +5099,15 @@ begin --
       -- CP-element group 87: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_343_Sample/$exit
       -- CP-element group 87: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_343_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(87)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(87)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(87) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_343_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_850_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 87_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_343_inst_ack_0, ack => zeropad3D_CP_182_elements(87)); -- 
@@ -3725,6 +5121,15 @@ begin --
       -- CP-element group 88: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_343_Update/$exit
       -- CP-element group 88: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_343_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(88)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(88)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(88) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_343_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_855_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 88_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_343_inst_ack_1, ack => zeropad3D_CP_182_elements(88)); -- 
@@ -3741,6 +5146,16 @@ begin --
       -- CP-element group 89: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_357_Update/$entry
       -- CP-element group 89: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_357_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(89)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(89)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(89) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_357_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_357_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_864_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 89_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_357_inst_ack_0, ack => zeropad3D_CP_182_elements(89)); -- 
@@ -3764,6 +5179,17 @@ begin --
       -- CP-element group 90: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_375_Sample/$entry
       -- CP-element group 90: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_375_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(90)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(90)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(90) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_357_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_361_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_375_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_869_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 90_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_357_inst_ack_1, ack => zeropad3D_CP_182_elements(90)); -- 
@@ -3782,6 +5208,15 @@ begin --
       -- CP-element group 91: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_361_Sample/$exit
       -- CP-element group 91: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_361_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(91)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(91)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(91) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_361_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_878_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 91_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_361_inst_ack_0, ack => zeropad3D_CP_182_elements(91)); -- 
@@ -3795,6 +5230,15 @@ begin --
       -- CP-element group 92: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_361_Update/$exit
       -- CP-element group 92: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_361_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(92)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(92)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(92) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_361_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_883_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 92_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_361_inst_ack_1, ack => zeropad3D_CP_182_elements(92)); -- 
@@ -3811,6 +5255,16 @@ begin --
       -- CP-element group 93: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_375_Update/$entry
       -- CP-element group 93: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_375_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(93)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(93)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(93) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_375_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_375_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_892_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 93_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_375_inst_ack_0, ack => zeropad3D_CP_182_elements(93)); -- 
@@ -3834,6 +5288,17 @@ begin --
       -- CP-element group 94: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_379_Sample/$entry
       -- CP-element group 94: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_379_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(94)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(94)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(94) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_375_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_379_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_393_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_897_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 94_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_375_inst_ack_1, ack => zeropad3D_CP_182_elements(94)); -- 
@@ -3852,6 +5317,15 @@ begin --
       -- CP-element group 95: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_379_Sample/$exit
       -- CP-element group 95: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_379_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(95)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(95)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(95) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_379_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_906_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 95_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_379_inst_ack_0, ack => zeropad3D_CP_182_elements(95)); -- 
@@ -3865,6 +5339,15 @@ begin --
       -- CP-element group 96: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_379_Update/$exit
       -- CP-element group 96: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_379_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(96)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(96)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(96) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_379_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_911_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 96_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_379_inst_ack_1, ack => zeropad3D_CP_182_elements(96)); -- 
@@ -3881,6 +5364,16 @@ begin --
       -- CP-element group 97: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_393_Sample/ra
       -- CP-element group 97: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_393_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(97)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(97)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(97) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_393_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_393_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_920_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 97_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_393_inst_ack_0, ack => zeropad3D_CP_182_elements(97)); -- 
@@ -3904,6 +5397,17 @@ begin --
       -- CP-element group 98: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_411_Sample/$entry
       -- CP-element group 98: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_411_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(98)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(98)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(98) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_393_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_397_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_411_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_925_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 98_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_393_inst_ack_1, ack => zeropad3D_CP_182_elements(98)); -- 
@@ -3922,6 +5426,15 @@ begin --
       -- CP-element group 99: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_397_sample_completed_
       -- CP-element group 99: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_397_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(99)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(99)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(99) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_397_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_934_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 99_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_397_inst_ack_0, ack => zeropad3D_CP_182_elements(99)); -- 
@@ -3935,6 +5448,15 @@ begin --
       -- CP-element group 100: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_397_Update/ca
       -- CP-element group 100: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_397_Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(100)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(100)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(100) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_397_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_939_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 100_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_397_inst_ack_1, ack => zeropad3D_CP_182_elements(100)); -- 
@@ -3951,6 +5473,16 @@ begin --
       -- CP-element group 101: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_411_Sample/$exit
       -- CP-element group 101: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_411_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(101)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(101)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(101) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_411_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_411_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_948_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 101_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_411_inst_ack_0, ack => zeropad3D_CP_182_elements(101)); -- 
@@ -3974,6 +5506,17 @@ begin --
       -- CP-element group 102: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_411_Update/ca
       -- CP-element group 102: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_411_Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(102)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(102)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(102) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_411_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_415_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_429_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_953_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 102_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_411_inst_ack_1, ack => zeropad3D_CP_182_elements(102)); -- 
@@ -3992,6 +5535,15 @@ begin --
       -- CP-element group 103: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_415_Sample/$exit
       -- CP-element group 103: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_415_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(103)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(103)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(103) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_415_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_962_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 103_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_415_inst_ack_0, ack => zeropad3D_CP_182_elements(103)); -- 
@@ -4005,6 +5557,15 @@ begin --
       -- CP-element group 104: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_415_Update/$exit
       -- CP-element group 104: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_415_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(104)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(104)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(104) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_415_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_967_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 104_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_415_inst_ack_1, ack => zeropad3D_CP_182_elements(104)); -- 
@@ -4021,6 +5582,16 @@ begin --
       -- CP-element group 105: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_429_Sample/ra
       -- CP-element group 105: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_429_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(105)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(105)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(105) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_429_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_429_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_976_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 105_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_429_inst_ack_0, ack => zeropad3D_CP_182_elements(105)); -- 
@@ -4044,6 +5615,17 @@ begin --
       -- CP-element group 106: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_433_Sample/rr
       -- CP-element group 106: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_433_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(106)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(106)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(106) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_429_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_433_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_447_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_981_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 106_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_429_inst_ack_1, ack => zeropad3D_CP_182_elements(106)); -- 
@@ -4062,6 +5644,15 @@ begin --
       -- CP-element group 107: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_433_Sample/ra
       -- CP-element group 107: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_433_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(107)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(107)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(107) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_433_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_990_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 107_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_433_inst_ack_0, ack => zeropad3D_CP_182_elements(107)); -- 
@@ -4075,6 +5666,15 @@ begin --
       -- CP-element group 108: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_433_Update/$exit
       -- CP-element group 108: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_433_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(108)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(108)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(108) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_433_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_995_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 108_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_433_inst_ack_1, ack => zeropad3D_CP_182_elements(108)); -- 
@@ -4091,6 +5691,16 @@ begin --
       -- CP-element group 109: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_447_Sample/ra
       -- CP-element group 109: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_447_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(109)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(109)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(109) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_447_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_447_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1004_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 109_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_447_inst_ack_0, ack => zeropad3D_CP_182_elements(109)); -- 
@@ -4110,6 +5720,16 @@ begin --
       -- CP-element group 110: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/RPIPE_zeropad_input_pipe_447_update_completed_
       -- CP-element group 110: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_451_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(110)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(110)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(110) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_447_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_451_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1009_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 110_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_zeropad_input_pipe_447_inst_ack_1, ack => zeropad3D_CP_182_elements(110)); -- 
@@ -4125,6 +5745,15 @@ begin --
       -- CP-element group 111: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_451_sample_completed_
       -- CP-element group 111: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_451_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(111)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(111)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(111) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_451_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1018_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 111_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_451_inst_ack_0, ack => zeropad3D_CP_182_elements(111)); -- 
@@ -4138,6 +5767,15 @@ begin --
       -- CP-element group 112: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_451_update_completed_
       -- CP-element group 112: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/type_cast_451_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(112)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(112)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(112) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_451_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1023_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 112_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_451_inst_ack_1, ack => zeropad3D_CP_182_elements(112)); -- 
@@ -4165,6 +5803,15 @@ begin --
       -- CP-element group 113: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/ptr_deref_459_Sample/$entry
       -- CP-element group 113: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/ptr_deref_459_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(113)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(113)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(113) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_459_store_0_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_1061_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_1061_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(113), ack => ptr_deref_459_store_0_req_0); -- 
@@ -4190,6 +5837,15 @@ begin --
       -- CP-element group 114: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/ptr_deref_459_Sample/word_access_start/$exit
       -- CP-element group 114: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/ptr_deref_459_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(114)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(114)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(114) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_459_store_0_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1062_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 114_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_459_store_0_ack_0, ack => zeropad3D_CP_182_elements(114)); -- 
@@ -4205,6 +5861,15 @@ begin --
       -- CP-element group 115: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/ptr_deref_459_Update/word_access_complete/word_0/$exit
       -- CP-element group 115: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/ptr_deref_459_Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(115)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(115)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(115) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_459_store_0_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1073_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 115_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_459_store_0_ack_1, ack => zeropad3D_CP_182_elements(115)); -- 
@@ -4227,6 +5892,15 @@ begin --
       -- CP-element group 116: 	 branch_block_stmt_49/if_stmt_473_eval_test/$entry
       -- CP-element group 116: 	 branch_block_stmt_49/assign_stmt_324_to_assign_stmt_472/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(116)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(116)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(116) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_473_branch_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     branch_req_1081_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " branch_req_1081_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(116), ack => if_stmt_473_branch_req_0); -- 
@@ -4261,6 +5935,15 @@ begin --
       -- CP-element group 117: 	 branch_block_stmt_49/forx_xbody_forx_xendx_xloopexit_PhiReq/$exit
       -- CP-element group 117: 	 branch_block_stmt_49/forx_xbody_forx_xendx_xloopexit_PhiReq/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(117)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(117)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(117) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_473_branch_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     if_choice_transition_1086_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 117_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_473_branch_ack_1, ack => zeropad3D_CP_182_elements(117)); -- 
@@ -4284,6 +5967,17 @@ begin --
       -- CP-element group 118: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/phi_stmt_310/$entry
       -- CP-element group 118: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(118)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(118)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(118) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_473_branch_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_316_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_316_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     else_choice_transition_1090_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 118_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_473_branch_ack_0, ack => zeropad3D_CP_182_elements(118)); -- 
@@ -4302,6 +5996,15 @@ begin --
       -- CP-element group 119: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/call_stmt_484_Sample/$exit
       -- CP-element group 119: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/call_stmt_484_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(119)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(119)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(119) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_484_call_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     cra_1104_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 119_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => call_stmt_484_call_ack_0, ack => zeropad3D_CP_182_elements(119)); -- 
@@ -4318,6 +6021,16 @@ begin --
       -- CP-element group 120: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/call_stmt_484_Update/$exit
       -- CP-element group 120: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/type_cast_488_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(120)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(120)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(120) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_484_call_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_488_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     cca_1109_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 120_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => call_stmt_484_call_ack_1, ack => zeropad3D_CP_182_elements(120)); -- 
@@ -4333,6 +6046,15 @@ begin --
       -- CP-element group 121: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/type_cast_488_Sample/ra
       -- CP-element group 121: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/type_cast_488_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(121)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(121)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(121) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_488_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1118_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 121_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_488_inst_ack_0, ack => zeropad3D_CP_182_elements(121)); -- 
@@ -4357,6 +6079,17 @@ begin --
       -- CP-element group 122: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/RPIPE_Block0_complete_513_Sample/rr
       -- CP-element group 122: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/type_cast_488_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(122)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(122)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(122) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_488_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_491_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_Block0_complete_513_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1123_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 122_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_488_inst_ack_1, ack => zeropad3D_CP_182_elements(122)); -- 
@@ -4379,6 +6112,16 @@ begin --
       -- CP-element group 123: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_491_update_start_
       -- CP-element group 123: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_491_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(123)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(123)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(123) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_491_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_491_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1135_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 123_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_491_inst_ack_0, ack => zeropad3D_CP_182_elements(123)); -- 
@@ -4398,6 +6141,16 @@ begin --
       -- CP-element group 124: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_494_Sample/req
       -- CP-element group 124: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_494_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(124)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(124)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(124) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_491_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_494_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1140_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 124_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_491_inst_ack_1, ack => zeropad3D_CP_182_elements(124)); -- 
@@ -4417,6 +6170,16 @@ begin --
       -- CP-element group 125: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_494_Sample/ack
       -- CP-element group 125: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_494_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(125)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(125)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(125) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_494_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_494_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1149_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 125_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_494_inst_ack_0, ack => zeropad3D_CP_182_elements(125)); -- 
@@ -4436,6 +6199,16 @@ begin --
       -- CP-element group 126: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_494_Update/$exit
       -- CP-element group 126: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_494_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(126)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(126)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(126) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_494_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_497_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1154_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 126_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_494_inst_ack_1, ack => zeropad3D_CP_182_elements(126)); -- 
@@ -4455,6 +6228,16 @@ begin --
       -- CP-element group 127: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_497_update_start_
       -- CP-element group 127: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_497_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(127)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(127)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(127) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_497_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_497_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1163_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 127_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_497_inst_ack_0, ack => zeropad3D_CP_182_elements(127)); -- 
@@ -4474,6 +6257,16 @@ begin --
       -- CP-element group 128: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_500_Sample/req
       -- CP-element group 128: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_500_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(128)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(128)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(128) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_497_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_500_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1168_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 128_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_497_inst_ack_1, ack => zeropad3D_CP_182_elements(128)); -- 
@@ -4493,6 +6286,16 @@ begin --
       -- CP-element group 129: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_500_Sample/ack
       -- CP-element group 129: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_500_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(129)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(129)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(129) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_500_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_500_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1177_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 129_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_500_inst_ack_0, ack => zeropad3D_CP_182_elements(129)); -- 
@@ -4512,6 +6315,16 @@ begin --
       -- CP-element group 130: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_500_Update/$exit
       -- CP-element group 130: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_500_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(130)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(130)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(130) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_500_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_503_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1182_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 130_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_500_inst_ack_1, ack => zeropad3D_CP_182_elements(130)); -- 
@@ -4531,6 +6344,16 @@ begin --
       -- CP-element group 131: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_503_update_start_
       -- CP-element group 131: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_503_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(131)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(131)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(131) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_503_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_503_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1191_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 131_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_503_inst_ack_0, ack => zeropad3D_CP_182_elements(131)); -- 
@@ -4550,6 +6373,16 @@ begin --
       -- CP-element group 132: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_506_Sample/$entry
       -- CP-element group 132: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_506_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(132)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(132)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(132) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_503_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_506_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1196_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 132_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_503_inst_ack_1, ack => zeropad3D_CP_182_elements(132)); -- 
@@ -4569,6 +6402,16 @@ begin --
       -- CP-element group 133: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_506_update_start_
       -- CP-element group 133: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_506_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(133)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(133)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(133) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_506_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_506_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1205_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 133_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_506_inst_ack_0, ack => zeropad3D_CP_182_elements(133)); -- 
@@ -4588,6 +6431,16 @@ begin --
       -- CP-element group 134: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_509_sample_start_
       -- CP-element group 134: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_506_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(134)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(134)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(134) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_506_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_509_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1210_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 134_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_506_inst_ack_1, ack => zeropad3D_CP_182_elements(134)); -- 
@@ -4607,6 +6460,16 @@ begin --
       -- CP-element group 135: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_509_update_start_
       -- CP-element group 135: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_509_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(135)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(135)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(135) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_509_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_509_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1219_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 135_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_509_inst_ack_0, ack => zeropad3D_CP_182_elements(135)); -- 
@@ -4623,6 +6486,15 @@ begin --
       -- CP-element group 136: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_509_Update/$exit
       -- CP-element group 136: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/WPIPE_Block0_starting_509_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(136)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(136)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(136) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_Block0_starting_509_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1224_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 136_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_starting_509_inst_ack_1, ack => zeropad3D_CP_182_elements(136)); -- 
@@ -4639,6 +6511,16 @@ begin --
       -- CP-element group 137: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/RPIPE_Block0_complete_513_Sample/ra
       -- CP-element group 137: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/RPIPE_Block0_complete_513_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(137)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(137)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(137) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_Block0_complete_513_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_Block0_complete_513_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1233_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 137_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_complete_513_inst_ack_0, ack => zeropad3D_CP_182_elements(137)); -- 
@@ -4655,6 +6537,15 @@ begin --
       -- CP-element group 138: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/RPIPE_Block0_complete_513_update_completed_
       -- CP-element group 138: 	 branch_block_stmt_49/assign_stmt_493_to_assign_stmt_514/RPIPE_Block0_complete_513_Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(138)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(138)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(138) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_Block0_complete_513_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1238_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 138_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_complete_513_inst_ack_1, ack => zeropad3D_CP_182_elements(138)); -- 
@@ -4681,6 +6572,17 @@ begin --
       -- CP-element group 139: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/call_stmt_517_update_start_
       -- CP-element group 139: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/call_stmt_517_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(139)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(139)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(139) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_517_call_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_521_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_517_call_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ccr_1254_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " ccr_1254_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(139), ack => call_stmt_517_call_req_1); -- 
@@ -4710,6 +6612,15 @@ begin --
       -- CP-element group 140: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/call_stmt_517_Sample/$exit
       -- CP-element group 140: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/call_stmt_517_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(140)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(140)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(140) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_517_call_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     cra_1250_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 140_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => call_stmt_517_call_ack_0, ack => zeropad3D_CP_182_elements(140)); -- 
@@ -4726,6 +6637,16 @@ begin --
       -- CP-element group 141: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/call_stmt_517_update_completed_
       -- CP-element group 141: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/type_cast_521_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(141)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(141)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(141) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_517_call_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_521_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     cca_1255_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 141_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => call_stmt_517_call_ack_1, ack => zeropad3D_CP_182_elements(141)); -- 
@@ -4741,6 +6662,15 @@ begin --
       -- CP-element group 142: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/type_cast_521_Sample/ra
       -- CP-element group 142: 	 branch_block_stmt_49/call_stmt_517_to_assign_stmt_527/type_cast_521_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(142)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(142)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(142) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_521_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1264_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 142_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_521_inst_ack_0, ack => zeropad3D_CP_182_elements(142)); -- 
@@ -4821,6 +6751,31 @@ begin --
       -- CP-element group 143: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_601_Update/$entry
       -- CP-element group 143: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_601_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(143)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(143)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(143) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_521_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_551_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_561_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_571_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_551_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_531_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_561_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_571_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_531_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_541_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_541_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_581_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_581_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_591_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_591_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_601_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_601_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1269_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 143_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_521_inst_ack_1, ack => zeropad3D_CP_182_elements(143)); -- 
@@ -4881,6 +6836,15 @@ begin --
       -- CP-element group 144: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_531_Sample/ra
       -- CP-element group 144: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_531_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(144)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(144)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(144) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_531_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1281_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 144_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_531_inst_ack_0, ack => zeropad3D_CP_182_elements(144)); -- 
@@ -4894,6 +6858,15 @@ begin --
       -- CP-element group 145: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_531_Update/$exit
       -- CP-element group 145: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_531_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(145)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(145)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(145) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_531_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1286_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 145_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_531_inst_ack_1, ack => zeropad3D_CP_182_elements(145)); -- 
@@ -4906,6 +6879,15 @@ begin --
       -- CP-element group 146: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_541_Sample/ra
       -- CP-element group 146: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_541_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(146)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(146)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(146) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_541_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1295_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 146_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_541_inst_ack_0, ack => zeropad3D_CP_182_elements(146)); -- 
@@ -4919,6 +6901,15 @@ begin --
       -- CP-element group 147: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_541_Update/$exit
       -- CP-element group 147: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_541_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(147)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(147)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(147) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_541_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1300_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 147_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_541_inst_ack_1, ack => zeropad3D_CP_182_elements(147)); -- 
@@ -4931,6 +6922,15 @@ begin --
       -- CP-element group 148: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_551_Sample/ra
       -- CP-element group 148: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_551_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(148)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(148)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(148) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_551_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1309_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 148_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_551_inst_ack_0, ack => zeropad3D_CP_182_elements(148)); -- 
@@ -4944,6 +6944,15 @@ begin --
       -- CP-element group 149: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_551_Update/ca
       -- CP-element group 149: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_551_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(149)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(149)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(149) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_551_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1314_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 149_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_551_inst_ack_1, ack => zeropad3D_CP_182_elements(149)); -- 
@@ -4956,6 +6965,15 @@ begin --
       -- CP-element group 150: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_561_Sample/ra
       -- CP-element group 150: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_561_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(150)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(150)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(150) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_561_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1323_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 150_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_561_inst_ack_0, ack => zeropad3D_CP_182_elements(150)); -- 
@@ -4969,6 +6987,15 @@ begin --
       -- CP-element group 151: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_561_Update/$exit
       -- CP-element group 151: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_561_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(151)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(151)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(151) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_561_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1328_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 151_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_561_inst_ack_1, ack => zeropad3D_CP_182_elements(151)); -- 
@@ -4981,6 +7008,15 @@ begin --
       -- CP-element group 152: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_571_Sample/$exit
       -- CP-element group 152: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_571_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(152)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(152)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(152) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_571_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1337_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 152_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_571_inst_ack_0, ack => zeropad3D_CP_182_elements(152)); -- 
@@ -4994,6 +7030,15 @@ begin --
       -- CP-element group 153: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_571_Update/$exit
       -- CP-element group 153: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_571_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(153)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(153)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(153) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_571_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1342_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 153_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_571_inst_ack_1, ack => zeropad3D_CP_182_elements(153)); -- 
@@ -5006,6 +7051,15 @@ begin --
       -- CP-element group 154: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_581_Sample/$exit
       -- CP-element group 154: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_581_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(154)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(154)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(154) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_581_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1351_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 154_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_581_inst_ack_0, ack => zeropad3D_CP_182_elements(154)); -- 
@@ -5019,6 +7073,15 @@ begin --
       -- CP-element group 155: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_581_Update/$exit
       -- CP-element group 155: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_581_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(155)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(155)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(155) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_581_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1356_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 155_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_581_inst_ack_1, ack => zeropad3D_CP_182_elements(155)); -- 
@@ -5031,6 +7094,15 @@ begin --
       -- CP-element group 156: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_591_Sample/$exit
       -- CP-element group 156: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_591_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(156)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(156)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(156) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_591_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1365_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 156_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_591_inst_ack_0, ack => zeropad3D_CP_182_elements(156)); -- 
@@ -5044,6 +7116,15 @@ begin --
       -- CP-element group 157: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_591_Update/$exit
       -- CP-element group 157: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_591_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(157)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(157)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(157) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_591_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1370_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 157_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_591_inst_ack_1, ack => zeropad3D_CP_182_elements(157)); -- 
@@ -5056,6 +7137,15 @@ begin --
       -- CP-element group 158: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_601_Sample/$exit
       -- CP-element group 158: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/type_cast_601_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(158)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(158)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(158) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_601_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1379_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 158_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_601_inst_ack_0, ack => zeropad3D_CP_182_elements(158)); -- 
@@ -5072,6 +7162,16 @@ begin --
       -- CP-element group 159: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_603_Sample/$entry
       -- CP-element group 159: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_603_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(159)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(159)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(159) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_601_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_603_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1384_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 159_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_601_inst_ack_1, ack => zeropad3D_CP_182_elements(159)); -- 
@@ -5091,6 +7191,16 @@ begin --
       -- CP-element group 160: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_603_Update/$entry
       -- CP-element group 160: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_603_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(160)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(160)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(160) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_603_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_603_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1393_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 160_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_603_inst_ack_0, ack => zeropad3D_CP_182_elements(160)); -- 
@@ -5107,6 +7217,15 @@ begin --
       -- CP-element group 161: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_603_Update/$exit
       -- CP-element group 161: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_603_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(161)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(161)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(161) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_603_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1398_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 161_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_603_inst_ack_1, ack => zeropad3D_CP_182_elements(161)); -- 
@@ -5121,6 +7240,15 @@ begin --
       -- CP-element group 162: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_606_Sample/$entry
       -- CP-element group 162: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_606_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(162)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(162)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(162) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_606_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1406_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1406_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(162), ack => WPIPE_zeropad_output_pipe_606_inst_req_0); -- 
@@ -5148,6 +7276,16 @@ begin --
       -- CP-element group 163: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_606_Update/$entry
       -- CP-element group 163: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_606_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(163)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(163)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(163) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_606_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_606_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1407_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 163_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_606_inst_ack_0, ack => zeropad3D_CP_182_elements(163)); -- 
@@ -5164,6 +7302,15 @@ begin --
       -- CP-element group 164: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_606_Update/$exit
       -- CP-element group 164: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_606_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(164)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(164)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(164) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_606_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1412_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 164_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_606_inst_ack_1, ack => zeropad3D_CP_182_elements(164)); -- 
@@ -5178,6 +7325,15 @@ begin --
       -- CP-element group 165: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_609_Sample/$entry
       -- CP-element group 165: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_609_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(165)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(165)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(165) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_609_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1420_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1420_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(165), ack => WPIPE_zeropad_output_pipe_609_inst_req_0); -- 
@@ -5205,6 +7361,16 @@ begin --
       -- CP-element group 166: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_609_Update/$entry
       -- CP-element group 166: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_609_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(166)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(166)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(166) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_609_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_609_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1421_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 166_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_609_inst_ack_0, ack => zeropad3D_CP_182_elements(166)); -- 
@@ -5221,6 +7387,15 @@ begin --
       -- CP-element group 167: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_609_Update/$exit
       -- CP-element group 167: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_609_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(167)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(167)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(167) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_609_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1426_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 167_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_609_inst_ack_1, ack => zeropad3D_CP_182_elements(167)); -- 
@@ -5235,6 +7410,15 @@ begin --
       -- CP-element group 168: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_612_Sample/$entry
       -- CP-element group 168: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_612_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(168)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(168)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(168) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_612_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1434_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1434_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(168), ack => WPIPE_zeropad_output_pipe_612_inst_req_0); -- 
@@ -5262,6 +7446,16 @@ begin --
       -- CP-element group 169: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_612_Update/$entry
       -- CP-element group 169: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_612_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(169)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(169)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(169) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_612_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_612_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1435_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 169_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_612_inst_ack_0, ack => zeropad3D_CP_182_elements(169)); -- 
@@ -5278,6 +7472,15 @@ begin --
       -- CP-element group 170: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_612_Update/$exit
       -- CP-element group 170: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_612_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(170)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(170)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(170) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_612_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1440_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 170_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_612_inst_ack_1, ack => zeropad3D_CP_182_elements(170)); -- 
@@ -5292,6 +7495,15 @@ begin --
       -- CP-element group 171: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_615_Sample/$entry
       -- CP-element group 171: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_615_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(171)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(171)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(171) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_615_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1448_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1448_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(171), ack => WPIPE_zeropad_output_pipe_615_inst_req_0); -- 
@@ -5319,6 +7531,16 @@ begin --
       -- CP-element group 172: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_615_Update/$entry
       -- CP-element group 172: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_615_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(172)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(172)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(172) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_615_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_615_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1449_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 172_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_615_inst_ack_0, ack => zeropad3D_CP_182_elements(172)); -- 
@@ -5335,6 +7557,15 @@ begin --
       -- CP-element group 173: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_615_Update/$exit
       -- CP-element group 173: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_615_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(173)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(173)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(173) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_615_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1454_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 173_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_615_inst_ack_1, ack => zeropad3D_CP_182_elements(173)); -- 
@@ -5349,6 +7580,15 @@ begin --
       -- CP-element group 174: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_618_Sample/$entry
       -- CP-element group 174: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_618_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(174)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(174)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(174) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_618_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1462_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1462_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(174), ack => WPIPE_zeropad_output_pipe_618_inst_req_0); -- 
@@ -5376,6 +7616,16 @@ begin --
       -- CP-element group 175: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_618_Update/$entry
       -- CP-element group 175: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_618_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(175)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(175)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(175) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_618_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_618_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1463_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 175_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_618_inst_ack_0, ack => zeropad3D_CP_182_elements(175)); -- 
@@ -5392,6 +7642,15 @@ begin --
       -- CP-element group 176: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_618_Update/$exit
       -- CP-element group 176: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_618_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(176)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(176)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(176) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_618_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1468_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 176_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_618_inst_ack_1, ack => zeropad3D_CP_182_elements(176)); -- 
@@ -5406,6 +7665,15 @@ begin --
       -- CP-element group 177: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_621_Sample/$entry
       -- CP-element group 177: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_621_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(177)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(177)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(177) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_621_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1476_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1476_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(177), ack => WPIPE_zeropad_output_pipe_621_inst_req_0); -- 
@@ -5433,6 +7701,16 @@ begin --
       -- CP-element group 178: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_621_Update/$entry
       -- CP-element group 178: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_621_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(178)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(178)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(178) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_621_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_621_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1477_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 178_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_621_inst_ack_0, ack => zeropad3D_CP_182_elements(178)); -- 
@@ -5449,6 +7727,15 @@ begin --
       -- CP-element group 179: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_621_Update/$exit
       -- CP-element group 179: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_621_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(179)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(179)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(179) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_621_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1482_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 179_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_621_inst_ack_1, ack => zeropad3D_CP_182_elements(179)); -- 
@@ -5463,6 +7750,15 @@ begin --
       -- CP-element group 180: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_624_Sample/$entry
       -- CP-element group 180: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_624_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(180)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(180)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(180) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_624_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1490_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1490_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(180), ack => WPIPE_zeropad_output_pipe_624_inst_req_0); -- 
@@ -5490,6 +7786,16 @@ begin --
       -- CP-element group 181: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_624_Update/$entry
       -- CP-element group 181: 	 branch_block_stmt_49/assign_stmt_532_to_assign_stmt_626/WPIPE_zeropad_output_pipe_624_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(181)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(181)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(181) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_624_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_624_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1491_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 181_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_624_inst_ack_0, ack => zeropad3D_CP_182_elements(181)); -- 
@@ -5533,6 +7839,21 @@ begin --
       -- CP-element group 182: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_638_Update/$entry
       -- CP-element group 182: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_638_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(182)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(182)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(182) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_624_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_630_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_630_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_634_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_634_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_638_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_638_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1496_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 182_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_624_inst_ack_1, ack => zeropad3D_CP_182_elements(182)); -- 
@@ -5563,6 +7884,15 @@ begin --
       -- CP-element group 183: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_630_Sample/$exit
       -- CP-element group 183: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_630_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(183)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(183)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(183) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_630_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1508_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 183_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_630_inst_ack_0, ack => zeropad3D_CP_182_elements(183)); -- 
@@ -5576,6 +7906,15 @@ begin --
       -- CP-element group 184: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_630_Update/$exit
       -- CP-element group 184: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_630_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(184)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(184)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(184) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_630_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1513_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 184_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_630_inst_ack_1, ack => zeropad3D_CP_182_elements(184)); -- 
@@ -5588,6 +7927,15 @@ begin --
       -- CP-element group 185: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_634_Sample/$exit
       -- CP-element group 185: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_634_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(185)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(185)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(185) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_634_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1522_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 185_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_634_inst_ack_0, ack => zeropad3D_CP_182_elements(185)); -- 
@@ -5601,6 +7949,15 @@ begin --
       -- CP-element group 186: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_634_Update/$exit
       -- CP-element group 186: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_634_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(186)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(186)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(186) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_634_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1527_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 186_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_634_inst_ack_1, ack => zeropad3D_CP_182_elements(186)); -- 
@@ -5613,6 +7970,15 @@ begin --
       -- CP-element group 187: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_638_Sample/$exit
       -- CP-element group 187: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_638_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(187)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(187)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(187) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_638_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1536_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 187_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_638_inst_ack_0, ack => zeropad3D_CP_182_elements(187)); -- 
@@ -5626,6 +7992,15 @@ begin --
       -- CP-element group 188: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_638_Update/$exit
       -- CP-element group 188: 	 branch_block_stmt_49/assign_stmt_631_to_assign_stmt_667/type_cast_638_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(188)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(188)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(188) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_638_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1541_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 188_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_638_inst_ack_1, ack => zeropad3D_CP_182_elements(188)); -- 
@@ -5649,6 +8024,15 @@ begin --
       -- CP-element group 189: 	 branch_block_stmt_49/if_stmt_668_if_link/$entry
       -- CP-element group 189: 	 branch_block_stmt_49/if_stmt_668_else_link/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(189)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(189)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(189) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_668_branch_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     branch_req_1549_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " branch_req_1549_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(189), ack => if_stmt_668_branch_req_0); -- 
@@ -5689,6 +8073,17 @@ begin --
       -- CP-element group 190: 	 branch_block_stmt_49/assign_stmt_678/type_cast_677_Update/$entry
       -- CP-element group 190: 	 branch_block_stmt_49/assign_stmt_678/type_cast_677_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(190)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(190)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(190) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_668_branch_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_677_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_677_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     if_choice_transition_1554_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 190_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_668_branch_ack_1, ack => zeropad3D_CP_182_elements(190)); -- 
@@ -5710,6 +8105,15 @@ begin --
       -- CP-element group 191: 	 branch_block_stmt_49/forx_xend_forx_xend308_PhiReq/$exit
       -- CP-element group 191: 	 branch_block_stmt_49/forx_xend_forx_xend308_PhiReq/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(191)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(191)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(191) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_668_branch_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     else_choice_transition_1558_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 191_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_668_branch_ack_0, ack => zeropad3D_CP_182_elements(191)); -- 
@@ -5722,6 +8126,15 @@ begin --
       -- CP-element group 192: 	 branch_block_stmt_49/assign_stmt_678/type_cast_677_Sample/$exit
       -- CP-element group 192: 	 branch_block_stmt_49/assign_stmt_678/type_cast_677_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(192)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(192)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(192) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_677_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1572_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 192_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_677_inst_ack_0, ack => zeropad3D_CP_182_elements(192)); -- 
@@ -5741,6 +8154,15 @@ begin --
       -- CP-element group 193: 	 branch_block_stmt_49/assign_stmt_678/type_cast_677_Update/$exit
       -- CP-element group 193: 	 branch_block_stmt_49/assign_stmt_678/type_cast_677_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(193)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(193)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(193) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_677_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1577_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 193_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_677_inst_ack_1, ack => zeropad3D_CP_182_elements(193)); -- 
@@ -5754,6 +8176,15 @@ begin --
       -- CP-element group 194: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/array_obj_ref_693_final_index_sum_regn_Sample/$exit
       -- CP-element group 194: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/array_obj_ref_693_final_index_sum_regn_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(194)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(194)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(194) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_693_index_offset_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1606_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 194_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_693_index_offset_ack_0, ack => zeropad3D_CP_182_elements(194)); -- 
@@ -5775,6 +8206,16 @@ begin --
       -- CP-element group 195: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/addr_of_694_request/$entry
       -- CP-element group 195: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/addr_of_694_request/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(195)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(195)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(195) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_693_index_offset_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_694_final_reg_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1611_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 195_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_693_index_offset_ack_1, ack => zeropad3D_CP_182_elements(195)); -- 
@@ -5790,6 +8231,15 @@ begin --
       -- CP-element group 196: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/addr_of_694_request/$exit
       -- CP-element group 196: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/addr_of_694_request/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(196)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(196)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(196) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_694_final_reg_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1621_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 196_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_694_final_reg_ack_0, ack => zeropad3D_CP_182_elements(196)); -- 
@@ -5824,6 +8274,16 @@ begin --
       -- CP-element group 197: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/ptr_deref_698_Sample/word_access_start/word_0/$entry
       -- CP-element group 197: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/ptr_deref_698_Sample/word_access_start/word_0/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(197)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(197)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(197) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_694_final_reg_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_698_load_0_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1626_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 197_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_694_final_reg_ack_1, ack => zeropad3D_CP_182_elements(197)); -- 
@@ -5841,6 +8301,15 @@ begin --
       -- CP-element group 198: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/ptr_deref_698_Sample/word_access_start/word_0/$exit
       -- CP-element group 198: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/ptr_deref_698_Sample/word_access_start/word_0/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(198)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(198)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(198) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_698_load_0_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1660_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 198_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_698_load_0_ack_0, ack => zeropad3D_CP_182_elements(198)); -- 
@@ -5891,6 +8360,23 @@ begin --
       -- CP-element group 199: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_772_Sample/$entry
       -- CP-element group 199: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_772_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(199)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(199)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(199) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_698_load_0_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_702_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_712_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_722_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_732_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_742_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_752_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_762_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_772_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1671_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 199_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_698_load_0_ack_1, ack => zeropad3D_CP_182_elements(199)); -- 
@@ -5927,6 +8413,15 @@ begin --
       -- CP-element group 200: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_702_Sample/$exit
       -- CP-element group 200: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_702_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(200)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(200)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(200) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_702_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1685_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 200_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_702_inst_ack_0, ack => zeropad3D_CP_182_elements(200)); -- 
@@ -5940,6 +8435,15 @@ begin --
       -- CP-element group 201: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_702_Update/$exit
       -- CP-element group 201: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_702_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(201)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(201)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(201) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_702_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1690_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 201_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_702_inst_ack_1, ack => zeropad3D_CP_182_elements(201)); -- 
@@ -5952,6 +8456,15 @@ begin --
       -- CP-element group 202: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_712_Sample/$exit
       -- CP-element group 202: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_712_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(202)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(202)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(202) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_712_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1699_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 202_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_712_inst_ack_0, ack => zeropad3D_CP_182_elements(202)); -- 
@@ -5965,6 +8478,15 @@ begin --
       -- CP-element group 203: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_712_Update/$exit
       -- CP-element group 203: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_712_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(203)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(203)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(203) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_712_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1704_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 203_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_712_inst_ack_1, ack => zeropad3D_CP_182_elements(203)); -- 
@@ -5977,6 +8499,15 @@ begin --
       -- CP-element group 204: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_722_Sample/$exit
       -- CP-element group 204: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_722_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(204)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(204)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(204) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_722_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1713_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 204_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_722_inst_ack_0, ack => zeropad3D_CP_182_elements(204)); -- 
@@ -5990,6 +8521,15 @@ begin --
       -- CP-element group 205: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_722_Update/$exit
       -- CP-element group 205: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_722_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(205)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(205)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(205) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_722_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1718_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 205_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_722_inst_ack_1, ack => zeropad3D_CP_182_elements(205)); -- 
@@ -6002,6 +8542,15 @@ begin --
       -- CP-element group 206: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_732_Sample/$exit
       -- CP-element group 206: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_732_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(206)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(206)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(206) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_732_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1727_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 206_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_732_inst_ack_0, ack => zeropad3D_CP_182_elements(206)); -- 
@@ -6015,6 +8564,15 @@ begin --
       -- CP-element group 207: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_732_Update/$exit
       -- CP-element group 207: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_732_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(207)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(207)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(207) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_732_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1732_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 207_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_732_inst_ack_1, ack => zeropad3D_CP_182_elements(207)); -- 
@@ -6027,6 +8585,15 @@ begin --
       -- CP-element group 208: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_742_Sample/$exit
       -- CP-element group 208: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_742_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(208)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(208)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(208) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_742_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1741_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 208_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_742_inst_ack_0, ack => zeropad3D_CP_182_elements(208)); -- 
@@ -6040,6 +8607,15 @@ begin --
       -- CP-element group 209: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_742_Update/$exit
       -- CP-element group 209: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_742_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(209)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(209)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(209) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_742_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1746_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 209_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_742_inst_ack_1, ack => zeropad3D_CP_182_elements(209)); -- 
@@ -6052,6 +8628,15 @@ begin --
       -- CP-element group 210: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_752_Sample/$exit
       -- CP-element group 210: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_752_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(210)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(210)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(210) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_752_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1755_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 210_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_752_inst_ack_0, ack => zeropad3D_CP_182_elements(210)); -- 
@@ -6065,6 +8650,15 @@ begin --
       -- CP-element group 211: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_752_Update/$exit
       -- CP-element group 211: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_752_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(211)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(211)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(211) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_752_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1760_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 211_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_752_inst_ack_1, ack => zeropad3D_CP_182_elements(211)); -- 
@@ -6077,6 +8671,15 @@ begin --
       -- CP-element group 212: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_762_Sample/$exit
       -- CP-element group 212: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_762_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(212)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(212)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(212) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_762_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1769_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 212_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_762_inst_ack_0, ack => zeropad3D_CP_182_elements(212)); -- 
@@ -6090,6 +8693,15 @@ begin --
       -- CP-element group 213: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_762_Update/$exit
       -- CP-element group 213: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_762_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(213)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(213)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(213) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_762_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1774_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 213_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_762_inst_ack_1, ack => zeropad3D_CP_182_elements(213)); -- 
@@ -6102,6 +8714,15 @@ begin --
       -- CP-element group 214: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_772_Sample/$exit
       -- CP-element group 214: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_772_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(214)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(214)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(214) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_772_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1783_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 214_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_772_inst_ack_0, ack => zeropad3D_CP_182_elements(214)); -- 
@@ -6118,6 +8739,16 @@ begin --
       -- CP-element group 215: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_774_Sample/$entry
       -- CP-element group 215: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_774_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(215)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(215)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(215) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_772_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_774_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1788_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 215_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_772_inst_ack_1, ack => zeropad3D_CP_182_elements(215)); -- 
@@ -6137,6 +8768,16 @@ begin --
       -- CP-element group 216: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_774_Update/$entry
       -- CP-element group 216: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_774_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(216)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(216)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(216) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_774_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_774_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1797_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 216_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_774_inst_ack_0, ack => zeropad3D_CP_182_elements(216)); -- 
@@ -6153,6 +8794,15 @@ begin --
       -- CP-element group 217: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_774_Update/$exit
       -- CP-element group 217: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_774_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(217)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(217)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(217) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_774_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1802_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 217_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_774_inst_ack_1, ack => zeropad3D_CP_182_elements(217)); -- 
@@ -6167,6 +8817,15 @@ begin --
       -- CP-element group 218: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_777_Sample/$entry
       -- CP-element group 218: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_777_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(218)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(218)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(218) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_777_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1810_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1810_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(218), ack => WPIPE_zeropad_output_pipe_777_inst_req_0); -- 
@@ -6194,6 +8853,16 @@ begin --
       -- CP-element group 219: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_777_Update/$entry
       -- CP-element group 219: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_777_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(219)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(219)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(219) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_777_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_777_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1811_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 219_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_777_inst_ack_0, ack => zeropad3D_CP_182_elements(219)); -- 
@@ -6210,6 +8879,15 @@ begin --
       -- CP-element group 220: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_777_Update/$exit
       -- CP-element group 220: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_777_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(220)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(220)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(220) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_777_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1816_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 220_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_777_inst_ack_1, ack => zeropad3D_CP_182_elements(220)); -- 
@@ -6224,6 +8902,15 @@ begin --
       -- CP-element group 221: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_780_Sample/$entry
       -- CP-element group 221: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_780_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(221)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(221)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(221) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_780_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1824_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1824_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(221), ack => WPIPE_zeropad_output_pipe_780_inst_req_0); -- 
@@ -6251,6 +8938,16 @@ begin --
       -- CP-element group 222: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_780_sample_completed_
       -- CP-element group 222: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_780_update_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(222)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(222)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(222) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_780_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_780_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1825_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 222_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_780_inst_ack_0, ack => zeropad3D_CP_182_elements(222)); -- 
@@ -6267,6 +8964,15 @@ begin --
       -- CP-element group 223: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_780_Update/$exit
       -- CP-element group 223: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_780_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(223)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(223)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(223) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_780_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1830_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 223_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_780_inst_ack_1, ack => zeropad3D_CP_182_elements(223)); -- 
@@ -6281,6 +8987,15 @@ begin --
       -- CP-element group 224: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_783_Sample/req
       -- CP-element group 224: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_783_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(224)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(224)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(224) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_783_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1838_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1838_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(224), ack => WPIPE_zeropad_output_pipe_783_inst_req_0); -- 
@@ -6308,6 +9023,16 @@ begin --
       -- CP-element group 225: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_783_sample_completed_
       -- CP-element group 225: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_783_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(225)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(225)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(225) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_783_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_783_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1839_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 225_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_783_inst_ack_0, ack => zeropad3D_CP_182_elements(225)); -- 
@@ -6324,6 +9049,15 @@ begin --
       -- CP-element group 226: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_783_Update/ack
       -- CP-element group 226: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_783_Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(226)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(226)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(226) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_783_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1844_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 226_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_783_inst_ack_1, ack => zeropad3D_CP_182_elements(226)); -- 
@@ -6338,6 +9072,15 @@ begin --
       -- CP-element group 227: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_786_Sample/req
       -- CP-element group 227: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_786_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(227)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(227)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(227) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_786_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1852_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1852_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(227), ack => WPIPE_zeropad_output_pipe_786_inst_req_0); -- 
@@ -6365,6 +9108,16 @@ begin --
       -- CP-element group 228: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_786_Sample/ack
       -- CP-element group 228: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_786_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(228)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(228)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(228) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_786_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_786_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1853_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 228_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_786_inst_ack_0, ack => zeropad3D_CP_182_elements(228)); -- 
@@ -6381,6 +9134,15 @@ begin --
       -- CP-element group 229: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_786_Update/$exit
       -- CP-element group 229: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_786_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(229)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(229)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(229) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_786_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1858_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 229_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_786_inst_ack_1, ack => zeropad3D_CP_182_elements(229)); -- 
@@ -6395,6 +9157,15 @@ begin --
       -- CP-element group 230: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_789_Sample/req
       -- CP-element group 230: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_789_Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(230)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(230)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(230) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_789_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1866_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1866_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(230), ack => WPIPE_zeropad_output_pipe_789_inst_req_0); -- 
@@ -6422,6 +9193,16 @@ begin --
       -- CP-element group 231: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_789_Update/$entry
       -- CP-element group 231: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_789_Update/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(231)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(231)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(231) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_789_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_789_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1867_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 231_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_789_inst_ack_0, ack => zeropad3D_CP_182_elements(231)); -- 
@@ -6438,6 +9219,15 @@ begin --
       -- CP-element group 232: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_789_Update/$exit
       -- CP-element group 232: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_789_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(232)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(232)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(232) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_789_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1872_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 232_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_789_inst_ack_1, ack => zeropad3D_CP_182_elements(232)); -- 
@@ -6452,6 +9242,15 @@ begin --
       -- CP-element group 233: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_792_sample_start_
       -- CP-element group 233: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_792_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(233)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(233)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(233) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_792_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1880_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1880_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(233), ack => WPIPE_zeropad_output_pipe_792_inst_req_0); -- 
@@ -6479,6 +9278,16 @@ begin --
       -- CP-element group 234: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_792_Sample/ack
       -- CP-element group 234: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_792_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(234)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(234)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(234) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_792_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_792_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1881_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 234_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_792_inst_ack_0, ack => zeropad3D_CP_182_elements(234)); -- 
@@ -6495,6 +9304,15 @@ begin --
       -- CP-element group 235: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_792_Update/ack
       -- CP-element group 235: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_792_Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(235)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(235)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(235) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_792_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1886_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 235_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_792_inst_ack_1, ack => zeropad3D_CP_182_elements(235)); -- 
@@ -6509,6 +9327,15 @@ begin --
       -- CP-element group 236: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_795_Sample/$entry
       -- CP-element group 236: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_795_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(236)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(236)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(236) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_795_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_1894_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_1894_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(236), ack => WPIPE_zeropad_output_pipe_795_inst_req_0); -- 
@@ -6536,6 +9363,16 @@ begin --
       -- CP-element group 237: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_795_update_start_
       -- CP-element group 237: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_795_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(237)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(237)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(237) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_795_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_795_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1895_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 237_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_795_inst_ack_0, ack => zeropad3D_CP_182_elements(237)); -- 
@@ -6552,6 +9389,15 @@ begin --
       -- CP-element group 238: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_795_Update/ack
       -- CP-element group 238: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/WPIPE_zeropad_output_pipe_795_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(238)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(238)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(238) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:WPIPE_zeropad_output_pipe_795_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_1900_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 238_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_zeropad_output_pipe_795_inst_ack_1, ack => zeropad3D_CP_182_elements(238)); -- 
@@ -6574,6 +9420,15 @@ begin --
       -- CP-element group 239: 	 branch_block_stmt_49/R_exitcond2_810_place
       -- CP-element group 239: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(239)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(239)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(239) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_809_branch_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     branch_req_1908_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " branch_req_1908_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(239), ack => if_stmt_809_branch_req_0); -- 
@@ -6608,6 +9463,15 @@ begin --
       -- CP-element group 240: 	 branch_block_stmt_49/merge_stmt_815_PhiAck/$exit
       -- CP-element group 240: 	 branch_block_stmt_49/merge_stmt_815_PhiAck/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(240)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(240)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(240) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_809_branch_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     if_choice_transition_1913_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 240_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_809_branch_ack_1, ack => zeropad3D_CP_182_elements(240)); -- 
@@ -6631,6 +9495,17 @@ begin --
       -- CP-element group 241: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_687/SplitProtocol/Sample/rr
       -- CP-element group 241: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_687/SplitProtocol/Sample/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(241)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(241)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(241) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:if_stmt_809_branch_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_687_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_687_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     else_choice_transition_1917_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 241_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => if_stmt_809_branch_ack_0, ack => zeropad3D_CP_182_elements(241)); -- 
@@ -6652,6 +9527,15 @@ begin --
       -- CP-element group 242: 	 branch_block_stmt_49/bbx_xnph316_forx_xbody_PhiReq/phi_stmt_310/phi_stmt_310_sources/$exit
       -- CP-element group 242: 	 branch_block_stmt_49/bbx_xnph316_forx_xbody_PhiReq/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(242)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(242)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(242) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:phi_stmt_310_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_310_req_1942_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_310_req_1942_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(242), ack => phi_stmt_310_req_0); -- 
@@ -6666,6 +9550,15 @@ begin --
       -- CP-element group 243: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/phi_stmt_310/phi_stmt_310_sources/type_cast_316/SplitProtocol/Sample/ra
       -- CP-element group 243: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/phi_stmt_310/phi_stmt_310_sources/type_cast_316/SplitProtocol/Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(243)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(243)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(243) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_316_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_1962_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 243_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_316_inst_ack_0, ack => zeropad3D_CP_182_elements(243)); -- 
@@ -6678,6 +9571,15 @@ begin --
       -- CP-element group 244: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/phi_stmt_310/phi_stmt_310_sources/type_cast_316/SplitProtocol/Update/ca
       -- CP-element group 244: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/phi_stmt_310/phi_stmt_310_sources/type_cast_316/SplitProtocol/Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(244)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(244)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(244) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_316_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_1967_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 244_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_316_inst_ack_1, ack => zeropad3D_CP_182_elements(244)); -- 
@@ -6695,6 +9597,15 @@ begin --
       -- CP-element group 245: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/phi_stmt_310/$exit
       -- CP-element group 245: 	 branch_block_stmt_49/forx_xbody_forx_xbody_PhiReq/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(245)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(245)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(245) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:phi_stmt_310_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_310_req_1968_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_310_req_1968_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(245), ack => phi_stmt_310_req_1); -- 
@@ -6719,6 +9630,14 @@ begin --
       -- CP-element group 246: 	 branch_block_stmt_49/merge_stmt_309_PhiReqMerge
       -- CP-element group 246: 	 branch_block_stmt_49/merge_stmt_309_PhiAck/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(246)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(246)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(246) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_CP_182_elements(246) <= OrReduce(zeropad3D_CP_182_elements(242) & zeropad3D_CP_182_elements(245));
     -- CP-element group 247:  fork  transition  place  input  output  bypass 
     -- CP-element group 247: predecessors 
@@ -6795,6 +9714,28 @@ begin --
       -- CP-element group 247: 	 branch_block_stmt_49/merge_stmt_309_PhiAck/phi_stmt_310_ack
       -- CP-element group 247: 	 branch_block_stmt_49/merge_stmt_309_PhiAck/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(247)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(247)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(247) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:phi_stmt_310_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_451_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_415_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_379_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_459_store_0_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_433_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_397_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_322_index_offset_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_322_index_offset_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_323_final_reg_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:RPIPE_zeropad_input_pipe_326_inst_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_330_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_343_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_361_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_310_ack_1973_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 247_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_310_ack_0, ack => zeropad3D_CP_182_elements(247)); -- 
@@ -6863,6 +9804,17 @@ begin --
       -- CP-element group 248: 	 branch_block_stmt_49/call_stmt_484_to_assign_stmt_489/type_cast_488_update_start_
       -- CP-element group 248: 	 branch_block_stmt_49/merge_stmt_481_PhiReqMerge
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(248)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(248)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(248) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_484_call_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_488_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:call_stmt_484_call_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     crr_1103_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " crr_1103_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(248), ack => call_stmt_484_call_req_0); -- 
@@ -6885,6 +9837,15 @@ begin --
       -- CP-element group 249: 	 branch_block_stmt_49/bbx_xnph_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_685_konst_delay_trans
       -- CP-element group 249: 	 branch_block_stmt_49/bbx_xnph_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_req
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(249)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(249)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(249) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:phi_stmt_681_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_681_req_2019_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_681_req_2019_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(249), ack => phi_stmt_681_req_0); -- 
@@ -6899,6 +9860,15 @@ begin --
       -- CP-element group 250: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_687/SplitProtocol/Sample/ra
       -- CP-element group 250: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_687/SplitProtocol/Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(250)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(250)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(250) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_687_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2039_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 250_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_687_inst_ack_0, ack => zeropad3D_CP_182_elements(250)); -- 
@@ -6911,6 +9881,15 @@ begin --
       -- CP-element group 251: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_687/SplitProtocol/Update/ca
       -- CP-element group 251: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_687/SplitProtocol/Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(251)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(251)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(251) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_687_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2044_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 251_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => type_cast_687_inst_ack_1, ack => zeropad3D_CP_182_elements(251)); -- 
@@ -6928,6 +9907,15 @@ begin --
       -- CP-element group 252: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_req
       -- CP-element group 252: 	 branch_block_stmt_49/forx_xbody235_forx_xbody235_PhiReq/phi_stmt_681/phi_stmt_681_sources/type_cast_687/SplitProtocol/$exit
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(252)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(252)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(252) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:phi_stmt_681_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_681_req_2045_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_681_req_2045_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_CP_182_elements(252), ack => phi_stmt_681_req_1); -- 
@@ -6952,6 +9940,14 @@ begin --
       -- CP-element group 253: 	 branch_block_stmt_49/merge_stmt_680_PhiReqMerge
       -- CP-element group 253: 	 branch_block_stmt_49/merge_stmt_680_PhiAck/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(253)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(253)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(253) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_CP_182_elements(253) <= OrReduce(zeropad3D_CP_182_elements(249) & zeropad3D_CP_182_elements(252));
     -- CP-element group 254:  fork  transition  place  input  output  bypass 
     -- CP-element group 254: predecessors 
@@ -7024,6 +10020,27 @@ begin --
       -- CP-element group 254: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_772_Update/$entry
       -- CP-element group 254: 	 branch_block_stmt_49/assign_stmt_695_to_assign_stmt_808/type_cast_772_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(254)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(254)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(254) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:phi_stmt_681_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_693_index_offset_req_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:array_obj_ref_693_index_offset_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:addr_of_694_final_reg_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:ptr_deref_698_load_0_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_702_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_712_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_722_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_732_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_742_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_752_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_762_inst_req_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:type_cast_772_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_681_ack_2050_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 254_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_681_ack_0, ack => zeropad3D_CP_182_elements(254)); -- 
@@ -7086,6 +10103,14 @@ begin --
       -- CP-element group 255: 	 branch_block_stmt_49/merge_stmt_817_PhiAck/$exit
       -- CP-element group 255: 	 branch_block_stmt_49/merge_stmt_817_PhiAck/$entry
       -- 
+    -- logger for CP element group zeropad3D_CP_182_elements(255)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_CP_182_elements(255)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D:CP:zeropad3D_CP_182_elements(255) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_CP_182_elements(255) <= OrReduce(zeropad3D_CP_182_elements(191) & zeropad3D_CP_182_elements(240));
     --  hookup: inputs to control-path 
     -- hookup: output from control-path 
@@ -7361,6 +10386,30 @@ begin --
     type_cast_767_wire_constant <= "0000000000000000000000000000000000000000000000000000000000111000";
     type_cast_801_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000001";
     type_cast_97_wire_constant <= "0000000000001000";
+    -- logger for phi phi_stmt_310
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_310_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D:DP:phi_stmt_310:input-0 type_cast_314_wire_constant= " & Convert_SLV_To_Hex_String(type_cast_314_wire_constant));
+          --
+        end if;
+        if phi_stmt_310_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D:DP:phi_stmt_310:input-1 type_cast_316_wire= " & Convert_SLV_To_Hex_String(type_cast_316_wire));
+          --
+        end if;
+        if phi_stmt_310_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:zeropad3D:DP:phi_stmt_310:sample-completed");
+          --
+        end if;
+        if phi_stmt_310_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:zeropad3D:DP:phi_stmt_310:output indvar317_310= " & Convert_SLV_To_Hex_String(indvar317_310));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_310: Block -- phi operator 
       signal idata: std_logic_vector(127 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -7383,6 +10432,30 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_310
+    -- logger for phi phi_stmt_681
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_681_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D:DP:phi_stmt_681:input-0 type_cast_685_wire_constant= " & Convert_SLV_To_Hex_String(type_cast_685_wire_constant));
+          --
+        end if;
+        if phi_stmt_681_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D:DP:phi_stmt_681:input-1 type_cast_687_wire= " & Convert_SLV_To_Hex_String(type_cast_687_wire));
+          --
+        end if;
+        if phi_stmt_681_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:zeropad3D:DP:phi_stmt_681:sample-completed");
+          --
+        end if;
+        if phi_stmt_681_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:zeropad3D:DP:phi_stmt_681:output indvar_681= " & Convert_SLV_To_Hex_String(indvar_681));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_681: Block -- phi operator 
       signal idata: std_logic_vector(127 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -7405,8 +10478,31 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_681
+    -- logger for split-operator MUX_306_inst flow-through 
+    process(umax3_307) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:MUX_306_inst:flowthrough inputs: " & " tmp_300 = "& Convert_SLV_To_Hex_String(tmp_300) & " shr_294 = "& Convert_SLV_To_Hex_String(shr_294) & " type_cast_305_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_305_wire_constant) & " outputs:" & " umax3_307= "  & Convert_SLV_To_Hex_String(umax3_307));
+      --
+    end process; 
     -- flow-through select operator MUX_306_inst
     umax3_307 <= shr_294 when (tmp_300(0) /=  '0') else type_cast_305_wire_constant;
+    -- logger for split-operator addr_of_323_final_reg
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if addr_of_323_final_reg_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:addr_of_323_final_reg:started:   inputs: " & " array_obj_ref_322_root_address = "& Convert_SLV_To_Hex_String(array_obj_ref_322_root_address));
+          --
+        end if; 
+        if addr_of_323_final_reg_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:addr_of_323_final_reg:finished:  outputs: " & " arrayidx_324= "  & Convert_SLV_To_Hex_String(arrayidx_324));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     addr_of_323_final_reg_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7435,6 +10531,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator addr_of_694_final_reg
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if addr_of_694_final_reg_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:addr_of_694_final_reg:started:   inputs: " & " array_obj_ref_693_root_address = "& Convert_SLV_To_Hex_String(array_obj_ref_693_root_address));
+          --
+        end if; 
+        if addr_of_694_final_reg_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:addr_of_694_final_reg:finished:  outputs: " & " arrayidx240_695= "  & Convert_SLV_To_Hex_String(arrayidx240_695));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     addr_of_694_final_reg_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7463,6 +10575,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_105_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_105_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_105_inst:started:   inputs: " & " call30_102 = "& Convert_SLV_To_Hex_String(call30_102));
+          --
+        end if; 
+        if type_cast_105_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_105_inst:finished:  outputs: " & " conv31_106= "  & Convert_SLV_To_Hex_String(conv31_106));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_105_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7491,6 +10619,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_117_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_117_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_117_inst:started:   inputs: " & " call34_114 = "& Convert_SLV_To_Hex_String(call34_114));
+          --
+        end if; 
+        if type_cast_117_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_117_inst:finished:  outputs: " & " conv37_118= "  & Convert_SLV_To_Hex_String(conv37_118));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_117_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7519,6 +10663,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_130_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_130_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_130_inst:started:   inputs: " & " call39_127 = "& Convert_SLV_To_Hex_String(call39_127));
+          --
+        end if; 
+        if type_cast_130_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_130_inst:finished:  outputs: " & " conv40_131= "  & Convert_SLV_To_Hex_String(conv40_131));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_130_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7547,6 +10707,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_142_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_142_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_142_inst:started:   inputs: " & " call43_139 = "& Convert_SLV_To_Hex_String(call43_139));
+          --
+        end if; 
+        if type_cast_142_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_142_inst:finished:  outputs: " & " conv46_143= "  & Convert_SLV_To_Hex_String(conv46_143));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_142_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7575,6 +10751,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_155_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_155_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_155_inst:started:   inputs: " & " call48_152 = "& Convert_SLV_To_Hex_String(call48_152));
+          --
+        end if; 
+        if type_cast_155_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_155_inst:finished:  outputs: " & " conv49_156= "  & Convert_SLV_To_Hex_String(conv49_156));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_155_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7603,6 +10795,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_167_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_167_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_167_inst:started:   inputs: " & " call52_164 = "& Convert_SLV_To_Hex_String(call52_164));
+          --
+        end if; 
+        if type_cast_167_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_167_inst:finished:  outputs: " & " conv55_168= "  & Convert_SLV_To_Hex_String(conv55_168));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_167_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7631,6 +10839,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_180_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_180_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_180_inst:started:   inputs: " & " call57_177 = "& Convert_SLV_To_Hex_String(call57_177));
+          --
+        end if; 
+        if type_cast_180_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_180_inst:finished:  outputs: " & " conv58_181= "  & Convert_SLV_To_Hex_String(conv58_181));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_180_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7659,6 +10883,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_192_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_192_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_192_inst:started:   inputs: " & " call61_189 = "& Convert_SLV_To_Hex_String(call61_189));
+          --
+        end if; 
+        if type_cast_192_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_192_inst:finished:  outputs: " & " conv64_193= "  & Convert_SLV_To_Hex_String(conv64_193));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_192_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7687,6 +10927,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_205_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_205_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_205_inst:started:   inputs: " & " call66_202 = "& Convert_SLV_To_Hex_String(call66_202));
+          --
+        end if; 
+        if type_cast_205_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_205_inst:finished:  outputs: " & " conv67_206= "  & Convert_SLV_To_Hex_String(conv67_206));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_205_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7715,6 +10971,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_217_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_217_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_217_inst:started:   inputs: " & " call70_214 = "& Convert_SLV_To_Hex_String(call70_214));
+          --
+        end if; 
+        if type_cast_217_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_217_inst:finished:  outputs: " & " conv73_218= "  & Convert_SLV_To_Hex_String(conv73_218));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_217_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7743,6 +11015,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_230_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_230_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_230_inst:started:   inputs: " & " call75_227 = "& Convert_SLV_To_Hex_String(call75_227));
+          --
+        end if; 
+        if type_cast_230_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_230_inst:finished:  outputs: " & " conv76_231= "  & Convert_SLV_To_Hex_String(conv76_231));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_230_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7771,6 +11059,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_239_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_239_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_239_inst:started:   inputs: " & " add23_86 = "& Convert_SLV_To_Hex_String(add23_86));
+          --
+        end if; 
+        if type_cast_239_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_239_inst:finished:  outputs: " & " conv81_240= "  & Convert_SLV_To_Hex_String(conv81_240));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_239_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7799,6 +11103,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_243_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_243_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_243_inst:started:   inputs: " & " add32_111 = "& Convert_SLV_To_Hex_String(add32_111));
+          --
+        end if; 
+        if type_cast_243_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_243_inst:finished:  outputs: " & " conv83_244= "  & Convert_SLV_To_Hex_String(conv83_244));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_243_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7827,6 +11147,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_247_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_247_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_247_inst:started:   inputs: " & " add41_136 = "& Convert_SLV_To_Hex_String(add41_136));
+          --
+        end if; 
+        if type_cast_247_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_247_inst:finished:  outputs: " & " conv85_248= "  & Convert_SLV_To_Hex_String(conv85_248));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_247_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7855,6 +11191,13 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_268_inst flow-through 
+    process(type_cast_268_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_268_inst:flowthrough inputs: " & " sext_264 = "& Convert_SLV_To_Hex_String(sext_264) & " outputs:" & " type_cast_268_wire= "  & Convert_SLV_To_Hex_String(type_cast_268_wire));
+      --
+    end process; 
     -- interlock type_cast_268_inst
     process(sext_264) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -7863,6 +11206,13 @@ begin --
       tmp_var( 63 downto 0) := sext_264(63 downto 0);
       type_cast_268_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_273_inst flow-through 
+    process(conv87_274) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_273_inst:flowthrough inputs: " & " ASHR_i64_i64_272_wire = "& Convert_SLV_To_Hex_String(ASHR_i64_i64_272_wire) & " outputs:" & " conv87_274= "  & Convert_SLV_To_Hex_String(conv87_274));
+      --
+    end process; 
     -- interlock type_cast_273_inst
     process(ASHR_i64_i64_272_wire) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -7871,6 +11221,22 @@ begin --
       tmp_var( 63 downto 0) := ASHR_i64_i64_272_wire(63 downto 0);
       conv87_274 <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_316_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_316_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_316_inst:started:   inputs: " & " indvarx_xnext318_467 = "& Convert_SLV_To_Hex_String(indvarx_xnext318_467));
+          --
+        end if; 
+        if type_cast_316_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_316_inst:finished:  outputs: " & " type_cast_316_wire= "  & Convert_SLV_To_Hex_String(type_cast_316_wire));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_316_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7899,6 +11265,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_330_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_330_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_330_inst:started:   inputs: " & " call93_327 = "& Convert_SLV_To_Hex_String(call93_327));
+          --
+        end if; 
+        if type_cast_330_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_330_inst:finished:  outputs: " & " conv94_331= "  & Convert_SLV_To_Hex_String(conv94_331));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_330_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7927,6 +11309,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_343_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_343_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_343_inst:started:   inputs: " & " call97_340 = "& Convert_SLV_To_Hex_String(call97_340));
+          --
+        end if; 
+        if type_cast_343_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_343_inst:finished:  outputs: " & " conv99_344= "  & Convert_SLV_To_Hex_String(conv99_344));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_343_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7955,6 +11353,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_361_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_361_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_361_inst:started:   inputs: " & " call103_358 = "& Convert_SLV_To_Hex_String(call103_358));
+          --
+        end if; 
+        if type_cast_361_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_361_inst:finished:  outputs: " & " conv105_362= "  & Convert_SLV_To_Hex_String(conv105_362));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_361_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -7983,6 +11397,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_379_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_379_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_379_inst:started:   inputs: " & " call109_376 = "& Convert_SLV_To_Hex_String(call109_376));
+          --
+        end if; 
+        if type_cast_379_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_379_inst:finished:  outputs: " & " conv111_380= "  & Convert_SLV_To_Hex_String(conv111_380));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_379_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8011,6 +11441,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_397_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_397_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_397_inst:started:   inputs: " & " call115_394 = "& Convert_SLV_To_Hex_String(call115_394));
+          --
+        end if; 
+        if type_cast_397_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_397_inst:finished:  outputs: " & " conv117_398= "  & Convert_SLV_To_Hex_String(conv117_398));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_397_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8039,6 +11485,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_415_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_415_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_415_inst:started:   inputs: " & " call121_412 = "& Convert_SLV_To_Hex_String(call121_412));
+          --
+        end if; 
+        if type_cast_415_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_415_inst:finished:  outputs: " & " conv123_416= "  & Convert_SLV_To_Hex_String(conv123_416));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_415_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8067,6 +11529,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_433_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_433_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_433_inst:started:   inputs: " & " call127_430 = "& Convert_SLV_To_Hex_String(call127_430));
+          --
+        end if; 
+        if type_cast_433_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_433_inst:finished:  outputs: " & " conv129_434= "  & Convert_SLV_To_Hex_String(conv129_434));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_433_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8095,6 +11573,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_451_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_451_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_451_inst:started:   inputs: " & " call133_448 = "& Convert_SLV_To_Hex_String(call133_448));
+          --
+        end if; 
+        if type_cast_451_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_451_inst:finished:  outputs: " & " conv135_452= "  & Convert_SLV_To_Hex_String(conv135_452));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_451_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8123,6 +11617,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_488_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_488_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_488_inst:started:   inputs: " & " type_cast_487_wire = "& Convert_SLV_To_Hex_String(type_cast_487_wire));
+          --
+        end if; 
+        if type_cast_488_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_488_inst:finished:  outputs: " & " conv142_489= "  & Convert_SLV_To_Hex_String(conv142_489));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_488_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8151,6 +11661,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_521_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_521_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_521_inst:started:   inputs: " & " type_cast_520_wire = "& Convert_SLV_To_Hex_String(type_cast_520_wire));
+          --
+        end if; 
+        if type_cast_521_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_521_inst:finished:  outputs: " & " conv154_522= "  & Convert_SLV_To_Hex_String(conv154_522));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_521_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8179,6 +11705,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_531_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_531_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_531_inst:started:   inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527));
+          --
+        end if; 
+        if type_cast_531_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_531_inst:finished:  outputs: " & " conv160_532= "  & Convert_SLV_To_Hex_String(conv160_532));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_531_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8207,6 +11749,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_541_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_541_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_541_inst:started:   inputs: " & " shr163_538 = "& Convert_SLV_To_Hex_String(shr163_538));
+          --
+        end if; 
+        if type_cast_541_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_541_inst:finished:  outputs: " & " conv166_542= "  & Convert_SLV_To_Hex_String(conv166_542));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_541_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8235,6 +11793,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_551_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_551_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_551_inst:started:   inputs: " & " shr169_548 = "& Convert_SLV_To_Hex_String(shr169_548));
+          --
+        end if; 
+        if type_cast_551_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_551_inst:finished:  outputs: " & " conv172_552= "  & Convert_SLV_To_Hex_String(conv172_552));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_551_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8263,6 +11837,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_561_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_561_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_561_inst:started:   inputs: " & " shr175_558 = "& Convert_SLV_To_Hex_String(shr175_558));
+          --
+        end if; 
+        if type_cast_561_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_561_inst:finished:  outputs: " & " conv178_562= "  & Convert_SLV_To_Hex_String(conv178_562));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_561_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8291,6 +11881,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_571_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_571_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_571_inst:started:   inputs: " & " shr181_568 = "& Convert_SLV_To_Hex_String(shr181_568));
+          --
+        end if; 
+        if type_cast_571_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_571_inst:finished:  outputs: " & " conv184_572= "  & Convert_SLV_To_Hex_String(conv184_572));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_571_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8319,6 +11925,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_581_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_581_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_581_inst:started:   inputs: " & " shr187_578 = "& Convert_SLV_To_Hex_String(shr187_578));
+          --
+        end if; 
+        if type_cast_581_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_581_inst:finished:  outputs: " & " conv190_582= "  & Convert_SLV_To_Hex_String(conv190_582));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_581_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8347,6 +11969,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_591_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_591_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_591_inst:started:   inputs: " & " shr193_588 = "& Convert_SLV_To_Hex_String(shr193_588));
+          --
+        end if; 
+        if type_cast_591_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_591_inst:finished:  outputs: " & " conv196_592= "  & Convert_SLV_To_Hex_String(conv196_592));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_591_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8375,6 +12013,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_601_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_601_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_601_inst:started:   inputs: " & " shr199_598 = "& Convert_SLV_To_Hex_String(shr199_598));
+          --
+        end if; 
+        if type_cast_601_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_601_inst:finished:  outputs: " & " conv202_602= "  & Convert_SLV_To_Hex_String(conv202_602));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_601_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8403,6 +12057,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_630_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_630_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_630_inst:started:   inputs: " & " add59_186 = "& Convert_SLV_To_Hex_String(add59_186));
+          --
+        end if; 
+        if type_cast_630_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_630_inst:finished:  outputs: " & " conv222_631= "  & Convert_SLV_To_Hex_String(conv222_631));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_630_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8431,6 +12101,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_634_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_634_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_634_inst:started:   inputs: " & " add68_211 = "& Convert_SLV_To_Hex_String(add68_211));
+          --
+        end if; 
+        if type_cast_634_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_634_inst:finished:  outputs: " & " conv224_635= "  & Convert_SLV_To_Hex_String(conv224_635));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_634_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8459,6 +12145,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_638_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_638_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_638_inst:started:   inputs: " & " add77_236 = "& Convert_SLV_To_Hex_String(add77_236));
+          --
+        end if; 
+        if type_cast_638_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_638_inst:finished:  outputs: " & " conv227_639= "  & Convert_SLV_To_Hex_String(conv227_639));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_638_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8487,6 +12189,13 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_653_inst flow-through 
+    process(type_cast_653_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_653_inst:flowthrough inputs: " & " mul228_649 = "& Convert_SLV_To_Hex_String(mul228_649) & " outputs:" & " type_cast_653_wire= "  & Convert_SLV_To_Hex_String(type_cast_653_wire));
+      --
+    end process; 
     -- interlock type_cast_653_inst
     process(mul228_649) -- 
       variable tmp_var : std_logic_vector(31 downto 0); -- 
@@ -8495,6 +12204,13 @@ begin --
       tmp_var( 31 downto 0) := mul228_649(31 downto 0);
       type_cast_653_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_658_inst flow-through 
+    process(shr232309_659) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_658_inst:flowthrough inputs: " & " ASHR_i32_i32_657_wire = "& Convert_SLV_To_Hex_String(ASHR_i32_i32_657_wire) & " outputs:" & " shr232309_659= "  & Convert_SLV_To_Hex_String(shr232309_659));
+      --
+    end process; 
     -- interlock type_cast_658_inst
     process(ASHR_i32_i32_657_wire) -- 
       variable tmp_var : std_logic_vector(31 downto 0); -- 
@@ -8503,6 +12219,13 @@ begin --
       tmp_var( 31 downto 0) := ASHR_i32_i32_657_wire(31 downto 0);
       shr232309_659 <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_662_inst flow-through 
+    process(type_cast_662_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_662_inst:flowthrough inputs: " & " shr232309_659 = "& Convert_SLV_To_Hex_String(shr232309_659) & " outputs:" & " type_cast_662_wire= "  & Convert_SLV_To_Hex_String(type_cast_662_wire));
+      --
+    end process; 
     -- interlock type_cast_662_inst
     process(shr232309_659) -- 
       variable tmp_var : std_logic_vector(31 downto 0); -- 
@@ -8511,6 +12234,22 @@ begin --
       tmp_var( 31 downto 0) := shr232309_659(31 downto 0);
       type_cast_662_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_677_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_677_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_677_inst:started:   inputs: " & " shr232309_659 = "& Convert_SLV_To_Hex_String(shr232309_659));
+          --
+        end if; 
+        if type_cast_677_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_677_inst:finished:  outputs: " & " tmp1_678= "  & Convert_SLV_To_Hex_String(tmp1_678));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_677_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8539,6 +12278,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_67_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_67_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_67_inst:started:   inputs: " & " call16_64 = "& Convert_SLV_To_Hex_String(call16_64));
+          --
+        end if; 
+        if type_cast_67_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_67_inst:finished:  outputs: " & " conv19_68= "  & Convert_SLV_To_Hex_String(conv19_68));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_67_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8567,6 +12322,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_687_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_687_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_687_inst:started:   inputs: " & " indvarx_xnext_803 = "& Convert_SLV_To_Hex_String(indvarx_xnext_803));
+          --
+        end if; 
+        if type_cast_687_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_687_inst:finished:  outputs: " & " type_cast_687_wire= "  & Convert_SLV_To_Hex_String(type_cast_687_wire));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_687_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8595,6 +12366,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_702_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_702_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_702_inst:started:   inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699));
+          --
+        end if; 
+        if type_cast_702_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_702_inst:finished:  outputs: " & " conv245_703= "  & Convert_SLV_To_Hex_String(conv245_703));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_702_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8623,6 +12410,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_712_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_712_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_712_inst:started:   inputs: " & " shr248_709 = "& Convert_SLV_To_Hex_String(shr248_709));
+          --
+        end if; 
+        if type_cast_712_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_712_inst:finished:  outputs: " & " conv251_713= "  & Convert_SLV_To_Hex_String(conv251_713));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_712_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8651,6 +12454,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_722_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_722_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_722_inst:started:   inputs: " & " shr254_719 = "& Convert_SLV_To_Hex_String(shr254_719));
+          --
+        end if; 
+        if type_cast_722_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_722_inst:finished:  outputs: " & " conv257_723= "  & Convert_SLV_To_Hex_String(conv257_723));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_722_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8679,6 +12498,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_732_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_732_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_732_inst:started:   inputs: " & " shr260_729 = "& Convert_SLV_To_Hex_String(shr260_729));
+          --
+        end if; 
+        if type_cast_732_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_732_inst:finished:  outputs: " & " conv263_733= "  & Convert_SLV_To_Hex_String(conv263_733));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_732_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8707,6 +12542,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_742_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_742_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_742_inst:started:   inputs: " & " shr266_739 = "& Convert_SLV_To_Hex_String(shr266_739));
+          --
+        end if; 
+        if type_cast_742_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_742_inst:finished:  outputs: " & " conv269_743= "  & Convert_SLV_To_Hex_String(conv269_743));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_742_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8735,6 +12586,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_752_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_752_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_752_inst:started:   inputs: " & " shr272_749 = "& Convert_SLV_To_Hex_String(shr272_749));
+          --
+        end if; 
+        if type_cast_752_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_752_inst:finished:  outputs: " & " conv275_753= "  & Convert_SLV_To_Hex_String(conv275_753));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_752_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8763,6 +12630,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_762_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_762_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_762_inst:started:   inputs: " & " shr278_759 = "& Convert_SLV_To_Hex_String(shr278_759));
+          --
+        end if; 
+        if type_cast_762_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_762_inst:finished:  outputs: " & " conv281_763= "  & Convert_SLV_To_Hex_String(conv281_763));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_762_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8791,6 +12674,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_772_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_772_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_772_inst:started:   inputs: " & " shr284_769 = "& Convert_SLV_To_Hex_String(shr284_769));
+          --
+        end if; 
+        if type_cast_772_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_772_inst:finished:  outputs: " & " conv287_773= "  & Convert_SLV_To_Hex_String(conv287_773));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_772_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8819,6 +12718,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_80_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_80_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_80_inst:started:   inputs: " & " call21_77 = "& Convert_SLV_To_Hex_String(call21_77));
+          --
+        end if; 
+        if type_cast_80_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_80_inst:finished:  outputs: " & " conv22_81= "  & Convert_SLV_To_Hex_String(conv22_81));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_80_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8847,6 +12762,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_92_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if type_cast_92_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_92_inst:started:   inputs: " & " call25_89 = "& Convert_SLV_To_Hex_String(call25_89));
+          --
+        end if; 
+        if type_cast_92_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_92_inst:finished:  outputs: " & " conv28_93= "  & Convert_SLV_To_Hex_String(conv28_93));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     type_cast_92_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -8875,6 +12806,13 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for operator array_obj_ref_322_index_1_rename flow-through 
+    process(R_indvar317_321_scaled) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_322_index_1_rename:flowthrough  inputs: " & " R_indvar317_321_resized = "& Convert_SLV_To_Hex_String(R_indvar317_321_resized) & "outputs: " & " R_indvar317_321_scaled= "  & Convert_SLV_To_Hex_String(R_indvar317_321_scaled));
+      --
+    end process; 
     -- equivalence array_obj_ref_322_index_1_rename
     process(R_indvar317_321_resized) --
       variable iv : std_logic_vector(13 downto 0);
@@ -8887,6 +12825,13 @@ begin --
       R_indvar317_321_scaled <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_322_index_1_resize flow-through 
+    process(R_indvar317_321_resized) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_322_index_1_resize:flowthrough  inputs: " & " indvar317_310 = "& Convert_SLV_To_Hex_String(indvar317_310) & "outputs: " & " R_indvar317_321_resized= "  & Convert_SLV_To_Hex_String(R_indvar317_321_resized));
+      --
+    end process; 
     -- equivalence array_obj_ref_322_index_1_resize
     process(indvar317_310) --
       variable iv : std_logic_vector(63 downto 0);
@@ -8899,6 +12844,13 @@ begin --
       R_indvar317_321_resized <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_322_root_address_inst flow-through 
+    process(array_obj_ref_322_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_322_root_address_inst:flowthrough  inputs: " & " array_obj_ref_322_final_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_322_final_offset) & "outputs: " & " array_obj_ref_322_root_address= "  & Convert_SLV_To_Hex_String(array_obj_ref_322_root_address));
+      --
+    end process; 
     -- equivalence array_obj_ref_322_root_address_inst
     process(array_obj_ref_322_final_offset) --
       variable iv : std_logic_vector(13 downto 0);
@@ -8911,6 +12863,13 @@ begin --
       array_obj_ref_322_root_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_693_index_1_rename flow-through 
+    process(R_indvar_692_scaled) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_693_index_1_rename:flowthrough  inputs: " & " R_indvar_692_resized = "& Convert_SLV_To_Hex_String(R_indvar_692_resized) & "outputs: " & " R_indvar_692_scaled= "  & Convert_SLV_To_Hex_String(R_indvar_692_scaled));
+      --
+    end process; 
     -- equivalence array_obj_ref_693_index_1_rename
     process(R_indvar_692_resized) --
       variable iv : std_logic_vector(13 downto 0);
@@ -8923,6 +12882,13 @@ begin --
       R_indvar_692_scaled <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_693_index_1_resize flow-through 
+    process(R_indvar_692_resized) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_693_index_1_resize:flowthrough  inputs: " & " indvar_681 = "& Convert_SLV_To_Hex_String(indvar_681) & "outputs: " & " R_indvar_692_resized= "  & Convert_SLV_To_Hex_String(R_indvar_692_resized));
+      --
+    end process; 
     -- equivalence array_obj_ref_693_index_1_resize
     process(indvar_681) --
       variable iv : std_logic_vector(63 downto 0);
@@ -8935,6 +12901,13 @@ begin --
       R_indvar_692_resized <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_693_root_address_inst flow-through 
+    process(array_obj_ref_693_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_693_root_address_inst:flowthrough  inputs: " & " array_obj_ref_693_final_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_693_final_offset) & "outputs: " & " array_obj_ref_693_root_address= "  & Convert_SLV_To_Hex_String(array_obj_ref_693_root_address));
+      --
+    end process; 
     -- equivalence array_obj_ref_693_root_address_inst
     process(array_obj_ref_693_final_offset) --
       variable iv : std_logic_vector(13 downto 0);
@@ -8947,6 +12920,13 @@ begin --
       array_obj_ref_693_root_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_459_addr_0 flow-through 
+    process(ptr_deref_459_word_address_0) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_459_addr_0:flowthrough  inputs: " & " ptr_deref_459_root_address = "& Convert_SLV_To_Hex_String(ptr_deref_459_root_address) & "outputs: " & " ptr_deref_459_word_address_0= "  & Convert_SLV_To_Hex_String(ptr_deref_459_word_address_0));
+      --
+    end process; 
     -- equivalence ptr_deref_459_addr_0
     process(ptr_deref_459_root_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -8959,6 +12939,13 @@ begin --
       ptr_deref_459_word_address_0 <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_459_base_resize flow-through 
+    process(ptr_deref_459_resized_base_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_459_base_resize:flowthrough  inputs: " & " arrayidx_324 = "& Convert_SLV_To_Hex_String(arrayidx_324) & "outputs: " & " ptr_deref_459_resized_base_address= "  & Convert_SLV_To_Hex_String(ptr_deref_459_resized_base_address));
+      --
+    end process; 
     -- equivalence ptr_deref_459_base_resize
     process(arrayidx_324) --
       variable iv : std_logic_vector(31 downto 0);
@@ -8971,6 +12958,13 @@ begin --
       ptr_deref_459_resized_base_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_459_gather_scatter flow-through 
+    process(ptr_deref_459_data_0) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_459_gather_scatter:flowthrough  inputs: " & " add136_457 = "& Convert_SLV_To_Hex_String(add136_457) & "outputs: " & " ptr_deref_459_data_0= "  & Convert_SLV_To_Hex_String(ptr_deref_459_data_0));
+      --
+    end process; 
     -- equivalence ptr_deref_459_gather_scatter
     process(add136_457) --
       variable iv : std_logic_vector(63 downto 0);
@@ -8983,6 +12977,13 @@ begin --
       ptr_deref_459_data_0 <= ov(63 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_459_root_address_inst flow-through 
+    process(ptr_deref_459_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_459_root_address_inst:flowthrough  inputs: " & " ptr_deref_459_resized_base_address = "& Convert_SLV_To_Hex_String(ptr_deref_459_resized_base_address) & "outputs: " & " ptr_deref_459_root_address= "  & Convert_SLV_To_Hex_String(ptr_deref_459_root_address));
+      --
+    end process; 
     -- equivalence ptr_deref_459_root_address_inst
     process(ptr_deref_459_resized_base_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -8995,6 +12996,13 @@ begin --
       ptr_deref_459_root_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_698_addr_0 flow-through 
+    process(ptr_deref_698_word_address_0) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_698_addr_0:flowthrough  inputs: " & " ptr_deref_698_root_address = "& Convert_SLV_To_Hex_String(ptr_deref_698_root_address) & "outputs: " & " ptr_deref_698_word_address_0= "  & Convert_SLV_To_Hex_String(ptr_deref_698_word_address_0));
+      --
+    end process; 
     -- equivalence ptr_deref_698_addr_0
     process(ptr_deref_698_root_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -9007,6 +13015,13 @@ begin --
       ptr_deref_698_word_address_0 <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_698_base_resize flow-through 
+    process(ptr_deref_698_resized_base_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_698_base_resize:flowthrough  inputs: " & " arrayidx240_695 = "& Convert_SLV_To_Hex_String(arrayidx240_695) & "outputs: " & " ptr_deref_698_resized_base_address= "  & Convert_SLV_To_Hex_String(ptr_deref_698_resized_base_address));
+      --
+    end process; 
     -- equivalence ptr_deref_698_base_resize
     process(arrayidx240_695) --
       variable iv : std_logic_vector(31 downto 0);
@@ -9019,6 +13034,13 @@ begin --
       ptr_deref_698_resized_base_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_698_gather_scatter flow-through 
+    process(tmp241_699) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_698_gather_scatter:flowthrough  inputs: " & " ptr_deref_698_data_0 = "& Convert_SLV_To_Hex_String(ptr_deref_698_data_0) & "outputs: " & " tmp241_699= "  & Convert_SLV_To_Hex_String(tmp241_699));
+      --
+    end process; 
     -- equivalence ptr_deref_698_gather_scatter
     process(ptr_deref_698_data_0) --
       variable iv : std_logic_vector(63 downto 0);
@@ -9031,6 +13053,13 @@ begin --
       tmp241_699 <= ov(63 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_698_root_address_inst flow-through 
+    process(ptr_deref_698_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_698_root_address_inst:flowthrough  inputs: " & " ptr_deref_698_resized_base_address = "& Convert_SLV_To_Hex_String(ptr_deref_698_resized_base_address) & "outputs: " & " ptr_deref_698_root_address= "  & Convert_SLV_To_Hex_String(ptr_deref_698_root_address));
+      --
+    end process; 
     -- equivalence ptr_deref_698_root_address_inst
     process(ptr_deref_698_resized_base_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -9043,6 +13072,9 @@ begin --
       ptr_deref_698_root_address <= ov(13 downto 0);
       --
     end process;
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_282_branch_req_0," req0 if_stmt_282_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_282_branch_ack_0," ack0 if_stmt_282_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_282_branch_ack_1," ack1 if_stmt_282_branch");
     if_stmt_282_branch: Block -- 
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
@@ -9059,6 +13091,9 @@ begin --
           reset => reset); -- 
       --
     end Block; -- branch-block
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_473_branch_req_0," req0 if_stmt_473_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_473_branch_ack_0," ack0 if_stmt_473_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_473_branch_ack_1," ack1 if_stmt_473_branch");
     if_stmt_473_branch: Block -- 
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
@@ -9075,6 +13110,9 @@ begin --
           reset => reset); -- 
       --
     end Block; -- branch-block
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_668_branch_req_0," req0 if_stmt_668_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_668_branch_ack_0," ack0 if_stmt_668_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_668_branch_ack_1," ack1 if_stmt_668_branch");
     if_stmt_668_branch: Block -- 
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
@@ -9091,6 +13129,9 @@ begin --
           reset => reset); -- 
       --
     end Block; -- branch-block
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_809_branch_req_0," req0 if_stmt_809_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_809_branch_ack_0," ack0 if_stmt_809_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,if_stmt_809_branch_ack_1," ack1 if_stmt_809_branch");
     if_stmt_809_branch: Block -- 
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
@@ -9107,6 +13148,13 @@ begin --
           reset => reset); -- 
       --
     end Block; -- branch-block
+    -- logger for split-operator ADD_u64_u64_466_inst flow-through 
+    process(indvarx_xnext318_467) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ADD_u64_u64_466_inst:flowthrough inputs: " & " indvar317_310 = "& Convert_SLV_To_Hex_String(indvar317_310) & " type_cast_465_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_465_wire_constant) & " outputs:" & " indvarx_xnext318_467= "  & Convert_SLV_To_Hex_String(indvarx_xnext318_467));
+      --
+    end process; 
     -- binary operator ADD_u64_u64_466_inst
     process(indvar317_310) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9114,6 +13162,13 @@ begin --
       ApIntAdd_proc(indvar317_310, type_cast_465_wire_constant, tmp_var);
       indvarx_xnext318_467 <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u64_u64_802_inst flow-through 
+    process(indvarx_xnext_803) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ADD_u64_u64_802_inst:flowthrough inputs: " & " indvar_681 = "& Convert_SLV_To_Hex_String(indvar_681) & " type_cast_801_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_801_wire_constant) & " outputs:" & " indvarx_xnext_803= "  & Convert_SLV_To_Hex_String(indvarx_xnext_803));
+      --
+    end process; 
     -- binary operator ADD_u64_u64_802_inst
     process(indvar_681) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9121,6 +13176,13 @@ begin --
       ApIntAdd_proc(indvar_681, type_cast_801_wire_constant, tmp_var);
       indvarx_xnext_803 <= tmp_var; --
     end process;
+    -- logger for split-operator ASHR_i32_i32_657_inst flow-through 
+    process(ASHR_i32_i32_657_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ASHR_i32_i32_657_inst:flowthrough inputs: " & " type_cast_653_wire = "& Convert_SLV_To_Hex_String(type_cast_653_wire) & " type_cast_656_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_656_wire_constant) & " outputs:" & " ASHR_i32_i32_657_wire= "  & Convert_SLV_To_Hex_String(ASHR_i32_i32_657_wire));
+      --
+    end process; 
     -- binary operator ASHR_i32_i32_657_inst
     process(type_cast_653_wire) -- 
       variable tmp_var : std_logic_vector(31 downto 0); -- 
@@ -9128,6 +13190,13 @@ begin --
       ApIntASHR_proc(type_cast_653_wire, type_cast_656_wire_constant, tmp_var);
       ASHR_i32_i32_657_wire <= tmp_var; --
     end process;
+    -- logger for split-operator ASHR_i64_i64_272_inst flow-through 
+    process(ASHR_i64_i64_272_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ASHR_i64_i64_272_inst:flowthrough inputs: " & " type_cast_268_wire = "& Convert_SLV_To_Hex_String(type_cast_268_wire) & " type_cast_271_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_271_wire_constant) & " outputs:" & " ASHR_i64_i64_272_wire= "  & Convert_SLV_To_Hex_String(ASHR_i64_i64_272_wire));
+      --
+    end process; 
     -- binary operator ASHR_i64_i64_272_inst
     process(type_cast_268_wire) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9135,6 +13204,13 @@ begin --
       ApIntASHR_proc(type_cast_268_wire, type_cast_271_wire_constant, tmp_var);
       ASHR_i64_i64_272_wire <= tmp_var; --
     end process;
+    -- logger for split-operator EQ_u64_u1_471_inst flow-through 
+    process(exitcond_472) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:EQ_u64_u1_471_inst:flowthrough inputs: " & " indvarx_xnext318_467 = "& Convert_SLV_To_Hex_String(indvarx_xnext318_467) & " umax3_307 = "& Convert_SLV_To_Hex_String(umax3_307) & " outputs:" & " exitcond_472= "  & Convert_SLV_To_Hex_String(exitcond_472));
+      --
+    end process; 
     -- binary operator EQ_u64_u1_471_inst
     process(indvarx_xnext318_467, umax3_307) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -9142,6 +13218,13 @@ begin --
       ApIntEq_proc(indvarx_xnext318_467, umax3_307, tmp_var);
       exitcond_472 <= tmp_var; --
     end process;
+    -- logger for split-operator EQ_u64_u1_807_inst flow-through 
+    process(exitcond2_808) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:EQ_u64_u1_807_inst:flowthrough inputs: " & " indvarx_xnext_803 = "& Convert_SLV_To_Hex_String(indvarx_xnext_803) & " tmp1_678 = "& Convert_SLV_To_Hex_String(tmp1_678) & " outputs:" & " exitcond2_808= "  & Convert_SLV_To_Hex_String(exitcond2_808));
+      --
+    end process; 
     -- binary operator EQ_u64_u1_807_inst
     process(indvarx_xnext_803, tmp1_678) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -9149,6 +13232,13 @@ begin --
       ApIntEq_proc(indvarx_xnext_803, tmp1_678, tmp_var);
       exitcond2_808 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_293_inst flow-through 
+    process(shr_294) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_293_inst:flowthrough inputs: " & " conv87_274 = "& Convert_SLV_To_Hex_String(conv87_274) & " type_cast_292_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_292_wire_constant) & " outputs:" & " shr_294= "  & Convert_SLV_To_Hex_String(shr_294));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_293_inst
     process(conv87_274) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9156,6 +13246,13 @@ begin --
       ApIntLSHR_proc(conv87_274, type_cast_292_wire_constant, tmp_var);
       shr_294 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_537_inst flow-through 
+    process(shr163_538) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_537_inst:flowthrough inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527) & " type_cast_536_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_536_wire_constant) & " outputs:" & " shr163_538= "  & Convert_SLV_To_Hex_String(shr163_538));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_537_inst
     process(sub_527) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9163,6 +13260,13 @@ begin --
       ApIntLSHR_proc(sub_527, type_cast_536_wire_constant, tmp_var);
       shr163_538 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_547_inst flow-through 
+    process(shr169_548) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_547_inst:flowthrough inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527) & " type_cast_546_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_546_wire_constant) & " outputs:" & " shr169_548= "  & Convert_SLV_To_Hex_String(shr169_548));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_547_inst
     process(sub_527) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9170,6 +13274,13 @@ begin --
       ApIntLSHR_proc(sub_527, type_cast_546_wire_constant, tmp_var);
       shr169_548 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_557_inst flow-through 
+    process(shr175_558) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_557_inst:flowthrough inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527) & " type_cast_556_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_556_wire_constant) & " outputs:" & " shr175_558= "  & Convert_SLV_To_Hex_String(shr175_558));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_557_inst
     process(sub_527) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9177,6 +13288,13 @@ begin --
       ApIntLSHR_proc(sub_527, type_cast_556_wire_constant, tmp_var);
       shr175_558 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_567_inst flow-through 
+    process(shr181_568) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_567_inst:flowthrough inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527) & " type_cast_566_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_566_wire_constant) & " outputs:" & " shr181_568= "  & Convert_SLV_To_Hex_String(shr181_568));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_567_inst
     process(sub_527) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9184,6 +13302,13 @@ begin --
       ApIntLSHR_proc(sub_527, type_cast_566_wire_constant, tmp_var);
       shr181_568 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_577_inst flow-through 
+    process(shr187_578) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_577_inst:flowthrough inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527) & " type_cast_576_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_576_wire_constant) & " outputs:" & " shr187_578= "  & Convert_SLV_To_Hex_String(shr187_578));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_577_inst
     process(sub_527) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9191,6 +13316,13 @@ begin --
       ApIntLSHR_proc(sub_527, type_cast_576_wire_constant, tmp_var);
       shr187_578 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_587_inst flow-through 
+    process(shr193_588) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_587_inst:flowthrough inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527) & " type_cast_586_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_586_wire_constant) & " outputs:" & " shr193_588= "  & Convert_SLV_To_Hex_String(shr193_588));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_587_inst
     process(sub_527) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9198,6 +13330,13 @@ begin --
       ApIntLSHR_proc(sub_527, type_cast_586_wire_constant, tmp_var);
       shr193_588 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_597_inst flow-through 
+    process(shr199_598) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_597_inst:flowthrough inputs: " & " sub_527 = "& Convert_SLV_To_Hex_String(sub_527) & " type_cast_596_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_596_wire_constant) & " outputs:" & " shr199_598= "  & Convert_SLV_To_Hex_String(shr199_598));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_597_inst
     process(sub_527) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9205,6 +13344,13 @@ begin --
       ApIntLSHR_proc(sub_527, type_cast_596_wire_constant, tmp_var);
       shr199_598 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_708_inst flow-through 
+    process(shr248_709) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_708_inst:flowthrough inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699) & " type_cast_707_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_707_wire_constant) & " outputs:" & " shr248_709= "  & Convert_SLV_To_Hex_String(shr248_709));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_708_inst
     process(tmp241_699) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9212,6 +13358,13 @@ begin --
       ApIntLSHR_proc(tmp241_699, type_cast_707_wire_constant, tmp_var);
       shr248_709 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_718_inst flow-through 
+    process(shr254_719) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_718_inst:flowthrough inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699) & " type_cast_717_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_717_wire_constant) & " outputs:" & " shr254_719= "  & Convert_SLV_To_Hex_String(shr254_719));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_718_inst
     process(tmp241_699) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9219,6 +13372,13 @@ begin --
       ApIntLSHR_proc(tmp241_699, type_cast_717_wire_constant, tmp_var);
       shr254_719 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_728_inst flow-through 
+    process(shr260_729) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_728_inst:flowthrough inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699) & " type_cast_727_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_727_wire_constant) & " outputs:" & " shr260_729= "  & Convert_SLV_To_Hex_String(shr260_729));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_728_inst
     process(tmp241_699) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9226,6 +13386,13 @@ begin --
       ApIntLSHR_proc(tmp241_699, type_cast_727_wire_constant, tmp_var);
       shr260_729 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_738_inst flow-through 
+    process(shr266_739) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_738_inst:flowthrough inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699) & " type_cast_737_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_737_wire_constant) & " outputs:" & " shr266_739= "  & Convert_SLV_To_Hex_String(shr266_739));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_738_inst
     process(tmp241_699) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9233,6 +13400,13 @@ begin --
       ApIntLSHR_proc(tmp241_699, type_cast_737_wire_constant, tmp_var);
       shr266_739 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_748_inst flow-through 
+    process(shr272_749) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_748_inst:flowthrough inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699) & " type_cast_747_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_747_wire_constant) & " outputs:" & " shr272_749= "  & Convert_SLV_To_Hex_String(shr272_749));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_748_inst
     process(tmp241_699) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9240,6 +13414,13 @@ begin --
       ApIntLSHR_proc(tmp241_699, type_cast_747_wire_constant, tmp_var);
       shr272_749 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_758_inst flow-through 
+    process(shr278_759) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_758_inst:flowthrough inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699) & " type_cast_757_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_757_wire_constant) & " outputs:" & " shr278_759= "  & Convert_SLV_To_Hex_String(shr278_759));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_758_inst
     process(tmp241_699) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9247,6 +13428,13 @@ begin --
       ApIntLSHR_proc(tmp241_699, type_cast_757_wire_constant, tmp_var);
       shr278_759 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u64_u64_768_inst flow-through 
+    process(shr284_769) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:LSHR_u64_u64_768_inst:flowthrough inputs: " & " tmp241_699 = "& Convert_SLV_To_Hex_String(tmp241_699) & " type_cast_767_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_767_wire_constant) & " outputs:" & " shr284_769= "  & Convert_SLV_To_Hex_String(shr284_769));
+      --
+    end process; 
     -- binary operator LSHR_u64_u64_768_inst
     process(tmp241_699) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9254,6 +13442,13 @@ begin --
       ApIntLSHR_proc(tmp241_699, type_cast_767_wire_constant, tmp_var);
       shr284_769 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u32_u32_643_inst flow-through 
+    process(mul225_644) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:MUL_u32_u32_643_inst:flowthrough inputs: " & " conv224_635 = "& Convert_SLV_To_Hex_String(conv224_635) & " conv222_631 = "& Convert_SLV_To_Hex_String(conv222_631) & " outputs:" & " mul225_644= "  & Convert_SLV_To_Hex_String(mul225_644));
+      --
+    end process; 
     -- binary operator MUL_u32_u32_643_inst
     process(conv224_635, conv222_631) -- 
       variable tmp_var : std_logic_vector(31 downto 0); -- 
@@ -9261,6 +13456,13 @@ begin --
       ApIntMul_proc(conv224_635, conv222_631, tmp_var);
       mul225_644 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u32_u32_648_inst flow-through 
+    process(mul228_649) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:MUL_u32_u32_648_inst:flowthrough inputs: " & " mul225_644 = "& Convert_SLV_To_Hex_String(mul225_644) & " conv227_639 = "& Convert_SLV_To_Hex_String(conv227_639) & " outputs:" & " mul228_649= "  & Convert_SLV_To_Hex_String(mul228_649));
+      --
+    end process; 
     -- binary operator MUL_u32_u32_648_inst
     process(mul225_644, conv227_639) -- 
       variable tmp_var : std_logic_vector(31 downto 0); -- 
@@ -9268,6 +13470,13 @@ begin --
       ApIntMul_proc(mul225_644, conv227_639, tmp_var);
       mul228_649 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u64_u64_258_inst flow-through 
+    process(mul86_259) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:MUL_u64_u64_258_inst:flowthrough inputs: " & " mul_254 = "& Convert_SLV_To_Hex_String(mul_254) & " conv83_244 = "& Convert_SLV_To_Hex_String(conv83_244) & " outputs:" & " mul86_259= "  & Convert_SLV_To_Hex_String(mul86_259));
+      --
+    end process; 
     -- binary operator MUL_u64_u64_258_inst
     process(mul_254, conv83_244) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9275,6 +13484,13 @@ begin --
       ApIntMul_proc(mul_254, conv83_244, tmp_var);
       mul86_259 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u64_u64_263_inst flow-through 
+    process(sext_264) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:MUL_u64_u64_263_inst:flowthrough inputs: " & " mul86_259 = "& Convert_SLV_To_Hex_String(mul86_259) & " conv85_248 = "& Convert_SLV_To_Hex_String(conv85_248) & " outputs:" & " sext_264= "  & Convert_SLV_To_Hex_String(sext_264));
+      --
+    end process; 
     -- binary operator MUL_u64_u64_263_inst
     process(mul86_259, conv85_248) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9282,6 +13498,13 @@ begin --
       ApIntMul_proc(mul86_259, conv85_248, tmp_var);
       sext_264 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u16_u16_110_inst flow-through 
+    process(add32_111) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u16_u16_110_inst:flowthrough inputs: " & " shl29_99 = "& Convert_SLV_To_Hex_String(shl29_99) & " conv31_106 = "& Convert_SLV_To_Hex_String(conv31_106) & " outputs:" & " add32_111= "  & Convert_SLV_To_Hex_String(add32_111));
+      --
+    end process; 
     -- binary operator OR_u16_u16_110_inst
     process(shl29_99, conv31_106) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9289,6 +13512,13 @@ begin --
       ApIntOr_proc(shl29_99, conv31_106, tmp_var);
       add32_111 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u16_u16_135_inst flow-through 
+    process(add41_136) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u16_u16_135_inst:flowthrough inputs: " & " shl38_124 = "& Convert_SLV_To_Hex_String(shl38_124) & " conv40_131 = "& Convert_SLV_To_Hex_String(conv40_131) & " outputs:" & " add41_136= "  & Convert_SLV_To_Hex_String(add41_136));
+      --
+    end process; 
     -- binary operator OR_u16_u16_135_inst
     process(shl38_124, conv40_131) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9296,6 +13526,13 @@ begin --
       ApIntOr_proc(shl38_124, conv40_131, tmp_var);
       add41_136 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u16_u16_160_inst flow-through 
+    process(add50_161) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u16_u16_160_inst:flowthrough inputs: " & " shl47_149 = "& Convert_SLV_To_Hex_String(shl47_149) & " conv49_156 = "& Convert_SLV_To_Hex_String(conv49_156) & " outputs:" & " add50_161= "  & Convert_SLV_To_Hex_String(add50_161));
+      --
+    end process; 
     -- binary operator OR_u16_u16_160_inst
     process(shl47_149, conv49_156) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9303,6 +13540,13 @@ begin --
       ApIntOr_proc(shl47_149, conv49_156, tmp_var);
       add50_161 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u16_u16_185_inst flow-through 
+    process(add59_186) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u16_u16_185_inst:flowthrough inputs: " & " shl56_174 = "& Convert_SLV_To_Hex_String(shl56_174) & " conv58_181 = "& Convert_SLV_To_Hex_String(conv58_181) & " outputs:" & " add59_186= "  & Convert_SLV_To_Hex_String(add59_186));
+      --
+    end process; 
     -- binary operator OR_u16_u16_185_inst
     process(shl56_174, conv58_181) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9310,6 +13554,13 @@ begin --
       ApIntOr_proc(shl56_174, conv58_181, tmp_var);
       add59_186 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u16_u16_210_inst flow-through 
+    process(add68_211) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u16_u16_210_inst:flowthrough inputs: " & " shl65_199 = "& Convert_SLV_To_Hex_String(shl65_199) & " conv67_206 = "& Convert_SLV_To_Hex_String(conv67_206) & " outputs:" & " add68_211= "  & Convert_SLV_To_Hex_String(add68_211));
+      --
+    end process; 
     -- binary operator OR_u16_u16_210_inst
     process(shl65_199, conv67_206) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9317,6 +13568,13 @@ begin --
       ApIntOr_proc(shl65_199, conv67_206, tmp_var);
       add68_211 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u16_u16_235_inst flow-through 
+    process(add77_236) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u16_u16_235_inst:flowthrough inputs: " & " shl74_224 = "& Convert_SLV_To_Hex_String(shl74_224) & " conv76_231 = "& Convert_SLV_To_Hex_String(conv76_231) & " outputs:" & " add77_236= "  & Convert_SLV_To_Hex_String(add77_236));
+      --
+    end process; 
     -- binary operator OR_u16_u16_235_inst
     process(shl74_224, conv76_231) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9324,6 +13582,13 @@ begin --
       ApIntOr_proc(shl74_224, conv76_231, tmp_var);
       add77_236 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u16_u16_85_inst flow-through 
+    process(add23_86) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u16_u16_85_inst:flowthrough inputs: " & " shl20_74 = "& Convert_SLV_To_Hex_String(shl20_74) & " conv22_81 = "& Convert_SLV_To_Hex_String(conv22_81) & " outputs:" & " add23_86= "  & Convert_SLV_To_Hex_String(add23_86));
+      --
+    end process; 
     -- binary operator OR_u16_u16_85_inst
     process(shl20_74, conv22_81) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9331,6 +13596,13 @@ begin --
       ApIntOr_proc(shl20_74, conv22_81, tmp_var);
       add23_86 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u64_u64_348_inst flow-through 
+    process(add100_349) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u64_u64_348_inst:flowthrough inputs: " & " shl96_337 = "& Convert_SLV_To_Hex_String(shl96_337) & " conv99_344 = "& Convert_SLV_To_Hex_String(conv99_344) & " outputs:" & " add100_349= "  & Convert_SLV_To_Hex_String(add100_349));
+      --
+    end process; 
     -- binary operator OR_u64_u64_348_inst
     process(shl96_337, conv99_344) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9338,6 +13610,13 @@ begin --
       ApIntOr_proc(shl96_337, conv99_344, tmp_var);
       add100_349 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u64_u64_366_inst flow-through 
+    process(add106_367) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u64_u64_366_inst:flowthrough inputs: " & " shl102_355 = "& Convert_SLV_To_Hex_String(shl102_355) & " conv105_362 = "& Convert_SLV_To_Hex_String(conv105_362) & " outputs:" & " add106_367= "  & Convert_SLV_To_Hex_String(add106_367));
+      --
+    end process; 
     -- binary operator OR_u64_u64_366_inst
     process(shl102_355, conv105_362) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9345,6 +13624,13 @@ begin --
       ApIntOr_proc(shl102_355, conv105_362, tmp_var);
       add106_367 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u64_u64_384_inst flow-through 
+    process(add112_385) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u64_u64_384_inst:flowthrough inputs: " & " shl108_373 = "& Convert_SLV_To_Hex_String(shl108_373) & " conv111_380 = "& Convert_SLV_To_Hex_String(conv111_380) & " outputs:" & " add112_385= "  & Convert_SLV_To_Hex_String(add112_385));
+      --
+    end process; 
     -- binary operator OR_u64_u64_384_inst
     process(shl108_373, conv111_380) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9352,6 +13638,13 @@ begin --
       ApIntOr_proc(shl108_373, conv111_380, tmp_var);
       add112_385 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u64_u64_402_inst flow-through 
+    process(add118_403) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u64_u64_402_inst:flowthrough inputs: " & " shl114_391 = "& Convert_SLV_To_Hex_String(shl114_391) & " conv117_398 = "& Convert_SLV_To_Hex_String(conv117_398) & " outputs:" & " add118_403= "  & Convert_SLV_To_Hex_String(add118_403));
+      --
+    end process; 
     -- binary operator OR_u64_u64_402_inst
     process(shl114_391, conv117_398) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9359,6 +13652,13 @@ begin --
       ApIntOr_proc(shl114_391, conv117_398, tmp_var);
       add118_403 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u64_u64_420_inst flow-through 
+    process(add124_421) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u64_u64_420_inst:flowthrough inputs: " & " shl120_409 = "& Convert_SLV_To_Hex_String(shl120_409) & " conv123_416 = "& Convert_SLV_To_Hex_String(conv123_416) & " outputs:" & " add124_421= "  & Convert_SLV_To_Hex_String(add124_421));
+      --
+    end process; 
     -- binary operator OR_u64_u64_420_inst
     process(shl120_409, conv123_416) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9366,6 +13666,13 @@ begin --
       ApIntOr_proc(shl120_409, conv123_416, tmp_var);
       add124_421 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u64_u64_438_inst flow-through 
+    process(add130_439) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u64_u64_438_inst:flowthrough inputs: " & " shl126_427 = "& Convert_SLV_To_Hex_String(shl126_427) & " conv129_434 = "& Convert_SLV_To_Hex_String(conv129_434) & " outputs:" & " add130_439= "  & Convert_SLV_To_Hex_String(add130_439));
+      --
+    end process; 
     -- binary operator OR_u64_u64_438_inst
     process(shl126_427, conv129_434) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9373,6 +13680,13 @@ begin --
       ApIntOr_proc(shl126_427, conv129_434, tmp_var);
       add130_439 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u64_u64_456_inst flow-through 
+    process(add136_457) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:OR_u64_u64_456_inst:flowthrough inputs: " & " shl132_445 = "& Convert_SLV_To_Hex_String(shl132_445) & " conv135_452 = "& Convert_SLV_To_Hex_String(conv135_452) & " outputs:" & " add136_457= "  & Convert_SLV_To_Hex_String(add136_457));
+      --
+    end process; 
     -- binary operator OR_u64_u64_456_inst
     process(shl132_445, conv135_452) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9380,6 +13694,13 @@ begin --
       ApIntOr_proc(shl132_445, conv135_452, tmp_var);
       add136_457 <= tmp_var; --
     end process;
+    -- logger for split-operator SGT_i32_u1_666_inst flow-through 
+    process(cmp233310_667) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SGT_i32_u1_666_inst:flowthrough inputs: " & " type_cast_662_wire = "& Convert_SLV_To_Hex_String(type_cast_662_wire) & " type_cast_665_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_665_wire_constant) & " outputs:" & " cmp233310_667= "  & Convert_SLV_To_Hex_String(cmp233310_667));
+      --
+    end process; 
     -- binary operator SGT_i32_u1_666_inst
     process(type_cast_662_wire) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -9387,6 +13708,13 @@ begin --
       ApIntSgt_proc(type_cast_662_wire, type_cast_665_wire_constant, tmp_var);
       cmp233310_667 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_123_inst flow-through 
+    process(shl38_124) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u16_u16_123_inst:flowthrough inputs: " & " conv37_118 = "& Convert_SLV_To_Hex_String(conv37_118) & " type_cast_122_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_122_wire_constant) & " outputs:" & " shl38_124= "  & Convert_SLV_To_Hex_String(shl38_124));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_123_inst
     process(conv37_118) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9394,6 +13722,13 @@ begin --
       ApIntSHL_proc(conv37_118, type_cast_122_wire_constant, tmp_var);
       shl38_124 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_148_inst flow-through 
+    process(shl47_149) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u16_u16_148_inst:flowthrough inputs: " & " conv46_143 = "& Convert_SLV_To_Hex_String(conv46_143) & " type_cast_147_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_147_wire_constant) & " outputs:" & " shl47_149= "  & Convert_SLV_To_Hex_String(shl47_149));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_148_inst
     process(conv46_143) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9401,6 +13736,13 @@ begin --
       ApIntSHL_proc(conv46_143, type_cast_147_wire_constant, tmp_var);
       shl47_149 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_173_inst flow-through 
+    process(shl56_174) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u16_u16_173_inst:flowthrough inputs: " & " conv55_168 = "& Convert_SLV_To_Hex_String(conv55_168) & " type_cast_172_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_172_wire_constant) & " outputs:" & " shl56_174= "  & Convert_SLV_To_Hex_String(shl56_174));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_173_inst
     process(conv55_168) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9408,6 +13750,13 @@ begin --
       ApIntSHL_proc(conv55_168, type_cast_172_wire_constant, tmp_var);
       shl56_174 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_198_inst flow-through 
+    process(shl65_199) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u16_u16_198_inst:flowthrough inputs: " & " conv64_193 = "& Convert_SLV_To_Hex_String(conv64_193) & " type_cast_197_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_197_wire_constant) & " outputs:" & " shl65_199= "  & Convert_SLV_To_Hex_String(shl65_199));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_198_inst
     process(conv64_193) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9415,6 +13764,13 @@ begin --
       ApIntSHL_proc(conv64_193, type_cast_197_wire_constant, tmp_var);
       shl65_199 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_223_inst flow-through 
+    process(shl74_224) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u16_u16_223_inst:flowthrough inputs: " & " conv73_218 = "& Convert_SLV_To_Hex_String(conv73_218) & " type_cast_222_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_222_wire_constant) & " outputs:" & " shl74_224= "  & Convert_SLV_To_Hex_String(shl74_224));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_223_inst
     process(conv73_218) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9422,6 +13778,13 @@ begin --
       ApIntSHL_proc(conv73_218, type_cast_222_wire_constant, tmp_var);
       shl74_224 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_73_inst flow-through 
+    process(shl20_74) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u16_u16_73_inst:flowthrough inputs: " & " conv19_68 = "& Convert_SLV_To_Hex_String(conv19_68) & " type_cast_72_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_72_wire_constant) & " outputs:" & " shl20_74= "  & Convert_SLV_To_Hex_String(shl20_74));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_73_inst
     process(conv19_68) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9429,6 +13792,13 @@ begin --
       ApIntSHL_proc(conv19_68, type_cast_72_wire_constant, tmp_var);
       shl20_74 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_98_inst flow-through 
+    process(shl29_99) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u16_u16_98_inst:flowthrough inputs: " & " conv28_93 = "& Convert_SLV_To_Hex_String(conv28_93) & " type_cast_97_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_97_wire_constant) & " outputs:" & " shl29_99= "  & Convert_SLV_To_Hex_String(shl29_99));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_98_inst
     process(conv28_93) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -9436,6 +13806,13 @@ begin --
       ApIntSHL_proc(conv28_93, type_cast_97_wire_constant, tmp_var);
       shl29_99 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_253_inst flow-through 
+    process(mul_254) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_253_inst:flowthrough inputs: " & " conv81_240 = "& Convert_SLV_To_Hex_String(conv81_240) & " type_cast_252_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_252_wire_constant) & " outputs:" & " mul_254= "  & Convert_SLV_To_Hex_String(mul_254));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_253_inst
     process(conv81_240) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9443,6 +13820,13 @@ begin --
       ApIntSHL_proc(conv81_240, type_cast_252_wire_constant, tmp_var);
       mul_254 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_336_inst flow-through 
+    process(shl96_337) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_336_inst:flowthrough inputs: " & " conv94_331 = "& Convert_SLV_To_Hex_String(conv94_331) & " type_cast_335_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_335_wire_constant) & " outputs:" & " shl96_337= "  & Convert_SLV_To_Hex_String(shl96_337));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_336_inst
     process(conv94_331) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9450,6 +13834,13 @@ begin --
       ApIntSHL_proc(conv94_331, type_cast_335_wire_constant, tmp_var);
       shl96_337 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_354_inst flow-through 
+    process(shl102_355) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_354_inst:flowthrough inputs: " & " add100_349 = "& Convert_SLV_To_Hex_String(add100_349) & " type_cast_353_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_353_wire_constant) & " outputs:" & " shl102_355= "  & Convert_SLV_To_Hex_String(shl102_355));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_354_inst
     process(add100_349) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9457,6 +13848,13 @@ begin --
       ApIntSHL_proc(add100_349, type_cast_353_wire_constant, tmp_var);
       shl102_355 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_372_inst flow-through 
+    process(shl108_373) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_372_inst:flowthrough inputs: " & " add106_367 = "& Convert_SLV_To_Hex_String(add106_367) & " type_cast_371_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_371_wire_constant) & " outputs:" & " shl108_373= "  & Convert_SLV_To_Hex_String(shl108_373));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_372_inst
     process(add106_367) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9464,6 +13862,13 @@ begin --
       ApIntSHL_proc(add106_367, type_cast_371_wire_constant, tmp_var);
       shl108_373 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_390_inst flow-through 
+    process(shl114_391) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_390_inst:flowthrough inputs: " & " add112_385 = "& Convert_SLV_To_Hex_String(add112_385) & " type_cast_389_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_389_wire_constant) & " outputs:" & " shl114_391= "  & Convert_SLV_To_Hex_String(shl114_391));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_390_inst
     process(add112_385) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9471,6 +13876,13 @@ begin --
       ApIntSHL_proc(add112_385, type_cast_389_wire_constant, tmp_var);
       shl114_391 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_408_inst flow-through 
+    process(shl120_409) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_408_inst:flowthrough inputs: " & " add118_403 = "& Convert_SLV_To_Hex_String(add118_403) & " type_cast_407_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_407_wire_constant) & " outputs:" & " shl120_409= "  & Convert_SLV_To_Hex_String(shl120_409));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_408_inst
     process(add118_403) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9478,6 +13890,13 @@ begin --
       ApIntSHL_proc(add118_403, type_cast_407_wire_constant, tmp_var);
       shl120_409 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_426_inst flow-through 
+    process(shl126_427) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_426_inst:flowthrough inputs: " & " add124_421 = "& Convert_SLV_To_Hex_String(add124_421) & " type_cast_425_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_425_wire_constant) & " outputs:" & " shl126_427= "  & Convert_SLV_To_Hex_String(shl126_427));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_426_inst
     process(add124_421) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9485,6 +13904,13 @@ begin --
       ApIntSHL_proc(add124_421, type_cast_425_wire_constant, tmp_var);
       shl126_427 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u64_u64_444_inst flow-through 
+    process(shl132_445) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SHL_u64_u64_444_inst:flowthrough inputs: " & " add130_439 = "& Convert_SLV_To_Hex_String(add130_439) & " type_cast_443_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_443_wire_constant) & " outputs:" & " shl132_445= "  & Convert_SLV_To_Hex_String(shl132_445));
+      --
+    end process; 
     -- binary operator SHL_u64_u64_444_inst
     process(add130_439) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9492,6 +13918,13 @@ begin --
       ApIntSHL_proc(add130_439, type_cast_443_wire_constant, tmp_var);
       shl132_445 <= tmp_var; --
     end process;
+    -- logger for split-operator SUB_u64_u64_526_inst flow-through 
+    process(sub_527) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:SUB_u64_u64_526_inst:flowthrough inputs: " & " conv154_522 = "& Convert_SLV_To_Hex_String(conv154_522) & " conv142_489 = "& Convert_SLV_To_Hex_String(conv142_489) & " outputs:" & " sub_527= "  & Convert_SLV_To_Hex_String(sub_527));
+      --
+    end process; 
     -- binary operator SUB_u64_u64_526_inst
     process(conv154_522, conv142_489) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9499,6 +13932,13 @@ begin --
       ApIntSub_proc(conv154_522, conv142_489, tmp_var);
       sub_527 <= tmp_var; --
     end process;
+    -- logger for split-operator UGT_u64_u1_279_inst flow-through 
+    process(cmp314_281) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:UGT_u64_u1_279_inst:flowthrough inputs: " & " conv87_274 = "& Convert_SLV_To_Hex_String(conv87_274) & " type_cast_278_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_278_wire_constant) & " outputs:" & " cmp314_281= "  & Convert_SLV_To_Hex_String(cmp314_281));
+      --
+    end process; 
     -- binary operator UGT_u64_u1_279_inst
     process(conv87_274) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -9506,6 +13946,13 @@ begin --
       ApIntUgt_proc(conv87_274, type_cast_278_wire_constant, tmp_var);
       cmp314_281 <= tmp_var; --
     end process;
+    -- logger for split-operator UGT_u64_u1_299_inst flow-through 
+    process(tmp_300) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:UGT_u64_u1_299_inst:flowthrough inputs: " & " shr_294 = "& Convert_SLV_To_Hex_String(shr_294) & " type_cast_298_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_298_wire_constant) & " outputs:" & " tmp_300= "  & Convert_SLV_To_Hex_String(tmp_300));
+      --
+    end process; 
     -- binary operator UGT_u64_u1_299_inst
     process(shr_294) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -9513,6 +13960,22 @@ begin --
       ApIntUgt_proc(shr_294, type_cast_298_wire_constant, tmp_var);
       tmp_300 <= tmp_var; --
     end process;
+    -- logger for split-operator array_obj_ref_322_index_offset
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if array_obj_ref_322_index_offset_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_322_index_offset:started:   inputs: " & " R_indvar317_321_scaled = "& Convert_SLV_To_Hex_String(R_indvar317_321_scaled) & " array_obj_ref_322_constant_part_of_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_322_constant_part_of_offset));
+          --
+        end if; 
+        if array_obj_ref_322_index_offset_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_322_index_offset:finished:  outputs: " & " array_obj_ref_322_final_offset= "  & Convert_SLV_To_Hex_String(array_obj_ref_322_final_offset));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared split operator group (58) : array_obj_ref_322_index_offset 
     ApIntAdd_group_58: Block -- 
       signal data_in: std_logic_vector(13 downto 0);
@@ -9580,6 +14043,22 @@ begin --
           reset => reset); -- 
       -- 
     end Block; -- split operator group 58
+    -- logger for split-operator array_obj_ref_693_index_offset
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if array_obj_ref_693_index_offset_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_693_index_offset:started:   inputs: " & " R_indvar_692_scaled = "& Convert_SLV_To_Hex_String(R_indvar_692_scaled) & " array_obj_ref_693_constant_part_of_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_693_constant_part_of_offset));
+          --
+        end if; 
+        if array_obj_ref_693_index_offset_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:array_obj_ref_693_index_offset:finished:  outputs: " & " array_obj_ref_693_final_offset= "  & Convert_SLV_To_Hex_String(array_obj_ref_693_final_offset));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared split operator group (59) : array_obj_ref_693_index_offset 
     ApIntAdd_group_59: Block -- 
       signal data_in: std_logic_vector(13 downto 0);
@@ -9647,6 +14126,13 @@ begin --
           reset => reset); -- 
       -- 
     end Block; -- split operator group 59
+    -- logger for split-operator type_cast_487_inst flow-through 
+    process(type_cast_487_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_487_inst:flowthrough inputs: " & " call141_484 = "& Convert_SLV_To_Hex_String(call141_484) & " outputs:" & " type_cast_487_wire= "  & Convert_SLV_To_Hex_String(type_cast_487_wire));
+      --
+    end process; 
     -- unary operator type_cast_487_inst
     process(call141_484) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9654,6 +14140,13 @@ begin --
       SingleInputOperation("ApIntToApIntSigned", call141_484, tmp_var);
       type_cast_487_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_520_inst flow-through 
+    process(type_cast_520_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:type_cast_520_inst:flowthrough inputs: " & " call153_517 = "& Convert_SLV_To_Hex_String(call153_517) & " outputs:" & " type_cast_520_wire= "  & Convert_SLV_To_Hex_String(type_cast_520_wire));
+      --
+    end process; 
     -- unary operator type_cast_520_inst
     process(call153_517) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -9661,6 +14154,22 @@ begin --
       SingleInputOperation("ApIntToApIntSigned", call153_517, tmp_var);
       type_cast_520_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator ptr_deref_698_load_0
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if ptr_deref_698_load_0_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_698_load_0:started:   inputs: " & " ptr_deref_698_word_address_0 = "& Convert_SLV_To_Hex_String(ptr_deref_698_word_address_0));
+          --
+        end if; 
+        if ptr_deref_698_load_0_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_698_load_0:finished:  outputs: " & " ptr_deref_698_data_0= "  & Convert_SLV_To_Hex_String(ptr_deref_698_data_0));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared load operator group (0) : ptr_deref_698_load_0 
     LoadGroup0: Block -- 
       signal data_in: std_logic_vector(13 downto 0);
@@ -9675,6 +14184,19 @@ begin --
       constant guardBuffering: IntegerArray(0 downto 0)  := (0 => 2);
       -- 
     begin -- 
+      -- logging on!
+      LogMemRead(clk, reset, global_clock_cycle_count,-- 
+        ptr_deref_698_load_0_req_0,
+        ptr_deref_698_load_0_ack_0,
+        ptr_deref_698_load_0_req_1,
+        ptr_deref_698_load_0_ack_1,
+        "ptr_deref_698_load_0",
+        "memory_space_0" ,
+        ptr_deref_698_data_0,
+        ptr_deref_698_word_address_0,
+        "ptr_deref_698_data_0",
+        "ptr_deref_698_word_address_0" -- 
+      );
       reqL_unguarded(0) <= ptr_deref_698_load_0_req_0;
       ptr_deref_698_load_0_ack_0 <= ackL_unguarded(0);
       reqR_unguarded(0) <= ptr_deref_698_load_0_req_1;
@@ -9732,6 +14254,35 @@ begin --
         ); -- 
       -- 
     end Block; -- load group 0
+    -- logger for split-operator ptr_deref_459_store_0
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if ptr_deref_459_store_0_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_459_store_0:started:   inputs: " & " ptr_deref_459_word_address_0 = "& Convert_SLV_To_Hex_String(ptr_deref_459_word_address_0) & " ptr_deref_459_data_0 = "& Convert_SLV_To_Hex_String(ptr_deref_459_data_0));
+          --
+        end if; 
+        if ptr_deref_459_store_0_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:ptr_deref_459_store_0:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logging on!
+    LogMemWrite(clk, reset,global_clock_cycle_count,  -- 
+      ptr_deref_459_store_0_req_0,
+      ptr_deref_459_store_0_ack_0,
+      ptr_deref_459_store_0_req_1,
+      ptr_deref_459_store_0_ack_1,
+      "ptr_deref_459_store_0",
+      "memory_space_1" ,
+      ptr_deref_459_data_0,
+      ptr_deref_459_word_address_0,
+      "ptr_deref_459_data_0",
+      "ptr_deref_459_word_address_0" -- 
+    );
     -- shared store operator group (0) : ptr_deref_459_store_0 
     StoreGroup0: Block -- 
       signal addr_in: std_logic_vector(13 downto 0);
@@ -9804,6 +14355,22 @@ begin --
         ); -- 
       -- 
     end Block; -- store group 0
+    -- logger for split-operator RPIPE_Block0_complete_513_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_complete_513_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_Block0_complete_513_inst:started:   PipeRead from Block0_complete inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_complete_513_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_Block0_complete_513_inst:finished:  outputs: " & " call151_514= "  & Convert_SLV_To_Hex_String(call151_514));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared inport operator group (0) : RPIPE_Block0_complete_513_inst 
     InportGroup_0: Block -- 
       signal data_out: std_logic_vector(15 downto 0);
@@ -9848,6 +14415,422 @@ begin --
         ); -- 
       -- 
     end Block; -- inport group 0
+    -- logger for split-operator RPIPE_zeropad_input_pipe_51_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_51_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_51_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_51_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_51_inst:finished:  outputs: " & " call_52= "  & Convert_SLV_To_Hex_String(call_52));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_54_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_54_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_54_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_54_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_54_inst:finished:  outputs: " & " call2_55= "  & Convert_SLV_To_Hex_String(call2_55));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_57_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_57_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_57_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_57_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_57_inst:finished:  outputs: " & " call6_58= "  & Convert_SLV_To_Hex_String(call6_58));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_60_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_60_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_60_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_60_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_60_inst:finished:  outputs: " & " call11_61= "  & Convert_SLV_To_Hex_String(call11_61));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_63_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_63_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_63_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_63_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_63_inst:finished:  outputs: " & " call16_64= "  & Convert_SLV_To_Hex_String(call16_64));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_76_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_76_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_76_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_76_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_76_inst:finished:  outputs: " & " call21_77= "  & Convert_SLV_To_Hex_String(call21_77));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_88_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_88_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_88_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_88_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_88_inst:finished:  outputs: " & " call25_89= "  & Convert_SLV_To_Hex_String(call25_89));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_101_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_101_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_101_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_101_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_101_inst:finished:  outputs: " & " call30_102= "  & Convert_SLV_To_Hex_String(call30_102));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_113_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_113_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_113_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_113_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_113_inst:finished:  outputs: " & " call34_114= "  & Convert_SLV_To_Hex_String(call34_114));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_126_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_126_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_126_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_126_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_126_inst:finished:  outputs: " & " call39_127= "  & Convert_SLV_To_Hex_String(call39_127));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_138_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_138_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_138_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_138_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_138_inst:finished:  outputs: " & " call43_139= "  & Convert_SLV_To_Hex_String(call43_139));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_151_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_151_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_151_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_151_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_151_inst:finished:  outputs: " & " call48_152= "  & Convert_SLV_To_Hex_String(call48_152));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_163_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_163_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_163_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_163_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_163_inst:finished:  outputs: " & " call52_164= "  & Convert_SLV_To_Hex_String(call52_164));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_176_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_176_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_176_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_176_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_176_inst:finished:  outputs: " & " call57_177= "  & Convert_SLV_To_Hex_String(call57_177));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_188_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_188_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_188_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_188_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_188_inst:finished:  outputs: " & " call61_189= "  & Convert_SLV_To_Hex_String(call61_189));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_201_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_201_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_201_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_201_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_201_inst:finished:  outputs: " & " call66_202= "  & Convert_SLV_To_Hex_String(call66_202));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_213_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_213_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_213_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_213_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_213_inst:finished:  outputs: " & " call70_214= "  & Convert_SLV_To_Hex_String(call70_214));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_226_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_226_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_226_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_226_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_226_inst:finished:  outputs: " & " call75_227= "  & Convert_SLV_To_Hex_String(call75_227));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_326_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_326_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_326_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_326_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_326_inst:finished:  outputs: " & " call93_327= "  & Convert_SLV_To_Hex_String(call93_327));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_339_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_339_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_339_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_339_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_339_inst:finished:  outputs: " & " call97_340= "  & Convert_SLV_To_Hex_String(call97_340));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_357_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_357_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_357_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_357_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_357_inst:finished:  outputs: " & " call103_358= "  & Convert_SLV_To_Hex_String(call103_358));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_375_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_375_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_375_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_375_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_375_inst:finished:  outputs: " & " call109_376= "  & Convert_SLV_To_Hex_String(call109_376));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_393_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_393_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_393_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_393_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_393_inst:finished:  outputs: " & " call115_394= "  & Convert_SLV_To_Hex_String(call115_394));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_411_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_411_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_411_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_411_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_411_inst:finished:  outputs: " & " call121_412= "  & Convert_SLV_To_Hex_String(call121_412));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_429_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_429_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_429_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_429_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_429_inst:finished:  outputs: " & " call127_430= "  & Convert_SLV_To_Hex_String(call127_430));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_zeropad_input_pipe_447_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_zeropad_input_pipe_447_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_447_inst:started:   PipeRead from zeropad_input_pipe inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_zeropad_input_pipe_447_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:RPIPE_zeropad_input_pipe_447_inst:finished:  outputs: " & " call133_448= "  & Convert_SLV_To_Hex_String(call133_448));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared inport operator group (1) : RPIPE_zeropad_input_pipe_51_inst RPIPE_zeropad_input_pipe_54_inst RPIPE_zeropad_input_pipe_57_inst RPIPE_zeropad_input_pipe_60_inst RPIPE_zeropad_input_pipe_63_inst RPIPE_zeropad_input_pipe_76_inst RPIPE_zeropad_input_pipe_88_inst RPIPE_zeropad_input_pipe_101_inst RPIPE_zeropad_input_pipe_113_inst RPIPE_zeropad_input_pipe_126_inst RPIPE_zeropad_input_pipe_138_inst RPIPE_zeropad_input_pipe_151_inst RPIPE_zeropad_input_pipe_163_inst RPIPE_zeropad_input_pipe_176_inst RPIPE_zeropad_input_pipe_188_inst RPIPE_zeropad_input_pipe_201_inst RPIPE_zeropad_input_pipe_213_inst RPIPE_zeropad_input_pipe_226_inst RPIPE_zeropad_input_pipe_326_inst RPIPE_zeropad_input_pipe_339_inst RPIPE_zeropad_input_pipe_357_inst RPIPE_zeropad_input_pipe_375_inst RPIPE_zeropad_input_pipe_393_inst RPIPE_zeropad_input_pipe_411_inst RPIPE_zeropad_input_pipe_429_inst RPIPE_zeropad_input_pipe_447_inst 
     InportGroup_1: Block -- 
       signal data_out: std_logic_vector(207 downto 0);
@@ -10042,6 +15025,118 @@ begin --
         ); -- 
       -- 
     end Block; -- inport group 1
+    -- logger for split-operator WPIPE_Block0_starting_509_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_starting_509_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_509_inst:started:   PipeWrite to Block0_starting inputs: " & " add50_161 = "& Convert_SLV_To_Hex_String(add50_161));
+          --
+        end if; 
+        if WPIPE_Block0_starting_509_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_509_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_Block0_starting_506_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_starting_506_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_506_inst:started:   PipeWrite to Block0_starting inputs: " & " add77_236 = "& Convert_SLV_To_Hex_String(add77_236));
+          --
+        end if; 
+        if WPIPE_Block0_starting_506_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_506_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_Block0_starting_503_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_starting_503_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_503_inst:started:   PipeWrite to Block0_starting inputs: " & " add68_211 = "& Convert_SLV_To_Hex_String(add68_211));
+          --
+        end if; 
+        if WPIPE_Block0_starting_503_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_503_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_Block0_starting_500_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_starting_500_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_500_inst:started:   PipeWrite to Block0_starting inputs: " & " add59_186 = "& Convert_SLV_To_Hex_String(add59_186));
+          --
+        end if; 
+        if WPIPE_Block0_starting_500_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_500_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_Block0_starting_497_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_starting_497_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_497_inst:started:   PipeWrite to Block0_starting inputs: " & " add41_136 = "& Convert_SLV_To_Hex_String(add41_136));
+          --
+        end if; 
+        if WPIPE_Block0_starting_497_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_497_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_Block0_starting_494_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_starting_494_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_494_inst:started:   PipeWrite to Block0_starting inputs: " & " add32_111 = "& Convert_SLV_To_Hex_String(add32_111));
+          --
+        end if; 
+        if WPIPE_Block0_starting_494_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_494_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_Block0_starting_491_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_starting_491_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_491_inst:started:   PipeWrite to Block0_starting inputs: " & " add23_86 = "& Convert_SLV_To_Hex_String(add23_86));
+          --
+        end if; 
+        if WPIPE_Block0_starting_491_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_Block0_starting_491_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared outport operator group (0) : WPIPE_Block0_starting_509_inst WPIPE_Block0_starting_506_inst WPIPE_Block0_starting_503_inst WPIPE_Block0_starting_500_inst WPIPE_Block0_starting_497_inst WPIPE_Block0_starting_494_inst WPIPE_Block0_starting_491_inst 
     OutportGroup_0: Block -- 
       signal data_in: std_logic_vector(111 downto 0);
@@ -10118,6 +15213,262 @@ begin --
         );-- 
       -- 
     end Block; -- outport group 0
+    -- logger for split-operator WPIPE_zeropad_output_pipe_792_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_792_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_792_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv251_713 = "& Convert_SLV_To_Hex_String(conv251_713));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_792_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_792_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_783_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_783_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_783_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv269_743 = "& Convert_SLV_To_Hex_String(conv269_743));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_783_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_783_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_777_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_777_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_777_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv281_763 = "& Convert_SLV_To_Hex_String(conv281_763));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_777_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_777_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_780_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_780_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_780_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv275_753 = "& Convert_SLV_To_Hex_String(conv275_753));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_780_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_780_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_786_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_786_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_786_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv263_733 = "& Convert_SLV_To_Hex_String(conv263_733));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_786_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_786_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_789_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_789_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_789_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv257_723 = "& Convert_SLV_To_Hex_String(conv257_723));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_789_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_789_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_795_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_795_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_795_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv245_703 = "& Convert_SLV_To_Hex_String(conv245_703));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_795_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_795_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_774_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_774_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_774_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv287_773 = "& Convert_SLV_To_Hex_String(conv287_773));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_774_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_774_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_624_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_624_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_624_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv160_532 = "& Convert_SLV_To_Hex_String(conv160_532));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_624_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_624_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_621_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_621_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_621_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv166_542 = "& Convert_SLV_To_Hex_String(conv166_542));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_621_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_621_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_618_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_618_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_618_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv172_552 = "& Convert_SLV_To_Hex_String(conv172_552));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_618_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_618_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_615_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_615_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_615_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv178_562 = "& Convert_SLV_To_Hex_String(conv178_562));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_615_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_615_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_612_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_612_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_612_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv184_572 = "& Convert_SLV_To_Hex_String(conv184_572));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_612_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_612_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_609_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_609_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_609_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv190_582 = "& Convert_SLV_To_Hex_String(conv190_582));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_609_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_609_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_606_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_606_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_606_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv196_592 = "& Convert_SLV_To_Hex_String(conv196_592));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_606_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_606_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator WPIPE_zeropad_output_pipe_603_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_zeropad_output_pipe_603_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_603_inst:started:   PipeWrite to zeropad_output_pipe inputs: " & " conv202_602 = "& Convert_SLV_To_Hex_String(conv202_602));
+          --
+        end if; 
+        if WPIPE_zeropad_output_pipe_603_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:WPIPE_zeropad_output_pipe_603_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared outport operator group (1) : WPIPE_zeropad_output_pipe_792_inst WPIPE_zeropad_output_pipe_783_inst WPIPE_zeropad_output_pipe_777_inst WPIPE_zeropad_output_pipe_780_inst WPIPE_zeropad_output_pipe_786_inst WPIPE_zeropad_output_pipe_789_inst WPIPE_zeropad_output_pipe_795_inst WPIPE_zeropad_output_pipe_774_inst WPIPE_zeropad_output_pipe_624_inst WPIPE_zeropad_output_pipe_621_inst WPIPE_zeropad_output_pipe_618_inst WPIPE_zeropad_output_pipe_615_inst WPIPE_zeropad_output_pipe_612_inst WPIPE_zeropad_output_pipe_609_inst WPIPE_zeropad_output_pipe_606_inst WPIPE_zeropad_output_pipe_603_inst 
     OutportGroup_1: Block -- 
       signal data_in: std_logic_vector(127 downto 0);
@@ -10239,6 +15590,38 @@ begin --
         );-- 
       -- 
     end Block; -- outport group 1
+    -- logger for split-operator call_stmt_484_call
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if call_stmt_484_call_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:call_stmt_484_call:started:  Call to module timer inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if call_stmt_484_call_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:call_stmt_484_call:finished:  outputs: " & " call141_484= "  & Convert_SLV_To_Hex_String(call141_484));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator call_stmt_517_call
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if call_stmt_517_call_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:call_stmt_517_call:started:  Call to module timer inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if call_stmt_517_call_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D:DP:call_stmt_517_call:finished:  outputs: " & " call153_517= "  & Convert_SLV_To_Hex_String(call153_517));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared call operator group (0) : call_stmt_484_call call_stmt_517_call 
     timer_call_group_0: Block -- 
       signal data_out: std_logic_vector(127 downto 0);
@@ -10347,6 +15730,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
+library GhdlLink;
+use GhdlLink.LogUtilities.all;
 library work;
 use work.ahir_system_global_package.all;
 entity zeropad3D_A is -- 
@@ -10537,8 +15922,21 @@ architecture zeropad3D_A_arch of zeropad3D_A is --
   signal W_dim0T_check_2_1096_delayed_1_0_1112_inst_ack_1 : boolean;
   signal do_while_stmt_903_branch_ack_0 : boolean;
   signal do_while_stmt_903_branch_ack_1 : boolean;
+  signal global_clock_cycle_count: integer := 0;
   -- 
 begin --  
+  ---------------------------------------------------------- 
+  process(clk)  
+  begin -- 
+    if(clk'event and clk = '1') then -- 
+      if(reset = '1') then -- 
+        global_clock_cycle_count <= 0; --
+      else -- 
+        global_clock_cycle_count <= global_clock_cycle_count + 1; -- 
+      end if; --
+    end if; --
+  end process;
+  ---------------------------------------------------------- 
   -- input handling ------------------------------------------------
   in_buffer: UnloadBuffer -- 
     generic map(name => "zeropad3D_A_input_buffer", -- 
@@ -10638,6 +16036,9 @@ begin --
     gj_tag_ilock_read_req_symbol_join : generic_join generic map(name => joinName, number_of_predecessors => 3, place_capacities => place_capacities, place_markings => place_markings, place_delays => place_delays) -- 
       port map(preds => preds, symbol_out => tag_ilock_read_req_symbol, clk => clk, reset => reset); --
   end block;
+  --- logging ------------------------------------------------------
+  LogCPEvent(clk,reset,global_clock_cycle_count,zeropad3D_A_CP_2082_start,"zeropad3D_A cp_entry_symbol ");
+  LogCPEvent(clk,reset,global_clock_cycle_count,zeropad3D_A_CP_2082_symbol, "zeropad3D_A cp_exit_symbol ");
   -- the control path --------------------------------------------------
   always_true_symbol <= true; 
   default_zero_sig <= '0';
@@ -10661,6 +16062,15 @@ begin --
       -- CP-element group 0: 	 branch_block_stmt_823/branch_block_stmt_823__entry__
       -- CP-element group 0: 	 $entry
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(0)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(0)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(0) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_825_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_2110_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_2110_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(0), ack => RPIPE_Block0_starting_825_inst_req_0); -- 
@@ -10677,6 +16087,15 @@ begin --
       -- CP-element group 1: 	 branch_block_stmt_823/assign_stmt_1163/$entry
       -- CP-element group 1: 	 branch_block_stmt_823/assign_stmt_1163/WPIPE_Block0_complete_1160_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(1)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(1)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(1) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:WPIPE_Block0_complete_1160_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2768_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2768_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(1), ack => WPIPE_Block0_complete_1160_inst_req_0); -- 
@@ -10694,6 +16113,16 @@ begin --
       -- CP-element group 2: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_825_Update/$entry
       -- CP-element group 2: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_825_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(2)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(2)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(2) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_825_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_825_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2111_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 2_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_825_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(2)); -- 
@@ -10713,6 +16142,16 @@ begin --
       -- CP-element group 3: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_828_Sample/rr
       -- CP-element group 3: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_825_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(3)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(3)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(3) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_825_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_828_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2116_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 3_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_825_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(3)); -- 
@@ -10732,6 +16171,16 @@ begin --
       -- CP-element group 4: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_828_sample_completed_
       -- CP-element group 4: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_828_Update/$entry
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(4)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(4)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(4) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_828_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_828_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2125_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 4_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_828_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(4)); -- 
@@ -10751,6 +16200,16 @@ begin --
       -- CP-element group 5: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_828_Update/$exit
       -- CP-element group 5: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_831_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(5)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(5)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(5) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_828_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_831_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2130_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 5_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_828_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(5)); -- 
@@ -10770,6 +16229,16 @@ begin --
       -- CP-element group 6: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_831_Sample/ra
       -- CP-element group 6: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_831_Update/$entry
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(6)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(6)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(6) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_831_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_831_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2139_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 6_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_831_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(6)); -- 
@@ -10789,6 +16258,16 @@ begin --
       -- CP-element group 7: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_834_sample_start_
       -- CP-element group 7: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_831_Update/$exit
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(7)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(7)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(7) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_831_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_834_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2144_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 7_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_831_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(7)); -- 
@@ -10808,6 +16287,16 @@ begin --
       -- CP-element group 8: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_834_Update/$entry
       -- CP-element group 8: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_834_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(8)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(8)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(8) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_834_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_834_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2153_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 8_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_834_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(8)); -- 
@@ -10827,6 +16316,16 @@ begin --
       -- CP-element group 9: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_834_Update/ca
       -- CP-element group 9: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_837_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(9)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(9)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(9) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_834_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_837_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2158_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 9_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_834_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(9)); -- 
@@ -10846,6 +16345,16 @@ begin --
       -- CP-element group 10: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_837_Sample/$exit
       -- CP-element group 10: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_837_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(10)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(10)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(10) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_837_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_837_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2167_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 10_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_837_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(10)); -- 
@@ -10865,6 +16374,16 @@ begin --
       -- CP-element group 11: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_837_update_completed_
       -- CP-element group 11: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_840_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(11)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(11)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(11) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_837_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_840_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2172_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 11_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_837_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(11)); -- 
@@ -10884,6 +16403,16 @@ begin --
       -- CP-element group 12: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_840_Sample/ra
       -- CP-element group 12: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_840_Update/$entry
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(12)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(12)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(12) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_840_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_840_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2181_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 12_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_840_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(12)); -- 
@@ -10903,6 +16432,16 @@ begin --
       -- CP-element group 13: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_843_sample_start_
       -- CP-element group 13: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_840_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(13)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(13)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(13) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_840_inst_ack_1 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_843_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2186_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 13_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_840_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(13)); -- 
@@ -10922,6 +16461,16 @@ begin --
       -- CP-element group 14: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_843_update_start_
       -- CP-element group 14: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_843_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(14)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(14)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(14) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_843_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_843_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2195_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 14_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_843_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(14)); -- 
@@ -10945,6 +16494,15 @@ begin --
       -- CP-element group 15: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_843_Update/$exit
       -- CP-element group 15: 	 branch_block_stmt_823/assign_stmt_826_to_assign_stmt_844/RPIPE_Block0_starting_843_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(15)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(15)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(15) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:RPIPE_Block0_starting_843_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2200_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 15_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => RPIPE_Block0_starting_843_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(15)); -- 
@@ -10957,6 +16515,14 @@ begin --
       -- CP-element group 16: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903__entry__
       -- CP-element group 16: 	 branch_block_stmt_823/do_while_stmt_903/$entry
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(16)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(16)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(16) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(16) <= zeropad3D_A_CP_2082_elements(15);
     -- CP-element group 17:  merge  place  bypass  pipeline-parent 
     -- CP-element group 17: predecessors 
@@ -10965,6 +16531,14 @@ begin --
     -- CP-element group 17:  members (1) 
       -- CP-element group 17: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903__exit__
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(17)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(17)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(17) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(17) is bound as output of CP function.
     -- CP-element group 18:  merge  place  bypass  pipeline-parent 
     -- CP-element group 18: predecessors 
@@ -10973,6 +16547,14 @@ begin --
     -- CP-element group 18:  members (1) 
       -- CP-element group 18: 	 branch_block_stmt_823/do_while_stmt_903/loop_back
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(18)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(18)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(18) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(18) is bound as output of CP function.
     -- CP-element group 19:  branch  transition  place  bypass  pipeline-parent 
     -- CP-element group 19: predecessors 
@@ -10985,6 +16567,14 @@ begin --
       -- CP-element group 19: 	 branch_block_stmt_823/do_while_stmt_903/loop_exit/$entry
       -- CP-element group 19: 	 branch_block_stmt_823/do_while_stmt_903/loop_taken/$entry
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(19)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(19)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(19) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(19) <= zeropad3D_A_CP_2082_elements(24);
     -- CP-element group 20:  branch  place  bypass  pipeline-parent 
     -- CP-element group 20: predecessors 
@@ -10993,6 +16583,14 @@ begin --
     -- CP-element group 20:  members (1) 
       -- CP-element group 20: 	 branch_block_stmt_823/do_while_stmt_903/loop_body_done
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(20)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(20)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(20) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(20) <= zeropad3D_A_CP_2082_elements(177);
     -- CP-element group 21:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 21: predecessors 
@@ -11006,6 +16604,14 @@ begin --
     -- CP-element group 21:  members (1) 
       -- CP-element group 21: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/back_edge_to_loop_body
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(21)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(21)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(21) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(21) <= zeropad3D_A_CP_2082_elements(18);
     -- CP-element group 22:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 22: predecessors 
@@ -11019,6 +16625,14 @@ begin --
     -- CP-element group 22:  members (1) 
       -- CP-element group 22: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/first_time_through_loop_body
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(22)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(22)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(22) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(22) <= zeropad3D_A_CP_2082_elements(16);
     -- CP-element group 23:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 23: predecessors 
@@ -11047,6 +16661,14 @@ begin --
       -- CP-element group 23: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/loop_body_start
       -- CP-element group 23: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/$entry
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(23)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(23)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(23) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(23) is bound as output of CP function.
     -- CP-element group 24:  join  transition  output  bypass  pipeline-parent 
     -- CP-element group 24: predecessors 
@@ -11059,6 +16681,15 @@ begin --
     -- CP-element group 24:  members (1) 
       -- CP-element group 24: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/condition_evaluated
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(24)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(24)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(24) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:do_while_stmt_903_branch_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     condition_evaluated_2218_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " condition_evaluated_2218_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(24), ack => do_while_stmt_903_branch_req_0); -- 
@@ -11091,6 +16722,14 @@ begin --
       -- CP-element group 25: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_sample_start__ps
       -- CP-element group 25: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/aggregated_phi_sample_req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(25)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(25)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(25) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_25: block -- 
       constant place_capacities: IntegerArray(0 to 5) := (0 => 15,1 => 15,2 => 15,3 => 15,4 => 15,5 => 1);
       constant place_markings: IntegerArray(0 to 5)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0,5 => 1);
@@ -11127,6 +16766,14 @@ begin --
       -- CP-element group 26: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_sample_completed_
       -- CP-element group 26: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(26)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(26)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(26) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_26: block -- 
       constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 15,2 => 15,3 => 15,4 => 15);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
@@ -11154,6 +16801,14 @@ begin --
       -- CP-element group 27: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_update_start__ps
       -- CP-element group 27: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/aggregated_phi_update_req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(27)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(27)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(27) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_27: block -- 
       constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 15,2 => 15,3 => 15,4 => 15);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
@@ -11179,6 +16834,14 @@ begin --
     -- CP-element group 28:  members (1) 
       -- CP-element group 28: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/aggregated_phi_update_ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(28)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(28)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(28) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_28: block -- 
       constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 15,2 => 15,3 => 15,4 => 15);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
@@ -11201,6 +16864,14 @@ begin --
     -- CP-element group 29:  members (1) 
       -- CP-element group 29: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(29)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(29)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(29) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_29: block -- 
       constant place_capacities: IntegerArray(0 to 2) := (0 => 15,1 => 1,2 => 1);
       constant place_markings: IntegerArray(0 to 2)  := (0 => 0,1 => 1,2 => 1);
@@ -11222,6 +16893,14 @@ begin --
     -- CP-element group 30:  members (1) 
       -- CP-element group 30: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(30)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(30)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(30) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_30: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -11240,6 +16919,14 @@ begin --
     -- CP-element group 31:  members (1) 
       -- CP-element group 31: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(31)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(31)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(31) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(31) is bound as output of CP function.
     -- CP-element group 32:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 32: predecessors 
@@ -11251,6 +16938,14 @@ begin --
       -- CP-element group 32: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_update_completed__ps
       -- CP-element group 32: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(32)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(32)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(32) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(32) is bound as output of CP function.
     -- CP-element group 33:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 33: predecessors 
@@ -11259,6 +16954,14 @@ begin --
     -- CP-element group 33:  members (1) 
       -- CP-element group 33: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_loopback_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(33)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(33)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(33) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(33) <= zeropad3D_A_CP_2082_elements(21);
     -- CP-element group 34:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 34: predecessors 
@@ -11267,6 +16970,15 @@ begin --
       -- CP-element group 34: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_loopback_sample_req_ps
       -- CP-element group 34: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_loopback_sample_req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(34)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(34)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(34) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_905_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_905_loopback_sample_req_2233_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_905_loopback_sample_req_2233_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(34), ack => phi_stmt_905_req_1); -- 
@@ -11278,6 +16990,14 @@ begin --
     -- CP-element group 35:  members (1) 
       -- CP-element group 35: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_entry_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(35)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(35)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(35) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(35) <= zeropad3D_A_CP_2082_elements(22);
     -- CP-element group 36:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 36: predecessors 
@@ -11286,6 +17006,15 @@ begin --
       -- CP-element group 36: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_entry_sample_req
       -- CP-element group 36: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_entry_sample_req_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(36)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(36)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(36) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_905_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_905_entry_sample_req_2236_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_905_entry_sample_req_2236_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(36), ack => phi_stmt_905_req_0); -- 
@@ -11297,6 +17026,15 @@ begin --
       -- CP-element group 37: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_phi_mux_ack
       -- CP-element group 37: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_905_phi_mux_ack_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(37)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(37)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(37) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_905_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_905_phi_mux_ack_2239_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 37_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_905_ack_0, ack => zeropad3D_A_CP_2082_elements(37)); -- 
@@ -11309,6 +17047,14 @@ begin --
       -- CP-element group 38: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_k_loop_init_907_sample_start_
       -- CP-element group 38: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_k_loop_init_907_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(38)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(38)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(38) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(38) is bound as output of CP function.
     -- CP-element group 39:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 39: predecessors 
@@ -11318,6 +17064,14 @@ begin --
       -- CP-element group 39: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_k_loop_init_907_update_start_
       -- CP-element group 39: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_k_loop_init_907_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(39)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(39)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(39) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(39) is bound as output of CP function.
     -- CP-element group 40:  join  transition  bypass  pipeline-parent 
     -- CP-element group 40: predecessors 
@@ -11326,6 +17080,14 @@ begin --
     -- CP-element group 40:  members (1) 
       -- CP-element group 40: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_k_loop_init_907_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(40)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(40)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(40) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(40) <= zeropad3D_A_CP_2082_elements(41);
     -- CP-element group 41:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 41: predecessors 
@@ -11335,6 +17097,14 @@ begin --
     -- CP-element group 41:  members (1) 
       -- CP-element group 41: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_k_loop_init_907_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(41)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(41)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(41) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(41) is a control-delay.
     cp_element_41_delay: control_delay_element  generic map(name => " 41_delay", delay_value => 1)  port map(req => zeropad3D_A_CP_2082_elements(39), ack => zeropad3D_A_CP_2082_elements(41), clk => clk, reset =>reset);
     -- CP-element group 42:  join  fork  transition  output  bypass  pipeline-parent 
@@ -11347,6 +17117,15 @@ begin --
       -- CP-element group 42: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_Sample/$entry
       -- CP-element group 42: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(42)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(42)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(42) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_k_loop_1133_908_buf_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2260_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2260_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(42), ack => next_k_loop_1133_908_buf_req_0); -- 
@@ -11361,6 +17140,15 @@ begin --
       -- CP-element group 43: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_update_start_
       -- CP-element group 43: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(43)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(43)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(43) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_k_loop_1133_908_buf_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2265_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2265_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(43), ack => next_k_loop_1133_908_buf_req_1); -- 
@@ -11375,6 +17163,15 @@ begin --
       -- CP-element group 44: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_sample_completed__ps
       -- CP-element group 44: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(44)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(44)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(44) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_k_loop_1133_908_buf_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2261_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 44_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_k_loop_1133_908_buf_ack_0, ack => zeropad3D_A_CP_2082_elements(44)); -- 
@@ -11388,6 +17185,15 @@ begin --
       -- CP-element group 45: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_update_completed_
       -- CP-element group 45: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_k_loop_908_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(45)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(45)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(45) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_k_loop_1133_908_buf_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2266_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 45_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_k_loop_1133_908_buf_ack_1, ack => zeropad3D_A_CP_2082_elements(45)); -- 
@@ -11403,6 +17209,14 @@ begin --
     -- CP-element group 46:  members (1) 
       -- CP-element group 46: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(46)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(46)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(46) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_46: block -- 
       constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 1,2 => 1,3 => 1);
       constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 1,2 => 1,3 => 1);
@@ -11424,6 +17238,14 @@ begin --
     -- CP-element group 47:  members (1) 
       -- CP-element group 47: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(47)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(47)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(47) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_47: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -11442,6 +17264,14 @@ begin --
     -- CP-element group 48:  members (1) 
       -- CP-element group 48: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_sample_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(48)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(48)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(48) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(48) <= zeropad3D_A_CP_2082_elements(25);
     -- CP-element group 49:  join  transition  bypass  pipeline-parent 
     -- CP-element group 49: predecessors 
@@ -11450,6 +17280,14 @@ begin --
     -- CP-element group 49:  members (1) 
       -- CP-element group 49: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(49)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(49)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(49) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(49) is bound as output of CP function.
     -- CP-element group 50:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 50: predecessors 
@@ -11458,6 +17296,14 @@ begin --
     -- CP-element group 50:  members (1) 
       -- CP-element group 50: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(50)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(50)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(50) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(50) <= zeropad3D_A_CP_2082_elements(27);
     -- CP-element group 51:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 51: predecessors 
@@ -11468,6 +17314,14 @@ begin --
       -- CP-element group 51: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_update_completed__ps
       -- CP-element group 51: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(51)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(51)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(51) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(51) is bound as output of CP function.
     -- CP-element group 52:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 52: predecessors 
@@ -11476,6 +17330,14 @@ begin --
     -- CP-element group 52:  members (1) 
       -- CP-element group 52: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_loopback_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(52)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(52)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(52) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(52) <= zeropad3D_A_CP_2082_elements(21);
     -- CP-element group 53:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 53: predecessors 
@@ -11484,6 +17346,15 @@ begin --
       -- CP-element group 53: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_loopback_sample_req_ps
       -- CP-element group 53: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_loopback_sample_req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(53)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(53)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(53) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_909_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_909_loopback_sample_req_2277_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_909_loopback_sample_req_2277_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(53), ack => phi_stmt_909_req_1); -- 
@@ -11495,6 +17366,14 @@ begin --
     -- CP-element group 54:  members (1) 
       -- CP-element group 54: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_entry_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(54)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(54)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(54) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(54) <= zeropad3D_A_CP_2082_elements(22);
     -- CP-element group 55:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 55: predecessors 
@@ -11503,6 +17382,15 @@ begin --
       -- CP-element group 55: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_entry_sample_req
       -- CP-element group 55: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_entry_sample_req_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(55)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(55)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(55) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_909_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_909_entry_sample_req_2280_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_909_entry_sample_req_2280_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(55), ack => phi_stmt_909_req_0); -- 
@@ -11514,6 +17402,15 @@ begin --
       -- CP-element group 56: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_phi_mux_ack
       -- CP-element group 56: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_909_phi_mux_ack_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(56)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(56)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(56) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_909_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_909_phi_mux_ack_2283_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 56_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_909_ack_0, ack => zeropad3D_A_CP_2082_elements(56)); -- 
@@ -11526,6 +17423,14 @@ begin --
       -- CP-element group 57: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_j_loop_init_911_sample_completed__ps
       -- CP-element group 57: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_j_loop_init_911_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(57)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(57)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(57) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(57) is bound as output of CP function.
     -- CP-element group 58:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 58: predecessors 
@@ -11535,6 +17440,14 @@ begin --
       -- CP-element group 58: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_j_loop_init_911_update_start__ps
       -- CP-element group 58: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_j_loop_init_911_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(58)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(58)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(58) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(58) is bound as output of CP function.
     -- CP-element group 59:  join  transition  bypass  pipeline-parent 
     -- CP-element group 59: predecessors 
@@ -11543,6 +17456,14 @@ begin --
     -- CP-element group 59:  members (1) 
       -- CP-element group 59: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_j_loop_init_911_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(59)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(59)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(59) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(59) <= zeropad3D_A_CP_2082_elements(60);
     -- CP-element group 60:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 60: predecessors 
@@ -11552,6 +17473,14 @@ begin --
     -- CP-element group 60:  members (1) 
       -- CP-element group 60: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_j_loop_init_911_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(60)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(60)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(60) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(60) is a control-delay.
     cp_element_60_delay: control_delay_element  generic map(name => " 60_delay", delay_value => 1)  port map(req => zeropad3D_A_CP_2082_elements(58), ack => zeropad3D_A_CP_2082_elements(60), clk => clk, reset =>reset);
     -- CP-element group 61:  join  fork  transition  output  bypass  pipeline-parent 
@@ -11564,6 +17493,15 @@ begin --
       -- CP-element group 61: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_Sample/req
       -- CP-element group 61: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_sample_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(61)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(61)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(61) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_j_loop_1144_912_buf_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2304_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2304_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(61), ack => next_j_loop_1144_912_buf_req_0); -- 
@@ -11578,6 +17516,15 @@ begin --
       -- CP-element group 62: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_Update/$entry
       -- CP-element group 62: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(62)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(62)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(62) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_j_loop_1144_912_buf_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2309_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2309_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(62), ack => next_j_loop_1144_912_buf_req_1); -- 
@@ -11592,6 +17539,15 @@ begin --
       -- CP-element group 63: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_sample_completed__ps
       -- CP-element group 63: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_Sample/$exit
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(63)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(63)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(63) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_j_loop_1144_912_buf_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2305_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 63_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_j_loop_1144_912_buf_ack_0, ack => zeropad3D_A_CP_2082_elements(63)); -- 
@@ -11605,6 +17561,15 @@ begin --
       -- CP-element group 64: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_Update/$exit
       -- CP-element group 64: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_j_loop_912_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(64)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(64)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(64) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_j_loop_1144_912_buf_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2310_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 64_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_j_loop_1144_912_buf_ack_1, ack => zeropad3D_A_CP_2082_elements(64)); -- 
@@ -11620,6 +17585,14 @@ begin --
     -- CP-element group 65:  members (1) 
       -- CP-element group 65: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(65)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(65)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(65) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_65: block -- 
       constant place_capacities: IntegerArray(0 to 3) := (0 => 15,1 => 1,2 => 1,3 => 1);
       constant place_markings: IntegerArray(0 to 3)  := (0 => 0,1 => 1,2 => 1,3 => 1);
@@ -11641,6 +17614,14 @@ begin --
     -- CP-element group 66:  members (1) 
       -- CP-element group 66: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(66)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(66)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(66) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_66: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -11659,6 +17640,14 @@ begin --
     -- CP-element group 67:  members (1) 
       -- CP-element group 67: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_sample_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(67)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(67)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(67) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(67) <= zeropad3D_A_CP_2082_elements(25);
     -- CP-element group 68:  join  transition  bypass  pipeline-parent 
     -- CP-element group 68: predecessors 
@@ -11667,6 +17656,14 @@ begin --
     -- CP-element group 68:  members (1) 
       -- CP-element group 68: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(68)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(68)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(68) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(68) is bound as output of CP function.
     -- CP-element group 69:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 69: predecessors 
@@ -11675,6 +17672,14 @@ begin --
     -- CP-element group 69:  members (1) 
       -- CP-element group 69: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(69)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(69)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(69) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(69) <= zeropad3D_A_CP_2082_elements(27);
     -- CP-element group 70:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 70: predecessors 
@@ -11685,6 +17690,14 @@ begin --
       -- CP-element group 70: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_update_completed_
       -- CP-element group 70: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(70)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(70)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(70) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(70) is bound as output of CP function.
     -- CP-element group 71:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 71: predecessors 
@@ -11693,6 +17706,14 @@ begin --
     -- CP-element group 71:  members (1) 
       -- CP-element group 71: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_loopback_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(71)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(71)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(71) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(71) <= zeropad3D_A_CP_2082_elements(21);
     -- CP-element group 72:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 72: predecessors 
@@ -11701,6 +17722,15 @@ begin --
       -- CP-element group 72: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_loopback_sample_req_ps
       -- CP-element group 72: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_loopback_sample_req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(72)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(72)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(72) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_913_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_913_loopback_sample_req_2321_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_913_loopback_sample_req_2321_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(72), ack => phi_stmt_913_req_1); -- 
@@ -11712,6 +17742,14 @@ begin --
     -- CP-element group 73:  members (1) 
       -- CP-element group 73: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_entry_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(73)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(73)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(73) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(73) <= zeropad3D_A_CP_2082_elements(22);
     -- CP-element group 74:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 74: predecessors 
@@ -11720,6 +17758,15 @@ begin --
       -- CP-element group 74: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_entry_sample_req
       -- CP-element group 74: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_entry_sample_req_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(74)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(74)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(74) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_913_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_913_entry_sample_req_2324_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_913_entry_sample_req_2324_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(74), ack => phi_stmt_913_req_0); -- 
@@ -11731,6 +17778,15 @@ begin --
       -- CP-element group 75: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_phi_mux_ack
       -- CP-element group 75: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_913_phi_mux_ack_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(75)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(75)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(75) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_913_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_913_phi_mux_ack_2327_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 75_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_913_ack_0, ack => zeropad3D_A_CP_2082_elements(75)); -- 
@@ -11743,6 +17799,14 @@ begin --
       -- CP-element group 76: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_i_loop_init_915_sample_completed_
       -- CP-element group 76: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_i_loop_init_915_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(76)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(76)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(76) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(76) is bound as output of CP function.
     -- CP-element group 77:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 77: predecessors 
@@ -11752,6 +17816,14 @@ begin --
       -- CP-element group 77: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_i_loop_init_915_update_start__ps
       -- CP-element group 77: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_i_loop_init_915_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(77)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(77)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(77) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(77) is bound as output of CP function.
     -- CP-element group 78:  join  transition  bypass  pipeline-parent 
     -- CP-element group 78: predecessors 
@@ -11760,6 +17832,14 @@ begin --
     -- CP-element group 78:  members (1) 
       -- CP-element group 78: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_i_loop_init_915_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(78)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(78)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(78) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(78) <= zeropad3D_A_CP_2082_elements(79);
     -- CP-element group 79:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 79: predecessors 
@@ -11769,6 +17849,14 @@ begin --
     -- CP-element group 79:  members (1) 
       -- CP-element group 79: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_i_loop_init_915_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(79)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(79)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(79) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(79) is a control-delay.
     cp_element_79_delay: control_delay_element  generic map(name => " 79_delay", delay_value => 1)  port map(req => zeropad3D_A_CP_2082_elements(77), ack => zeropad3D_A_CP_2082_elements(79), clk => clk, reset =>reset);
     -- CP-element group 80:  join  fork  transition  output  bypass  pipeline-parent 
@@ -11781,6 +17869,15 @@ begin --
       -- CP-element group 80: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_sample_start_
       -- CP-element group 80: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_sample_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(80)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(80)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(80) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_i_loop_1152_916_buf_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2348_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2348_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(80), ack => next_i_loop_1152_916_buf_req_0); -- 
@@ -11795,6 +17892,15 @@ begin --
       -- CP-element group 81: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_update_start_
       -- CP-element group 81: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(81)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(81)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(81) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_i_loop_1152_916_buf_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2353_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2353_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(81), ack => next_i_loop_1152_916_buf_req_1); -- 
@@ -11809,6 +17915,15 @@ begin --
       -- CP-element group 82: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_sample_completed_
       -- CP-element group 82: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(82)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(82)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(82) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_i_loop_1152_916_buf_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2349_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 82_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_i_loop_1152_916_buf_ack_0, ack => zeropad3D_A_CP_2082_elements(82)); -- 
@@ -11822,6 +17937,15 @@ begin --
       -- CP-element group 83: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_update_completed_
       -- CP-element group 83: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_i_loop_916_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(83)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(83)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(83) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_i_loop_1152_916_buf_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2354_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 83_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_i_loop_1152_916_buf_ack_1, ack => zeropad3D_A_CP_2082_elements(83)); -- 
@@ -11835,6 +17959,14 @@ begin --
     -- CP-element group 84:  members (1) 
       -- CP-element group 84: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(84)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(84)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(84) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_84: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -11856,6 +17988,14 @@ begin --
     -- CP-element group 85:  members (1) 
       -- CP-element group 85: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(85)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(85)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(85) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_85: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -11874,6 +18014,14 @@ begin --
     -- CP-element group 86:  members (1) 
       -- CP-element group 86: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_sample_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(86)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(86)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(86) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(86) <= zeropad3D_A_CP_2082_elements(25);
     -- CP-element group 87:  join  transition  bypass  pipeline-parent 
     -- CP-element group 87: predecessors 
@@ -11882,6 +18030,14 @@ begin --
     -- CP-element group 87:  members (1) 
       -- CP-element group 87: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(87)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(87)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(87) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(87) is bound as output of CP function.
     -- CP-element group 88:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 88: predecessors 
@@ -11890,6 +18046,14 @@ begin --
     -- CP-element group 88:  members (1) 
       -- CP-element group 88: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(88)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(88)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(88) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(88) <= zeropad3D_A_CP_2082_elements(27);
     -- CP-element group 89:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 89: predecessors 
@@ -11913,6 +18077,15 @@ begin --
       -- CP-element group 89: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_final_index_sum_regn_Sample/$entry
       -- CP-element group 89: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_final_index_sum_regn_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(89)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(89)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(89) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1048_index_offset_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2592_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2592_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(89), ack => array_obj_ref_1048_index_offset_req_0); -- 
@@ -11924,6 +18097,14 @@ begin --
     -- CP-element group 90:  members (1) 
       -- CP-element group 90: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_loopback_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(90)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(90)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(90) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(90) <= zeropad3D_A_CP_2082_elements(21);
     -- CP-element group 91:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 91: predecessors 
@@ -11932,6 +18113,15 @@ begin --
       -- CP-element group 91: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_loopback_sample_req_ps
       -- CP-element group 91: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_loopback_sample_req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(91)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(91)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(91) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_917_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_917_loopback_sample_req_2365_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_917_loopback_sample_req_2365_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(91), ack => phi_stmt_917_req_1); -- 
@@ -11943,6 +18133,14 @@ begin --
     -- CP-element group 92:  members (1) 
       -- CP-element group 92: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_entry_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(92)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(92)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(92) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(92) <= zeropad3D_A_CP_2082_elements(22);
     -- CP-element group 93:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 93: predecessors 
@@ -11951,6 +18149,15 @@ begin --
       -- CP-element group 93: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_entry_sample_req_ps
       -- CP-element group 93: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_entry_sample_req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(93)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(93)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(93) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_917_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_917_entry_sample_req_2368_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_917_entry_sample_req_2368_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(93), ack => phi_stmt_917_req_0); -- 
@@ -11962,6 +18169,15 @@ begin --
       -- CP-element group 94: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_phi_mux_ack_ps
       -- CP-element group 94: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_917_phi_mux_ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(94)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(94)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(94) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_917_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_917_phi_mux_ack_2371_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 94_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_917_ack_0, ack => zeropad3D_A_CP_2082_elements(94)); -- 
@@ -11974,6 +18190,14 @@ begin --
       -- CP-element group 95: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_dest_add_init_919_sample_start__ps
       -- CP-element group 95: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_dest_add_init_919_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(95)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(95)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(95) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(95) is bound as output of CP function.
     -- CP-element group 96:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 96: predecessors 
@@ -11983,6 +18207,14 @@ begin --
       -- CP-element group 96: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_dest_add_init_919_update_start_
       -- CP-element group 96: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_dest_add_init_919_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(96)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(96)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(96) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(96) is bound as output of CP function.
     -- CP-element group 97:  join  transition  bypass  pipeline-parent 
     -- CP-element group 97: predecessors 
@@ -11991,6 +18223,14 @@ begin --
     -- CP-element group 97:  members (1) 
       -- CP-element group 97: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_dest_add_init_919_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(97)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(97)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(97) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(97) <= zeropad3D_A_CP_2082_elements(98);
     -- CP-element group 98:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 98: predecessors 
@@ -12000,6 +18240,14 @@ begin --
     -- CP-element group 98:  members (1) 
       -- CP-element group 98: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_dest_add_init_919_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(98)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(98)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(98) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(98) is a control-delay.
     cp_element_98_delay: control_delay_element  generic map(name => " 98_delay", delay_value => 1)  port map(req => zeropad3D_A_CP_2082_elements(96), ack => zeropad3D_A_CP_2082_elements(98), clk => clk, reset =>reset);
     -- CP-element group 99:  join  fork  transition  output  bypass  pipeline-parent 
@@ -12012,6 +18260,15 @@ begin --
       -- CP-element group 99: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_sample_start_
       -- CP-element group 99: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_sample_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(99)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(99)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(99) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_dest_add_1025_920_buf_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2392_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2392_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(99), ack => next_dest_add_1025_920_buf_req_0); -- 
@@ -12026,6 +18283,15 @@ begin --
       -- CP-element group 100: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_update_start__ps
       -- CP-element group 100: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(100)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(100)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(100) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_dest_add_1025_920_buf_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2397_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2397_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(100), ack => next_dest_add_1025_920_buf_req_1); -- 
@@ -12040,6 +18306,15 @@ begin --
       -- CP-element group 101: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_sample_completed_
       -- CP-element group 101: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(101)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(101)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(101) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_dest_add_1025_920_buf_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2393_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 101_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_dest_add_1025_920_buf_ack_0, ack => zeropad3D_A_CP_2082_elements(101)); -- 
@@ -12053,6 +18328,15 @@ begin --
       -- CP-element group 102: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_update_completed__ps
       -- CP-element group 102: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_dest_add_920_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(102)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(102)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(102) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_dest_add_1025_920_buf_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2398_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 102_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_dest_add_1025_920_buf_ack_1, ack => zeropad3D_A_CP_2082_elements(102)); -- 
@@ -12066,6 +18350,14 @@ begin --
     -- CP-element group 103:  members (1) 
       -- CP-element group 103: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_sample_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(103)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(103)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(103) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_103: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -12087,6 +18379,14 @@ begin --
     -- CP-element group 104:  members (1) 
       -- CP-element group 104: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(104)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(104)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(104) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_104: block -- 
       constant place_capacities: IntegerArray(0 to 1) := (0 => 15,1 => 1);
       constant place_markings: IntegerArray(0 to 1)  := (0 => 0,1 => 1);
@@ -12105,6 +18405,14 @@ begin --
     -- CP-element group 105:  members (1) 
       -- CP-element group 105: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_sample_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(105)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(105)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(105) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(105) <= zeropad3D_A_CP_2082_elements(25);
     -- CP-element group 106:  join  transition  bypass  pipeline-parent 
     -- CP-element group 106: predecessors 
@@ -12113,6 +18421,14 @@ begin --
     -- CP-element group 106:  members (1) 
       -- CP-element group 106: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_sample_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(106)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(106)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(106) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(106) is bound as output of CP function.
     -- CP-element group 107:  fork  transition  bypass  pipeline-parent 
     -- CP-element group 107: predecessors 
@@ -12121,6 +18437,14 @@ begin --
     -- CP-element group 107:  members (1) 
       -- CP-element group 107: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_update_start__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(107)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(107)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(107) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(107) <= zeropad3D_A_CP_2082_elements(27);
     -- CP-element group 108:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 108: predecessors 
@@ -12144,6 +18468,15 @@ begin --
       -- CP-element group 108: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_final_index_sum_regn_Sample/$entry
       -- CP-element group 108: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_final_index_sum_regn_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(108)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(108)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(108) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1036_index_offset_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2496_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2496_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(108), ack => array_obj_ref_1036_index_offset_req_0); -- 
@@ -12155,6 +18488,14 @@ begin --
     -- CP-element group 109:  members (1) 
       -- CP-element group 109: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_loopback_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(109)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(109)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(109) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(109) <= zeropad3D_A_CP_2082_elements(21);
     -- CP-element group 110:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 110: predecessors 
@@ -12163,6 +18504,15 @@ begin --
       -- CP-element group 110: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_loopback_sample_req
       -- CP-element group 110: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_loopback_sample_req_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(110)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(110)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(110) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_921_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_921_loopback_sample_req_2409_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_921_loopback_sample_req_2409_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(110), ack => phi_stmt_921_req_1); -- 
@@ -12174,6 +18524,14 @@ begin --
     -- CP-element group 111:  members (1) 
       -- CP-element group 111: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_entry_trigger
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(111)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(111)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(111) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(111) <= zeropad3D_A_CP_2082_elements(22);
     -- CP-element group 112:  fork  transition  output  bypass  pipeline-parent 
     -- CP-element group 112: predecessors 
@@ -12182,6 +18540,15 @@ begin --
       -- CP-element group 112: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_entry_sample_req
       -- CP-element group 112: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_entry_sample_req_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(112)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(112)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(112) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_921_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_921_entry_sample_req_2412_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " phi_stmt_921_entry_sample_req_2412_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(112), ack => phi_stmt_921_req_0); -- 
@@ -12193,6 +18560,15 @@ begin --
       -- CP-element group 113: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_phi_mux_ack
       -- CP-element group 113: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/phi_stmt_921_phi_mux_ack_ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(113)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(113)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(113) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:phi_stmt_921_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     phi_stmt_921_phi_mux_ack_2415_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 113_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => phi_stmt_921_ack_0, ack => zeropad3D_A_CP_2082_elements(113)); -- 
@@ -12205,6 +18581,14 @@ begin --
       -- CP-element group 114: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_src_add_init_923_sample_start_
       -- CP-element group 114: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_src_add_init_923_sample_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(114)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(114)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(114) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(114) is bound as output of CP function.
     -- CP-element group 115:  join  fork  transition  bypass  pipeline-parent 
     -- CP-element group 115: predecessors 
@@ -12214,6 +18598,14 @@ begin --
       -- CP-element group 115: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_src_add_init_923_update_start__ps
       -- CP-element group 115: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_src_add_init_923_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(115)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(115)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(115) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(115) is bound as output of CP function.
     -- CP-element group 116:  join  transition  bypass  pipeline-parent 
     -- CP-element group 116: predecessors 
@@ -12222,6 +18614,14 @@ begin --
     -- CP-element group 116:  members (1) 
       -- CP-element group 116: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_src_add_init_923_update_completed__ps
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(116)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(116)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(116) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(116) <= zeropad3D_A_CP_2082_elements(117);
     -- CP-element group 117:  transition  delay-element  bypass  pipeline-parent 
     -- CP-element group 117: predecessors 
@@ -12231,6 +18631,14 @@ begin --
     -- CP-element group 117:  members (1) 
       -- CP-element group 117: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_src_add_init_923_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(117)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(117)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(117) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(117) is a control-delay.
     cp_element_117_delay: control_delay_element  generic map(name => " 117_delay", delay_value => 1)  port map(req => zeropad3D_A_CP_2082_elements(115), ack => zeropad3D_A_CP_2082_elements(117), clk => clk, reset =>reset);
     -- CP-element group 118:  join  fork  transition  output  bypass  pipeline-parent 
@@ -12243,6 +18651,15 @@ begin --
       -- CP-element group 118: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Sample/$entry
       -- CP-element group 118: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(118)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(118)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(118) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_src_add_1030_924_buf_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2436_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2436_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(118), ack => next_src_add_1030_924_buf_req_0); -- 
@@ -12257,6 +18674,15 @@ begin --
       -- CP-element group 119: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Update/$entry
       -- CP-element group 119: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(119)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(119)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(119) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_src_add_1030_924_buf_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2441_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2441_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(119), ack => next_src_add_1030_924_buf_req_1); -- 
@@ -12271,6 +18697,15 @@ begin --
       -- CP-element group 120: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Sample/$exit
       -- CP-element group 120: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(120)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(120)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(120) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_src_add_1030_924_buf_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2437_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 120_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_src_add_1030_924_buf_ack_0, ack => zeropad3D_A_CP_2082_elements(120)); -- 
@@ -12284,6 +18719,15 @@ begin --
       -- CP-element group 121: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Update/$exit
       -- CP-element group 121: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/R_next_src_add_924_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(121)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(121)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(121) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:next_src_add_1030_924_buf_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2442_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 121_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => next_src_add_1030_924_buf_ack_1, ack => zeropad3D_A_CP_2082_elements(121)); -- 
@@ -12299,6 +18743,15 @@ begin --
       -- CP-element group 122: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Sample/$entry
       -- CP-element group 122: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(122)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(122)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(122) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_989_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_2451_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_2451_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(122), ack => ADD_u16_u16_989_inst_req_0); -- 
@@ -12324,6 +18777,15 @@ begin --
       -- CP-element group 123: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Update/$entry
       -- CP-element group 123: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(123)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(123)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(123) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_989_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     cr_2456_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_2456_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(123), ack => ADD_u16_u16_989_inst_req_1); -- 
@@ -12349,6 +18811,15 @@ begin --
       -- CP-element group 124: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Sample/$exit
       -- CP-element group 124: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(124)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(124)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(124) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_989_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2452_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 124_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ADD_u16_u16_989_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(124)); -- 
@@ -12362,6 +18833,15 @@ begin --
       -- CP-element group 125: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Update/$exit
       -- CP-element group 125: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_989_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(125)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(125)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(125) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_989_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2457_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 125_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ADD_u16_u16_989_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(125)); -- 
@@ -12377,6 +18857,15 @@ begin --
       -- CP-element group 126: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Sample/$entry
       -- CP-element group 126: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Sample/rr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(126)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(126)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(126) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_999_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_2465_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_2465_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(126), ack => ADD_u16_u16_999_inst_req_0); -- 
@@ -12402,6 +18891,15 @@ begin --
       -- CP-element group 127: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Update/$entry
       -- CP-element group 127: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Update/cr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(127)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(127)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(127) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_999_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     cr_2470_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_2470_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(127), ack => ADD_u16_u16_999_inst_req_1); -- 
@@ -12427,6 +18925,15 @@ begin --
       -- CP-element group 128: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Sample/$exit
       -- CP-element group 128: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Sample/ra
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(128)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(128)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(128) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_999_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2466_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 128_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ADD_u16_u16_999_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(128)); -- 
@@ -12440,6 +18947,15 @@ begin --
       -- CP-element group 129: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Update/$exit
       -- CP-element group 129: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ADD_u16_u16_999_Update/ca
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(129)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(129)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(129) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ADD_u16_u16_999_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2471_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 129_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ADD_u16_u16_999_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(129)); -- 
@@ -12455,6 +18971,15 @@ begin --
       -- CP-element group 130: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1037_request/$entry
       -- CP-element group 130: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1037_request/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(130)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(130)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(130) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1037_final_reg_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2511_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2511_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(130), ack => addr_of_1037_final_reg_req_0); -- 
@@ -12481,6 +19006,15 @@ begin --
       -- CP-element group 131: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1037_complete/$entry
       -- CP-element group 131: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1037_complete/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(131)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(131)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(131) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1037_final_reg_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2516_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2516_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(131), ack => addr_of_1037_final_reg_req_1); -- 
@@ -12507,6 +19041,15 @@ begin --
       -- CP-element group 132: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_final_index_sum_regn_Update/$entry
       -- CP-element group 132: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_final_index_sum_regn_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(132)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(132)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(132) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1036_index_offset_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2501_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2501_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(132), ack => array_obj_ref_1036_index_offset_req_1); -- 
@@ -12533,6 +19076,15 @@ begin --
       -- CP-element group 133: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_final_index_sum_regn_Sample/$exit
       -- CP-element group 133: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_final_index_sum_regn_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(133)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(133)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(133) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1036_index_offset_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2497_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 133_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_1036_index_offset_ack_0, ack => zeropad3D_A_CP_2082_elements(133)); -- 
@@ -12551,6 +19103,15 @@ begin --
       -- CP-element group 134: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_base_plus_offset/sum_rename_req
       -- CP-element group 134: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1036_base_plus_offset/sum_rename_ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(134)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(134)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(134) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1036_index_offset_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2502_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 134_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_1036_index_offset_ack_1, ack => zeropad3D_A_CP_2082_elements(134)); -- 
@@ -12566,6 +19127,15 @@ begin --
       -- CP-element group 135: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1037_request/$exit
       -- CP-element group 135: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1037_request/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(135)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(135)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(135) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1037_final_reg_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2512_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 135_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_1037_final_reg_ack_0, ack => zeropad3D_A_CP_2082_elements(135)); -- 
@@ -12595,6 +19165,15 @@ begin --
       -- CP-element group 136: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_word_addrgen/root_register_req
       -- CP-element group 136: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_word_addrgen/root_register_ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(136)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(136)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(136) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1037_final_reg_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2517_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 136_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_1037_final_reg_ack_1, ack => zeropad3D_A_CP_2082_elements(136)); -- 
@@ -12612,6 +19191,15 @@ begin --
       -- CP-element group 137: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Sample/word_access_start/word_0/$entry
       -- CP-element group 137: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Sample/word_access_start/word_0/rr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(137)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(137)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(137) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1041_load_0_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_2550_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_2550_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(137), ack => ptr_deref_1041_load_0_req_0); -- 
@@ -12639,6 +19227,15 @@ begin --
       -- CP-element group 138: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Update/word_access_complete/word_0/$entry
       -- CP-element group 138: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Update/word_access_complete/word_0/cr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(138)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(138)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(138) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1041_load_0_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     cr_2561_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_2561_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(138), ack => ptr_deref_1041_load_0_req_1); -- 
@@ -12667,6 +19264,15 @@ begin --
       -- CP-element group 139: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Sample/word_access_start/word_0/$exit
       -- CP-element group 139: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Sample/word_access_start/word_0/ra
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(139)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(139)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(139) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1041_load_0_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2551_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 139_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_1041_load_0_ack_0, ack => zeropad3D_A_CP_2082_elements(139)); -- 
@@ -12686,6 +19292,15 @@ begin --
       -- CP-element group 140: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Update/ptr_deref_1041_Merge/merge_req
       -- CP-element group 140: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1041_Update/ptr_deref_1041_Merge/merge_ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(140)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(140)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(140) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1041_load_0_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2562_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 140_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_1041_load_0_ack_1, ack => zeropad3D_A_CP_2082_elements(140)); -- 
@@ -12701,6 +19316,15 @@ begin --
       -- CP-element group 141: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_request/$entry
       -- CP-element group 141: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_request/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(141)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(141)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(141) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1049_final_reg_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2607_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2607_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(141), ack => addr_of_1049_final_reg_req_0); -- 
@@ -12727,6 +19351,15 @@ begin --
       -- CP-element group 142: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_complete/$entry
       -- CP-element group 142: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_complete/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(142)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(142)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(142) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1049_final_reg_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2612_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2612_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(142), ack => addr_of_1049_final_reg_req_1); -- 
@@ -12753,6 +19386,15 @@ begin --
       -- CP-element group 143: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_final_index_sum_regn_Update/$entry
       -- CP-element group 143: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_final_index_sum_regn_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(143)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(143)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(143) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1048_index_offset_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2597_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2597_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(143), ack => array_obj_ref_1048_index_offset_req_1); -- 
@@ -12779,6 +19421,15 @@ begin --
       -- CP-element group 144: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_final_index_sum_regn_Sample/$exit
       -- CP-element group 144: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_final_index_sum_regn_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(144)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(144)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(144) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1048_index_offset_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2593_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 144_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_1048_index_offset_ack_0, ack => zeropad3D_A_CP_2082_elements(144)); -- 
@@ -12797,6 +19448,15 @@ begin --
       -- CP-element group 145: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_base_plus_offset/sum_rename_req
       -- CP-element group 145: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/array_obj_ref_1048_base_plus_offset/sum_rename_ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(145)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(145)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(145) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:array_obj_ref_1048_index_offset_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2598_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 145_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => array_obj_ref_1048_index_offset_ack_1, ack => zeropad3D_A_CP_2082_elements(145)); -- 
@@ -12812,6 +19472,15 @@ begin --
       -- CP-element group 146: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_request/$exit
       -- CP-element group 146: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_request/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(146)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(146)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(146) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1049_final_reg_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2608_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 146_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_1049_final_reg_ack_0, ack => zeropad3D_A_CP_2082_elements(146)); -- 
@@ -12825,6 +19494,15 @@ begin --
       -- CP-element group 147: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_complete/$exit
       -- CP-element group 147: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/addr_of_1049_complete/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(147)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(147)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(147) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:addr_of_1049_final_reg_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2613_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 147_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => addr_of_1049_final_reg_ack_1, ack => zeropad3D_A_CP_2082_elements(147)); -- 
@@ -12840,6 +19518,15 @@ begin --
       -- CP-element group 148: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1053_Sample/$entry
       -- CP-element group 148: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1053_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(148)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(148)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(148) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_ov_1045_delayed_7_0_1051_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2621_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2621_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(148), ack => W_ov_1045_delayed_7_0_1051_inst_req_0); -- 
@@ -12865,6 +19552,15 @@ begin --
       -- CP-element group 149: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1053_Update/$entry
       -- CP-element group 149: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1053_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(149)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(149)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(149) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_ov_1045_delayed_7_0_1051_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2626_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2626_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(149), ack => W_ov_1045_delayed_7_0_1051_inst_req_1); -- 
@@ -12891,6 +19587,15 @@ begin --
       -- CP-element group 150: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1053_Sample/$exit
       -- CP-element group 150: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1053_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(150)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(150)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(150) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_ov_1045_delayed_7_0_1051_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2622_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 150_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_ov_1045_delayed_7_0_1051_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(150)); -- 
@@ -12920,6 +19625,15 @@ begin --
       -- CP-element group 151: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_word_addrgen/root_register_req
       -- CP-element group 151: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_word_addrgen/root_register_ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(151)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(151)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(151) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_ov_1045_delayed_7_0_1051_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2627_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 151_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_ov_1045_delayed_7_0_1051_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(151)); -- 
@@ -12938,6 +19652,15 @@ begin --
       -- CP-element group 152: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Sample/$entry
       -- CP-element group 152: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(152)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(152)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(152) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_data_check_1047_delayed_13_0_1054_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2635_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2635_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(152), ack => W_data_check_1047_delayed_13_0_1054_inst_req_0); -- 
@@ -12963,6 +19686,15 @@ begin --
       -- CP-element group 153: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Update/$entry
       -- CP-element group 153: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(153)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(153)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(153) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_data_check_1047_delayed_13_0_1054_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2640_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2640_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(153), ack => W_data_check_1047_delayed_13_0_1054_inst_req_1); -- 
@@ -12992,6 +19724,15 @@ begin --
       -- CP-element group 154: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Sample/$exit
       -- CP-element group 154: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(154)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(154)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(154) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_data_check_1047_delayed_13_0_1054_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2636_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 154_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_data_check_1047_delayed_13_0_1054_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(154)); -- 
@@ -13005,6 +19746,15 @@ begin --
       -- CP-element group 155: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Update/$exit
       -- CP-element group 155: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1056_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(155)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(155)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(155) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_data_check_1047_delayed_13_0_1054_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2641_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 155_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_data_check_1047_delayed_13_0_1054_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(155)); -- 
@@ -13021,6 +19771,15 @@ begin --
       -- CP-element group 156: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_start/$entry
       -- CP-element group 156: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_start/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(156)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(156)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(156) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:MUX_1063_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2649_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2649_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(156), ack => MUX_1063_inst_req_0); -- 
@@ -13046,6 +19805,15 @@ begin --
       -- CP-element group 157: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_complete/$entry
       -- CP-element group 157: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_complete/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(157)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(157)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(157) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:MUX_1063_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2654_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2654_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(157), ack => MUX_1063_inst_req_1); -- 
@@ -13073,6 +19841,15 @@ begin --
       -- CP-element group 158: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_start/$exit
       -- CP-element group 158: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_start/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(158)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(158)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(158) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:MUX_1063_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2650_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 158_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => MUX_1063_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(158)); -- 
@@ -13086,6 +19863,15 @@ begin --
       -- CP-element group 159: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_complete/$exit
       -- CP-element group 159: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/MUX_1063_complete/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(159)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(159)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(159) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:MUX_1063_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2655_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 159_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => MUX_1063_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(159)); -- 
@@ -13108,6 +19894,15 @@ begin --
       -- CP-element group 160: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Sample/word_access_start/word_0/$entry
       -- CP-element group 160: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Sample/word_access_start/word_0/rr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(160)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(160)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(160) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1058_store_0_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     rr_2693_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " rr_2693_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(160), ack => ptr_deref_1058_store_0_req_0); -- 
@@ -13135,6 +19930,15 @@ begin --
       -- CP-element group 161: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Update/word_access_complete/word_0/$entry
       -- CP-element group 161: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Update/word_access_complete/word_0/cr
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(161)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(161)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(161) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1058_store_0_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     cr_2704_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " cr_2704_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(161), ack => ptr_deref_1058_store_0_req_1); -- 
@@ -13164,6 +19968,15 @@ begin --
       -- CP-element group 162: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Sample/word_access_start/word_0/$exit
       -- CP-element group 162: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Sample/word_access_start/word_0/ra
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(162)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(162)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(162) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1058_store_0_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ra_2694_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 162_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_1058_store_0_ack_0, ack => zeropad3D_A_CP_2082_elements(162)); -- 
@@ -13181,6 +19994,15 @@ begin --
       -- CP-element group 163: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Update/word_access_complete/word_0/$exit
       -- CP-element group 163: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/ptr_deref_1058_Update/word_access_complete/word_0/ca
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(163)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(163)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(163) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:ptr_deref_1058_store_0_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ca_2705_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 163_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => ptr_deref_1058_store_0_ack_1, ack => zeropad3D_A_CP_2082_elements(163)); -- 
@@ -13196,6 +20018,15 @@ begin --
       -- CP-element group 164: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Sample/$entry
       -- CP-element group 164: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(164)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(164)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(164) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim2T_dif_1060_delayed_1_0_1070_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2713_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2713_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(164), ack => W_dim2T_dif_1060_delayed_1_0_1070_inst_req_0); -- 
@@ -13222,6 +20053,15 @@ begin --
       -- CP-element group 165: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Update/$entry
       -- CP-element group 165: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(165)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(165)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(165) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim2T_dif_1060_delayed_1_0_1070_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2718_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2718_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(165), ack => W_dim2T_dif_1060_delayed_1_0_1070_inst_req_1); -- 
@@ -13247,6 +20087,15 @@ begin --
       -- CP-element group 166: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Sample/$exit
       -- CP-element group 166: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(166)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(166)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(166) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim2T_dif_1060_delayed_1_0_1070_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2714_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 166_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_dim2T_dif_1060_delayed_1_0_1070_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(166)); -- 
@@ -13265,6 +20114,15 @@ begin --
       -- CP-element group 167: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Update/$exit
       -- CP-element group 167: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1072_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(167)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(167)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(167) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim2T_dif_1060_delayed_1_0_1070_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2719_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 167_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_dim2T_dif_1060_delayed_1_0_1070_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(167)); -- 
@@ -13280,6 +20138,15 @@ begin --
       -- CP-element group 168: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Sample/$entry
       -- CP-element group 168: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(168)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(168)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(168) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim1T_check_2_1075_delayed_1_0_1088_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2727_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2727_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(168), ack => W_dim1T_check_2_1075_delayed_1_0_1088_inst_req_0); -- 
@@ -13306,6 +20173,15 @@ begin --
       -- CP-element group 169: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Update/$entry
       -- CP-element group 169: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(169)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(169)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(169) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim1T_check_2_1075_delayed_1_0_1088_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2732_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2732_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(169), ack => W_dim1T_check_2_1075_delayed_1_0_1088_inst_req_1); -- 
@@ -13331,6 +20207,15 @@ begin --
       -- CP-element group 170: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Sample/$exit
       -- CP-element group 170: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(170)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(170)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(170) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim1T_check_2_1075_delayed_1_0_1088_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2728_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 170_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_dim1T_check_2_1075_delayed_1_0_1088_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(170)); -- 
@@ -13348,6 +20233,15 @@ begin --
       -- CP-element group 171: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Update/$exit
       -- CP-element group 171: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1090_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(171)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(171)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(171) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim1T_check_2_1075_delayed_1_0_1088_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2733_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 171_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_dim1T_check_2_1075_delayed_1_0_1088_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(171)); -- 
@@ -13363,6 +20257,15 @@ begin --
       -- CP-element group 172: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Sample/$entry
       -- CP-element group 172: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Sample/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(172)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(172)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(172) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim0T_check_2_1096_delayed_1_0_1112_inst_req_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2741_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2741_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(172), ack => W_dim0T_check_2_1096_delayed_1_0_1112_inst_req_0); -- 
@@ -13388,6 +20291,15 @@ begin --
       -- CP-element group 173: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Update/$entry
       -- CP-element group 173: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Update/req
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(173)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(173)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(173) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim0T_check_2_1096_delayed_1_0_1112_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     req_2746_symbol_link_to_dp: control_delay_element -- 
       generic map(name => " req_2746_symbol_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => zeropad3D_A_CP_2082_elements(173), ack => W_dim0T_check_2_1096_delayed_1_0_1112_inst_req_1); -- 
@@ -13413,6 +20325,15 @@ begin --
       -- CP-element group 174: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Sample/$exit
       -- CP-element group 174: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Sample/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(174)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(174)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(174) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim0T_check_2_1096_delayed_1_0_1112_inst_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2742_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 174_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_dim0T_check_2_1096_delayed_1_0_1112_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(174)); -- 
@@ -13428,6 +20349,15 @@ begin --
       -- CP-element group 175: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Update/$exit
       -- CP-element group 175: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/assign_stmt_1114_Update/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(175)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(175)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(175) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:W_dim0T_check_2_1096_delayed_1_0_1112_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2747_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 175_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => W_dim0T_check_2_1096_delayed_1_0_1112_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(175)); -- 
@@ -13439,6 +20369,14 @@ begin --
     -- CP-element group 176:  members (1) 
       -- CP-element group 176: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/loop_body_delay_to_condition_start
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(176)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(176)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(176) fired."); 
+        -- 
+      end if; --
+    end process; 
     -- Element group zeropad3D_A_CP_2082_elements(176) is a control-delay.
     cp_element_176_delay: control_delay_element  generic map(name => " 176_delay", delay_value => 1)  port map(req => zeropad3D_A_CP_2082_elements(23), ack => zeropad3D_A_CP_2082_elements(176), clk => clk, reset =>reset);
     -- CP-element group 177:  join  transition  bypass  pipeline-parent 
@@ -13453,6 +20391,14 @@ begin --
     -- CP-element group 177:  members (1) 
       -- CP-element group 177: 	 branch_block_stmt_823/do_while_stmt_903/do_while_stmt_903_loop_body/$exit
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(177)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(177)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(177) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_cp_element_group_177: block -- 
       constant place_capacities: IntegerArray(0 to 4) := (0 => 15,1 => 15,2 => 15,3 => 15,4 => 15);
       constant place_markings: IntegerArray(0 to 4)  := (0 => 0,1 => 0,2 => 0,3 => 0,4 => 0);
@@ -13472,6 +20418,15 @@ begin --
       -- CP-element group 178: 	 branch_block_stmt_823/do_while_stmt_903/loop_exit/$exit
       -- CP-element group 178: 	 branch_block_stmt_823/do_while_stmt_903/loop_exit/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(178)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(178)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(178) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:do_while_stmt_903_branch_ack_0 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2752_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 178_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => do_while_stmt_903_branch_ack_0, ack => zeropad3D_A_CP_2082_elements(178)); -- 
@@ -13483,6 +20438,15 @@ begin --
       -- CP-element group 179: 	 branch_block_stmt_823/do_while_stmt_903/loop_taken/$exit
       -- CP-element group 179: 	 branch_block_stmt_823/do_while_stmt_903/loop_taken/ack
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(179)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(179)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(179) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:do_while_stmt_903_branch_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2756_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 179_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => do_while_stmt_903_branch_ack_1, ack => zeropad3D_A_CP_2082_elements(179)); -- 
@@ -13494,6 +20458,14 @@ begin --
     -- CP-element group 180:  members (1) 
       -- CP-element group 180: 	 branch_block_stmt_823/do_while_stmt_903/$exit
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(180)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(180)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(180) fired."); 
+        -- 
+      end if; --
+    end process; 
     zeropad3D_A_CP_2082_elements(180) <= zeropad3D_A_CP_2082_elements(17);
     -- CP-element group 181:  transition  input  output  bypass 
     -- CP-element group 181: predecessors 
@@ -13508,6 +20480,16 @@ begin --
       -- CP-element group 181: 	 branch_block_stmt_823/assign_stmt_1163/WPIPE_Block0_complete_1160_sample_completed_
       -- CP-element group 181: 	 branch_block_stmt_823/assign_stmt_1163/WPIPE_Block0_complete_1160_update_start_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(181)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(181)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(181) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:WPIPE_Block0_complete_1160_inst_ack_0 fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:WPIPE_Block0_complete_1160_inst_req_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2769_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 181_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_complete_1160_inst_ack_0, ack => zeropad3D_A_CP_2082_elements(181)); -- 
@@ -13536,6 +20518,15 @@ begin --
       -- CP-element group 182: 	 branch_block_stmt_823/assign_stmt_1163/$exit
       -- CP-element group 182: 	 branch_block_stmt_823/assign_stmt_1163/WPIPE_Block0_complete_1160_update_completed_
       -- 
+    -- logger for CP element group zeropad3D_A_CP_2082_elements(182)
+    process (clk) 
+    begin --
+      if (clk'event and (clk = '1') and (reset = '0') and zeropad3D_A_CP_2082_elements(182)) then -- 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:zeropad3D_A_CP_2082_elements(182) fired."); 
+        LogRecordPrint(global_clock_cycle_count,  " logger:zeropad3D_A:CP:WPIPE_Block0_complete_1160_inst_ack_1 fired."); 
+        -- 
+      end if; --
+    end process; 
     ack_2774_symbol_link_from_dp: control_delay_element -- 
       generic map(name => " 182_delay",delay_value => 0)
       port map(clk => clk, reset => reset, req => WPIPE_Block0_complete_1160_inst_ack_1, ack => zeropad3D_A_CP_2082_elements(182)); -- 
@@ -13868,6 +20859,30 @@ begin --
     src_add_init_861 <= "0000000000000000";
     type_cast_1061_wire_constant <= "0000000000000000000000000000000000000000000000000000000000000000";
     type_cast_1162_wire_constant <= "0000000000000001";
+    -- logger for phi phi_stmt_905
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_905_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_905:input-0 k_loop_init_857= " & Convert_SLV_To_Hex_String(k_loop_init_857));
+          --
+        end if;
+        if phi_stmt_905_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_905:input-1 next_k_loop_1133_908_buffered= " & Convert_SLV_To_Hex_String(next_k_loop_1133_908_buffered));
+          --
+        end if;
+        if phi_stmt_905_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:zeropad3D_A:DP:phi_stmt_905:sample-completed");
+          --
+        end if;
+        if phi_stmt_905_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:zeropad3D_A:DP:phi_stmt_905:output k_loop_905= " & Convert_SLV_To_Hex_String(k_loop_905));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_905: Block -- phi operator 
       signal idata: std_logic_vector(31 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -13890,6 +20905,30 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_905
+    -- logger for phi phi_stmt_909
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_909_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_909:input-0 j_loop_init_853= " & Convert_SLV_To_Hex_String(j_loop_init_853));
+          --
+        end if;
+        if phi_stmt_909_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_909:input-1 next_j_loop_1144_912_buffered= " & Convert_SLV_To_Hex_String(next_j_loop_1144_912_buffered));
+          --
+        end if;
+        if phi_stmt_909_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:zeropad3D_A:DP:phi_stmt_909:sample-completed");
+          --
+        end if;
+        if phi_stmt_909_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:zeropad3D_A:DP:phi_stmt_909:output j_loop_909= " & Convert_SLV_To_Hex_String(j_loop_909));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_909: Block -- phi operator 
       signal idata: std_logic_vector(31 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -13912,6 +20951,30 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_909
+    -- logger for phi phi_stmt_913
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_913_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_913:input-0 i_loop_init_849= " & Convert_SLV_To_Hex_String(i_loop_init_849));
+          --
+        end if;
+        if phi_stmt_913_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_913:input-1 next_i_loop_1152_916_buffered= " & Convert_SLV_To_Hex_String(next_i_loop_1152_916_buffered));
+          --
+        end if;
+        if phi_stmt_913_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:zeropad3D_A:DP:phi_stmt_913:sample-completed");
+          --
+        end if;
+        if phi_stmt_913_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:zeropad3D_A:DP:phi_stmt_913:output i_loop_913= " & Convert_SLV_To_Hex_String(i_loop_913));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_913: Block -- phi operator 
       signal idata: std_logic_vector(31 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -13934,6 +20997,30 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_913
+    -- logger for phi phi_stmt_917
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_917_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_917:input-0 dest_add_init_865= " & Convert_SLV_To_Hex_String(dest_add_init_865));
+          --
+        end if;
+        if phi_stmt_917_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_917:input-1 next_dest_add_1025_920_buffered= " & Convert_SLV_To_Hex_String(next_dest_add_1025_920_buffered));
+          --
+        end if;
+        if phi_stmt_917_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:zeropad3D_A:DP:phi_stmt_917:sample-completed");
+          --
+        end if;
+        if phi_stmt_917_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:zeropad3D_A:DP:phi_stmt_917:output dest_add_917= " & Convert_SLV_To_Hex_String(dest_add_917));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_917: Block -- phi operator 
       signal idata: std_logic_vector(31 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -13956,6 +21043,30 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_917
+    -- logger for phi phi_stmt_921
+    process(clk) 
+    begin -- 
+      if((reset = '0') and (clk'event and clk = '1')) then --
+        if phi_stmt_921_req_0 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_921:input-0 src_add_init_861= " & Convert_SLV_To_Hex_String(src_add_init_861));
+          --
+        end if;
+        if phi_stmt_921_req_1 then --
+          LogRecordPrint(global_clock_cycle_count, "logger:zeropad3D_A:DP:phi_stmt_921:input-1 next_src_add_1030_924_buffered= " & Convert_SLV_To_Hex_String(next_src_add_1030_924_buffered));
+          --
+        end if;
+        if phi_stmt_921_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count," logger:zeropad3D_A:DP:phi_stmt_921:sample-completed");
+          --
+        end if;
+        if phi_stmt_921_ack_0 then --
+          LogRecordPrint(global_clock_cycle_count,"logger:zeropad3D_A:DP:phi_stmt_921:output src_add_921= " & Convert_SLV_To_Hex_String(src_add_921));
+          --
+        end if;
+        --
+      end if;
+      --
+    end process; 
     phi_stmt_921: Block -- phi operator 
       signal idata: std_logic_vector(31 downto 0);
       signal req: BooleanArray(1 downto 0);
@@ -13978,6 +21089,22 @@ begin --
           reset => reset ); -- 
       -- 
     end Block; -- phi operator phi_stmt_921
+    -- logger for split-operator MUX_1063_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if MUX_1063_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUX_1063_inst:started:   inputs: " & " data_check_1047_delayed_13_0_1056 = "& Convert_SLV_To_Hex_String(data_check_1047_delayed_13_0_1056) & " type_cast_1061_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_1061_wire_constant) & " i1_1042 = "& Convert_SLV_To_Hex_String(i1_1042));
+          --
+        end if; 
+        if MUX_1063_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUX_1063_inst:finished:  outputs: " & " MUX_1063_wire= "  & Convert_SLV_To_Hex_String(MUX_1063_wire));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     MUX_1063_inst_block : block -- 
       signal sample_req, sample_ack, update_req, update_ack: BooleanArray(0 downto 0); 
       -- 
@@ -13990,14 +21117,58 @@ begin --
         port map( x => type_cast_1061_wire_constant, y => i1_1042, sel => data_check_1047_delayed_13_0_1056, z => MUX_1063_wire, sample_req => sample_req(0), sample_ack => sample_ack(0), update_req => update_req(0), update_ack => update_ack(0), clk => clk, reset => reset); -- 
       -- 
     end block;
+    -- logger for split-operator MUX_1132_inst flow-through 
+    process(next_k_loop_1133) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUX_1132_inst:flowthrough inputs: " & " cmp_dim2_1077 = "& Convert_SLV_To_Hex_String(cmp_dim2_1077) & " ADD_u16_u16_1130_wire = "& Convert_SLV_To_Hex_String(ADD_u16_u16_1130_wire) & " konst_1131_wire_constant = "& Convert_SLV_To_Hex_String(konst_1131_wire_constant) & " outputs:" & " next_k_loop_1133= "  & Convert_SLV_To_Hex_String(next_k_loop_1133));
+      --
+    end process; 
     -- flow-through select operator MUX_1132_inst
     next_k_loop_1133 <= ADD_u16_u16_1130_wire when (cmp_dim2_1077(0) /=  '0') else konst_1131_wire_constant;
+    -- logger for split-operator MUX_1142_inst flow-through 
+    process(MUX_1142_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUX_1142_inst:flowthrough inputs: " & " cmp_dim1_1101 = "& Convert_SLV_To_Hex_String(cmp_dim1_1101) & " j1_869 = "& Convert_SLV_To_Hex_String(j1_869) & " ADD_u16_u16_1141_wire = "& Convert_SLV_To_Hex_String(ADD_u16_u16_1141_wire) & " outputs:" & " MUX_1142_wire= "  & Convert_SLV_To_Hex_String(MUX_1142_wire));
+      --
+    end process; 
     -- flow-through select operator MUX_1142_inst
     MUX_1142_wire <= j1_869 when (cmp_dim1_1101(0) /=  '0') else ADD_u16_u16_1141_wire;
+    -- logger for split-operator MUX_1143_inst flow-through 
+    process(next_j_loop_1144) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUX_1143_inst:flowthrough inputs: " & " cmp_dim2_1077 = "& Convert_SLV_To_Hex_String(cmp_dim2_1077) & " j_loop_909 = "& Convert_SLV_To_Hex_String(j_loop_909) & " MUX_1142_wire = "& Convert_SLV_To_Hex_String(MUX_1142_wire) & " outputs:" & " next_j_loop_1144= "  & Convert_SLV_To_Hex_String(next_j_loop_1144));
+      --
+    end process; 
     -- flow-through select operator MUX_1143_inst
     next_j_loop_1144 <= j_loop_909 when (cmp_dim2_1077(0) /=  '0') else MUX_1142_wire;
+    -- logger for split-operator MUX_1151_inst flow-through 
+    process(next_i_loop_1152) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUX_1151_inst:flowthrough inputs: " & " cmp_dim1_1101 = "& Convert_SLV_To_Hex_String(cmp_dim1_1101) & " ADD_u16_u16_1149_wire = "& Convert_SLV_To_Hex_String(ADD_u16_u16_1149_wire) & " i_loop_913 = "& Convert_SLV_To_Hex_String(i_loop_913) & " outputs:" & " next_i_loop_1152= "  & Convert_SLV_To_Hex_String(next_i_loop_1152));
+      --
+    end process; 
     -- flow-through select operator MUX_1151_inst
     next_i_loop_1152 <= ADD_u16_u16_1149_wire when (cmp_dim1_1101(0) /=  '0') else i_loop_913;
+    -- logger for split-operator W_data_check_1047_delayed_13_0_1054_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if W_data_check_1047_delayed_13_0_1054_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_data_check_1047_delayed_13_0_1054_inst:started:   inputs: " & " data_check_1020 = "& Convert_SLV_To_Hex_String(data_check_1020));
+          --
+        end if; 
+        if W_data_check_1047_delayed_13_0_1054_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_data_check_1047_delayed_13_0_1054_inst:finished:  outputs: " & " data_check_1047_delayed_13_0_1056= "  & Convert_SLV_To_Hex_String(data_check_1047_delayed_13_0_1056));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     W_data_check_1047_delayed_13_0_1054_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14026,6 +21197,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator W_dim0T_check_2_1096_delayed_1_0_1112_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if W_dim0T_check_2_1096_delayed_1_0_1112_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_dim0T_check_2_1096_delayed_1_0_1112_inst:started:   inputs: " & " dim0T_check_2_1111 = "& Convert_SLV_To_Hex_String(dim0T_check_2_1111));
+          --
+        end if; 
+        if W_dim0T_check_2_1096_delayed_1_0_1112_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_dim0T_check_2_1096_delayed_1_0_1112_inst:finished:  outputs: " & " dim0T_check_2_1096_delayed_1_0_1114= "  & Convert_SLV_To_Hex_String(dim0T_check_2_1096_delayed_1_0_1114));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     W_dim0T_check_2_1096_delayed_1_0_1112_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14054,6 +21241,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator W_dim1T_check_2_1075_delayed_1_0_1088_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if W_dim1T_check_2_1075_delayed_1_0_1088_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_dim1T_check_2_1075_delayed_1_0_1088_inst:started:   inputs: " & " dim1T_check_2_1087 = "& Convert_SLV_To_Hex_String(dim1T_check_2_1087));
+          --
+        end if; 
+        if W_dim1T_check_2_1075_delayed_1_0_1088_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_dim1T_check_2_1075_delayed_1_0_1088_inst:finished:  outputs: " & " dim1T_check_2_1075_delayed_1_0_1090= "  & Convert_SLV_To_Hex_String(dim1T_check_2_1075_delayed_1_0_1090));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     W_dim1T_check_2_1075_delayed_1_0_1088_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14082,6 +21285,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator W_dim2T_dif_1060_delayed_1_0_1070_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if W_dim2T_dif_1060_delayed_1_0_1070_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_dim2T_dif_1060_delayed_1_0_1070_inst:started:   inputs: " & " dim2T_dif_1069 = "& Convert_SLV_To_Hex_String(dim2T_dif_1069));
+          --
+        end if; 
+        if W_dim2T_dif_1060_delayed_1_0_1070_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_dim2T_dif_1060_delayed_1_0_1070_inst:finished:  outputs: " & " dim2T_dif_1060_delayed_1_0_1072= "  & Convert_SLV_To_Hex_String(dim2T_dif_1060_delayed_1_0_1072));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     W_dim2T_dif_1060_delayed_1_0_1070_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14110,6 +21329,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator W_ov_1045_delayed_7_0_1051_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if W_ov_1045_delayed_7_0_1051_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_ov_1045_delayed_7_0_1051_inst:started:   inputs: " & " ov_1050 = "& Convert_SLV_To_Hex_String(ov_1050));
+          --
+        end if; 
+        if W_ov_1045_delayed_7_0_1051_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_ov_1045_delayed_7_0_1051_inst:finished:  outputs: " & " ov_1045_delayed_7_0_1053= "  & Convert_SLV_To_Hex_String(ov_1045_delayed_7_0_1053));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     W_ov_1045_delayed_7_0_1051_inst_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14138,6 +21373,13 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator W_pad_900_inst flow-through 
+    process(pad_902) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:W_pad_900_inst:flowthrough inputs: " & " padding_844 = "& Convert_SLV_To_Hex_String(padding_844) & " outputs:" & " pad_902= "  & Convert_SLV_To_Hex_String(pad_902));
+      --
+    end process; 
     -- interlock W_pad_900_inst
     process(padding_844) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14146,6 +21388,22 @@ begin --
       tmp_var( 15 downto 0) := padding_844(15 downto 0);
       pad_902 <= tmp_var; -- 
     end process;
+    -- logger for split-operator addr_of_1037_final_reg
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if addr_of_1037_final_reg_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:addr_of_1037_final_reg:started:   inputs: " & " array_obj_ref_1036_root_address = "& Convert_SLV_To_Hex_String(array_obj_ref_1036_root_address));
+          --
+        end if; 
+        if addr_of_1037_final_reg_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:addr_of_1037_final_reg:finished:  outputs: " & " iv1_1038= "  & Convert_SLV_To_Hex_String(iv1_1038));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     addr_of_1037_final_reg_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14174,6 +21432,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator addr_of_1049_final_reg
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if addr_of_1049_final_reg_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:addr_of_1049_final_reg:started:   inputs: " & " array_obj_ref_1048_root_address = "& Convert_SLV_To_Hex_String(array_obj_ref_1048_root_address));
+          --
+        end if; 
+        if addr_of_1049_final_reg_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:addr_of_1049_final_reg:finished:  outputs: " & " ov_1050= "  & Convert_SLV_To_Hex_String(ov_1050));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     addr_of_1049_final_reg_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14202,6 +21476,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator next_dest_add_1025_920_buf
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if next_dest_add_1025_920_buf_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_dest_add_1025_920_buf:started:   inputs: " & " next_dest_add_1025 = "& Convert_SLV_To_Hex_String(next_dest_add_1025));
+          --
+        end if; 
+        if next_dest_add_1025_920_buf_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_dest_add_1025_920_buf:finished:  outputs: " & " next_dest_add_1025_920_buffered= "  & Convert_SLV_To_Hex_String(next_dest_add_1025_920_buffered));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     next_dest_add_1025_920_buf_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14230,6 +21520,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator next_i_loop_1152_916_buf
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if next_i_loop_1152_916_buf_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_i_loop_1152_916_buf:started:   inputs: " & " next_i_loop_1152 = "& Convert_SLV_To_Hex_String(next_i_loop_1152));
+          --
+        end if; 
+        if next_i_loop_1152_916_buf_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_i_loop_1152_916_buf:finished:  outputs: " & " next_i_loop_1152_916_buffered= "  & Convert_SLV_To_Hex_String(next_i_loop_1152_916_buffered));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     next_i_loop_1152_916_buf_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14258,6 +21564,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator next_j_loop_1144_912_buf
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if next_j_loop_1144_912_buf_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_j_loop_1144_912_buf:started:   inputs: " & " next_j_loop_1144 = "& Convert_SLV_To_Hex_String(next_j_loop_1144));
+          --
+        end if; 
+        if next_j_loop_1144_912_buf_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_j_loop_1144_912_buf:finished:  outputs: " & " next_j_loop_1144_912_buffered= "  & Convert_SLV_To_Hex_String(next_j_loop_1144_912_buffered));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     next_j_loop_1144_912_buf_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14286,6 +21608,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator next_k_loop_1133_908_buf
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if next_k_loop_1133_908_buf_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_k_loop_1133_908_buf:started:   inputs: " & " next_k_loop_1133 = "& Convert_SLV_To_Hex_String(next_k_loop_1133));
+          --
+        end if; 
+        if next_k_loop_1133_908_buf_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_k_loop_1133_908_buf:finished:  outputs: " & " next_k_loop_1133_908_buffered= "  & Convert_SLV_To_Hex_String(next_k_loop_1133_908_buffered));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     next_k_loop_1133_908_buf_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14314,6 +21652,22 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator next_src_add_1030_924_buf
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if next_src_add_1030_924_buf_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_src_add_1030_924_buf:started:   inputs: " & " next_src_add_1030 = "& Convert_SLV_To_Hex_String(next_src_add_1030));
+          --
+        end if; 
+        if next_src_add_1030_924_buf_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:next_src_add_1030_924_buf:finished:  outputs: " & " next_src_add_1030_924_buffered= "  & Convert_SLV_To_Hex_String(next_src_add_1030_924_buffered));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     next_src_add_1030_924_buf_block: block -- 
       signal wreq, wack, rreq, rack: BooleanArray(0 downto 0); 
       -- 
@@ -14342,6 +21696,13 @@ begin --
         -- 
       );
       end block; -- 
+    -- logger for split-operator type_cast_1035_inst flow-through 
+    process(type_cast_1035_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:type_cast_1035_inst:flowthrough inputs: " & " src_add_921 = "& Convert_SLV_To_Hex_String(src_add_921) & " outputs:" & " type_cast_1035_wire= "  & Convert_SLV_To_Hex_String(type_cast_1035_wire));
+      --
+    end process; 
     -- interlock type_cast_1035_inst
     process(src_add_921) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -14350,6 +21711,13 @@ begin --
       tmp_var( 15 downto 0) := src_add_921(15 downto 0);
       type_cast_1035_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_1047_inst flow-through 
+    process(type_cast_1047_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:type_cast_1047_inst:flowthrough inputs: " & " dest_add_917 = "& Convert_SLV_To_Hex_String(dest_add_917) & " outputs:" & " type_cast_1047_wire= "  & Convert_SLV_To_Hex_String(type_cast_1047_wire));
+      --
+    end process; 
     -- interlock type_cast_1047_inst
     process(dest_add_917) -- 
       variable tmp_var : std_logic_vector(63 downto 0); -- 
@@ -14358,6 +21726,13 @@ begin --
       tmp_var( 15 downto 0) := dest_add_917(15 downto 0);
       type_cast_1047_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_872_inst flow-through 
+    process(dim0T_873) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:type_cast_872_inst:flowthrough inputs: " & " inp_d0_826 = "& Convert_SLV_To_Hex_String(inp_d0_826) & " outputs:" & " dim0T_873= "  & Convert_SLV_To_Hex_String(dim0T_873));
+      --
+    end process; 
     -- interlock type_cast_872_inst
     process(inp_d0_826) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14366,6 +21741,13 @@ begin --
       tmp_var( 15 downto 0) := inp_d0_826(15 downto 0);
       dim0T_873 <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_876_inst flow-through 
+    process(dim1T_877) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:type_cast_876_inst:flowthrough inputs: " & " inp_d1_829 = "& Convert_SLV_To_Hex_String(inp_d1_829) & " outputs:" & " dim1T_877= "  & Convert_SLV_To_Hex_String(dim1T_877));
+      --
+    end process; 
     -- interlock type_cast_876_inst
     process(inp_d1_829) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14374,6 +21756,13 @@ begin --
       tmp_var( 15 downto 0) := inp_d1_829(15 downto 0);
       dim1T_877 <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_880_inst flow-through 
+    process(dim2T_881) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:type_cast_880_inst:flowthrough inputs: " & " inp_d2_832 = "& Convert_SLV_To_Hex_String(inp_d2_832) & " outputs:" & " dim2T_881= "  & Convert_SLV_To_Hex_String(dim2T_881));
+      --
+    end process; 
     -- interlock type_cast_880_inst
     process(inp_d2_832) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14382,6 +21771,13 @@ begin --
       tmp_var( 15 downto 0) := inp_d2_832(15 downto 0);
       dim2T_881 <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_884_inst flow-through 
+    process(dim1R_885) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:type_cast_884_inst:flowthrough inputs: " & " out_d1_838 = "& Convert_SLV_To_Hex_String(out_d1_838) & " outputs:" & " dim1R_885= "  & Convert_SLV_To_Hex_String(dim1R_885));
+      --
+    end process; 
     -- interlock type_cast_884_inst
     process(out_d1_838) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14390,6 +21786,13 @@ begin --
       tmp_var( 15 downto 0) := out_d1_838(15 downto 0);
       dim1R_885 <= tmp_var; -- 
     end process;
+    -- logger for split-operator type_cast_888_inst flow-through 
+    process(dim2R_889) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:type_cast_888_inst:flowthrough inputs: " & " out_d2_841 = "& Convert_SLV_To_Hex_String(out_d2_841) & " outputs:" & " dim2R_889= "  & Convert_SLV_To_Hex_String(dim2R_889));
+      --
+    end process; 
     -- interlock type_cast_888_inst
     process(out_d2_841) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14398,6 +21801,13 @@ begin --
       tmp_var( 15 downto 0) := out_d2_841(15 downto 0);
       dim2R_889 <= tmp_var; -- 
     end process;
+    -- logger for operator array_obj_ref_1036_index_1_rename flow-through 
+    process(type_cast_1035_scaled) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1036_index_1_rename:flowthrough  inputs: " & " type_cast_1035_resized = "& Convert_SLV_To_Hex_String(type_cast_1035_resized) & "outputs: " & " type_cast_1035_scaled= "  & Convert_SLV_To_Hex_String(type_cast_1035_scaled));
+      --
+    end process; 
     -- equivalence array_obj_ref_1036_index_1_rename
     process(type_cast_1035_resized) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14410,6 +21820,13 @@ begin --
       type_cast_1035_scaled <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_1036_index_1_resize flow-through 
+    process(type_cast_1035_resized) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1036_index_1_resize:flowthrough  inputs: " & " type_cast_1035_wire = "& Convert_SLV_To_Hex_String(type_cast_1035_wire) & "outputs: " & " type_cast_1035_resized= "  & Convert_SLV_To_Hex_String(type_cast_1035_resized));
+      --
+    end process; 
     -- equivalence array_obj_ref_1036_index_1_resize
     process(type_cast_1035_wire) --
       variable iv : std_logic_vector(63 downto 0);
@@ -14422,6 +21839,13 @@ begin --
       type_cast_1035_resized <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_1036_root_address_inst flow-through 
+    process(array_obj_ref_1036_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1036_root_address_inst:flowthrough  inputs: " & " array_obj_ref_1036_final_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_1036_final_offset) & "outputs: " & " array_obj_ref_1036_root_address= "  & Convert_SLV_To_Hex_String(array_obj_ref_1036_root_address));
+      --
+    end process; 
     -- equivalence array_obj_ref_1036_root_address_inst
     process(array_obj_ref_1036_final_offset) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14434,6 +21858,13 @@ begin --
       array_obj_ref_1036_root_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_1048_index_1_rename flow-through 
+    process(type_cast_1047_scaled) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1048_index_1_rename:flowthrough  inputs: " & " type_cast_1047_resized = "& Convert_SLV_To_Hex_String(type_cast_1047_resized) & "outputs: " & " type_cast_1047_scaled= "  & Convert_SLV_To_Hex_String(type_cast_1047_scaled));
+      --
+    end process; 
     -- equivalence array_obj_ref_1048_index_1_rename
     process(type_cast_1047_resized) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14446,6 +21877,13 @@ begin --
       type_cast_1047_scaled <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_1048_index_1_resize flow-through 
+    process(type_cast_1047_resized) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1048_index_1_resize:flowthrough  inputs: " & " type_cast_1047_wire = "& Convert_SLV_To_Hex_String(type_cast_1047_wire) & "outputs: " & " type_cast_1047_resized= "  & Convert_SLV_To_Hex_String(type_cast_1047_resized));
+      --
+    end process; 
     -- equivalence array_obj_ref_1048_index_1_resize
     process(type_cast_1047_wire) --
       variable iv : std_logic_vector(63 downto 0);
@@ -14458,6 +21896,13 @@ begin --
       type_cast_1047_resized <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator array_obj_ref_1048_root_address_inst flow-through 
+    process(array_obj_ref_1048_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1048_root_address_inst:flowthrough  inputs: " & " array_obj_ref_1048_final_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_1048_final_offset) & "outputs: " & " array_obj_ref_1048_root_address= "  & Convert_SLV_To_Hex_String(array_obj_ref_1048_root_address));
+      --
+    end process; 
     -- equivalence array_obj_ref_1048_root_address_inst
     process(array_obj_ref_1048_final_offset) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14470,6 +21915,13 @@ begin --
       array_obj_ref_1048_root_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1041_addr_0 flow-through 
+    process(ptr_deref_1041_word_address_0) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1041_addr_0:flowthrough  inputs: " & " ptr_deref_1041_root_address = "& Convert_SLV_To_Hex_String(ptr_deref_1041_root_address) & "outputs: " & " ptr_deref_1041_word_address_0= "  & Convert_SLV_To_Hex_String(ptr_deref_1041_word_address_0));
+      --
+    end process; 
     -- equivalence ptr_deref_1041_addr_0
     process(ptr_deref_1041_root_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14482,6 +21934,13 @@ begin --
       ptr_deref_1041_word_address_0 <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1041_base_resize flow-through 
+    process(ptr_deref_1041_resized_base_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1041_base_resize:flowthrough  inputs: " & " iv1_1038 = "& Convert_SLV_To_Hex_String(iv1_1038) & "outputs: " & " ptr_deref_1041_resized_base_address= "  & Convert_SLV_To_Hex_String(ptr_deref_1041_resized_base_address));
+      --
+    end process; 
     -- equivalence ptr_deref_1041_base_resize
     process(iv1_1038) --
       variable iv : std_logic_vector(31 downto 0);
@@ -14494,6 +21953,13 @@ begin --
       ptr_deref_1041_resized_base_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1041_gather_scatter flow-through 
+    process(i1_1042) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1041_gather_scatter:flowthrough  inputs: " & " ptr_deref_1041_data_0 = "& Convert_SLV_To_Hex_String(ptr_deref_1041_data_0) & "outputs: " & " i1_1042= "  & Convert_SLV_To_Hex_String(i1_1042));
+      --
+    end process; 
     -- equivalence ptr_deref_1041_gather_scatter
     process(ptr_deref_1041_data_0) --
       variable iv : std_logic_vector(63 downto 0);
@@ -14506,6 +21972,13 @@ begin --
       i1_1042 <= ov(63 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1041_root_address_inst flow-through 
+    process(ptr_deref_1041_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1041_root_address_inst:flowthrough  inputs: " & " ptr_deref_1041_resized_base_address = "& Convert_SLV_To_Hex_String(ptr_deref_1041_resized_base_address) & "outputs: " & " ptr_deref_1041_root_address= "  & Convert_SLV_To_Hex_String(ptr_deref_1041_root_address));
+      --
+    end process; 
     -- equivalence ptr_deref_1041_root_address_inst
     process(ptr_deref_1041_resized_base_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14518,6 +21991,13 @@ begin --
       ptr_deref_1041_root_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1058_addr_0 flow-through 
+    process(ptr_deref_1058_word_address_0) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1058_addr_0:flowthrough  inputs: " & " ptr_deref_1058_root_address = "& Convert_SLV_To_Hex_String(ptr_deref_1058_root_address) & "outputs: " & " ptr_deref_1058_word_address_0= "  & Convert_SLV_To_Hex_String(ptr_deref_1058_word_address_0));
+      --
+    end process; 
     -- equivalence ptr_deref_1058_addr_0
     process(ptr_deref_1058_root_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14530,6 +22010,13 @@ begin --
       ptr_deref_1058_word_address_0 <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1058_base_resize flow-through 
+    process(ptr_deref_1058_resized_base_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1058_base_resize:flowthrough  inputs: " & " ov_1045_delayed_7_0_1053 = "& Convert_SLV_To_Hex_String(ov_1045_delayed_7_0_1053) & "outputs: " & " ptr_deref_1058_resized_base_address= "  & Convert_SLV_To_Hex_String(ptr_deref_1058_resized_base_address));
+      --
+    end process; 
     -- equivalence ptr_deref_1058_base_resize
     process(ov_1045_delayed_7_0_1053) --
       variable iv : std_logic_vector(31 downto 0);
@@ -14542,6 +22029,13 @@ begin --
       ptr_deref_1058_resized_base_address <= ov(13 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1058_gather_scatter flow-through 
+    process(ptr_deref_1058_data_0) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1058_gather_scatter:flowthrough  inputs: " & " MUX_1063_wire = "& Convert_SLV_To_Hex_String(MUX_1063_wire) & "outputs: " & " ptr_deref_1058_data_0= "  & Convert_SLV_To_Hex_String(ptr_deref_1058_data_0));
+      --
+    end process; 
     -- equivalence ptr_deref_1058_gather_scatter
     process(MUX_1063_wire) --
       variable iv : std_logic_vector(63 downto 0);
@@ -14554,6 +22048,13 @@ begin --
       ptr_deref_1058_data_0 <= ov(63 downto 0);
       --
     end process;
+    -- logger for operator ptr_deref_1058_root_address_inst flow-through 
+    process(ptr_deref_1058_root_address) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1058_root_address_inst:flowthrough  inputs: " & " ptr_deref_1058_resized_base_address = "& Convert_SLV_To_Hex_String(ptr_deref_1058_resized_base_address) & "outputs: " & " ptr_deref_1058_root_address= "  & Convert_SLV_To_Hex_String(ptr_deref_1058_root_address));
+      --
+    end process; 
     -- equivalence ptr_deref_1058_root_address_inst
     process(ptr_deref_1058_resized_base_address) --
       variable iv : std_logic_vector(13 downto 0);
@@ -14566,6 +22067,9 @@ begin --
       ptr_deref_1058_root_address <= ov(13 downto 0);
       --
     end process;
+    LogCPEvent(clk, reset, global_clock_cycle_count,do_while_stmt_903_branch_req_0," req0 do_while_stmt_903_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,do_while_stmt_903_branch_ack_0," ack0 do_while_stmt_903_branch");
+    LogCPEvent(clk, reset, global_clock_cycle_count,do_while_stmt_903_branch_ack_1," ack1 do_while_stmt_903_branch");
     do_while_stmt_903_branch: Block -- 
       -- branch-block
       signal condition_sig : std_logic_vector(0 downto 0);
@@ -14582,6 +22086,13 @@ begin --
           reset => reset); -- 
       --
     end Block; -- branch-block
+    -- logger for split-operator ADD_u16_u16_1086_inst flow-through 
+    process(dim1T_check_2_1087) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_1086_inst:flowthrough inputs: " & " dim1T_877 = "& Convert_SLV_To_Hex_String(dim1T_877) & " dim1T_check_1_1082 = "& Convert_SLV_To_Hex_String(dim1T_check_1_1082) & " outputs:" & " dim1T_check_2_1087= "  & Convert_SLV_To_Hex_String(dim1T_check_2_1087));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_1086_inst
     process(dim1T_877, dim1T_check_1_1082) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14589,6 +22100,13 @@ begin --
       ApIntAdd_proc(dim1T_877, dim1T_check_1_1082, tmp_var);
       dim1T_check_2_1087 <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_1110_inst flow-through 
+    process(dim0T_check_2_1111) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_1110_inst:flowthrough inputs: " & " dim0T_873 = "& Convert_SLV_To_Hex_String(dim0T_873) & " dim0T_check_1_1106 = "& Convert_SLV_To_Hex_String(dim0T_check_1_1106) & " outputs:" & " dim0T_check_2_1111= "  & Convert_SLV_To_Hex_String(dim0T_check_2_1111));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_1110_inst
     process(dim0T_873, dim0T_check_1_1106) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14596,6 +22114,13 @@ begin --
       ApIntAdd_proc(dim0T_873, dim0T_check_1_1106, tmp_var);
       dim0T_check_2_1111 <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_1130_inst flow-through 
+    process(ADD_u16_u16_1130_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_1130_inst:flowthrough inputs: " & " k_loop_905 = "& Convert_SLV_To_Hex_String(k_loop_905) & " konst_1129_wire_constant = "& Convert_SLV_To_Hex_String(konst_1129_wire_constant) & " outputs:" & " ADD_u16_u16_1130_wire= "  & Convert_SLV_To_Hex_String(ADD_u16_u16_1130_wire));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_1130_inst
     process(k_loop_905) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14603,6 +22128,13 @@ begin --
       ApIntAdd_proc(k_loop_905, konst_1129_wire_constant, tmp_var);
       ADD_u16_u16_1130_wire <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_1141_inst flow-through 
+    process(ADD_u16_u16_1141_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_1141_inst:flowthrough inputs: " & " j_loop_909 = "& Convert_SLV_To_Hex_String(j_loop_909) & " konst_1140_wire_constant = "& Convert_SLV_To_Hex_String(konst_1140_wire_constant) & " outputs:" & " ADD_u16_u16_1141_wire= "  & Convert_SLV_To_Hex_String(ADD_u16_u16_1141_wire));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_1141_inst
     process(j_loop_909) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14610,6 +22142,13 @@ begin --
       ApIntAdd_proc(j_loop_909, konst_1140_wire_constant, tmp_var);
       ADD_u16_u16_1141_wire <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_1149_inst flow-through 
+    process(ADD_u16_u16_1149_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_1149_inst:flowthrough inputs: " & " i_loop_913 = "& Convert_SLV_To_Hex_String(i_loop_913) & " konst_1148_wire_constant = "& Convert_SLV_To_Hex_String(konst_1148_wire_constant) & " outputs:" & " ADD_u16_u16_1149_wire= "  & Convert_SLV_To_Hex_String(ADD_u16_u16_1149_wire));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_1149_inst
     process(i_loop_913) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14617,6 +22156,13 @@ begin --
       ApIntAdd_proc(i_loop_913, konst_1148_wire_constant, tmp_var);
       ADD_u16_u16_1149_wire <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_939_inst flow-through 
+    process(dest_data_array_idx_3_940) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_939_inst:flowthrough inputs: " & " dest_data_array_idx_1_930 = "& Convert_SLV_To_Hex_String(dest_data_array_idx_1_930) & " dest_data_array_idx_2_935 = "& Convert_SLV_To_Hex_String(dest_data_array_idx_2_935) & " outputs:" & " dest_data_array_idx_3_940= "  & Convert_SLV_To_Hex_String(dest_data_array_idx_3_940));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_939_inst
     process(dest_data_array_idx_1_930, dest_data_array_idx_2_935) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14624,6 +22170,13 @@ begin --
       ApIntAdd_proc(dest_data_array_idx_1_930, dest_data_array_idx_2_935, tmp_var);
       dest_data_array_idx_3_940 <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_944_inst flow-through 
+    process(dest_data_array_idx_4_945) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_944_inst:flowthrough inputs: " & " dest_data_array_idx_3_940 = "& Convert_SLV_To_Hex_String(dest_data_array_idx_3_940) & " k_loop_905 = "& Convert_SLV_To_Hex_String(k_loop_905) & " outputs:" & " dest_data_array_idx_4_945= "  & Convert_SLV_To_Hex_String(dest_data_array_idx_4_945));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_944_inst
     process(dest_data_array_idx_3_940, k_loop_905) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14631,6 +22184,13 @@ begin --
       ApIntAdd_proc(dest_data_array_idx_3_940, k_loop_905, tmp_var);
       dest_data_array_idx_4_945 <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_969_inst flow-through 
+    process(img_data_array_idx_5_970) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_969_inst:flowthrough inputs: " & " img_data_array_idx_3_960 = "& Convert_SLV_To_Hex_String(img_data_array_idx_3_960) & " img_data_array_idx_4_965 = "& Convert_SLV_To_Hex_String(img_data_array_idx_4_965) & " outputs:" & " img_data_array_idx_5_970= "  & Convert_SLV_To_Hex_String(img_data_array_idx_5_970));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_969_inst
     process(img_data_array_idx_3_960, img_data_array_idx_4_965) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14638,6 +22198,13 @@ begin --
       ApIntAdd_proc(img_data_array_idx_3_960, img_data_array_idx_4_965, tmp_var);
       img_data_array_idx_5_970 <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_974_inst flow-through 
+    process(img_data_array_idx_6_975) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_974_inst:flowthrough inputs: " & " img_data_array_idx_5_970 = "& Convert_SLV_To_Hex_String(img_data_array_idx_5_970) & " k_loop_905 = "& Convert_SLV_To_Hex_String(k_loop_905) & " outputs:" & " img_data_array_idx_6_975= "  & Convert_SLV_To_Hex_String(img_data_array_idx_6_975));
+      --
+    end process; 
     -- binary operator ADD_u16_u16_974_inst
     process(img_data_array_idx_5_970, k_loop_905) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14645,6 +22212,22 @@ begin --
       ApIntAdd_proc(img_data_array_idx_5_970, k_loop_905, tmp_var);
       img_data_array_idx_6_975 <= tmp_var; --
     end process;
+    -- logger for split-operator ADD_u16_u16_989_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if ADD_u16_u16_989_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_989_inst:started:   inputs: " & " inp_d0_826 = "& Convert_SLV_To_Hex_String(inp_d0_826) & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902));
+          --
+        end if; 
+        if ADD_u16_u16_989_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_989_inst:finished:  outputs: " & " ADD_u16_u16_990_990_delayed_1_0_990= "  & Convert_SLV_To_Hex_String(ADD_u16_u16_990_990_delayed_1_0_990));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared split operator group (9) : ADD_u16_u16_989_inst 
     ApIntAdd_group_9: Block -- 
       signal data_in: std_logic_vector(31 downto 0);
@@ -14712,6 +22295,22 @@ begin --
           reset => reset); -- 
       -- 
     end Block; -- split operator group 9
+    -- logger for split-operator ADD_u16_u16_999_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if ADD_u16_u16_999_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_999_inst:started:   inputs: " & " inp_d1_829 = "& Convert_SLV_To_Hex_String(inp_d1_829) & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902));
+          --
+        end if; 
+        if ADD_u16_u16_999_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ADD_u16_u16_999_inst:finished:  outputs: " & " ADD_u16_u16_997_997_delayed_1_0_1000= "  & Convert_SLV_To_Hex_String(ADD_u16_u16_997_997_delayed_1_0_1000));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared split operator group (10) : ADD_u16_u16_999_inst 
     ApIntAdd_group_10: Block -- 
       signal data_in: std_logic_vector(31 downto 0);
@@ -14779,6 +22378,13 @@ begin --
           reset => reset); -- 
       -- 
     end Block; -- split operator group 10
+    -- logger for split-operator AND_u1_u1_1100_inst flow-through 
+    process(cmp_dim1_1101) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:AND_u1_u1_1100_inst:flowthrough inputs: " & " NOT_u1_u1_1098_wire = "& Convert_SLV_To_Hex_String(NOT_u1_u1_1098_wire) & " dim1T_check_3_1095 = "& Convert_SLV_To_Hex_String(dim1T_check_3_1095) & " outputs:" & " cmp_dim1_1101= "  & Convert_SLV_To_Hex_String(cmp_dim1_1101));
+      --
+    end process; 
     -- binary operator AND_u1_u1_1100_inst
     process(NOT_u1_u1_1098_wire, dim1T_check_3_1095) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14786,6 +22392,13 @@ begin --
       ApIntAnd_proc(NOT_u1_u1_1098_wire, dim1T_check_3_1095, tmp_var);
       cmp_dim1_1101 <= tmp_var; --
     end process;
+    -- logger for split-operator AND_u1_u1_1124_inst flow-through 
+    process(cmp_dim0_1125) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:AND_u1_u1_1124_inst:flowthrough inputs: " & " NOT_u1_u1_1122_wire = "& Convert_SLV_To_Hex_String(NOT_u1_u1_1122_wire) & " dim0T_check_3_1119 = "& Convert_SLV_To_Hex_String(dim0T_check_3_1119) & " outputs:" & " cmp_dim0_1125= "  & Convert_SLV_To_Hex_String(cmp_dim0_1125));
+      --
+    end process; 
     -- binary operator AND_u1_u1_1124_inst
     process(NOT_u1_u1_1122_wire, dim0T_check_3_1119) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14793,6 +22406,13 @@ begin --
       ApIntAnd_proc(NOT_u1_u1_1122_wire, dim0T_check_3_1119, tmp_var);
       cmp_dim0_1125 <= tmp_var; --
     end process;
+    -- logger for split-operator EQ_u16_u1_1094_inst flow-through 
+    process(dim1T_check_3_1095) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:EQ_u16_u1_1094_inst:flowthrough inputs: " & " j_loop_909 = "& Convert_SLV_To_Hex_String(j_loop_909) & " dim1T_check_2_1075_delayed_1_0_1090 = "& Convert_SLV_To_Hex_String(dim1T_check_2_1075_delayed_1_0_1090) & " outputs:" & " dim1T_check_3_1095= "  & Convert_SLV_To_Hex_String(dim1T_check_3_1095));
+      --
+    end process; 
     -- binary operator EQ_u16_u1_1094_inst
     process(j_loop_909, dim1T_check_2_1075_delayed_1_0_1090) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14800,6 +22420,13 @@ begin --
       ApIntEq_proc(j_loop_909, dim1T_check_2_1075_delayed_1_0_1090, tmp_var);
       dim1T_check_3_1095 <= tmp_var; --
     end process;
+    -- logger for split-operator EQ_u16_u1_1118_inst flow-through 
+    process(dim0T_check_3_1119) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:EQ_u16_u1_1118_inst:flowthrough inputs: " & " i_loop_913 = "& Convert_SLV_To_Hex_String(i_loop_913) & " dim0T_check_2_1096_delayed_1_0_1114 = "& Convert_SLV_To_Hex_String(dim0T_check_2_1096_delayed_1_0_1114) & " outputs:" & " dim0T_check_3_1119= "  & Convert_SLV_To_Hex_String(dim0T_check_3_1119));
+      --
+    end process; 
     -- binary operator EQ_u16_u1_1118_inst
     process(i_loop_913, dim0T_check_2_1096_delayed_1_0_1114) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14807,6 +22434,13 @@ begin --
       ApIntEq_proc(i_loop_913, dim0T_check_2_1096_delayed_1_0_1114, tmp_var);
       dim0T_check_3_1119 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u16_u16_1024_inst flow-through 
+    process(next_dest_add_1025) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:LSHR_u16_u16_1024_inst:flowthrough inputs: " & " dest_data_array_idx_4_945 = "& Convert_SLV_To_Hex_String(dest_data_array_idx_4_945) & " konst_1023_wire_constant = "& Convert_SLV_To_Hex_String(konst_1023_wire_constant) & " outputs:" & " next_dest_add_1025= "  & Convert_SLV_To_Hex_String(next_dest_add_1025));
+      --
+    end process; 
     -- binary operator LSHR_u16_u16_1024_inst
     process(dest_data_array_idx_4_945) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14814,6 +22448,13 @@ begin --
       ApIntLSHR_proc(dest_data_array_idx_4_945, konst_1023_wire_constant, tmp_var);
       next_dest_add_1025 <= tmp_var; --
     end process;
+    -- logger for split-operator LSHR_u16_u16_1029_inst flow-through 
+    process(next_src_add_1030) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:LSHR_u16_u16_1029_inst:flowthrough inputs: " & " img_data_array_idx_6_975 = "& Convert_SLV_To_Hex_String(img_data_array_idx_6_975) & " konst_1028_wire_constant = "& Convert_SLV_To_Hex_String(konst_1028_wire_constant) & " outputs:" & " next_src_add_1030= "  & Convert_SLV_To_Hex_String(next_src_add_1030));
+      --
+    end process; 
     -- binary operator LSHR_u16_u16_1029_inst
     process(img_data_array_idx_6_975) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14821,6 +22462,13 @@ begin --
       ApIntLSHR_proc(img_data_array_idx_6_975, konst_1028_wire_constant, tmp_var);
       next_src_add_1030 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u16_u16_893_inst flow-through 
+    process(dim21T_894) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUL_u16_u16_893_inst:flowthrough inputs: " & " dim2T_881 = "& Convert_SLV_To_Hex_String(dim2T_881) & " dim1T_877 = "& Convert_SLV_To_Hex_String(dim1T_877) & " outputs:" & " dim21T_894= "  & Convert_SLV_To_Hex_String(dim21T_894));
+      --
+    end process; 
     -- binary operator MUL_u16_u16_893_inst
     process(dim2T_881, dim1T_877) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14828,6 +22476,13 @@ begin --
       ApIntMul_proc(dim2T_881, dim1T_877, tmp_var);
       dim21T_894 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u16_u16_898_inst flow-through 
+    process(dim21R_899) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUL_u16_u16_898_inst:flowthrough inputs: " & " dim2R_889 = "& Convert_SLV_To_Hex_String(dim2R_889) & " dim1R_885 = "& Convert_SLV_To_Hex_String(dim1R_885) & " outputs:" & " dim21R_899= "  & Convert_SLV_To_Hex_String(dim21R_899));
+      --
+    end process; 
     -- binary operator MUL_u16_u16_898_inst
     process(dim2R_889, dim1R_885) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14835,6 +22490,13 @@ begin --
       ApIntMul_proc(dim2R_889, dim1R_885, tmp_var);
       dim21R_899 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u16_u16_929_inst flow-through 
+    process(dest_data_array_idx_1_930) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUL_u16_u16_929_inst:flowthrough inputs: " & " dim2R_889 = "& Convert_SLV_To_Hex_String(dim2R_889) & " j_loop_909 = "& Convert_SLV_To_Hex_String(j_loop_909) & " outputs:" & " dest_data_array_idx_1_930= "  & Convert_SLV_To_Hex_String(dest_data_array_idx_1_930));
+      --
+    end process; 
     -- binary operator MUL_u16_u16_929_inst
     process(dim2R_889, j_loop_909) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14842,6 +22504,13 @@ begin --
       ApIntMul_proc(dim2R_889, j_loop_909, tmp_var);
       dest_data_array_idx_1_930 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u16_u16_934_inst flow-through 
+    process(dest_data_array_idx_2_935) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUL_u16_u16_934_inst:flowthrough inputs: " & " dim21R_899 = "& Convert_SLV_To_Hex_String(dim21R_899) & " i_loop_913 = "& Convert_SLV_To_Hex_String(i_loop_913) & " outputs:" & " dest_data_array_idx_2_935= "  & Convert_SLV_To_Hex_String(dest_data_array_idx_2_935));
+      --
+    end process; 
     -- binary operator MUL_u16_u16_934_inst
     process(dim21R_899, i_loop_913) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14849,6 +22518,13 @@ begin --
       ApIntMul_proc(dim21R_899, i_loop_913, tmp_var);
       dest_data_array_idx_2_935 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u16_u16_959_inst flow-through 
+    process(img_data_array_idx_3_960) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUL_u16_u16_959_inst:flowthrough inputs: " & " dim2T_881 = "& Convert_SLV_To_Hex_String(dim2T_881) & " img_data_array_idx_1_950 = "& Convert_SLV_To_Hex_String(img_data_array_idx_1_950) & " outputs:" & " img_data_array_idx_3_960= "  & Convert_SLV_To_Hex_String(img_data_array_idx_3_960));
+      --
+    end process; 
     -- binary operator MUL_u16_u16_959_inst
     process(dim2T_881, img_data_array_idx_1_950) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14856,6 +22532,13 @@ begin --
       ApIntMul_proc(dim2T_881, img_data_array_idx_1_950, tmp_var);
       img_data_array_idx_3_960 <= tmp_var; --
     end process;
+    -- logger for split-operator MUL_u16_u16_964_inst flow-through 
+    process(img_data_array_idx_4_965) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:MUL_u16_u16_964_inst:flowthrough inputs: " & " dim21T_894 = "& Convert_SLV_To_Hex_String(dim21T_894) & " img_data_array_idx_2_955 = "& Convert_SLV_To_Hex_String(img_data_array_idx_2_955) & " outputs:" & " img_data_array_idx_4_965= "  & Convert_SLV_To_Hex_String(img_data_array_idx_4_965));
+      --
+    end process; 
     -- binary operator MUL_u16_u16_964_inst
     process(dim21T_894, img_data_array_idx_2_955) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14863,6 +22546,13 @@ begin --
       ApIntMul_proc(dim21T_894, img_data_array_idx_2_955, tmp_var);
       img_data_array_idx_4_965 <= tmp_var; --
     end process;
+    -- logger for split-operator NOT_u1_u1_1098_inst flow-through 
+    process(NOT_u1_u1_1098_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:NOT_u1_u1_1098_inst:flowthrough inputs: " & " cmp_dim2_1077 = "& Convert_SLV_To_Hex_String(cmp_dim2_1077) & " outputs:" & " NOT_u1_u1_1098_wire= "  & Convert_SLV_To_Hex_String(NOT_u1_u1_1098_wire));
+      --
+    end process; 
     -- unary operator NOT_u1_u1_1098_inst
     process(cmp_dim2_1077) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14870,6 +22560,13 @@ begin --
       SingleInputOperation("ApIntNot", cmp_dim2_1077, tmp_var);
       NOT_u1_u1_1098_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator NOT_u1_u1_1122_inst flow-through 
+    process(NOT_u1_u1_1122_wire) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:NOT_u1_u1_1122_inst:flowthrough inputs: " & " cmp_dim2_1077 = "& Convert_SLV_To_Hex_String(cmp_dim2_1077) & " outputs:" & " NOT_u1_u1_1122_wire= "  & Convert_SLV_To_Hex_String(NOT_u1_u1_1122_wire));
+      --
+    end process; 
     -- unary operator NOT_u1_u1_1122_inst
     process(cmp_dim2_1077) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14877,6 +22574,13 @@ begin --
       SingleInputOperation("ApIntNot", cmp_dim2_1077, tmp_var);
       NOT_u1_u1_1122_wire <= tmp_var; -- 
     end process;
+    -- logger for split-operator NOT_u1_u1_1155_inst flow-through 
+    process(flag_1156) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:NOT_u1_u1_1155_inst:flowthrough inputs: " & " cmp_dim0_1125 = "& Convert_SLV_To_Hex_String(cmp_dim0_1125) & " outputs:" & " flag_1156= "  & Convert_SLV_To_Hex_String(flag_1156));
+      --
+    end process; 
     -- unary operator NOT_u1_u1_1155_inst
     process(cmp_dim0_1125) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14884,6 +22588,13 @@ begin --
       SingleInputOperation("ApIntNot", cmp_dim0_1125, tmp_var);
       flag_1156 <= tmp_var; -- 
     end process;
+    -- logger for split-operator OR_u1_u1_1009_inst flow-through 
+    process(data_check1_1010) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:OR_u1_u1_1009_inst:flowthrough inputs: " & " i_small_check_980 = "& Convert_SLV_To_Hex_String(i_small_check_980) & " j_small_check_985 = "& Convert_SLV_To_Hex_String(j_small_check_985) & " outputs:" & " data_check1_1010= "  & Convert_SLV_To_Hex_String(data_check1_1010));
+      --
+    end process; 
     -- binary operator OR_u1_u1_1009_inst
     process(i_small_check_980, j_small_check_985) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14891,6 +22602,13 @@ begin --
       ApIntOr_proc(i_small_check_980, j_small_check_985, tmp_var);
       data_check1_1010 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u1_u1_1014_inst flow-through 
+    process(data_check2_1015) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:OR_u1_u1_1014_inst:flowthrough inputs: " & " data_check1_1010 = "& Convert_SLV_To_Hex_String(data_check1_1010) & " i_large_check_995 = "& Convert_SLV_To_Hex_String(i_large_check_995) & " outputs:" & " data_check2_1015= "  & Convert_SLV_To_Hex_String(data_check2_1015));
+      --
+    end process; 
     -- binary operator OR_u1_u1_1014_inst
     process(data_check1_1010, i_large_check_995) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14898,6 +22616,13 @@ begin --
       ApIntOr_proc(data_check1_1010, i_large_check_995, tmp_var);
       data_check2_1015 <= tmp_var; --
     end process;
+    -- logger for split-operator OR_u1_u1_1019_inst flow-through 
+    process(data_check_1020) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:OR_u1_u1_1019_inst:flowthrough inputs: " & " data_check2_1015 = "& Convert_SLV_To_Hex_String(data_check2_1015) & " j_large_check_1005 = "& Convert_SLV_To_Hex_String(j_large_check_1005) & " outputs:" & " data_check_1020= "  & Convert_SLV_To_Hex_String(data_check_1020));
+      --
+    end process; 
     -- binary operator OR_u1_u1_1019_inst
     process(data_check2_1015, j_large_check_1005) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14905,6 +22630,13 @@ begin --
       ApIntOr_proc(data_check2_1015, j_large_check_1005, tmp_var);
       data_check_1020 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_1081_inst flow-through 
+    process(dim1T_check_1_1082) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:SHL_u16_u16_1081_inst:flowthrough inputs: " & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902) & " konst_1080_wire_constant = "& Convert_SLV_To_Hex_String(konst_1080_wire_constant) & " outputs:" & " dim1T_check_1_1082= "  & Convert_SLV_To_Hex_String(dim1T_check_1_1082));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_1081_inst
     process(pad_902) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14912,6 +22644,13 @@ begin --
       ApIntSHL_proc(pad_902, konst_1080_wire_constant, tmp_var);
       dim1T_check_1_1082 <= tmp_var; --
     end process;
+    -- logger for split-operator SHL_u16_u16_1105_inst flow-through 
+    process(dim0T_check_1_1106) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:SHL_u16_u16_1105_inst:flowthrough inputs: " & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902) & " konst_1104_wire_constant = "& Convert_SLV_To_Hex_String(konst_1104_wire_constant) & " outputs:" & " dim0T_check_1_1106= "  & Convert_SLV_To_Hex_String(dim0T_check_1_1106));
+      --
+    end process; 
     -- binary operator SHL_u16_u16_1105_inst
     process(pad_902) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14919,6 +22658,13 @@ begin --
       ApIntSHL_proc(pad_902, konst_1104_wire_constant, tmp_var);
       dim0T_check_1_1106 <= tmp_var; --
     end process;
+    -- logger for split-operator SUB_u16_u16_1068_inst flow-through 
+    process(dim2T_dif_1069) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:SUB_u16_u16_1068_inst:flowthrough inputs: " & " dim2T_881 = "& Convert_SLV_To_Hex_String(dim2T_881) & " konst_1067_wire_constant = "& Convert_SLV_To_Hex_String(konst_1067_wire_constant) & " outputs:" & " dim2T_dif_1069= "  & Convert_SLV_To_Hex_String(dim2T_dif_1069));
+      --
+    end process; 
     -- binary operator SUB_u16_u16_1068_inst
     process(dim2T_881) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14926,6 +22672,13 @@ begin --
       ApIntSub_proc(dim2T_881, konst_1067_wire_constant, tmp_var);
       dim2T_dif_1069 <= tmp_var; --
     end process;
+    -- logger for split-operator SUB_u16_u16_949_inst flow-through 
+    process(img_data_array_idx_1_950) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:SUB_u16_u16_949_inst:flowthrough inputs: " & " j_loop_909 = "& Convert_SLV_To_Hex_String(j_loop_909) & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902) & " outputs:" & " img_data_array_idx_1_950= "  & Convert_SLV_To_Hex_String(img_data_array_idx_1_950));
+      --
+    end process; 
     -- binary operator SUB_u16_u16_949_inst
     process(j_loop_909, pad_902) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14933,6 +22686,13 @@ begin --
       ApIntSub_proc(j_loop_909, pad_902, tmp_var);
       img_data_array_idx_1_950 <= tmp_var; --
     end process;
+    -- logger for split-operator SUB_u16_u16_954_inst flow-through 
+    process(img_data_array_idx_2_955) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:SUB_u16_u16_954_inst:flowthrough inputs: " & " i_loop_913 = "& Convert_SLV_To_Hex_String(i_loop_913) & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902) & " outputs:" & " img_data_array_idx_2_955= "  & Convert_SLV_To_Hex_String(img_data_array_idx_2_955));
+      --
+    end process; 
     -- binary operator SUB_u16_u16_954_inst
     process(i_loop_913, pad_902) -- 
       variable tmp_var : std_logic_vector(15 downto 0); -- 
@@ -14940,6 +22700,13 @@ begin --
       ApIntSub_proc(i_loop_913, pad_902, tmp_var);
       img_data_array_idx_2_955 <= tmp_var; --
     end process;
+    -- logger for split-operator UGE_u16_u1_1004_inst flow-through 
+    process(j_large_check_1005) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:UGE_u16_u1_1004_inst:flowthrough inputs: " & " j_loop_909 = "& Convert_SLV_To_Hex_String(j_loop_909) & " ADD_u16_u16_997_997_delayed_1_0_1000 = "& Convert_SLV_To_Hex_String(ADD_u16_u16_997_997_delayed_1_0_1000) & " outputs:" & " j_large_check_1005= "  & Convert_SLV_To_Hex_String(j_large_check_1005));
+      --
+    end process; 
     -- binary operator UGE_u16_u1_1004_inst
     process(j_loop_909, ADD_u16_u16_997_997_delayed_1_0_1000) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14947,6 +22714,13 @@ begin --
       ApIntUge_proc(j_loop_909, ADD_u16_u16_997_997_delayed_1_0_1000, tmp_var);
       j_large_check_1005 <= tmp_var; --
     end process;
+    -- logger for split-operator UGE_u16_u1_994_inst flow-through 
+    process(i_large_check_995) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:UGE_u16_u1_994_inst:flowthrough inputs: " & " i_loop_913 = "& Convert_SLV_To_Hex_String(i_loop_913) & " ADD_u16_u16_990_990_delayed_1_0_990 = "& Convert_SLV_To_Hex_String(ADD_u16_u16_990_990_delayed_1_0_990) & " outputs:" & " i_large_check_995= "  & Convert_SLV_To_Hex_String(i_large_check_995));
+      --
+    end process; 
     -- binary operator UGE_u16_u1_994_inst
     process(i_loop_913, ADD_u16_u16_990_990_delayed_1_0_990) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14954,6 +22728,13 @@ begin --
       ApIntUge_proc(i_loop_913, ADD_u16_u16_990_990_delayed_1_0_990, tmp_var);
       i_large_check_995 <= tmp_var; --
     end process;
+    -- logger for split-operator ULE_u16_u1_1076_inst flow-through 
+    process(cmp_dim2_1077) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ULE_u16_u1_1076_inst:flowthrough inputs: " & " k_loop_905 = "& Convert_SLV_To_Hex_String(k_loop_905) & " dim2T_dif_1060_delayed_1_0_1072 = "& Convert_SLV_To_Hex_String(dim2T_dif_1060_delayed_1_0_1072) & " outputs:" & " cmp_dim2_1077= "  & Convert_SLV_To_Hex_String(cmp_dim2_1077));
+      --
+    end process; 
     -- binary operator ULE_u16_u1_1076_inst
     process(k_loop_905, dim2T_dif_1060_delayed_1_0_1072) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14961,6 +22742,13 @@ begin --
       ApIntUle_proc(k_loop_905, dim2T_dif_1060_delayed_1_0_1072, tmp_var);
       cmp_dim2_1077 <= tmp_var; --
     end process;
+    -- logger for split-operator ULT_u16_u1_979_inst flow-through 
+    process(i_small_check_980) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ULT_u16_u1_979_inst:flowthrough inputs: " & " i_loop_913 = "& Convert_SLV_To_Hex_String(i_loop_913) & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902) & " outputs:" & " i_small_check_980= "  & Convert_SLV_To_Hex_String(i_small_check_980));
+      --
+    end process; 
     -- binary operator ULT_u16_u1_979_inst
     process(i_loop_913, pad_902) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14968,6 +22756,13 @@ begin --
       ApIntUlt_proc(i_loop_913, pad_902, tmp_var);
       i_small_check_980 <= tmp_var; --
     end process;
+    -- logger for split-operator ULT_u16_u1_984_inst flow-through 
+    process(j_small_check_985) -- 
+      --
+    begin -- 
+      LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ULT_u16_u1_984_inst:flowthrough inputs: " & " j_loop_909 = "& Convert_SLV_To_Hex_String(j_loop_909) & " pad_902 = "& Convert_SLV_To_Hex_String(pad_902) & " outputs:" & " j_small_check_985= "  & Convert_SLV_To_Hex_String(j_small_check_985));
+      --
+    end process; 
     -- binary operator ULT_u16_u1_984_inst
     process(j_loop_909, pad_902) -- 
       variable tmp_var : std_logic_vector(0 downto 0); -- 
@@ -14975,6 +22770,22 @@ begin --
       ApIntUlt_proc(j_loop_909, pad_902, tmp_var);
       j_small_check_985 <= tmp_var; --
     end process;
+    -- logger for split-operator array_obj_ref_1036_index_offset
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if array_obj_ref_1036_index_offset_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1036_index_offset:started:   inputs: " & " type_cast_1035_scaled = "& Convert_SLV_To_Hex_String(type_cast_1035_scaled) & " array_obj_ref_1036_constant_part_of_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_1036_constant_part_of_offset));
+          --
+        end if; 
+        if array_obj_ref_1036_index_offset_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1036_index_offset:finished:  outputs: " & " array_obj_ref_1036_final_offset= "  & Convert_SLV_To_Hex_String(array_obj_ref_1036_final_offset));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared split operator group (39) : array_obj_ref_1036_index_offset 
     ApIntAdd_group_39: Block -- 
       signal data_in: std_logic_vector(13 downto 0);
@@ -15042,6 +22853,22 @@ begin --
           reset => reset); -- 
       -- 
     end Block; -- split operator group 39
+    -- logger for split-operator array_obj_ref_1048_index_offset
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if array_obj_ref_1048_index_offset_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1048_index_offset:started:   inputs: " & " type_cast_1047_scaled = "& Convert_SLV_To_Hex_String(type_cast_1047_scaled) & " array_obj_ref_1048_constant_part_of_offset = "& Convert_SLV_To_Hex_String(array_obj_ref_1048_constant_part_of_offset));
+          --
+        end if; 
+        if array_obj_ref_1048_index_offset_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:array_obj_ref_1048_index_offset:finished:  outputs: " & " array_obj_ref_1048_final_offset= "  & Convert_SLV_To_Hex_String(array_obj_ref_1048_final_offset));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared split operator group (40) : array_obj_ref_1048_index_offset 
     ApIntAdd_group_40: Block -- 
       signal data_in: std_logic_vector(13 downto 0);
@@ -15109,6 +22936,22 @@ begin --
           reset => reset); -- 
       -- 
     end Block; -- split operator group 40
+    -- logger for split-operator ptr_deref_1041_load_0
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if ptr_deref_1041_load_0_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1041_load_0:started:   inputs: " & " ptr_deref_1041_word_address_0 = "& Convert_SLV_To_Hex_String(ptr_deref_1041_word_address_0));
+          --
+        end if; 
+        if ptr_deref_1041_load_0_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1041_load_0:finished:  outputs: " & " ptr_deref_1041_data_0= "  & Convert_SLV_To_Hex_String(ptr_deref_1041_data_0));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared load operator group (0) : ptr_deref_1041_load_0 
     LoadGroup0: Block -- 
       signal data_in: std_logic_vector(13 downto 0);
@@ -15123,6 +22966,19 @@ begin --
       constant guardBuffering: IntegerArray(0 downto 0)  := (0 => 6);
       -- 
     begin -- 
+      -- logging on!
+      LogMemRead(clk, reset, global_clock_cycle_count,-- 
+        ptr_deref_1041_load_0_req_0,
+        ptr_deref_1041_load_0_ack_0,
+        ptr_deref_1041_load_0_req_1,
+        ptr_deref_1041_load_0_ack_1,
+        "ptr_deref_1041_load_0",
+        "memory_space_1" ,
+        ptr_deref_1041_data_0,
+        ptr_deref_1041_word_address_0,
+        "ptr_deref_1041_data_0",
+        "ptr_deref_1041_word_address_0" -- 
+      );
       reqL_unguarded(0) <= ptr_deref_1041_load_0_req_0;
       ptr_deref_1041_load_0_ack_0 <= ackL_unguarded(0);
       reqR_unguarded(0) <= ptr_deref_1041_load_0_req_1;
@@ -15180,6 +23036,35 @@ begin --
         ); -- 
       -- 
     end Block; -- load group 0
+    -- logger for split-operator ptr_deref_1058_store_0
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if ptr_deref_1058_store_0_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1058_store_0:started:   inputs: " & " ptr_deref_1058_word_address_0 = "& Convert_SLV_To_Hex_String(ptr_deref_1058_word_address_0) & " ptr_deref_1058_data_0 = "& Convert_SLV_To_Hex_String(ptr_deref_1058_data_0));
+          --
+        end if; 
+        if ptr_deref_1058_store_0_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:ptr_deref_1058_store_0:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logging on!
+    LogMemWrite(clk, reset,global_clock_cycle_count,  -- 
+      ptr_deref_1058_store_0_req_0,
+      ptr_deref_1058_store_0_ack_0,
+      ptr_deref_1058_store_0_req_1,
+      ptr_deref_1058_store_0_ack_1,
+      "ptr_deref_1058_store_0",
+      "memory_space_0" ,
+      ptr_deref_1058_data_0,
+      ptr_deref_1058_word_address_0,
+      "ptr_deref_1058_data_0",
+      "ptr_deref_1058_word_address_0" -- 
+    );
     -- shared store operator group (0) : ptr_deref_1058_store_0 
     StoreGroup0: Block -- 
       signal addr_in: std_logic_vector(13 downto 0);
@@ -15252,6 +23137,118 @@ begin --
         ); -- 
       -- 
     end Block; -- store group 0
+    -- logger for split-operator RPIPE_Block0_starting_843_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_starting_843_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_843_inst:started:   PipeRead from Block0_starting inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_starting_843_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_843_inst:finished:  outputs: " & " padding_844= "  & Convert_SLV_To_Hex_String(padding_844));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_Block0_starting_840_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_starting_840_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_840_inst:started:   PipeRead from Block0_starting inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_starting_840_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_840_inst:finished:  outputs: " & " out_d2_841= "  & Convert_SLV_To_Hex_String(out_d2_841));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_Block0_starting_837_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_starting_837_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_837_inst:started:   PipeRead from Block0_starting inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_starting_837_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_837_inst:finished:  outputs: " & " out_d1_838= "  & Convert_SLV_To_Hex_String(out_d1_838));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_Block0_starting_834_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_starting_834_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_834_inst:started:   PipeRead from Block0_starting inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_starting_834_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_834_inst:finished:  outputs: " & " out_d0_835= "  & Convert_SLV_To_Hex_String(out_d0_835));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_Block0_starting_831_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_starting_831_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_831_inst:started:   PipeRead from Block0_starting inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_starting_831_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_831_inst:finished:  outputs: " & " inp_d2_832= "  & Convert_SLV_To_Hex_String(inp_d2_832));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_Block0_starting_828_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_starting_828_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_828_inst:started:   PipeRead from Block0_starting inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_starting_828_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_828_inst:finished:  outputs: " & " inp_d1_829= "  & Convert_SLV_To_Hex_String(inp_d1_829));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
+    -- logger for split-operator RPIPE_Block0_starting_825_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if RPIPE_Block0_starting_825_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_825_inst:started:   PipeRead from Block0_starting inputs: " & " no-guard, no-inputs ");
+          --
+        end if; 
+        if RPIPE_Block0_starting_825_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:RPIPE_Block0_starting_825_inst:finished:  outputs: " & " inp_d0_826= "  & Convert_SLV_To_Hex_String(inp_d0_826));
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared inport operator group (0) : RPIPE_Block0_starting_843_inst RPIPE_Block0_starting_840_inst RPIPE_Block0_starting_837_inst RPIPE_Block0_starting_834_inst RPIPE_Block0_starting_831_inst RPIPE_Block0_starting_828_inst RPIPE_Block0_starting_825_inst 
     InportGroup_0: Block -- 
       signal data_out: std_logic_vector(111 downto 0);
@@ -15332,6 +23329,22 @@ begin --
         ); -- 
       -- 
     end Block; -- inport group 0
+    -- logger for split-operator WPIPE_Block0_complete_1160_inst
+    process(clk)  
+    begin -- 
+      if ((reset = '0') and (clk'event and clk = '1')) then -- 
+        if WPIPE_Block0_complete_1160_inst_ack_0 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:WPIPE_Block0_complete_1160_inst:started:   PipeWrite to Block0_complete inputs: " & " type_cast_1162_wire_constant = "& Convert_SLV_To_Hex_String(type_cast_1162_wire_constant));
+          --
+        end if; 
+        if WPIPE_Block0_complete_1160_inst_ack_1 then -- 
+          LogRecordPrint(global_clock_cycle_count,  "logger:zeropad3D_A:DP:WPIPE_Block0_complete_1160_inst:finished:  outputs: " & " no-outputs ");
+          --
+        end if; 
+        --
+      end if; 
+      --
+    end process; 
     -- shared outport operator group (0) : WPIPE_Block0_complete_1160_inst 
     OutportGroup_0: Block -- 
       signal data_in: std_logic_vector(15 downto 0);
@@ -15399,6 +23412,8 @@ use ahir.basecomponents.all;
 use ahir.operatorpackage.all;
 use ahir.floatoperatorpackage.all;
 use ahir.utilities.all;
+library GhdlLink;
+use GhdlLink.LogUtilities.all;
 library work;
 use work.ahir_system_global_package.all;
 entity ahir_system is  -- system 

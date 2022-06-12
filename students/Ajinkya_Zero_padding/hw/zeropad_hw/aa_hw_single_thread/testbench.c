@@ -29,7 +29,7 @@
 	des_out.dimensions[des_out.number_of_dimensions-1] = T.dimensions[T.number_of_dimensions-1];\
 })
 
-#define __dt__ int16_t
+#define __dt__ uint16_t
 
 #ifdef SW
 DEFINE_THREAD(zeropad3D);
@@ -44,7 +44,7 @@ DEFINE_THREAD(zeropad3D_A);
 #endif
 
 SizedTensor_16K T,R;
-uint8_t pad;
+uint16_t pad;
 TensorDescriptor des_inp,des_out;
 
 int main(int argc,char **argv)
@@ -74,8 +74,8 @@ int main(int argc,char **argv)
         init_pipe_handler();
         register_pipe ("zeropad_input_pipe",2,8,PIPE_FIFO_MODE);
         register_pipe ("zeropad_output_pipe",2,8,PIPE_FIFO_MODE);
-		register_pipe ("Block0_starting",1,8,PIPE_FIFO_MODE);
-		register_pipe ("Block0_complete",1,8,PIPE_FIFO_MODE);
+		register_pipe ("Block0_starting",1,16,PIPE_FIFO_MODE);
+		register_pipe ("Block0_complete",1,16,PIPE_FIFO_MODE);
 		// register_pipe ("Block1_starting",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block1_complete",1,8,PIPE_FIFO_MODE);
 		// register_pipe ("Block2_starting",1,8,PIPE_FIFO_MODE);
@@ -156,8 +156,13 @@ int main(int argc,char **argv)
 	}
 	fprintf(stderr,"Read input descriptor %d,%d,%d.\n",des_inp.dimensions[0],des_inp.dimensions[1],des_inp.dimensions[2]);
 
-	fscanf(param_file,"%d",&pad);
-	write_uint8("zeropad_input_pipe",pad);
+	// fscanf(param_file,"%d",&pad);
+	fscanf(param_file,"%u",&c1);
+	fscanf(param_file,"%u",&c2);
+	write_uint8("zeropad_input_pipe",c1);
+	write_uint8("zeropad_input_pipe",c2);
+	pad = (c1 << 8) + c2;
+	// write_uint8("zeropad_input_pipe",pad);
 
 	fprintf(stderr,"Read pad value:%d\n",pad);
 

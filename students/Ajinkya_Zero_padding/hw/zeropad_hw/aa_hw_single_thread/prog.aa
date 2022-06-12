@@ -20,133 +20,143 @@ $is
   $branchblock [body] 
   {
     //begin: basic-block entry
-    call := Block0_starting
-    call1 := Block0_starting
-    call2 := Block0_starting
-    call3 := Block0_starting
-    call4 := Block0_starting
-    call5 := Block0_starting
-    call6 := Block0_starting
+    inp_d0 := Block0_starting
+    inp_d1 := Block0_starting
+    inp_d2 := Block0_starting
+    out_d0 := Block0_starting
+    out_d1 := Block0_starting
+    out_d2 := Block0_starting
+    padding := Block0_starting
     $barrier 
-    sub := (call2 + ( $bitcast ($uint<16> ) _b1111111111111000 ) )
-    conv42 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) sub) )
-    conv51 := ($cast ($uint<32>) call1)
-    conv53 := ($cast ($uint<32>) call6)
-    shl := (conv53 << ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
-    add54 := (shl + conv51)
-    conv64 := ($cast ($uint<32>) call)
-    add68 := (shl + conv64)
-    add125 := (conv53 + conv64)
-    add142 := (conv53 + conv51)
-    $place [entry_whilex_xbody]
-    //begin: basic-block whilex_xbody
-    //   this is a do-while loop.
-    $merge entry_whilex_xbody
-    $phi kx_x1_at_entry :=  ( $cast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000000 ) ) $on entry_whilex_xbody 
-    $phi ix_x2_at_entry :=  ( $cast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000000 ) ) $on entry_whilex_xbody 
-    $phi jx_x1_at_entry :=  ( $cast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000000 ) ) $on entry_whilex_xbody 
-    $endmerge
-    $dopipeline $depth 15 $buffering 1 
-    $fullrate
+    //BEGINNING OF Zeropad MODULE
+    // Writing the initial data
+    //uint16_t k = 0,j1 = col_low,i = row_low,pad_reg = pad,dim2T = tz,\
+	//dim1T = ty,dim0T = tx,dim2R = rz,\
+	//dim1R = ry,dim0R = rx,dim21T = dim2T*dim1T,\
+	//dim21R = dim2R*dim1R,j = j1,break_flag;\
+    $volatile i_loop_init := ($bitcast ($uint<16>) 0)
+    $volatile j_loop_init := ($bitcast ($uint<16>) 0)
+    $volatile k_loop_init := ($bitcast ($uint<16>) 0)
+    $volatile src_add_init := ($bitcast ($uint<16>) 0)
+    $volatile dest_add_init := ($bitcast ($uint<16>) 0)
+    $volatile j1 := ($bitcast ($uint<16>) 0)
+    $volatile dim0T := ($cast ($uint<16>) inp_d0)
+    $volatile dim1T := ($cast ($uint<16>) inp_d1)
+    $volatile dim2T := ($cast ($uint<16>) inp_d2)
+    $volatile dim0R := ($cast ($uint<16>) out_d0)
+    $volatile dim1R := ($cast ($uint<16>) out_d1)
+    $volatile dim2R := ($cast ($uint<16>) out_d2)
+    $volatile dim21T := (dim2T * dim1T)
+    $volatile dim21R := (dim2R * dim1R)
+    $volatile pad := padding
+    /////////////////
+    
+    // Running the loop on the values that are going to change
+    $dopipeline $depth 15 $buffering 1 $fullrate
     $merge $entry $loopback
-    $phi kx_x1 :=  ( $cast ($uint<16>) kx_x0) $on $loopback kx_x1_at_entry $on $entry
-    $phi ix_x2 :=  ( $cast ($uint<16>) ix_x1) $on $loopback ix_x2_at_entry $on $entry
-    $phi jx_x1 :=  ( $cast ($uint<16>) jx_x0) $on $loopback jx_x1_at_entry $on $entry
+    $phi k_loop := k_loop_init $on $entry next_k_loop $on $loopback
+    $phi j_loop := j_loop_init $on $entry next_j_loop $on $loopback
+    $phi i_loop := i_loop_init $on $entry next_i_loop $on $loopback
+    $phi dest_add := dest_add_init $on $entry next_dest_add $on $loopback
+    $phi src_add := src_add_init $on $entry next_src_add $on $loopback
     $endmerge
-    conv40 := ($cast ($uint<32>) kx_x1)
-    // compare instruction
-    cmp := ( ($bitcast ( $int<32>) conv40) >  ($bitcast ( $int<32>) conv42 ) )
-    whilex_xbody_ifx_xelse_taken := cmp
-    whilex_xbody_ifx_xthen_taken := ( ~cmp)
-    ifx_xthen_exec_guard := whilex_xbody_ifx_xthen_taken
-    //begin: basic-block ifx_xthen
-    $guard (ifx_xthen_exec_guard) add := (kx_x1 + ( $bitcast ($uint<16> ) _b0000000000001000 ) )
-    ifx_xthen_ifx_xend73_taken := ifx_xthen_exec_guard
-    ifx_xelse_exec_guard := whilex_xbody_ifx_xelse_taken
-    //begin: basic-block ifx_xelse
-    $guard (ifx_xelse_exec_guard) inc := (jx_x1 + ( $bitcast ($uint<16> ) _b0000000000000001 ) )
-    $guard (ifx_xelse_exec_guard) conv49 := ($cast ($uint<32>) inc)
-    // compare instruction
-    $guard (ifx_xelse_exec_guard) cmp55 := (conv49 == add54 )
-    $guard (ifx_xelse_exec_guard) inc60 := ($cast ($uint<16>) cmp55)
-    $guard (ifx_xelse_exec_guard) inc60x_xix_x2 := (inc60 + ix_x2)
-    $guard (ifx_xelse_exec_guard) jx_x2 := ( $mux cmp55 ( $bitcast ($uint<16> ) _b0000000000000000 )  inc)
-    $guard (ifx_xelse_exec_guard) conv62 := ($cast ($uint<32>) inc60x_xix_x2)
-    // compare instruction
-    $guard (ifx_xelse_exec_guard) cmp69 := (conv62 == add68 )
-    ifx_xelse_ifx_xthen71_taken := (ifx_xelse_exec_guard & cmp69)
-    ifx_xelse_ifx_xend73_taken := (ifx_xelse_exec_guard & (~cmp69))
-    ifx_xthen71_exec_guard := ifx_xelse_ifx_xthen71_taken
-    //begin: basic-block ifx_xthen71
-    ifx_xthen71_ifx_xend73_taken := ifx_xthen71_exec_guard
-    ifx_xend73_exec_guard := (ifx_xelse_ifx_xend73_taken | ( ifx_xthen_ifx_xend73_taken | ifx_xthen71_ifx_xend73_taken ) )
-    //begin: basic-block ifx_xend73
-    kx_x0 := ($mux ifx_xthen_ifx_xend73_taken ( $bitcast ($uint<16>) add) ($mux ifx_xthen71_ifx_xend73_taken ( $bitcast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000000 ) ) ($mux ifx_xelse_ifx_xend73_taken ( $bitcast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000000 ) ) ($bitcast ($uint<16>) 0))))
-    ix_x1 := ($mux ifx_xthen_ifx_xend73_taken ( $bitcast ($uint<16>) ix_x2) ($mux ifx_xthen71_ifx_xend73_taken ( $bitcast ($uint<16>) inc60x_xix_x2) ($mux ifx_xelse_ifx_xend73_taken ( $bitcast ($uint<16>) inc60x_xix_x2) ($bitcast ($uint<16>) 0))))
-    jx_x0 := ($mux ifx_xthen_ifx_xend73_taken ( $bitcast ($uint<16>) jx_x1) ($mux ifx_xthen71_ifx_xend73_taken ( $bitcast ($uint<16>) jx_x2) ($mux ifx_xelse_ifx_xend73_taken ( $bitcast ($uint<16>) jx_x2) ($bitcast ($uint<16>) 0))))
-    flagx_x0 := ($mux ifx_xthen_ifx_xend73_taken ( $bitcast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000000 ) ) ($mux ifx_xthen71_ifx_xend73_taken ( $bitcast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000001 ) ) ($mux ifx_xelse_ifx_xend73_taken ( $bitcast ($uint<16>) ( $bitcast ($uint<16> ) _b0000000000000000 ) ) ($bitcast ($uint<16>) 0))))
-    $guard (ifx_xend73_exec_guard) mul88 := (call4 * ix_x1)
-    $guard (ifx_xend73_exec_guard) tmp := (jx_x0 + mul88)
-    $guard (ifx_xend73_exec_guard) tmp164 := (tmp * call5)
-    $guard (ifx_xend73_exec_guard) add89 := (tmp164 + kx_x0)
-    $guard (ifx_xend73_exec_guard) sub100 := (jx_x0 - call6)
-    $guard (ifx_xend73_exec_guard) sub109 := (ix_x1 - call6)
-    $guard (ifx_xend73_exec_guard) mul110 := (call1 * sub109)
-    $guard (ifx_xend73_exec_guard) tmp165 := (sub100 + mul110)
-    $guard (ifx_xend73_exec_guard) tmp166 := (tmp165 * call2)
-    $guard (ifx_xend73_exec_guard) add111 := (tmp166 + kx_x0)
-    // compare instruction
-    $guard (ifx_xend73_exec_guard) cmp117 := (ix_x1 < call6 )
-    ifx_xend73_ifx_xthen145_taken := (ifx_xend73_exec_guard & cmp117)
-    ifx_xend73_lorx_xlhsx_xfalse_taken := (ifx_xend73_exec_guard & (~cmp117))
-    lorx_xlhsx_xfalse_exec_guard := ifx_xend73_lorx_xlhsx_xfalse_taken
-    //begin: basic-block lorx_xlhsx_xfalse
-    $guard (lorx_xlhsx_xfalse_exec_guard) conv120 := ($cast ($uint<32>) ix_x1)
-    // compare instruction
-    $guard (lorx_xlhsx_xfalse_exec_guard) cmp126x_xnot := ( ($bitcast ( $int<32>) conv120) >=   ($bitcast ( $int<32>) add125 ) )
-    // compare instruction
-    $guard (lorx_xlhsx_xfalse_exec_guard) cmp133 := (jx_x0 < call6 )
-    $guard (lorx_xlhsx_xfalse_exec_guard) orx_xcond := (cmp126x_xnot | cmp133)
-    $guard (lorx_xlhsx_xfalse_exec_guard) orx_xcondx_xnot := (orx_xcond ^ ( $bitcast ($uint<1> ) _b1 ) )
-    $guard (lorx_xlhsx_xfalse_exec_guard) conv137 := ($cast ($uint<32>) jx_x0)
-    // compare instruction
-    $guard (lorx_xlhsx_xfalse_exec_guard) cmp143 := ( ($bitcast ( $int<32>) conv137) <   ($bitcast ( $int<32>) add142 ) )
-    $guard (lorx_xlhsx_xfalse_exec_guard) orx_xcond167 := (orx_xcondx_xnot & cmp143)
-    lorx_xlhsx_xfalse_ifx_xelse148_taken := (lorx_xlhsx_xfalse_exec_guard & orx_xcond167)
-    lorx_xlhsx_xfalse_ifx_xthen145_taken := (lorx_xlhsx_xfalse_exec_guard & (~orx_xcond167))
-    ifx_xelse148_exec_guard := lorx_xlhsx_xfalse_ifx_xelse148_taken
-    //begin: basic-block ifx_xelse148
-    $guard (ifx_xelse148_exec_guard) conv150 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) add111) )
-    $guard (ifx_xelse148_exec_guard) shr151 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) conv150) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 )  )))
-    $guard (ifx_xelse148_exec_guard) idxprom152 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) shr151) )
-    arrayidx153 := @(T[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][idxprom152])
-    // load 
-    $guard (ifx_xelse148_exec_guard) tmp154 := ->(arrayidx153) 
-    $guard (ifx_xelse148_exec_guard) conv156 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) add89) )
-    $guard (ifx_xelse148_exec_guard) shr157 :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) conv156) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 )  )))
-    $guard (ifx_xelse148_exec_guard) idxprom158 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) shr157) )
-    arrayidx159 := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][idxprom158])
-    $guard (ifx_xelse148_exec_guard) ->(arrayidx159) := tmp154
-    ifx_xelse148_ifx_xend160_taken := ifx_xelse148_exec_guard
-    ifx_xthen145_exec_guard := (ifx_xend73_ifx_xthen145_taken | lorx_xlhsx_xfalse_ifx_xthen145_taken )
-    //begin: basic-block ifx_xthen145
-    $guard (ifx_xthen145_exec_guard) conv147 :=  ($bitcast ($uint<32>) ( $cast ($int< 32 > ) add89) )
-    $guard (ifx_xthen145_exec_guard) shr :=  ($bitcast ($uint<32>) ( ($bitcast ( $int<32>) conv147) >>  ($bitcast ( $int<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 )  )))
-    $guard (ifx_xthen145_exec_guard) idxprom :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) shr) )
-    arrayidx := @(R[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ][idxprom])
-    $guard (ifx_xthen145_exec_guard) ->(arrayidx) := ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) 
-    ifx_xthen145_ifx_xend160_taken := ifx_xthen145_exec_guard
-    //begin: basic-block ifx_xend160
-    // compare instruction
-    tobool := (flagx_x0 == ( $bitcast ($uint<16> ) _b0000000000000000 )  )
-    ifx_xend160_whilex_xend_taken := ( ~tobool)
-    $while tobool
-    $if ifx_xend160_whilex_xend_taken $then 
-    $place [ifx_xend160_whilex_xend]
-    $endif
-    //begin: basic-block whilex_xend
-    $merge ifx_xend160_whilex_xend
-    $endmerge
+    
+    ///////////////////
+    // Creating the indexes for the input and output arrays
+    // Now making the expression dest_data_array_idx = (k + dim2R*(j) + dim21R*(i))
+    $volatile dest_data_array_idx_1 := (dim2R * j_loop)
+    $volatile dest_data_array_idx_2 := (dim21R * i_loop)
+    $volatile dest_data_array_idx_3 := (dest_data_array_idx_1 + dest_data_array_idx_2)
+    $volatile dest_data_array_idx_4 := (dest_data_array_idx_3 + k_loop)
+
+    // Now making the expression img_data_array_idx = (k + dim2T*(j-pad_reg) + dim21T*(i-pad_reg))
+    $volatile img_data_array_idx_1 := (j_loop - pad)
+    $volatile img_data_array_idx_2 := (i_loop - pad)
+    $volatile img_data_array_idx_3 := (dim2T * img_data_array_idx_1)
+    $volatile img_data_array_idx_4 := (dim21T * img_data_array_idx_2)
+    $volatile img_data_array_idx_5 := (img_data_array_idx_3 + img_data_array_idx_4)
+    $volatile img_data_array_idx_6 := (img_data_array_idx_5 + k_loop )
+    
+    // Creating the condition to check if the index is within the bounds
+    // Now making ((i < (pad_reg)) || (i >= (row_high+pad_reg)) || (j < (pad_reg)) || (j >= (col_high+pad_reg)))
+    $volatile i_small_check := (i_loop < pad)
+    $volatile j_small_check := (j_loop < pad)
+    $volatile i_large_check := (i_loop >= (inp_d0 + pad))
+    $volatile j_large_check := (j_loop >= (inp_d1 + pad))
+    // To check if data or zero is to be written to the output array
+    $volatile data_check1 := (i_small_check | j_small_check)
+    $volatile data_check2 := (data_check1 | i_large_check)
+    $volatile data_check := (data_check2 | j_large_check)
+
+
+    // Now Creating the input and output data arrays address for the input and output arrays
+    $volatile next_dest_add := (dest_data_array_idx_4 >> 3)
+    $volatile next_src_add := (img_data_array_idx_6 >> 3)
+
+    ////////////////////
+    iv1 :=  @(T[( $bitcast ($uint<32>) 0)] [( $bitcast ($uint<64>) src_add)])
+    i1 := ->(iv1)
+    ov :=  @(R[( $bitcast ($uint<32>) 0)] [( $bitcast ($uint<64>) dest_add)])
+
+    //Now writing zero if the condition is true for zeros
+    ->(ov) := ($mux data_check ($bitcast ($uint<64>) 0) i1)
+
+
+    ////////////////////
+
+    //zeropad_output_pipe := i_loop
+    //zeropad_output_pipe := j_loop
+    //zeropad_output_pipe := k_loop
+    ////////////////////
+
+    // Now writing the CHECK BREAK FLAG
+    // Now writing the if conditions for the CHECK BREAK FLAG
+    // Now making the (k < dim2T_dif)
+    dim2T_dif := (dim2T - 8)
+    cmp_dim2 := (k_loop <= dim2T_dif)
+
+    // Now writing the first if the else block conditions
+    // Now making the (j == (col_high + (pad_reg<<1)))
+    dim1T_check_1 := (pad << 1)
+    dim1T_check_2 := (dim1T + dim1T_check_1)
+    dim1T_check_3 := (j_loop == dim1T_check_2)
+    cmp_dim1 := ((~cmp_dim2) & dim1T_check_3)
+
+    // Now writing the second if the else block conditions
+    // Now making the (i == (row_high + (pad_reg<<1)))
+    dim0T_check_1 := (pad << 1)
+    dim0T_check_2 := (dim0T + dim0T_check_1)
+    dim0T_check_3 := (i_loop == dim0T_check_2)
+    cmp_dim0 := ((~cmp_dim2) & dim0T_check_3)
+
+    // Now writing the contents of the if block of the CHECK BREAK FLAG
+    //check_if_true := (k_loop + 8)          
+    // Here we make k = k + 8 or 0
+    next_k_loop := ($mux cmp_dim2 (k_loop + 8) 0)
+    // Here we make j = j + 1 or 0
+    next_j_loop := ($mux cmp_dim2 j_loop ($mux cmp_dim1 j1 (j_loop + 1)))
+
+    // Now writing the contents of the else block starting of the CHECK BREAK FLAG
+    //check_if_false := (j_loop + 1)
+    //next_j_loop := ($mux cmp_dim1 j1 j_loop)
+    // Here we make i = i + 1 or i
+    next_i_loop := ($mux cmp_dim1 (i_loop + 1) i_loop)
+
+    // Now writing the contents of the else block and the its first if block, of the CHECK BREAK FLAG
+    //check_if_else_1 := (i_loop + 1) 
+    //flag := ($mux cmp_dim0 0 1)
+    // Here we make flag = 1 or 0
+    flag := (~cmp_dim0)
+    
+    ////
+    //zeropad_output_pipe := j_loop
+
+    ////////////////////
+    // Now checking the flag to determine if the loop should be broken
+    //cont_flag := (~flag)
+    $while flag
+    
+    //ENDING OF Zeropad MODULE
     $barrier 
     Block0_complete := ( $bitcast ($uint<16> ) _b0000000000000001 ) 
     $place [return__]

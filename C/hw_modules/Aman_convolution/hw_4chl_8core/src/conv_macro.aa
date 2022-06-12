@@ -1,0 +1,31 @@
+#include decl.aa
+
+#include kernelModule.aa
+#include inputModule.aa
+
+#define core_num 1
+#include convCore.aa
+
+#define core_num 2
+#include convCore.aa
+
+#define core_num 3
+#include convCore.aa
+
+#define core_num 4
+#include convCore.aa
+
+#define core_num 5
+#include convCore.aa
+
+#define core_num 6
+#include convCore.aa
+
+#define core_num 7
+#include convCore.aa
+
+#define core_num 8
+#include convCore.aa
+
+#include sendModule.aa
+

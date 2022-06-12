@@ -1,0 +1,15 @@
+$pipeline $depth 15 $buffering 2 $fullrate
+$opaque $module [writeToPipe##num ] $in (in_data1 in_data2 in_data3 : $uint<64>) $out (done : $uint<1>) $is
+{
+	core##num\_kp1 := in_data1
+	core##num\_kp2 := in_data2
+	core##num\_kp3 := in_data3
+	done := (in_data1 [] 0)
+}
+
+$pipeline $depth 15 $buffering 2 $fullrate
+$opaque $module [writeToSizePipe##num ] $in (in_data1 : $uint<16>) $out (done : $uint<1>) $is
+{
+	size_pipe##num := in_data1
+	done := (in_data1 [] 0)
+}

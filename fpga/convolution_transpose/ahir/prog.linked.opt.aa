@@ -1,0 +1,458 @@
+$record [structx_x__SizedTensor_16K]  < $array[16384] $of $uint<64> > 
+$record [structx_x__SizedTensor_1K]  < $array[1024] $of $uint<64> > 
+$pipe  ConvTranspose_input_pipe : $uint<8>  $depth 2 
+// can point into 
+$pipe  ConvTranspose_output_pipe : $uint<8>  $depth 2 
+// can point into 
+$storage  input :  structx_x__SizedTensor_16K  // memory space index = 0  base address = 0  word size = 64
+// can point into 
+$storage  kernel :  structx_x__SizedTensor_1K  // memory space index = 1  base address = 0  word size = 64
+// can point into 
+$noblock $pipe  timer_req : $uint<1>  $depth 1 
+// can point into 
+$pipe  timer_resp : $uint<64>  $depth 1 
+// can point into 
+$storage  upsampled :  structx_x__SizedTensor_16K  // memory space index = 2  base address = 0  word size = 64
+// can point into 
+$module [timer]
+$in ()
+$out ( T : $uint<64>  )
+$is
+{
+  timer_req := ($bitcast ($uint<1>) _b1  ) $buffering 1// bits of buffering = 1. 
+  T := timer_resp $buffering 1// bits of buffering = 64. 
+}
+$module [ct_core]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+    call := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv1 := ($cast ($uint<16>) call ) $buffering 1// bits of buffering = 16. 
+    $volatile shl := (conv1 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call2 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv3 := ($cast ($uint<16>) call2 ) $buffering 1// bits of buffering = 16. 
+    $volatile inp_d0 := (shl | conv3) $buffering 1
+    call5 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv8 := ($cast ($uint<16>) call5 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl9 := (conv8 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call10 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv11 := ($cast ($uint<16>) call10 ) $buffering 1// bits of buffering = 16. 
+    $volatile inp_d1 := (shl9 | conv11) $buffering 1
+    call14 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv17 := ($cast ($uint<16>) call14 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl18 := (conv17 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call19 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv20 := ($cast ($uint<16>) call19 ) $buffering 1// bits of buffering = 16. 
+    $volatile inp_d2 := (shl18 | conv20) $buffering 1
+    call23 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv26 := ($cast ($uint<16>) call23 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl27 := (conv26 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call28 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv29 := ($cast ($uint<16>) call28 ) $buffering 1// bits of buffering = 16. 
+    $volatile ker_d0 := (shl27 | conv29) $buffering 1
+    call32 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv35 := ($cast ($uint<16>) call32 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl36 := (conv35 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call37 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv38 := ($cast ($uint<16>) call37 ) $buffering 1// bits of buffering = 16. 
+    $volatile ker_d1 := (shl36 | conv38) $buffering 1
+    call41 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv44 := ($cast ($uint<16>) call41 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl45 := (conv44 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call46 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv47 := ($cast ($uint<16>) call46 ) $buffering 1// bits of buffering = 16. 
+    $volatile ker_d2 := (shl45 | conv47) $buffering 1
+    call50 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv53 := ($cast ($uint<16>) call50 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl54 := (conv53 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call55 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv56 := ($cast ($uint<16>) call55 ) $buffering 1// bits of buffering = 16. 
+    $volatile ker_d3 := (shl54 | conv56) $buffering 1
+    call92 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv95 := ($cast ($uint<16>) call92 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl96 := (conv95 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call97 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv98 := ($cast ($uint<16>) call97 ) $buffering 1// bits of buffering = 16. 
+    $volatile stride := (shl96 | conv98) $buffering 1
+    call101 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv104 := ($cast ($uint<16>) call101 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl105 := (conv104 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call106 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv107 := ($cast ($uint<16>) call106 ) $buffering 1// bits of buffering = 16. 
+    $volatile padding := (shl105 | conv107) $buffering 1
+    call110 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv113 := ($cast ($uint<16>) call110 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl114 := (conv113 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call115 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv116 := ($cast ($uint<16>) call115 ) $buffering 1// bits of buffering = 16. 
+    $volatile out_d0 := (shl114 | conv116) $buffering 1
+    call119 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv122 := ($cast ($uint<16>) call119 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl123 := (conv122 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call1124 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv1125 := ($cast ($uint<16>) call1124 ) $buffering 1// bits of buffering = 16. 
+    $volatile out_d1 := (shl123 | conv1125) $buffering 1
+    call1128 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv131 := ($cast ($uint<16>) call1128 ) $buffering 1// bits of buffering = 16. 
+    $volatile shl132 := (conv131 << ($bitcast ($uint<16>) _b0000000000001000  )) $buffering 1
+    call133 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv134 := ($cast ($uint<16>) call133 ) $buffering 1// bits of buffering = 16. 
+    $volatile out_d2 := (shl132 | conv134) $buffering 1
+    inp_d232 := ($cast ($uint<32>) inp_d2 ) $buffering 1// bits of buffering = 32. 
+    $volatile input_int := (inp_d0 * inp_d1) $buffering 1
+    input_int1 := ($cast ($uint<32>) input_int ) $buffering 1// bits of buffering = 32. 
+    $volatile input_size := (input_int1 * inp_d232) $buffering 1
+    $volatile ker_int1 := (ker_d0 * ker_d1) $buffering 1
+    $volatile ker_int2 := (ker_d2 * ker_d3) $buffering 1
+    ker_int3 := ($cast ($uint<32>) ker_int1 ) $buffering 1// bits of buffering = 32. 
+    ker_int4 := ($cast ($uint<32>) ker_int2 ) $buffering 1// bits of buffering = 32. 
+    $volatile kernel_size := (ker_int3 * ker_int4) $buffering 1
+    out_d232 := ($cast ($uint<32>) inp_d2 ) $buffering 1// bits of buffering = 32. 
+    $volatile out_int := (out_d0 * out_d1) $buffering 1
+    out_int1 := ($cast ($uint<32>) out_int ) $buffering 1// bits of buffering = 32. 
+    $volatile output_size := (out_int1 * out_d232) $buffering 1
+    $volatile cmp467 := (input_size > ($bitcast ($uint<32>) _b00000000000000000000000000000111  )) $buffering 1
+    $if cmp467 $then 
+    $place[entry_bbx_xnph469]
+    $else 
+    $place[entry_forx_xcond171x_xpreheader]
+    $endif
+    $merge forx_xbody_forx_xcond171x_xpreheaderx_xloopexit 
+    $endmerge
+    $place[forx_xcond171x_xpreheaderx_xloopexit_forx_xcond171x_xpreheader]
+    $merge entry_forx_xcond171x_xpreheader forx_xcond171x_xpreheaderx_xloopexit_forx_xcond171x_xpreheader 
+    $endmerge
+    $volatile cmp175463 := (kernel_size > ($bitcast ($uint<32>) _b00000000000000000000000000000111  )) $buffering 1
+    $if cmp175463 $then 
+    $place[forx_xcond171x_xpreheader_bbx_xnph465]
+    $else 
+    $place[forx_xcond171x_xpreheader_forx_xend231]
+    $endif
+    $merge entry_bbx_xnph469 
+    $endmerge
+    $volatile tmp495 := (input_size >> ($bitcast ($uint<32>) _b00000000000000000000000000000011  )) $buffering 1
+    $volatile tmp496 := (tmp495 > ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile tmp495x_xop := (tmp495 + ($bitcast ($uint<32>) _b11111111111111111111111111111111  )) $buffering 1
+    iNsTr_19 := ($cast ($uint<64>) tmp495x_xop ) $buffering 1// bits of buffering = 64. 
+    $volatile xx_xop503 := (iNsTr_19 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile tmp500 := ( $mux tmp496 xx_xop503  ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  ) )  $buffering 1
+    $place[bbx_xnph469_forx_xbody]
+    $merge bbx_xnph469_forx_xbody forx_xbody_forx_xbody 
+    $phi indvar489 := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph469_forx_xbody 			  ($cast ($uint<64>) indvarx_xnext490 ) $on   forx_xbody_forx_xbody 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx := @(input[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar489]) $buffering 1// bits of buffering = 32. 
+    call124 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv125 := ($cast ($uint<64>) call124 ) $buffering 1// bits of buffering = 64. 
+    $volatile shl127 := (conv125 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call128 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv130 := ($cast ($uint<64>) call128 ) $buffering 1// bits of buffering = 64. 
+    $volatile add131 := (shl127 | conv130) $buffering 1
+    $volatile shl133 := (add131 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call134 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv136 := ($cast ($uint<64>) call134 ) $buffering 1// bits of buffering = 64. 
+    $volatile add137 := (shl133 | conv136) $buffering 1
+    $volatile shl139 := (add137 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call140 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv142 := ($cast ($uint<64>) call140 ) $buffering 1// bits of buffering = 64. 
+    $volatile add143 := (shl139 | conv142) $buffering 1
+    $volatile shl145 := (add143 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call146 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv148 := ($cast ($uint<64>) call146 ) $buffering 1// bits of buffering = 64. 
+    $volatile add149 := (shl145 | conv148) $buffering 1
+    $volatile shl151 := (add149 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call152 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv154 := ($cast ($uint<64>) call152 ) $buffering 1// bits of buffering = 64. 
+    $volatile add155 := (shl151 | conv154) $buffering 1
+    $volatile shl157 := (add155 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call158 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv160 := ($cast ($uint<64>) call158 ) $buffering 1// bits of buffering = 64. 
+    $volatile add161 := (shl157 | conv160) $buffering 1
+    $volatile shl163 := (add161 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call164 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv166 := ($cast ($uint<64>) call164 ) $buffering 1// bits of buffering = 64. 
+    $volatile add167 := (shl163 | conv166) $buffering 1
+    ->(arrayidx) := add167 $buffering 1// bits of buffering = 64. 
+    $volatile indvarx_xnext490 := (indvar489 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile exitcond2 := (indvarx_xnext490 == tmp500) $buffering 1
+    $if exitcond2 $then 
+    $place[forx_xbody_forx_xcond171x_xpreheaderx_xloopexit]
+    $else 
+    $place[forx_xbody_forx_xbody]
+    $endif
+    $merge forx_xcond171x_xpreheader_bbx_xnph465 
+    $endmerge
+    $volatile tmp482 := (kernel_size >> ($bitcast ($uint<32>) _b00000000000000000000000000000011  )) $buffering 1
+    $volatile tmp483 := (tmp482 > ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile tmp482x_xop := (tmp482 + ($bitcast ($uint<32>) _b11111111111111111111111111111111  )) $buffering 1
+    iNsTr_32 := ($cast ($uint<64>) tmp482x_xop ) $buffering 1// bits of buffering = 64. 
+    $volatile xx_xop502 := (iNsTr_32 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile tmp487 := ( $mux tmp483 xx_xop502  ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  ) )  $buffering 1
+    $place[bbx_xnph465_forx_xbody177]
+    $merge bbx_xnph465_forx_xbody177 forx_xbody177_forx_xbody177 
+    $phi indvar476 := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph465_forx_xbody177 			  ($cast ($uint<64>) indvarx_xnext477 ) $on   forx_xbody177_forx_xbody177 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx227 := @(kernel[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar476]) $buffering 1// bits of buffering = 32. 
+    call180 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv181 := ($cast ($uint<64>) call180 ) $buffering 1// bits of buffering = 64. 
+    $volatile shl183 := (conv181 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call184 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv186 := ($cast ($uint<64>) call184 ) $buffering 1// bits of buffering = 64. 
+    $volatile add187 := (shl183 | conv186) $buffering 1
+    $volatile shl189 := (add187 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call190 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv192 := ($cast ($uint<64>) call190 ) $buffering 1// bits of buffering = 64. 
+    $volatile add193 := (shl189 | conv192) $buffering 1
+    $volatile shl195 := (add193 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call196 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv198 := ($cast ($uint<64>) call196 ) $buffering 1// bits of buffering = 64. 
+    $volatile add199 := (shl195 | conv198) $buffering 1
+    $volatile shl201 := (add199 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call202 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv204 := ($cast ($uint<64>) call202 ) $buffering 1// bits of buffering = 64. 
+    $volatile add205 := (shl201 | conv204) $buffering 1
+    $volatile shl207 := (add205 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call208 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv210 := ($cast ($uint<64>) call208 ) $buffering 1// bits of buffering = 64. 
+    $volatile add211 := (shl207 | conv210) $buffering 1
+    $volatile shl213 := (add211 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call214 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv216 := ($cast ($uint<64>) call214 ) $buffering 1// bits of buffering = 64. 
+    $volatile add217 := (shl213 | conv216) $buffering 1
+    $volatile shl219 := (add217 << ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    call220 := ConvTranspose_input_pipe $buffering 1// bits of buffering = 8. 
+    conv222 := ($cast ($uint<64>) call220 ) $buffering 1// bits of buffering = 64. 
+    $volatile add223 := (shl219 | conv222) $buffering 1
+    ->(arrayidx227) := add223 $buffering 1// bits of buffering = 64. 
+    $volatile indvarx_xnext477 := (indvar476 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile exitcond22 := (indvarx_xnext477 == tmp487) $buffering 1
+    $if exitcond22 $then 
+    $place[forx_xbody177_forx_xend231x_xloopexit]
+    $else 
+    $place[forx_xbody177_forx_xbody177]
+    $endif
+    $merge forx_xbody177_forx_xend231x_xloopexit 
+    $endmerge
+    $place[forx_xend231x_xloopexit_forx_xend231]
+    $merge forx_xcond171x_xpreheader_forx_xend231 forx_xend231x_xloopexit_forx_xend231 
+    $endmerge
+    $volatile cmp264448 := (output_size > ($bitcast ($uint<32>) _b00000000000000000000000000000011  )) $buffering 1
+    $if cmp264448 $then 
+    $place[forx_xend250_bbx_xnph450]
+    $else 
+    $place[forx_xend250_forx_xend273]
+    $endif
+    $merge forx_xend250_bbx_xnph450 
+    $endmerge
+    $volatile tmp476 := (output_size >> ($bitcast ($uint<32>) _b00000000000000000000000000000011  )) $buffering 1
+    $volatile tmp477 := (tmp476 > ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile tmp476x_xop := (tmp476 + ($bitcast ($uint<32>) _b11111111111111111111111111111111  )) $buffering 1
+    iNsTr_52 := ($cast ($uint<64>) tmp476x_xop ) $buffering 1// bits of buffering = 64. 
+    $volatile xx_xop513 := (iNsTr_52 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile tmp481 := ( $mux tmp477 xx_xop513  ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  ) )  $buffering 1
+    $place[bbx_xnph451_forx_xbody266]
+    $merge bbx_xnph451_forx_xbody266 forx_xbody266_forx_xbody266 
+    $phi indvar469 := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph451_forx_xbody266 			  ($cast ($uint<64>) indvarx_xnext470 ) $on   forx_xbody266_forx_xbody266 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx269 := @(upsampled[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar469]) $buffering 1// bits of buffering = 32. 
+    ->(arrayidx269) := ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) $buffering 1// bits of buffering = 64. 
+    $volatile indvarx_xnext470 := (indvar469 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile exitcond := (indvarx_xnext470 == tmp481) $buffering 1
+    $if exitcond $then 
+    $place[forx_xbody266_forx_xend273x_xloopexit]
+    $else 
+    $place[forx_xbody266_forx_xbody266]
+    $endif
+    $merge forx_xbody266_forx_xend273x_xloopexit 
+    $endmerge
+    $place[forx_xend273x_xloopexit_forx_xend273]
+    $merge forx_xend250_forx_xend273 forx_xend273x_xloopexit_forx_xend273 
+    $endmerge
+    $barrier
+    $call timer () (call233 ) 
+    $barrier
+    $volatile input_dim0_init := ($bitcast ($uint<16>) 0  ) $buffering 1
+    $volatile input_dim1_init := ($bitcast ($uint<16>) 0  ) $buffering 1
+    $volatile input_dim2_init := ($bitcast ($uint<16>) 0  ) $buffering 1
+    $volatile pad := (padding + 1 ) $buffering 1
+    $volatile add_dest_dim0_init := (ker_d1 - pad) $buffering 1
+    $volatile add_dest_dim1_init := (ker_d2 - pad) $buffering 1
+    $volatile add_src_init := ($bitcast ($uint<32>) 0  ) $buffering 1
+    $dopipeline $depth 15 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi input_dim0 := 			  input_dim0_init $on   $entry 			  next_input_dim0 $on   $loopback 
+    // type of target is $uint<16>
+    $phi input_dim1 := 			  input_dim1_init $on   $entry 			  next_input_dim1 $on   $loopback 
+    // type of target is $uint<16>
+    $phi input_dim2 := 			  input_dim2_init $on   $entry 			  next_input_dim2 $on   $loopback 
+    // type of target is $uint<16>
+    $phi add_dest_dim0 := 			  add_dest_dim0_init $on   $entry 			  next_add_dest_dim0 $on   $loopback 
+    // type of target is $uint<16>
+    $phi add_dest_dim1 := 			  add_dest_dim1_init $on   $entry 			  next_add_dest_dim1 $on   $loopback 
+    // type of target is $uint<16>
+    $phi add_src := 			  add_src_init $on   $entry 			  next_add_src $on   $loopback 
+    // type of target is $uint<32>
+    $endmerge
+    $volatile nao := (out_d1 * add_dest_dim0) $buffering 1
+    $volatile nao1 := (nao + add_dest_dim1) $buffering 1
+    $volatile nao2 := (out_d2 * nao1) $buffering 1
+    $volatile nao3 := (input_dim2 + nao2) $buffering 1
+    $volatile add_out := (nao3 >> 3 ) $buffering 1
+    iv1 := @(input[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_src )]) $buffering 1// bits of buffering = 32. 
+    i1 := ->(iv1) $buffering 1// bits of buffering = 64. 
+    ov := @(upsampled[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_out )]) $buffering 1// bits of buffering = 32. 
+    ov_1028_delayed_6_0 := ov $buffering 6 $cut_through // bits of buffering = 192. 
+    ->(ov_1028_delayed_6_0) := i1 $buffering 1// bits of buffering = 64. 
+    $volatile dim2_limit := (inp_d2 - 8 ) $buffering 1
+    dim2_limit_1039_delayed_1_0 := dim2_limit $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile cmp_dim2 := (input_dim2 < dim2_limit_1039_delayed_1_0) $buffering 1
+    SUB_u16_u16_1046_1046_delayed_1_0 := (inp_d1 - 1 ) $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile cmp_dim1 := (input_dim1 == SUB_u16_u16_1046_1046_delayed_1_0) $buffering 1
+    $volatile cmp_dim0 := (( ~ cmp_dim2 ) & cmp_dim1) $buffering 1
+    $volatile nid2_true := (input_dim2 + 8 ) $buffering 1
+    $volatile nid2_false := (input_dim1 + 1 ) $buffering 1
+    $volatile nid2_false1 := (add_dest_dim1 + stride) $buffering 1
+    $volatile nid1_true := (input_dim0 + 1 ) $buffering 1
+    $volatile nid1_true1 := (add_dest_dim0 + stride) $buffering 1
+    $volatile nid1_true2 := (stride * inp_d1) $buffering 1
+    $volatile nid1_true3 := (nid1_true2 - stride) $buffering 1
+    nid1_true3_1092_delayed_1_0 := nid1_true3 $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile nid1_true4 := (add_dest_dim1 - nid1_true3_1092_delayed_1_0) $buffering 1
+    $volatile next_add_src := (add_src + 1 ) $buffering 1
+    $volatile next_add_dest_dim1 := ( $mux ( ~ cmp_dim2 ) ( $mux cmp_dim1 nid1_true4  nid2_false1 )   add_dest_dim1 )  $buffering 1
+    $volatile next_add_dest_dim0 := ( $mux cmp_dim0 nid1_true1  add_dest_dim0 )  $buffering 1
+    $volatile next_input_dim2 := ( $mux cmp_dim2 nid2_true  0  )  $buffering 1
+    $volatile next_input_dim1 := ( $mux ( ~ cmp_dim2 ) ( $mux cmp_dim1 0   nid2_false )   input_dim1 )  $buffering 1
+    $volatile next_input_dim0 := ( $mux cmp_dim0 nid1_true  input_dim0 )  $buffering 1
+    SUB_u16_u16_1142_1142_delayed_1_0 := (inp_d0 - 1 ) $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile dim0_end := (input_dim0 < SUB_u16_u16_1142_1142_delayed_1_0) $buffering 1
+    $volatile continue_flag := (dim0_end | ( ~ cmp_dim0 )) $buffering 1
+    $while continue_flag
+    $barrier
+    $call timer () (call297 ) 
+    conv276 := ($bitcast ($uint<64>) ($cast ($int<64>) call233 ) ) $buffering 1// bits of buffering = 64. 
+    conv298 := ($bitcast ($uint<64>) ($cast ($int<64>) call297 ) ) $buffering 1// bits of buffering = 64. 
+    $volatile sub := (conv298 - conv276) $buffering 1
+    $barrier
+    conv305 := ($cast ($uint<8>) sub ) $buffering 1// bits of buffering = 8. 
+    $volatile shr308 := (sub >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    conv311 := ($cast ($uint<8>) shr308 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr314 := (sub >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000010000  )) $buffering 1
+    conv317 := ($cast ($uint<8>) shr314 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr320 := (sub >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000011000  )) $buffering 1
+    conv323 := ($cast ($uint<8>) shr320 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr326 := (sub >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000100000  )) $buffering 1
+    conv329 := ($cast ($uint<8>) shr326 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr332 := (sub >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000101000  )) $buffering 1
+    conv335 := ($cast ($uint<8>) shr332 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr338 := (sub >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000110000  )) $buffering 1
+    conv341 := ($cast ($uint<8>) shr338 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr344 := (sub >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000111000  )) $buffering 1
+    conv347 := ($cast ($uint<8>) shr344 ) $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv347 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv341 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv335 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv329 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv323 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv317 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv311 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv305 $buffering 1// bits of buffering = 8. 
+    $barrier
+    $volatile cmp264449 := (output_size > ($bitcast ($uint<32>) _b00000000000000000000000000000111  )) $buffering 1
+    $if cmp264449 $then 
+    $place[forx_xend273_bbx_xnph]
+    $else 
+    $place[forx_xend273_forx_xend444]
+    $endif
+    $merge forx_xend273_bbx_xnph 
+    $endmerge
+    $volatile tmp464 := (output_size >> ($bitcast ($uint<32>) _b00000000000000000000000000000011  )) $buffering 1
+    $volatile tmp465 := (tmp464 > ($bitcast ($uint<32>) _b00000000000000000000000000000001  )) $buffering 1
+    $volatile tmp464x_xop := (tmp464 + ($bitcast ($uint<32>) _b11111111111111111111111111111111  )) $buffering 1
+    iNsTr_111 := ($cast ($uint<64>) tmp464x_xop ) $buffering 1// bits of buffering = 64. 
+    $volatile xx_xop := (iNsTr_111 + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile tmp468 := ( $mux tmp465 xx_xop  ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  ) )  $buffering 1
+    $place[bbx_xnph_forx_xbody371]
+    $merge bbx_xnph_forx_xbody371 forx_xbody371_forx_xbody371 
+    $phi indvar := 			  ($cast ($uint<64>) ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000000  ) ) $on   bbx_xnph_forx_xbody371 			  ($cast ($uint<64>) indvarx_xnext ) $on   forx_xbody371_forx_xbody371 
+    // type of target is $uint<64>
+    $endmerge
+    arrayidx376 := @(upsampled[($bitcast ($uint<32>) _b00000000000000000000000000000000  )][indvar]) $buffering 1// bits of buffering = 32. 
+    tmp377 := ->(arrayidx376) $buffering 1// bits of buffering = 64. 
+    conv381 := ($cast ($uint<8>) tmp377 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr384 := (tmp377 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000001000  )) $buffering 1
+    conv387 := ($cast ($uint<8>) shr384 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr390 := (tmp377 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000010000  )) $buffering 1
+    conv393 := ($cast ($uint<8>) shr390 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr396 := (tmp377 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000011000  )) $buffering 1
+    conv399 := ($cast ($uint<8>) shr396 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr402 := (tmp377 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000100000  )) $buffering 1
+    conv405 := ($cast ($uint<8>) shr402 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr408 := (tmp377 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000101000  )) $buffering 1
+    conv411 := ($cast ($uint<8>) shr408 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr414 := (tmp377 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000110000  )) $buffering 1
+    conv417 := ($cast ($uint<8>) shr414 ) $buffering 1// bits of buffering = 8. 
+    $volatile shr420 := (tmp377 >> ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000111000  )) $buffering 1
+    conv423 := ($cast ($uint<8>) shr420 ) $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv423 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv417 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv411 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv405 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv399 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv393 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv387 $buffering 1// bits of buffering = 8. 
+    ConvTranspose_output_pipe := conv381 $buffering 1// bits of buffering = 8. 
+    $volatile indvarx_xnext := (indvar + ($bitcast ($uint<64>) _b0000000000000000000000000000000000000000000000000000000000000001  )) $buffering 1
+    $volatile exitcond1 := (indvarx_xnext == tmp468) $buffering 1
+    $if exitcond1 $then 
+    $place[forx_xbody371_forx_xend444x_xloopexit]
+    $else 
+    $place[forx_xbody371_forx_xbody371]
+    $endif
+    $merge forx_xbody371_forx_xend444x_xloopexit 
+    $endmerge
+    $place[forx_xend444x_xloopexit_forx_xend444]
+    $merge forx_xend273_forx_xend444 forx_xend444x_xloopexit_forx_xend444 
+    $endmerge
+    $place[return__]
+    $merge return__ 
+    $endmerge
+  }
+}
+$module [global_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $null
+}
+$module [timerDaemon]
+$in ()
+$out ()
+$is
+{
+  $branchblock [loop]
+  {
+    $dopipeline $depth 7 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi COUNTER := 			  ($bitcast ($uint<64>) _b0  ) $on   $entry 			  nCOUNTER $on   $loopback 
+    // type of target is $uint<64>
+    $phi req := 			  timer_req $on   $entry ,   $loopback 
+    // type of target is $uint<1>
+    $endmerge
+    $volatile nCOUNTER := (COUNTER + 1 ) $buffering 1
+    $guard (req) timer_resp := COUNTER $buffering 1// bits of buffering = 64. 
+    $while 1 
+  }
+}
+// Memory space 0: input 
+// Memory space 1: kernel 
+// Memory space 2: upsampled 
+// use of gated clocks in modules 

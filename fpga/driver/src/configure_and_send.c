@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 		fscanf(stdin,"%hu",&x);
 		if(x == 65535)
 		break;
-		tbSendUint16 (x);
+		tbSendUint8 (x);
 		fprintf(stderr,"sent %hu.\n", x);
 	}
 

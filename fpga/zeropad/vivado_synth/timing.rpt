@@ -1,7 +1,7 @@
 Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2017.1 (lin64) Build 1846317 Fri Apr 14 18:54:47 MDT 2017
-| Date         : Sun Jun 12 19:07:37 2022
+| Date         : Sun Jun 12 22:33:22 2022
 | Host         : ajit7 running 64-bit Ubuntu 16.04.7 LTS
 | Command      : report_timing_summary -file timing.rpt -nworst 10 -verbose
 | Design       : fpga_top

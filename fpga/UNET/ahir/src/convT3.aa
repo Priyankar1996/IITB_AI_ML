@@ -1,0 +1,92 @@
+$pipe  ConvTranspose3_input_pipe : $uint<16>  $depth 2 
+
+$module [ct_core3]
+$in ()
+$out ()
+$is
+{
+  $branchblock [body]
+  {
+	inp_d0 := ConvTranspose3_input_pipe
+	inp_d1 := ConvTranspose3_input_pipe
+	inp_d2 := ConvTranspose3_input_pipe
+	
+	ker_d0 := ConvTranspose3_input_pipe
+	ker_d1 := ConvTranspose3_input_pipe
+	ker_d2 := ConvTranspose3_input_pipe
+	ker_d3 := ConvTranspose3_input_pipe
+
+	stride := ConvTranspose3_input_pipe
+	padding := ConvTranspose3_input_pipe
+
+	out_d0 := ConvTranspose3_input_pipe
+	out_d1 := ConvTranspose3_input_pipe
+	out_d2 := ConvTranspose3_input_pipe
+	
+    $volatile input_dim0_init := ($bitcast ($uint<16>) 0  ) $buffering 1
+    $volatile input_dim1_init := ($bitcast ($uint<16>) 0  ) $buffering 1
+    $volatile input_dim2_init := ($bitcast ($uint<16>) 0  ) $buffering 1
+    $volatile pad := (padding + 1 ) $buffering 1
+    $volatile add_dest_dim0_init := (ker_d1 - pad) $buffering 1
+    $volatile add_dest_dim1_init := (ker_d2 - pad) $buffering 1
+    $volatile add_src_init := ($bitcast ($uint<32>) 0  ) $buffering 1
+    $dopipeline $depth 15 $buffering 1
+    $fullrate 
+    $merge $entry $loopback 
+    $phi input_dim0 := 			  input_dim0_init $on   $entry 			  next_input_dim0 $on   $loopback 
+    // type of target is $uint<16>
+    $phi input_dim1 := 			  input_dim1_init $on   $entry 			  next_input_dim1 $on   $loopback 
+    // type of target is $uint<16>
+    $phi input_dim2 := 			  input_dim2_init $on   $entry 			  next_input_dim2 $on   $loopback 
+    // type of target is $uint<16>
+    $phi add_dest_dim0 := 			  add_dest_dim0_init $on   $entry 			  next_add_dest_dim0 $on   $loopback 
+    // type of target is $uint<16>
+    $phi add_dest_dim1 := 			  add_dest_dim1_init $on   $entry 			  next_add_dest_dim1 $on   $loopback 
+    // type of target is $uint<16>
+    $phi add_src := 			  add_src_init $on   $entry 			  next_add_src $on   $loopback 
+    // type of target is $uint<32>
+    $endmerge
+    $volatile nao := (out_d1 * add_dest_dim0) $buffering 1
+    $volatile nao1 := (nao + add_dest_dim1) $buffering 1
+    $volatile nao2 := (out_d2 * nao1) $buffering 1
+    $volatile nao3 := (input_dim2 + nao2) $buffering 1
+    $volatile add_out := (nao3 >> 3 ) $buffering 1
+    iv1 := @(input[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_src )]) $buffering 1// bits of buffering = 32. 
+    i1 := ->(iv1) $buffering 1// bits of buffering = 64. 
+    ov := @(upsampled[($bitcast ($uint<32>) 0  )][($bitcast ($uint<64>) add_out )]) $buffering 1// bits of buffering = 32. 
+    ov_1028_delayed_6_0 := ov $buffering 6 $cut_through // bits of buffering = 192. 
+    ->(ov_1028_delayed_6_0) := i1 $buffering 1// bits of buffering = 64. 
+    $volatile dim2_limit := (inp_d2 - 8 ) $buffering 1
+    dim2_limit_1039_delayed_1_0 := dim2_limit $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile cmp_dim2 := (input_dim2 < dim2_limit_1039_delayed_1_0) $buffering 1
+    SUB_u16_u16_1046_1046_delayed_1_0 := (inp_d1 - 1 ) $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile cmp_dim1 := (input_dim1 == SUB_u16_u16_1046_1046_delayed_1_0) $buffering 1
+    $volatile cmp_dim0 := (( ~ cmp_dim2 ) & cmp_dim1) $buffering 1
+    $volatile nid2_true := (input_dim2 + 8 ) $buffering 1
+    $volatile nid2_false := (input_dim1 + 1 ) $buffering 1
+    $volatile nid2_false1 := (add_dest_dim1 + stride) $buffering 1
+    $volatile nid1_true := (input_dim0 + 1 ) $buffering 1
+    $volatile nid1_true1 := (add_dest_dim0 + stride) $buffering 1
+    $volatile nid1_true2 := (stride * inp_d1) $buffering 1
+    $volatile nid1_true3 := (nid1_true2 - stride) $buffering 1
+    nid1_true3_1092_delayed_1_0 := nid1_true3 $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile nid1_true4 := (add_dest_dim1 - nid1_true3_1092_delayed_1_0) $buffering 1
+    $volatile next_add_src := (add_src + 1 ) $buffering 1
+    $volatile next_add_dest_dim1 := ( $mux ( ~ cmp_dim2 ) ( $mux cmp_dim1 nid1_true4  nid2_false1 )   add_dest_dim1 )  $buffering 1
+    $volatile next_add_dest_dim0 := ( $mux cmp_dim0 nid1_true1  add_dest_dim0 )  $buffering 1
+    $volatile next_input_dim2 := ( $mux cmp_dim2 nid2_true  0  )  $buffering 1
+    $volatile next_input_dim1 := ( $mux ( ~ cmp_dim2 ) ( $mux cmp_dim1 0   nid2_false )   input_dim1 )  $buffering 1
+    $volatile next_input_dim0 := ( $mux cmp_dim0 nid1_true  input_dim0 )  $buffering 1
+    SUB_u16_u16_1142_1142_delayed_1_0 := (inp_d0 - 1 ) $buffering 1 $cut_through // bits of buffering = 16. 
+    $volatile dim0_end := (input_dim0 < SUB_u16_u16_1142_1142_delayed_1_0) $buffering 1
+    $volatile continue_flag := (dim0_end | ( ~ cmp_dim0 )) $buffering 1
+    $while continue_flag
+    $barrier
+    
+  }
+}
+
+// Memory space 0: input 
+// Memory space 1: kernel 
+// Memory space 2: upsampled 
+// use of gated clocks in modules 

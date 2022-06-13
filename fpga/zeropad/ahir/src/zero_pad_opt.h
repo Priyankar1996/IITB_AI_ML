@@ -19,7 +19,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 	#define __loop_pipeline_var__ {;}
 #endif
 
-#define __dt__ int16_t
+#define __dt__ uint16_t
 #define __dim0__(td) ({td.dimensions[0];})
 #define __dim1__(td) ({td.dimensions[1];})
 #define __dim2__(td) ({td.dimensions[2];})
@@ -46,7 +46,7 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 
 #define __Check_break_flag__(i,j,k,row_high,col_high,dim2T,j1,pad_reg) ({\
 	__dt__ flag = 0,dim2T_dif = dim2T - 8;\
-	if(k <= dim2T_dif)\
+	if(k < dim2T_dif)\
 		k+=8;\
 	else {\
 		k = 0;\

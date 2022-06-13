@@ -92,7 +92,7 @@ SizedTensor_16K T;
 void sendB(uint32_t size)
 {
 	int i;
-	for(i=0; i < (size>>2); i++)
+	for(i=0; i < (size>>3); i++)
 	{
 		__set4xi16__(i);
 	}
@@ -117,7 +117,7 @@ void maxPool3D()
 	__aa_barrier__();
 	uint32_t size = rt*ct*chl_in;
 	uint32_t i;
-	for (i = 0; i < (size >> 4); i++)
+	for (i = 0; i < (size >> 3); i++)
 	{
 		fill_T(i);
 	}
@@ -125,7 +125,7 @@ void maxPool3D()
 	uint16_t ce = cb;
 	uint16_t re = rb;
 	uint16_t dim1d = ct;
-	uint16_t offset1 = chl_out>>4, offset2 = dim1d*offset1;
+	uint16_t offset1 = chl_out>>3, offset2 = dim1d*offset1;
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();
@@ -136,31 +136,7 @@ void maxPool3D()
 #ifndef SW
 	uint64_t stop_time = timer();
 	uint64_t elapsed_time = stop_time - start_time;
-	uint8_t time_data[8];
-	time_data[7] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[6] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[5]= elapsed_time & 0xFF;
-	elapsed_time>>=8;
-    time_data[4] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[3] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[2] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-    time_data[1] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[0] = elapsed_time & 0xFF;
-	write_uint8 ("maxpool_output_pipe",time_data[0]);
-	write_uint8 ("maxpool_output_pipe",time_data[1]);
-	write_uint8 ("maxpool_output_pipe",time_data[2]);
-	write_uint8 ("maxpool_output_pipe",time_data[3]);
-    write_uint8 ("maxpool_output_pipe",time_data[4]);
-	write_uint8 ("maxpool_output_pipe",time_data[5]);
-	write_uint8 ("maxpool_output_pipe",time_data[6]);
-	write_uint8 ("maxpool_output_pipe",time_data[7]);
-	//write_uint64("elapsed_time_pipe", elapsed_time);
+	write_uint64("elapsed_time_pipe", elapsed_time);
 #endif
 	__aa_barrier__();
 	sendB (cb*rb*chl_out);

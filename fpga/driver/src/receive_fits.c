@@ -11,13 +11,11 @@
 
 int main(int argc, char* argv[])
 {
-	int count = 0;
-	while(count < 18496)
+	while(1)
 	{
-		uint16_t r;
+		uint8_t r;
 		r = tbGetUint8();
-		fprintf(stdout,"%hu\n", r);
-		count++;
+		fprintf(stdout,"%hhu\n", r);
 	}
 }
 

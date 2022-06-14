@@ -19,7 +19,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T zeropad_same -T timerDaemon
+TOPMODULES=-T zeropad -T timerDaemon
 
 
 # compile with SW defined.
@@ -30,13 +30,13 @@ SW: src/prog.c testbench.c
 	gcc -g -o testbench_sw prog.o testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread
 
 # five steps from C to vhdl simulator.
-HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
+HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl vhdlsim
 C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
 AA2VHDL: aalink aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c src/convolution_transpose_improved.h
-	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
+c2llvmbc: src/prog.c
+	clang -O3 -m32 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o
 
@@ -45,8 +45,8 @@ llvmbc2aa:  prog.opt.o
 	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
 
 # link and optimize
-aalink: timer.aa zeropad_same.aa
-	AaLinkExtMem timer.aa zeropad_same.aa| vcFormat > prog.linked.aa
+aalink: timer.aa zeropad_same.aa prog.aa
+	AaLinkExtMem timer.aa zeropad_same.aa prog.aa| vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 
@@ -56,7 +56,7 @@ aa2vc: prog.linked.opt.aa
 
 # vC to VHDL
 vc2vhdl: prog.vc
-	vc2vhdl -D -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc 
+	vc2vhdl -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc 
 	vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
 	vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
 	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl

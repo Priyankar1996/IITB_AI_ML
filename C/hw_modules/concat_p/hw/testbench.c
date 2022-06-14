@@ -19,8 +19,8 @@
 #define __UpdateOutputDescriptorConcatTensors__(src1,src2,output) ({\
 	fprintf(stderr,"Updating output descriptor and writing inputs.\n");\
     desc_output.dimensions[0] = src1.dimensions[0];\
-    desc_output.dimensions[1] = src1.dimensions[1] + src2.dimensions[1];\
-	desc_output.dimensions[2] = src1.dimensions[2];\
+    desc_output.dimensions[1] = src1.dimensions[1];\
+	desc_output.dimensions[2] = src1.dimensions[2]+ src2.dimensions[2];\
 })
 
 #ifdef SW

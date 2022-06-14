@@ -8,7 +8,7 @@
 #include "sized_tensor.h"
 #include "maxPoolOfTensors.h"
 
-SizedTensor_16K T[2];
+SizedTensor_16K memory[2];
 
 #ifndef SW
 void fill_T(uint64_t i);
@@ -57,27 +57,6 @@ void fill_T(uint64_t i);
 	write_uint8 ("maxpool_output_pipe",out_data[7]);\
 })
 
-// void testConfigure()
-// {
-
-// 	// configure the tensor T
-// 	desc_T.data_type = u16;
-// 	desc_T.row_major_form = 1;
-// 	desc_T.number_of_dimensions = 3;
-// 	desc_B.number_of_dimensions = 3;
-// 	int i;
-// 	for (i = 0;i < desc_T.number_of_dimensions;i++){
-// 		desc_T.dimensions[i] = read_uint8 ("maxpool_input_pipe");
-// 		desc_B.dimensions[i] = read_uint8 ("maxpool_input_pipe");
-// 	}
-
-// 	// size = number of 16-bit values in data array..
-// 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
-// 	for (i = 0; i < (size >> 4); i++)
-// 	{
-// 		fill_T(i);
-// 	}
-// }
 
 // this sends B...
 void sendB(uint32_t size)
@@ -124,7 +103,7 @@ void maxPool3D()
 	uint64_t start_time = timer();
 #endif
 	__aa_barrier__();
-	__maxPoolOfTensors3D_div__( 0, 0, re,ce,dim1d,ce,offset1,offset2);
+	__maxPoolOfTensors3D_div__( 0, 0, re,ce,dim1d,ce,offset1,offset2, 0, 1);
 	__aa_barrier__();
 #ifndef SW
 	uint64_t stop_time = timer();

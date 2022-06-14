@@ -1,10 +1,7 @@
-$module[concat_core] $in(input1_count:$uint<16> input2_count:$uint<16> output_size:$uint<32>) $out() $is
+$module[concat_core] $in(input1_count:$uint<16> input2_count:$uint<16> output_size:$uint<32> index1:$uint<8> index2:$uint<8> index3:$uint<8>) $out() $is
 {
     $branchblock[body]
     {
-        index1 := 0
-        index2 := 1
-        index3 := 2
         out_concat := (output_size >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ))
         $volatile add_out_init := ($bitcast ($uint<32>) 0)
         $volatile add_inp1_init := ($bitcast ($uint<16>) 0)

@@ -1,0 +1,100 @@
+
+$pipeline $depth 15  $buffering 1 $fullrate
+$module [maxPool4]
+$in (addr addr1 addr2 addr3 addr4 : $uint<32>)
+$out (output : $uint<8>)
+$is
+{
+    $call readModule1 (0 addr1) (c1)
+    $call readModule1 (0 addr2) (c2)
+    $call readModule1 (0 addr3) (c3)
+    $call readModule1 (0 addr4) (c4)
+    $split (c1 8 8 8 8 8 8 8 8) (sliced_v11 sliced_v12 sliced_v13 sliced_v14 sliced_v15 sliced_v16 sliced_v17 sliced_v18)
+    $split (c2 8 8 8 8 8 8 8 8) (sliced_v21 sliced_v22 sliced_v23 sliced_v24 sliced_v25 sliced_v26 sliced_v27 sliced_v28)
+    $split (c3 8 8 8 8 8 8 8 8) (sliced_v31 sliced_v32 sliced_v33 sliced_v34 sliced_v35 sliced_v36 sliced_v37 sliced_v38)
+    $split (c4 8 8 8 8 8 8 8 8) (sliced_v41 sliced_v42 sliced_v43 sliced_v44 sliced_v45 sliced_v46 sliced_v47 sliced_v48)
+    a11 := ($bitcast ($int<8>) sliced_v11)
+    a12 := ($bitcast ($int<8>) sliced_v12)
+    a13 := ($bitcast ($int<8>) sliced_v13)
+    a14 := ($bitcast ($int<8>) sliced_v14)
+    a15 := ($bitcast ($int<8>) sliced_v15)
+    a16 := ($bitcast ($int<8>) sliced_v16)
+    a17 := ($bitcast ($int<8>) sliced_v17)
+    a18 := ($bitcast ($int<8>) sliced_v18)
+
+    a21 := ($bitcast ($int<8>) sliced_v21)
+    a22 := ($bitcast ($int<8>) sliced_v22)
+    a23 := ($bitcast ($int<8>) sliced_v23)
+    a24 := ($bitcast ($int<8>) sliced_v24)
+    a25 := ($bitcast ($int<8>) sliced_v25)
+    a26 := ($bitcast ($int<8>) sliced_v26)
+    a27 := ($bitcast ($int<8>) sliced_v27)
+    a28 := ($bitcast ($int<8>) sliced_v28)
+    a31 := ($bitcast ($int<8>) sliced_v31)
+    a32 := ($bitcast ($int<8>) sliced_v32)
+    a33 := ($bitcast ($int<8>) sliced_v33)
+    a34 := ($bitcast ($int<8>) sliced_v34)
+    a35 := ($bitcast ($int<8>) sliced_v35)
+    a36 := ($bitcast ($int<8>) sliced_v36)
+    a37 := ($bitcast ($int<8>) sliced_v37)
+    a38 := ($bitcast ($int<8>) sliced_v38)
+
+    a41 := ($bitcast ($int<8>) sliced_v41)
+    a42 := ($bitcast ($int<8>) sliced_v42)
+    a43 := ($bitcast ($int<8>) sliced_v43)
+    a44 := ($bitcast ($int<8>) sliced_v44)
+    a45 := ($bitcast ($int<8>) sliced_v45)
+    a46 := ($bitcast ($int<8>) sliced_v46)
+    a47 := ($bitcast ($int<8>) sliced_v47)
+    a48 := ($bitcast ($int<8>) sliced_v48)
+
+
+    $volatile t11 := ($mux (a11 > a21) a11 a21)
+    $volatile t12 := ($mux (a31 > a41) a31 a41)
+    $volatile out1 := ($mux (t11 > t12) t11 t12)
+    $volatile t21 := ($mux (a12 > a22) a12 a22)
+    $volatile t22 := ($mux (a32 > a42) a32 a42)
+    $volatile out2 := ($mux (t21 > t22) t21 t22)
+    $volatile t31 := ($mux (a13 > a23) a13 a23)
+    $volatile t32 := ($mux (a33 > a43) a33 a43)
+    $volatile out3 := ($mux (t31 > t32) t31 t32)
+    $volatile t41 := ($mux (a14 > a24) a14 a24)
+    $volatile t42 := ($mux (a34 > a44) a34 a44)
+    $volatile out4 := ($mux (t41 > t42) t41 t42)
+    $volatile t51 := ($mux (a15 > a25) a15 a25)
+    $volatile t52 := ($mux (a35 > a45) a35 a45)
+    $volatile out5 := ($mux (t51 > t52) t51 t52)
+    $volatile t61 := ($mux (a16 > a26) a16 a26)
+    $volatile t62 := ($mux (a36 > a46) a36 a46)
+    $volatile out6 := ($mux (t61 > t62) t61 t62)
+    $volatile t71 := ($mux (a17 > a27) a17 a27)
+    $volatile t72 := ($mux (a37 > a47) a37 a47)
+    $volatile out7 := ($mux (t71 > t72) t71 t72)
+    $volatile t81 := ($mux (a18 > a28) a18 a28)
+    $volatile t82 := ($mux (a38 > a48) a38 a48)
+    $volatile out8 := ($mux (t81 > t82) t81 t82)
+    $call writeModule1 (1 addr ($concat ($bitcast ($uint<8>) out1) ($bitcast ($uint<8>) out2) ($bitcast ($uint<8>) out3) ($bitcast ($uint<8>) out4) ($bitcast ($uint<8>) out5) ($bitcast ($uint<8>) out6) ($bitcast ($uint<8>) out7) ($bitcast ($uint<8>) out8)) ) (d1)
+
+    output := ($bitcast ($uint<8>) out1)
+}
+
+$pipeline $depth 8 $buffering 2 $fullrate
+$opaque $module [readModule1]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+    ptr := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    data := ->(ptr)
+}
+
+$pipeline $depth 8 $buffering 2 $fullrate
+$opaque $module [writeModule1]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out (done : $uint<1>)
+$is
+{
+    ptr := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    ->(ptr) := data
+    done := (index [] 0)
+}

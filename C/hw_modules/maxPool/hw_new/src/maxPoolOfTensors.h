@@ -23,11 +23,11 @@ void maxPool3D();
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
 void __aa_barrier__();
-uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4);
+uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint8_t i1, uint8_t i2);
 #else
 	#define __loop_pipeline_var__ {;}
 	#define __aa_barrier__() {;}
-	#define maxPool4(addr,addr1,addr2,addr3,addr4) ({0;})
+	#define maxPool4(addr,addr1,addr2,addr3,addr4,i1,i2 ) ({0;})
 #endif
 
 #define __increment_mm__(row,col,chl,min_col,max_col,max_chl) ({\
@@ -42,18 +42,18 @@ uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4
 	}\
 })
 
-#define __maxPoolOfTensors3D_div__( rs, cs, re, ce, dim1d, dim1, offset1, offset2) ({\
-	uint32_t address, add_src;\
+#define __maxPoolOfTensors3D_div__( rs, cs, re, ce, dim1d, dim1, offset1, offset2, index1, index2) ({\
+	uint32_t address = 0, add_src;\
 	uint16_t row=rs,col=cs,chl=0;\
 	uint32_t offset3 = offset1 + offset2;\
 	int64_t data_array1,data_array2,data_array3,data_array4;\
 	while(1)\
 	{\
 		__loop_pipeline_var__\
-		address = ((chl+offset1*(col+dim1*row)));\
 		add_src = chl+((offset1*(col+dim1d*row))<<1);\
-		uint8_t done = maxPool4(address,add_src,add_src+offset1,add_src+offset2,add_src+offset3);\
+		uint8_t done = maxPool4(address,add_src,add_src+offset1,add_src+offset2,add_src+offset3, index1, index2);\
 		__increment_mm__(row,col,chl,cs,ce,offset1);\
+		address += 1;\
 		if (row == re) break;\
 	}\
 })

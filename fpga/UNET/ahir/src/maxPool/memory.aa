@@ -77,24 +77,3 @@ $is
 
     output := ($bitcast ($uint<8>) out1)
 }
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [readModule1]
-$in (index : $uint<8> address : $uint<32>)
-$out (data : $uint<64>)
-$is
-{
-    ptr := @(memory[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
-    data := ->(ptr)
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [writeModule1]
-$in (index : $uint<8> address : $uint<32> data : $uint<64>)
-$out (done : $uint<1>)
-$is
-{
-    ptr := @(memory[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
-    ->(ptr) := data
-    done := (index [] 0)
-}

@@ -15,7 +15,7 @@ SizedTensor_64K input, output;
 SizedTensor_512 kernel;
 } memStructTemp;
 
-memStructTemp memory;
+SizedTensor_4M memory[1];
 
 #define __get8xi8__(element) ({\
 	element = read_uint8("system_input_pipe");\
@@ -46,6 +46,6 @@ void fill_input(index){
 
 void systemTOP()
 {
-    memory.input.data_array[5] = 1;
+    memory[0].data_array[5] = 1;
     fill_input(1);
 }

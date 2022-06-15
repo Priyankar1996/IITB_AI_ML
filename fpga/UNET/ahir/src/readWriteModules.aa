@@ -4,7 +4,7 @@ $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
 $is
 {
-    ptr := @(memory[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    ptr := @(memory[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<32>) 0)][((($bitcast ($uint<32>) index) << 11) + address)])
     data := ->(ptr)
 }
 
@@ -14,7 +14,7 @@ $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
 $is
 {
-    ptr := @(memory[( $bitcast ($uint<32> ) 1 ) ][($bitcast ($uint<32>) 0)][address])
+    ptr := @(memory[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<32>) 0)][((($bitcast ($uint<32>) index) << 11) + address)])
     data := ->(ptr)
 }
 
@@ -24,7 +24,7 @@ $in (index : $uint<8> address : $uint<32> data : $uint<64>)
 $out (done : $uint<1>)
 $is
 {
-    ptr := @(memory[( $bitcast ($uint<32> ) 1 ) ][($bitcast ($uint<32>) 0)][address])
+    ptr := @(memory[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<32>) 0)][((($bitcast ($uint<32>) index) << 11) + address)])
     ->(ptr) := data
     done := (index [] 0)
 }

@@ -5,95 +5,9 @@
 #include <stdint.h>
 #include <Pipes.h>
 #include "pipeHandler.h"
-#include "sized_tensor.h"
-#include "maxPoolOfTensors.h"
 
-SizedTensor_16K memory[2];
-
-#ifndef SW
-void fill_T(uint64_t i);
-#else
-
-#define fill_T(i) ({\
-})
-#endif
-
-#define __get4xi16__(element) ({\
-	element = read_uint8 ("maxpool_input_pipe");\
-	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
-	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
-	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
-	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
-	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
-	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
-	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\
-})
-
-#define __set4xi16__(addr) ({\
-	uint64_t element = T[1].data_array[addr];\
-	uint16_t out_data[8];\
-	out_data[7] = element & 0xFF;\
-	element>>=8;\
-	out_data[6] = element & 0xFF;\
-	element>>=8;\
-	out_data[5] = element & 0xFF;\
-	element>>=8;\
-	out_data[4] = element & 0xFF;\
-	element>>=8;\
-	out_data[3] = element & 0xFF;\
-	element>>=8;\
-	out_data[2] = element & 0xFF;\
-	element>>=8;\
-	out_data[1] = element & 0xFF;\
-	element>>=8;\
-	out_data[0] = element & 0xFF;\
-	write_uint8 ("maxpool_output_pipe",out_data[0]);\
-	write_uint8 ("maxpool_output_pipe",out_data[1]);\
-	write_uint8 ("maxpool_output_pipe",out_data[2]);\
-	write_uint8 ("maxpool_output_pipe",out_data[3]);\
-	write_uint8 ("maxpool_output_pipe",out_data[4]);\
-	write_uint8 ("maxpool_output_pipe",out_data[5]);\
-	write_uint8 ("maxpool_output_pipe",out_data[6]);\
-	write_uint8 ("maxpool_output_pipe",out_data[7]);\
-})
-
-
-// this sends B...
-void sendB(uint32_t size)
+void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t index_in, uint8_t index_out)
 {
-	int i;
-	for(i=0; i < (size>>3); i++)
-	{
-		__set4xi16__(i);
-	}
-}
-
-void maxPool3D()
-{
-	// testConfigure();
-
-	uint16_t rt = read_uint8 ("maxpool_input_pipe");
-	rt = ( rt<<8 ) + read_uint8 ("maxpool_input_pipe");
-	uint16_t rb = read_uint8 ("maxpool_input_pipe");
-	rb = ( rb<<8 ) + read_uint8 ("maxpool_input_pipe");
-	uint16_t ct = read_uint8 ("maxpool_input_pipe");
-	ct = ( ct<<8 ) + read_uint8 ("maxpool_input_pipe");
-	uint16_t cb = read_uint8 ("maxpool_input_pipe");
-	cb = ( cb<<8 ) + read_uint8 ("maxpool_input_pipe");
-	uint16_t chl_in = read_uint8 ("maxpool_input_pipe");
-	chl_in = ( chl_in<<8 ) + read_uint8 ("maxpool_input_pipe");
-	uint16_t chl_out = read_uint8 ("maxpool_input_pipe");
-	chl_out = ( chl_out<<8 ) + read_uint8 ("maxpool_input_pipe");
-	__aa_barrier__();
-	uint32_t size = rt*ct*chl_in;
-	uint32_t i;
-	uint64_t element;
-	for (i = 0; i < (size >> 3); i++)
-	{
-		__get4xi16__(element);
-		T[0].data_array[i] = element;
-	}
-	__aa_barrier__();
 	uint16_t ce = cb;
 	uint16_t re = rb;
 	uint16_t dim1d = ct;
@@ -103,7 +17,7 @@ void maxPool3D()
 	uint64_t start_time = timer();
 #endif
 	__aa_barrier__();
-	__maxPoolOfTensors3D_div__( 0, 0, re,ce,dim1d,ce,offset1,offset2, 0, 1);
+	__maxPoolOfTensors3D_div__( 0, 0, re,ce,dim1d,ce,offset1,offset2, index_in, index_out);
 	__aa_barrier__();
 #ifndef SW
 	uint64_t stop_time = timer();

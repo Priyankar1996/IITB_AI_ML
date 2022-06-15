@@ -31,16 +31,10 @@ $is
             $phi row3 := ($bitcast ($uint<16>) 0) $on $entry n_row3 $on $loopback
             $phi address4 := ($bitcast ($uint<32>) m3_factor) $on $entry n_address4 $on $loopback
             $phi row4 := ($bitcast ($uint<16>) 1) $on $entry n_row4 $on $loopback
-            $phi address5 := ($bitcast ($uint<32>) m4_factor) $on $entry n_address5 $on $loopback
-            $phi row5 := ($bitcast ($uint<16>) 2) $on $entry n_row5 $on $loopback
-            $phi address6 := ($bitcast ($uint<32>) (m4_factor+m_factor)) $on $entry n_address6 $on $loopback
-            $phi row6 := ($bitcast ($uint<16>) 3) $on $entry n_row6 $on $loopback
-            $phi start := ($bitcast ($uint<1>) 1) $on $entry n_start $on $loopback
             $phi mycounter := ($bitcast ($uint<32>) m_factor) $on $entry n_mycounter $on $loopback
             $endmerge
             
             $volatile next_row := (mycounter == 1)
-            $volatile n_start := next_row
             $volatile tmp_cnt := (mycounter - 1)
             $volatile n_mycounter := ($mux next_row m_factor tmp_cnt )
 
@@ -52,13 +46,8 @@ $is
             #include macro_file1.aa
             #define num 4
             #include macro_file1.aa
-            #define num 5
-            #include macro_file1.aa
-            #define num 6
-            #include macro_file1.aa
 
             $volatile continue_flag1 := (n_row1 < row_in)
-
 
             $while continue_flag1
 
@@ -67,21 +56,3 @@ $is
         $if (n_chl_num != chl_out) $then $place [loopback] $endif
     }
 }
-
-#define num 1
-#include writeInputPipes.aa
-
-#define num 2
-#include writeInputPipes.aa
-
-#define num 3
-#include writeInputPipes.aa
-
-#define num 4
-#include writeInputPipes.aa
-
-#define num 5
-#include writeInputPipes.aa
-
-#define num 6
-#include writeInputPipes.aa

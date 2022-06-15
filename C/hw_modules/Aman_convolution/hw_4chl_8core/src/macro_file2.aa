@@ -1,5 +1,5 @@
 
-        $guard (read_ip) temp2_##num := core##core_num\_ip##num
+        $guard (read_ip) temp2_##num := core_ip##num
         $guard (~read_ip) temp1_##num := conv_ip##num
         iread##num := ($mux read_ip temp2_##num temp1_##num )
 

@@ -9,29 +9,13 @@
 #include "convolution_multipipe.h"
 #include "inttypes.h"
 
-SizedTensor_16K T,B,K;
+SizedTensor_16K T[3];
 
 #define my_read_write_fn(s1,s2) ({\
 	uint8_t x = read_uint8(s1);\
 	write_uint8(s2,x);\
 	x;\
 })
-
-#ifndef SW
-void fill_T(uint64_t i);
-#else
-#define fill_T(i) ({\
-	uint64_t element;\
-	__get4xi16__(element);\
-	T.data_array[4*i] = element;\
-	__get4xi16__(element);\
-	T.data_array[4*i+1] = element;\
-	__get4xi16__(element);\
-	T.data_array[4*i+2] = element;\
-	__get4xi16__(element);\
-	T.data_array[4*i+3] = element;\
-})
-#endif
 
 #define __get8xi8__(element) ({\
 	element = read_uint8("maxpool_input_pipe");\
@@ -45,7 +29,7 @@ void fill_T(uint64_t i);
 })
 
 #define __set8xi8__(addr) ({\
-	uint64_t element = B.data_array[addr];\
+	uint64_t element = T[2].data_array[addr];\
 	uint8_t out_data[8];\
 	out_data[7] = element & 0xFF;\
 	element>>=8;\
@@ -84,8 +68,6 @@ void sendB(uint32_t size)
 	}
 }
 
-
-
 void convolution3D()
 {
 	int i;
@@ -112,14 +94,14 @@ void convolution3D()
 	for (i = 0; i < (size >> 3); i++)
 	{
 		__get8xi8__(element);
-		T.data_array[i] = element;
+		T[0].data_array[i] = element;
 	}
 	
 	size =  chl_in*ck*rk*chl_out;
 	for (i = 0; i < (size >> 3); i++)
 	{
 		__get8xi8__(element);
-		K.data_array[i] = element;
+		T[1].data_array[i] = element;
 	}
 	chl_in >>= 3;
 	chl_out >>= 3;
@@ -130,24 +112,12 @@ void convolution3D()
 	write_uint16("output_pipe",rb);
 	write_uint16("output_pipe",cb);
 	write_uint16("output_pipe",chl_out);
-	write_uint16("num_out_pipe1",rb);
-	write_uint16("num_out_pipe1",cb);
-	write_uint16("num_out_pipe2",rb);
-	write_uint16("num_out_pipe2",cb);
-	write_uint16("num_out_pipe3",rb);
-	write_uint16("num_out_pipe3",cb);
-	write_uint16("num_out_pipe4",rb);
-	write_uint16("num_out_pipe4",cb);
-	write_uint16("num_out_pipe5",rb);
-	write_uint16("num_out_pipe5",cb);
-	write_uint16("num_out_pipe6",rb);
-	write_uint16("num_out_pipe6",cb);
-	write_uint16("num_out_pipe7",rb);
-	write_uint16("num_out_pipe7",cb);
-	write_uint16("num_out_pipe8",rb);
-	write_uint16("num_out_pipe8",cb);
+	write_uint16("num_out_pipe",rb);
+	write_uint16("num_out_pipe",cb);
+	write_uint16("num_out_pipe",chl_in);
 	write_uint16("kernel_module_pipe",chl_in);
 	write_uint16("kernel_module_pipe",chl_out);
+	write_uint16("kernel_module_pipe",1);
 	write_uint16("input_module_pipe",rb);
 	write_uint16("input_module_pipe",ct);
 	write_uint16("input_module_pipe",chl_in);
@@ -182,7 +152,7 @@ void convolution3D()
 	write_uint8 ("maxpool_output_pipe",time_data[1]);
 	write_uint8 ("maxpool_output_pipe",time_data[2]);
 	write_uint8 ("maxpool_output_pipe",time_data[3]);
-    write_uint8 ("maxpool_output_pipe",time_data[4]);
+	write_uint8 ("maxpool_output_pipe",time_data[4]);
 	write_uint8 ("maxpool_output_pipe",time_data[5]);
 	write_uint8 ("maxpool_output_pipe",time_data[6]);
 	write_uint8 ("maxpool_output_pipe",time_data[7]);

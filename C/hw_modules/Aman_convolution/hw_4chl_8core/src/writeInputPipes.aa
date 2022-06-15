@@ -1,13 +1,6 @@
 $pipeline $depth 15 $buffering 2 $fullrate
 $opaque $module [writeToInputPipe##num ] $in (in_data1 : $uint<64>) $out (done : $uint<1>) $is
 {
-	core1_ip##num := in_data1
-	core2_ip##num := in_data1
-	core3_ip##num := in_data1
-	core4_ip##num := in_data1
-	core5_ip##num := in_data1
-	core6_ip##num := in_data1
-	core7_ip##num := in_data1
-	core8_ip##num := in_data1
+	core_ip##num := in_data1
 	done := (in_data1 [] 0)
 }

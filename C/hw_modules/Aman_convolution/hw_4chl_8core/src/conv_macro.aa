@@ -3,29 +3,37 @@
 #include kernelModule.aa
 #include inputModule.aa
 
-#define core_num 1
-#include convCore.aa
-
-#define core_num 2
-#include convCore.aa
-
-#define core_num 3
-#include convCore.aa
-
-#define core_num 4
-#include convCore.aa
-
-#define core_num 5
-#include convCore.aa
-
-#define core_num 6
-#include convCore.aa
-
-#define core_num 7
-#include convCore.aa
-
-#define core_num 8
 #include convCore.aa
 
 #include sendModule.aa
 
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [readModule1]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+    ptr := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    data := ->(ptr)
+}
+
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [readModule2]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+    ptr := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    data := ->(ptr)
+}
+
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [writeModule1]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out (done : $uint<1>)
+$is
+{
+    ptr := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    ->(ptr) := data
+    done := (index [] 0)
+}

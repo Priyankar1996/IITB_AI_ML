@@ -1,14 +1,13 @@
 
-        $guard (read_k) tempk1_##k_num := core##core_num\_kp##k_num
-        $guard (~read_k) tempk2_##k_num := conv_k##k_num
-        kread##k_num := ($mux read_k tempk1_##k_num tempk2_##k_num )
-        $split (kread##k_num 8 8 8 8 8 8 8 8) (kr1_##k_num kr2_##k_num kr3_##k_num kr4_##k_num kr5_##k_num kr6_##k_num kr7_##k_num kr8_##k_num )
+        kread_##core_num\_##k_num := core##core_num\_kp##k_num
 
-        kval1_##k_num := ($bitcast ($int<8>) kr1_##k_num )
-        kval2_##k_num := ($bitcast ($int<8>) kr2_##k_num )
-        kval3_##k_num := ($bitcast ($int<8>) kr3_##k_num )
-        kval4_##k_num := ($bitcast ($int<8>) kr4_##k_num )
-        kval5_##k_num := ($bitcast ($int<8>) kr5_##k_num )
-        kval6_##k_num := ($bitcast ($int<8>) kr6_##k_num )
-        kval7_##k_num := ($bitcast ($int<8>) kr7_##k_num )
-        kval8_##k_num := ($bitcast ($int<8>) kr8_##k_num )
+        $split (kread_##core_num\_##k_num 8 8 8 8 8 8 8 8) (kr_##core_num\_1_##k_num kr_##core_num\_2_##k_num kr_##core_num\_3_##k_num kr_##core_num\_4_##k_num kr_##core_num\_5_##k_num kr_##core_num\_6_##k_num kr_##core_num\_7_##k_num kr_##core_num\_8_##k_num )
+
+        kval_##core_num\_1_##k_num := ($bitcast ($int<8>) kr_##core_num\_1_##k_num )
+        kval_##core_num\_2_##k_num := ($bitcast ($int<8>) kr_##core_num\_2_##k_num )
+        kval_##core_num\_3_##k_num := ($bitcast ($int<8>) kr_##core_num\_3_##k_num )
+        kval_##core_num\_4_##k_num := ($bitcast ($int<8>) kr_##core_num\_4_##k_num )
+        kval_##core_num\_5_##k_num := ($bitcast ($int<8>) kr_##core_num\_5_##k_num )
+        kval_##core_num\_6_##k_num := ($bitcast ($int<8>) kr_##core_num\_6_##k_num )
+        kval_##core_num\_7_##k_num := ($bitcast ($int<8>) kr_##core_num\_7_##k_num )
+        kval_##core_num\_8_##k_num := ($bitcast ($int<8>) kr_##core_num\_8_##k_num )

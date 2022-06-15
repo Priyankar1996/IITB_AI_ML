@@ -10,7 +10,12 @@ $is
         chl_in := kernel_module_pipe
         chl_out := (kernel_module_pipe << 3)
         row_size := (chl_in + (chl_in << 1))
-
+        
+        $merge $entry reentry
+        $endmerge
+        
+        index := ($bitcast ($uint<8>) kernel_module_pipe)
+        
         $merge $entry loopback
         $phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on loopback
         $phi start_add := ($bitcast ($uint<32>) 0) $on $entry n_start_add $on loopback
@@ -34,12 +39,10 @@ $is
             $endmerge
     
             $volatile nmycount := (mycount + 1)
-            fetch_addr1 := @(K[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) mycount)])
-            fetch_addr2 := @(K[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (mycount+ ( $bitcast ($uint<32> ) row_size)))])
-            fetch_addr3 := @(K[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (mycount+ ( $bitcast ($uint<32> )(row_size<<1))))])
-            fetch_val1 := ->(fetch_addr1)
-            fetch_val2 := ->(fetch_addr2)
-            fetch_val3 := ->(fetch_addr3)
+            
+            $call readModule1 (index mycount) (fetch_val1)
+            $call readModule1 (index (mycount+ ( $bitcast ($uint<32> ) row_size))) (fetch_val2)
+            $call readModule1 (index (mycount+ ( $bitcast ($uint<32> ) (row_size<<1)))) (fetch_val3)
 
             $guard (last3_0) $call writeToPipe1 (fetch_val1 fetch_val2 fetch_val3) (a1)
             $guard (last3_1) $call writeToPipe2 (fetch_val1 fetch_val2 fetch_val3) (a2)
@@ -49,23 +52,19 @@ $is
             $guard (last3_5) $call writeToPipe6 (fetch_val1 fetch_val2 fetch_val3) (a6)
             $guard (last3_6) $call writeToPipe7 (fetch_val1 fetch_val2 fetch_val3) (a7)
             $guard (last3_7) $call writeToPipe8 (fetch_val1 fetch_val2 fetch_val3) (a8)
-            
 
             $while (mycount < ea)
 
         n_chl_num := (chl_num + 1)
         n_start_add := (start_add + (9*($bitcast ($uint<32>) chl_in)))
-        $guard (last3_0) $call writeToSizePipe1 (chl_in) (b1)
-        $guard (last3_1) $call writeToSizePipe2 (chl_in) (b2)
-        $guard (last3_2) $call writeToSizePipe3 (chl_in) (b3)
-        $guard (last3_3) $call writeToSizePipe4 (chl_in) (b4)
-        $guard (last3_4) $call writeToSizePipe5 (chl_in) (b5)
-        $guard (last3_5) $call writeToSizePipe6 (chl_in) (b6)
-        $guard (last3_6) $call writeToSizePipe7 (chl_in) (b7)
-        $guard (last3_7) $call writeToSizePipe8 (chl_in) (b8)
+        
+        cnd := (chl_num == 7)
+        $guard (cnd) convStartPipe := 1
         //maxpool_output_pipe := 127
 
         $if (n_chl_num != chl_out) $then $place [loopback] $endif
+        
+        $place [reentry]
     }
 }
 

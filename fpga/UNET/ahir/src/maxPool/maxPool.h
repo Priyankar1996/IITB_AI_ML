@@ -2,16 +2,15 @@
 // Dept. Of Eelctrical Engineering, IITB
 
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
-#include <float.h>
-
-
-#define __I8 1
+#include <string.h>
+#include <time.h>
+#include <stdint.h>
+#include <Pipes.h>
+#include "pipeHandler.h"
 
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
-void __aa_barrier__();
 uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint8_t i1, uint8_t i2);
 
 #define __increment_mm__(row,col,chl,max_col,max_chl) ({\
@@ -41,3 +40,12 @@ uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4
 		if (row == re) break;\
 	}\
 })
+
+void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t index_in, uint8_t index_out)
+{
+	uint16_t ce = cb;
+	uint16_t re = rb;
+	uint16_t dim1d = ct;
+	uint16_t offset1 = chl_out>>3, offset2 = dim1d*offset1;
+	__maxPoolOfTensors3D_div__(re,ce,dim1d,ce,offset1,offset2, index_in, index_out);
+}

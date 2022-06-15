@@ -6,14 +6,15 @@
 #include <Pipes.h>
 #include "pipeHandler.h"
 #include "sized_tensor.h"
-#include "concat.h"
 
-SizedTensor_16K input_1,input_2,output;
+
+SizedTensor_16K T[3];
 
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
 void __aa_barrier__();
+void concat_core(uint16_t,uint16_t,uint32_t);
 #else
 	#define __loop_pipeline_var__ {;}
 	#define __aa_barrier__() {;}
@@ -31,7 +32,7 @@ void __aa_barrier__();
 })
 
 #define __set8xi8__(addr) ({\
-	uint64_t element = output.data_array[addr];\
+	uint64_t element = T[2].data_array[addr];\
 	uint8_t out_data[8];\
 	out_data[7] = element & 0xFF;\
 	element>>=8;\
@@ -81,32 +82,30 @@ void concat()
     out_dim2 = (out_dim2 << 8) + read_uint8 ("Concat_input_pipe");
 
     int i;
+    uint32_t input1_size = input1_dim0 * input1_dim1 * input1_dim2;
+    uint32_t input2_size = input2_dim0 * input2_dim1 * input2_dim2;
     uint32_t output_size = out_dim0 * out_dim1 *out_dim2;
-    uint16_t count1 = (input1_dim1 * input1_dim2);
-    uint16_t count2 = (input2_dim1 * input2_dim2);
-    uint32_t input1_size = count1 * input1_dim0;
-    uint32_t input2_size = count2 * input2_dim0; 
+    uint16_t count1 = (input1_dim2)>>3;
+    uint16_t count2 = (input2_dim2)>>3; 
     for(i = 0; i < (input1_size >> 3); i ++)
     {
-        __loop_pipeline_var__;
         uint64_t element;
         __get8xi8__(element);
-        input_1.data_array[i] = element;
+        T[0].data_array[i] = element;
     }
 
     for(i = 0; i < (input2_size >> 3); i ++)
     {
-        __loop_pipeline_var__;
         uint64_t element;
         __get8xi8__(element);
-        input_2.data_array[i] = element;
+        T[1].data_array[i] = element;
     }
     __aa_barrier__();
 #ifndef SW
     uint64_t start_time = timer();
     __aa_barrier__();
 #endif
-    __ConcatTensors__(input_1,input_2,output,(count1>>3),(count2>>3),(output_size >> 3));
+    concat_core(count1,count2,output_size);
     __aa_barrier__();
 #ifndef SW
     uint64_t stop_time = timer();

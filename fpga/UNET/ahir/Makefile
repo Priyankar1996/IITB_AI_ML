@@ -16,7 +16,8 @@ all: HW
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
-MODULES=src/readWriteModules.aa
+MODULES=src/readWriteModules.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/Convolution/conv_compiled.aa src/maxPool/memory.aa
+INCLUDES=-Isrc/Convolution -Isrc/concat -Isrc/maxPool -Isrc/convTranspose -Isrc/zeropad_same
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
@@ -28,9 +29,9 @@ C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
 AA2VHDL: aalink aa2vc vc2vhdl
 
 # C to llvm byte-code.. use clang.
-c2llvmbc: src/temp.c
-	clang -O3 -m32 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/temp.c -I$(SIZED_TENSOR) -Isrc/Convolution
-	opt --indvars --loopsimplify temp.o -o prog.opt.o
+c2llvmbc: src/prog.c
+	clang -O3 -m32 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR) $(INCLUDES)
+	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o
 
 # llvm byte-code to Aa..
@@ -39,7 +40,8 @@ llvmbc2aa:  prog.opt.o
 
 # link and optimize
 aalink: src/timer.aa prog.aa $(MODULES)
-	AaLinkExtMem src/timer.aa prog.aa $(MODULES)| vcFormat > prog.linked.aa
+	AaPreprocess -I src/Convolution src/Convolution/conv_macro.aa -o src/Convolution/conv_compiled.aa
+	AaLinkExtMem src/timer.aa src/decl.aa prog.aa $(MODULES)| vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 

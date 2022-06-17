@@ -7,7 +7,11 @@
 #include "pipeHandler.h"
 #include "inttypes.h"
 
-void convolution3D(uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct)
+typedef enum __convActivations {
+	none,relu,sigmoid
+} convActivations;
+
+void convolution3D(uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct, uint8_t activation)
 {
 	chl_in >>= 3;
 	chl_out >>= 3;

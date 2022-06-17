@@ -28,54 +28,54 @@ void systemTOP()
 {
     fill_input();
 	zeropadE1_1();
-    convTensorsE1_1();
+    convolution3D(224,224,64,3,0,0,0,226,relu);
     zeropadE1_2();
-    convTensorsE1_2();
-    maxPool1();
+    convolution3D(224,224,64,64,1,1,1,226,relu);
+    maxPool3D(112,112,224,64,0,0);
     zeropadE2_1();
-    convTensorsE2_1();
+    convolution3D(112,112,128,64,2,2,2,114,relu);
     zeropadE2_2();
-    convTensorsE2_2();
-    maxPool2();
+    convolution3D(112,112,128,128,3,3,3,114,relu);
+    maxPool3D(56,56,112,128,1,1);
     zeropadE3_1();
-    convTensorsE3_1();
+    convolution3D(56,56,256,128,4,4,4,58,relu);
     zeropadE3_2();
-    convTensorsE3_2();
-    maxPool3();
+    convolution3D(56,56,256,256,5,5,5,58,relu);
+    maxPool3D(28,28,56,256,2,2);
 
     zeropadM_1();
-    convTensorsM_1();
+    convolution3D(28,28,512,256,6,6,6,30,relu);
     zeropadM_2();
-    convTensorsM_2();
+    convolution3D(28,28,512,512,7,7,7,30,relu);
 
     convTranspose3();
     zeropadT_3();
-    convTensorT_3();
+    convolution3D(56,56,256,512,8,8,8,58,relu);
     concat3();
     zeropadD3_1();
-    convTensorsD3_1();
+    convolution3D(56,56,256,512,9,9,9,58,relu);
     zeropadD3_2();
-    convTensorsD3_2();
+    convolution3D(56,56,256,256,10,10,10,58,relu);
 
     convTranspose2();
     zeropadT_2();
-    convTensorT_2();
+    convolution3D(112,112,128,256,11,11,11,114,relu);
     concat2();
     zeropadD2_1();
-    convTensorsD2_1();
+    convolution3D(112,112,128,256,12,12,12,114,relu);
     zeropadD2_2();
-    convTensorsD2_2();
+    convolution3D(112,112,128,128,13,13,13,114,relu);
 
     convTranspose1();
     zeropadT_1();
-    convTensorT_1();
+    convolution3D(224,224,64,128,14,14,14,226,relu);
     concat1();
     zeropadD1_1();
-    convTensorsD1_1();
+    convolution3D(224,224,64,128,15,15,15,226,relu);
     zeropadD1_2();
-    convTensorsD1_2();
+    convolution3D(224,224,64,64,16,16,16,226,relu);
 
     zeropadL();
-    convTensorsL();
+    convolution3D(224,224,3,64,17,17,17,226,sigmoid);
     //Final stage is a sigmoid activation       
 }

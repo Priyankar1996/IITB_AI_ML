@@ -148,24 +148,24 @@ $is
     cnd16 := (index == 15)
     cnd17 := (index == 16)
     cnd18 := (index == 17)
-    $guard (cnd1) val1 := data
-    $guard (cnd2) val2 := data
-    $guard (cnd3) val3 := data
-    $guard (cnd4) val4 := data
-    $guard (cnd5) val5 := data
-    $guard (cnd6) val6 := data
-    $guard (cnd7) val7 := data
-    $guard (cnd8) val8 := data
-    $guard (cnd9) val9 := data
-    $guard (cnd10) val10 := data
-    $guard (cnd11) val11 := data
-    $guard (cnd12) val12 := data
-    $guard (cnd13) val13 := data
-    $guard (cnd14) val14 := data
-    $guard (cnd15) val15 := data
-    $guard (cnd16) val16 := data
-    $guard (cnd17) val17 := data
-    $guard (cnd18) val18 := data
+    $guard (cnd1) val1 := ->(tmp1)
+    $guard (cnd2) val2 := ->(tmp2)
+    $guard (cnd3) val3 := ->(tmp3)
+    $guard (cnd4) val4 := ->(tmp4)
+    $guard (cnd5) val5 := ->(tmp5)
+    $guard (cnd6) val6 := ->(tmp6)
+    $guard (cnd7) val7 := ->(tmp7)
+    $guard (cnd8) val8 := ->(tmp8)
+    $guard (cnd9) val9 := ->(tmp9)
+    $guard (cnd10) val10 := ->(tmp10)
+    $guard (cnd11) val11 := ->(tmp11)
+    $guard (cnd12) val12 := ->(tmp12)
+    $guard (cnd13) val13 := ->(tmp13)
+    $guard (cnd14) val14 := ->(tmp14)
+    $guard (cnd15) val15 := ->(tmp15)
+    $guard (cnd16) val16 := ->(tmp16)
+    $guard (cnd17) val17 := ->(tmp17)
+    $guard (cnd18) val18 := ->(tmp18)
     
     data := ( $excmux 
                 cnd1 val1 cnd2 val2 cnd3 val3
@@ -191,13 +191,13 @@ $is
     tmp6 := @(CE3_2[($bitcast ($uint<32>) 0)][address])
     tmp7 := @(CM1[($bitcast ($uint<32>) 0)][address])
     tmp8 := @(CM2[($bitcast ($uint<32>) 0)][address])
-    tmp9 := @(CT3[($bitcast ($uint<32>) 0)][address])
+    tmp9 := @(T3[($bitcast ($uint<32>) 0)][address])
     tmp10 := @(CD3_1[($bitcast ($uint<32>) 0)][address])
     tmp11 := @(CD3_2[($bitcast ($uint<32>) 0)][address])
-    tmp12 := @(CT2[($bitcast ($uint<32>) 0)][address])
+    tmp12 := @(T2[($bitcast ($uint<32>) 0)][address])
     tmp13 := @(CD2_1[($bitcast ($uint<32>) 0)][address])
     tmp14 := @(CD2_2[($bitcast ($uint<32>) 0)][address])
-    tmp15 := @(CT1[($bitcast ($uint<32>) 0)][address])
+    tmp15 := @(T1[($bitcast ($uint<32>) 0)][address])
     tmp16 := @(CD1_1[($bitcast ($uint<32>) 0)][address])
     tmp17 := @(CD1_2[($bitcast ($uint<32>) 0)][address])
     tmp18 := @(output[($bitcast ($uint<32>) 0)][address])

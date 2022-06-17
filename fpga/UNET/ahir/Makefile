@@ -16,7 +16,7 @@ all: HW
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
-MODULES=src/readWriteModules.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/Convolution/conv_compiled.aa src/maxPool/memory.aa
+MODULES=src/readWriteModules.aa src/readWriteModules2.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/Convolution/conv_compiled.aa src/maxPool/memory.aa src/zeropad_same/zeropad_same.aa
 INCLUDES=-Isrc/Convolution -Isrc/concat -Isrc/maxPool -Isrc/convTranspose -Isrc/zeropad_same
 
 #PROGDEFS=-DUNROLLED

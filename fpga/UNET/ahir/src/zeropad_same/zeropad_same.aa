@@ -24,7 +24,7 @@ $module [zeropad_same] $in(inp_d0:$uint<16> inp_d1:$uint<16> inp_d2:$uint<16> ou
     $merge bbx_xnph451_forx_xbody266 forx_xbody266_forx_xbody266
     $phi indvar469 :=  ( $cast ($uint<32>) ( $bitcast ($uint<32> ) 0 ) ) $on bbx_xnph451_forx_xbody266 ( $cast ($uint<32>) indvarx_xnext470) $on forx_xbody266_forx_xbody266 
     $endmerge
-    $call writeModule_zeropad (index3 indvar469 ($bitcast ($uint<64>) 0)) (done1) 
+    $call writeModule_zeropad (index2 indvar469 ($bitcast ($uint<64>) 0)) (done1) 
     indvarx_xnext470 := (indvar469 + ( $bitcast ($uint<32> ) 1 ) )
     // compare instruction
     exitcond := (indvarx_xnext470 == tmp481 )

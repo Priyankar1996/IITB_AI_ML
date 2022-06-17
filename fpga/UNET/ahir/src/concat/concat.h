@@ -18,7 +18,7 @@ void concat_core(uint16_t,uint16_t,uint32_t,uint8_t,uint8_t,uint8_t);
 	#define __aa_barrier__() {;}
 #endif
 
-void concat(uint16_t input1_dim0,uint16_t input1_dim1,uint16_t input1_dim2,uint16_t input2_dim0,uint16_t input2_dim1,uint16_t input2_dim2,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2)
+void concat(uint16_t input1_dim0,uint16_t input1_dim1,uint16_t input1_dim2,uint16_t input2_dim0,uint16_t input2_dim1,uint16_t input2_dim2,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index0,uint8_t index1,uint8_t index2)
 {
     uint32_t output_size = out_dim0 * out_dim1 * out_dim2;
     uint16_t count1 = (input1_dim2)>>3;

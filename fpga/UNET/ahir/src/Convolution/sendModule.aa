@@ -34,8 +34,8 @@ $module [sendModule] $in () $out () $is
         $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) (address1 + tmp2))
         $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) ( address2 + tmp2))
         
-        $call writeModule1 (index address1 output_pipe1) (d1)
-        $call writeModule1 (index address2 output_pipe2) (d2)
+        $call writeModule_convolution (index address1 output_pipe1) (d1)
+        $call writeModule_convolution (index address2 output_pipe2) (d2)
 //        maxpool_output_pipe := 100
         continue_flag := ((chl < (chl_out - 1)) | (~chl_change))
         $while continue_flag

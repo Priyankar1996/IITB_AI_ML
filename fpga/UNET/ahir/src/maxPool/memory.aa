@@ -5,10 +5,10 @@ $in (addr addr1 addr2 addr3 addr4 : $uint<32> index1 index2 : $uint<8>)
 $out (output : $uint<8>)
 $is
 {
-    $call readModule1 (index1 addr1) (c1)
-    $call readModule1 (index1 addr2) (c2)
-    $call readModule1 (index1 addr3) (c3)
-    $call readModule1 (index1 addr4) (c4)
+    $call readModule_maxPool (index1 addr1) (c1)
+    $call readModule_maxPool (index1 addr2) (c2)
+    $call readModule_maxPool (index1 addr3) (c3)
+    $call readModule_maxPool (index1 addr4) (c4)
     $split (c1 8 8 8 8 8 8 8 8) (sliced_v11 sliced_v12 sliced_v13 sliced_v14 sliced_v15 sliced_v16 sliced_v17 sliced_v18)
     $split (c2 8 8 8 8 8 8 8 8) (sliced_v21 sliced_v22 sliced_v23 sliced_v24 sliced_v25 sliced_v26 sliced_v27 sliced_v28)
     $split (c3 8 8 8 8 8 8 8 8) (sliced_v31 sliced_v32 sliced_v33 sliced_v34 sliced_v35 sliced_v36 sliced_v37 sliced_v38)
@@ -73,7 +73,7 @@ $is
     $volatile t81 := ($mux (a18 > a28) a18 a28)
     $volatile t82 := ($mux (a38 > a48) a38 a48)
     $volatile out8 := ($mux (t81 > t82) t81 t82)
-    $call writeModule1 (index2 addr ($concat ($bitcast ($uint<8>) out1) ($bitcast ($uint<8>) out2) ($bitcast ($uint<8>) out3) ($bitcast ($uint<8>) out4) ($bitcast ($uint<8>) out5) ($bitcast ($uint<8>) out6) ($bitcast ($uint<8>) out7) ($bitcast ($uint<8>) out8)) ) (d1)
+    $call writeModule_maxPool (index2 addr ($concat ($bitcast ($uint<8>) out1) ($bitcast ($uint<8>) out2) ($bitcast ($uint<8>) out3) ($bitcast ($uint<8>) out4) ($bitcast ($uint<8>) out5) ($bitcast ($uint<8>) out6) ($bitcast ($uint<8>) out7) ($bitcast ($uint<8>) out8)) ) (d1)
 
     output := ($bitcast ($uint<8>) out1)
 }

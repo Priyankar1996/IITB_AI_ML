@@ -1,0 +1,91 @@
+$pipe  BAUD_CONTROL_WORD_SIG : $uint<32>  $depth 1  $signal 
+// can point into 
+$pipe  BAUD_CONTROL_WORD_VALID : $uint<1>  $depth 1  $signal 
+// can point into 
+$pipe  BAUD_RATE_SIG : $uint<32>  $depth 1  $signal 
+// can point into 
+$pipe  CLK_FREQUENCY_SIG : $uint<32>  $depth 1  $signal 
+// can point into 
+$pipe  CLOCK_FREQUENCY_VALID : $uint<1>  $depth 1  $signal 
+// can point into 
+$module [my_gcd]
+$in ( A : $uint<32>   B : $uint<32>  )
+$out ( GCD : $uint<32>  )
+$is
+{
+  $branchblock [loop]
+  {
+    $merge $entry loopback 
+    $phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    $phi tB := 			  B $on   $entry 			  ntB $on   loopback 
+    // type of target is $uint<32>
+    $endmerge
+    continue_flag := (((tA > 1 ) & (tB > 1 )) & (tA != tB)) $buffering 1// bits of buffering = 1. 
+    GCD := ( $mux (tA == tB) tA  ( $mux ((tA == 1 ) | (tB == 1 )) 1   ($bitcast ($uint<32>) _b0  ) )  )  $buffering 1// bits of buffering = 32. 
+    $volatile ntA := ( $mux (tA > tB) (tA - tB)  tA )  $buffering 1
+    $volatile ntB := ( $mux (tB > tA) (tB - tA)  tB )  $buffering 1
+    $if continue_flag $then 
+    $place[loopback]
+    $endif
+  }
+}
+$module [my_div]
+$in ( A : $uint<32>   B : $uint<32>  )
+$out ( Q : $uint<32>  )
+$is
+{
+  $branchblock [loop]
+  {
+    $merge $entry loopback 
+    $phi tA := 			  A $on   $entry 			  ntA $on   loopback 
+    // type of target is $uint<32>
+    $phi tQ := 			  ($bitcast ($uint<32>) _b0  ) $on   $entry 			  ntQ $on   loopback 
+    // type of target is $uint<32>
+    $endmerge
+    $volatile continue_flag := ((tA != 0 ) & (tA >= B)) $buffering 1
+    $volatile ntA := ( $mux continue_flag (tA - B)  tA )  $buffering 1
+    $volatile ntQ := ( $mux continue_flag (tQ + 1 )  tQ )  $buffering 1
+    $if continue_flag $then 
+    $place[loopback]
+    $endif
+  }
+  ( tQ => tQ )
+  Q := tQ $buffering 1// bits of buffering = 32. 
+}
+$module [baudControlCalculatorDaemon]
+$in ()
+$out ()
+$is
+{
+  BAUD_CONTROL_WORD_VALID := 0  $buffering 1// bits of buffering = 1. 
+  $branchblock [loop]
+  {
+    $merge $entry wait_on_clock 
+    $endmerge
+    clock_valid := CLOCK_FREQUENCY_VALID $buffering 1// bits of buffering = 1. 
+    $if ( ~ clock_valid ) $then 
+    $place[wait_on_clock]
+    $endif
+    $merge $entry loopback 
+    $endmerge
+    SS := (( $slice CLK_FREQUENCY_SIG 31 16 )  && ($bitcast ($uint<16>) _b0  )) $buffering 1// bits of buffering = 32. 
+    BRx16 := (( $slice BAUD_RATE_SIG 27 0 )  && ($bitcast ($uint<4>) _b0  )) $buffering 1// bits of buffering = 32. 
+    $call my_gcd (SS BRx16 ) (GCD ) 
+    $call my_div (BRx16 GCD ) (BF ) 
+    $call my_div (SS GCD ) (BLx ) 
+    BL := (BLx - BF) $buffering 1// bits of buffering = 32. 
+    BAUD_CONTROL_WORD_SIG := ((( $slice BL 15 0 )  && ($bitcast ($uint<4>) _b0  )) && ( $slice BF 11 0 ) ) $buffering 1// bits of buffering = 32. 
+    $barrier
+    BAUD_CONTROL_WORD_VALID := 1  $buffering 1// bits of buffering = 1. 
+    $place[loopback]
+  }
+}
+$module [global_storage_initializer_]
+$in ()
+$out ()
+$is
+{
+  $null
+}
+// use of gated clocks in modules 

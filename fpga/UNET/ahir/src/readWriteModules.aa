@@ -1,46 +1,24 @@
 $pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [readModule_maxPool]
-$in (index : $uint<8> address : $uint<32>)
-$out (data : $uint<64>)
+$opaque $module [writeModule_zeropad]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out (done : $uint<1>)
 $is
 {
-    tmp1 := @(CE1_2[($bitcast ($uint<32>) 0)][address])
-    tmp2 := @(CE2_2[($bitcast ($uint<32>) 0)][address])
-    tmp3 := @(CE3_2[($bitcast ($uint<32>) 0)][address])
-    cnd1 := (index == 0)
-    cnd2 := (index == 1)
-    cnd3 := (index == 2)
-    $guard (cnd1) val1 := ->(tmp1)
-    $guard (cnd2) val2 := ->(tmp2)
-    $guard (cnd3) val3 := ->(tmp3)
-    
-    data := ( $excmux cnd1 val1 cnd2 val2 cnd3 val3 )
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [readModule_convolution]
-$in (index : $uint<8> address : $uint<32>)
-$out (data : $uint<64>)
-$is
-{
-    tmp1 := @(input[($bitcast ($uint<32>) 0)][address])
-    tmp2 := @(CE1_1[($bitcast ($uint<32>) 0)][address])
-    tmp3 := @(M1[($bitcast ($uint<32>) 0)][address])
-    tmp4 := @(CE2_1[($bitcast ($uint<32>) 0)][address])
-    tmp5 := @(M2[($bitcast ($uint<32>) 0)][address])
-    tmp6 := @(CE3_1[($bitcast ($uint<32>) 0)][address])
-    tmp7 := @(M3[($bitcast ($uint<32>) 0)][address])
-    tmp8 := @(CM1[($bitcast ($uint<32>) 0)][address])
-    tmp9 := @(T3[($bitcast ($uint<32>) 0)][address])
-    tmp10 := @(CO3[($bitcast ($uint<32>) 0)][address])
-    tmp11 := @(CD3_1[($bitcast ($uint<32>) 0)][address])
-    tmp12 := @(T2[($bitcast ($uint<32>) 0)][address])
-    tmp13 := @(CO3[($bitcast ($uint<32>) 0)][address])
-    tmp14 := @(CD2_1[($bitcast ($uint<32>) 0)][address])
-    tmp15 := @(T1[($bitcast ($uint<32>) 0)][address])
-    tmp16 := @(CO3[($bitcast ($uint<32>) 0)][address])
-    tmp17 := @(CD1_1[($bitcast ($uint<32>) 0)][address])
-    tmp18 := @(CD1_2[($bitcast ($uint<32>) 0)][address])
+    tmp1 := @(ZE1_1[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(ZE1_2[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(ZE2_1[($bitcast ($uint<32>) 0)][address])
+    tmp4 := @(ZE2_2[($bitcast ($uint<32>) 0)][address])
+    tmp5 := @(ZE3_1[($bitcast ($uint<32>) 0)][address])
+    tmp6 := @(ZE3_2[($bitcast ($uint<32>) 0)][address])
+    tmp7 := @(ZM1[($bitcast ($uint<32>) 0)][address])
+    tmp8 := @(ZM2[($bitcast ($uint<32>) 0)][address])
+    tmp9 := @(ZD3_1[($bitcast ($uint<32>) 0)][address])
+    tmp10 := @(ZD3_2[($bitcast ($uint<32>) 0)][address])
+    tmp11 := @(ZD2_1[($bitcast ($uint<32>) 0)][address])
+    tmp12 := @(ZD2_2[($bitcast ($uint<32>) 0)][address])
+    tmp13 := @(ZD1_1[($bitcast ($uint<32>) 0)][address])
+    tmp14 := @(ZD1_2[($bitcast ($uint<32>) 0)][address])
+    tmp15 := @(ZL[($bitcast ($uint<32>) 0)][address])
     cnd1 := (index == 0)
     cnd2 := (index == 1)
     cnd3 := (index == 2)
@@ -56,45 +34,22 @@ $is
     cnd13 := (index == 12)
     cnd14 := (index == 13)
     cnd15 := (index == 14)
-    cnd16 := (index == 15)
-    cnd17 := (index == 16)
-    cnd18 := (index == 17)
-    $guard (cnd1) val1 := ->(tmp1)
-    $guard (cnd2) val2 := ->(tmp2)
-    $guard (cnd3) val3 := ->(tmp3)
-    $guard (cnd4) val4 := ->(tmp4)
-    $guard (cnd5) val5 := ->(tmp5)
-    $guard (cnd6) val6 := ->(tmp6)
-    $guard (cnd7) val7 := ->(tmp7)
-    $guard (cnd8) val8 := ->(tmp8)
-    $guard (cnd9) val9 := ->(tmp9)
-    $guard (cnd10) val10 := ->(tmp10)
-    $guard (cnd11) val11 := ->(tmp11)
-    $guard (cnd12) val12 := ->(tmp12)
-    $guard (cnd13) val13 := ->(tmp13)
-    $guard (cnd14) val14 := ->(tmp14)
-    $guard (cnd15) val15 := ->(tmp15)
-    $guard (cnd16) val16 := ->(tmp16)
-    $guard (cnd17) val17 := ->(tmp17)
-    $guard (cnd18) val18 := ->(tmp18)
-    
-    data := ( $excmux 
-                cnd1 val1 cnd2 val2 cnd3 val3
-                cnd4 val4 cnd5 val5 cnd6 val6
-                cnd7 val7 cnd8 val8 cnd9 val9
-                cnd10 val10 cnd11 val11 cnd12 val12
-                cnd13 val13 cnd14 val14 cnd15 val15
-                cnd16 val16 cnd17 val17 cnd18 val18
-             )
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [writeModule_zeropad]
-$in (index : $uint<8> address : $uint<32> data : $uint<64>)
-$out (done : $uint<1>)
-$is
-{
-	
+    $guard (cnd1) ->(tmp1) := data
+    $guard (cnd2) ->(tmp2) := data
+    $guard (cnd3) ->(tmp3) := data
+    $guard (cnd4) ->(tmp4) := data
+    $guard (cnd5) ->(tmp5) := data
+    $guard (cnd6) ->(tmp6) := data
+    $guard (cnd7) ->(tmp7) := data
+    $guard (cnd8) ->(tmp8) := data
+    $guard (cnd9) ->(tmp9) := data
+    $guard (cnd10) ->(tmp10) := data
+    $guard (cnd11) ->(tmp11) := data
+    $guard (cnd12) ->(tmp12) := data
+    $guard (cnd13) ->(tmp13) := data
+    $guard (cnd14) ->(tmp14) := data
+    $guard (cnd15) ->(tmp15) := data
+    done := (index [] 0)	
 }
 
 $pipeline $depth 8 $buffering 1 $fullrate
@@ -111,16 +66,13 @@ $is
     tmp6 := @(CE3_1[($bitcast ($uint<32>) 0)][address])
     tmp7 := @(M3[($bitcast ($uint<32>) 0)][address])
     tmp8 := @(CM1[($bitcast ($uint<32>) 0)][address])
-    tmp9 := @(T3[($bitcast ($uint<32>) 0)][address])
-    tmp10 := @(CO3[($bitcast ($uint<32>) 0)][address])
-    tmp11 := @(CD3_1[($bitcast ($uint<32>) 0)][address])
-    tmp12 := @(T2[($bitcast ($uint<32>) 0)][address])
+    tmp9 := @(CO3[($bitcast ($uint<32>) 0)][address])
+    tmp10 := @(CD3_1[($bitcast ($uint<32>) 0)][address])
+    tmp11 := @(CO3[($bitcast ($uint<32>) 0)][address])
+    tmp12 := @(CD2_1[($bitcast ($uint<32>) 0)][address])
     tmp13 := @(CO3[($bitcast ($uint<32>) 0)][address])
-    tmp14 := @(CD2_1[($bitcast ($uint<32>) 0)][address])
-    tmp15 := @(T1[($bitcast ($uint<32>) 0)][address])
-    tmp16 := @(CO3[($bitcast ($uint<32>) 0)][address])
-    tmp17 := @(CD1_1[($bitcast ($uint<32>) 0)][address])
-    tmp18 := @(CD1_2[($bitcast ($uint<32>) 0)][address])
+    tmp14 := @(CD1_1[($bitcast ($uint<32>) 0)][address])
+    tmp15 := @(CD1_2[($bitcast ($uint<32>) 0)][address])
     cnd1 := (index == 0)
     cnd2 := (index == 1)
     cnd3 := (index == 2)
@@ -136,9 +88,6 @@ $is
     cnd13 := (index == 12)
     cnd14 := (index == 13)
     cnd15 := (index == 14)
-    cnd16 := (index == 15)
-    cnd17 := (index == 16)
-    cnd18 := (index == 17)
     $guard (cnd1) val1 := ->(tmp1)
     $guard (cnd2) val2 := ->(tmp2)
     $guard (cnd3) val3 := ->(tmp3)
@@ -154,9 +103,6 @@ $is
     $guard (cnd13) val13 := ->(tmp13)
     $guard (cnd14) val14 := ->(tmp14)
     $guard (cnd15) val15 := ->(tmp15)
-    $guard (cnd16) val16 := ->(tmp16)
-    $guard (cnd17) val17 := ->(tmp17)
-    $guard (cnd18) val18 := ->(tmp18)
     
     data := ( $excmux 
                 cnd1 val1 cnd2 val2 cnd3 val3
@@ -164,7 +110,6 @@ $is
                 cnd7 val7 cnd8 val8 cnd9 val9
                 cnd10 val10 cnd11 val11 cnd12 val12
                 cnd13 val13 cnd14 val14 cnd15 val15
-                cnd16 val16 cnd17 val17 cnd18 val18
              )
 	
 }
@@ -175,7 +120,16 @@ $in (index : $uint<8> address : $uint<32> data : $uint<64>)
 $out (done : $uint<1>)
 $is
 {
-	
+	tmp1 := @(CO3[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(CO2[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(CO1[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 2)
+    cnd2 := (index == 1)
+    cnd3 := (index == 0)
+    $guard (cnd1) ->(tmp1) := data
+    $guard (cnd2) ->(tmp2) := data
+    $guard (cnd3) ->(tmp3) := data
+    done := (index [] 0)
 }
 
 $pipeline $depth 8 $buffering 1 $fullrate
@@ -184,7 +138,27 @@ $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
 $is
 {
-	
+	tmp1 := @(T3[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(CE3_2[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(T2[($bitcast ($uint<32>) 0)][address])
+    tmp4 := @(CE2_2[($bitcast ($uint<32>) 0)][address])
+    tmp5 := @(T1[($bitcast ($uint<32>) 0)][address])
+    tmp6 := @(CE1_2[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 5)
+    cnd2 := (index == 4)
+    cnd3 := (index == 3)
+    cnd4 := (index == 2)
+    cnd5 := (index == 1)
+    cnd6 := (index == 0)
+    $guard (cnd1) val1 := ->(tmp1)
+    $guard (cnd2) val2 := ->(tmp2)
+    $guard (cnd3) val3 := ->(tmp3)
+    $guard (cnd4) val4 := ->(tmp4)
+    $guard (cnd5) val5 := ->(tmp5)
+    $guard (cnd6) val6 := ->(tmp6)
+    
+    data := ( $excmux cnd1 val1 cnd2 val2 cnd3 val3
+                      cnd4 val4 cnd5 val5 cnd6 val6)
 }
 
 $pipeline $depth 8 $buffering 1 $fullrate
@@ -193,12 +167,12 @@ $in (index : $uint<8> address : $uint<32> data : $uint<64>)
 $out (done : $uint<1>)
 $is
 {
-	tmp1 := @(T1[($bitcast ($uint<32>) 0)][address])
+	tmp1 := @(T3[($bitcast ($uint<32>) 0)][address])
     tmp2 := @(T2[($bitcast ($uint<32>) 0)][address])
-    tmp3 := @(T3[($bitcast ($uint<32>) 0)][address])
-    cnd1 := (index == 0)
+    tmp3 := @(T1[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 2)
     cnd2 := (index == 1)
-    cnd3 := (index == 2)
+    cnd3 := (index == 0)
     $guard (cnd1) val1 := ->(tmp1)
     $guard (cnd2) val2 := ->(tmp2)
     $guard (cnd3) val3 := ->(tmp3)
@@ -211,5 +185,15 @@ $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
 $is
 {
-	
+	tmp1 := @(CM2[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(CD3_2[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(CD2_2[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 2)
+    cnd2 := (index == 1)
+    cnd3 := (index == 0)
+    $guard (cnd1) val1 := ->(tmp1)
+    $guard (cnd2) val2 := ->(tmp2)
+    $guard (cnd3) val3 := ->(tmp3)
+    
+    data := ( $excmux cnd1 val1 cnd2 val2 cnd3 val3 )
 }

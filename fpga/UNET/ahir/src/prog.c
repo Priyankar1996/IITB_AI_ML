@@ -20,7 +20,7 @@ void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t 
 
 void systemTOP()
 {
-    fill_input();
+    //fill_input();
 	zeropad(224,224,3,226,226,30,0,0);
     convolution3D(224,224,64,3,0,0,0,226,relu);
     zeropad(224,224,64,226,226,64,1,1);

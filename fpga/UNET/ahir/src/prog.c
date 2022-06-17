@@ -96,6 +96,7 @@ void sendOutput()
 void systemTOP()
 {
     fill_input();
+    uint64_t start_time = timer();
 	zeropad(224,224,3,226,226,30,0,0);
     convolution3D(224,224,64,3,0,0,0,226,relu);
     zeropad(224,224,64,226,226,64,1,1);
@@ -143,6 +144,32 @@ void systemTOP()
 
     zeropad(224,224,64,226,226,64,17,17);
     convolution3D(224,224,3,64,17,17,17,226,sigmoid);
+    uint64_t stop_time = timer();
+    uint64_t elapsed_time = stop_time-start_time;
+	uint8_t out_data[8];\
+	out_data[7] = elapsed_time & 0xFF;\
+	elapsed_time>>=8;\
+	out_data[6] = elapsed_time & 0xFF;\
+	elapsed_time>>=8;\
+	out_data[5] = elapsed_time & 0xFF;\
+	elapsed_time>>=8;\
+	out_data[4] = elapsed_time & 0xFF;\
+	elapsed_time>>=8;\
+	out_data[3] = elapsed_time & 0xFF;\
+	elapsed_time>>=8;\
+	out_data[2] = elapsed_time & 0xFF;\
+	elapsed_time>>=8;\
+	out_data[1] = elapsed_time & 0xFF;\
+	elapsed_time>>=8;\
+	out_data[0] = elapsed_time & 0xFF;\
+	write_uint8 ("system_output_pipe",out_data[0]);\
+	write_uint8 ("system_output_pipe",out_data[1]);\
+	write_uint8 ("system_output_pipe",out_data[2]);\
+	write_uint8 ("system_output_pipe",out_data[3]);\
+	write_uint8 ("system_output_pipe",out_data[4]);\
+	write_uint8 ("system_output_pipe",out_data[5]);\
+	write_uint8 ("system_output_pipe",out_data[6]);\
+	write_uint8 ("system_output_pipe",out_data[7]);\
     //Final stage is a sigmoid activation       
     
     sendOutput();

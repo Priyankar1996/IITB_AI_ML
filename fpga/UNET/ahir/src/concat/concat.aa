@@ -19,10 +19,10 @@ $module[concat_core] $in(input1_count:$uint<16> input2_count:$uint<16> output_si
     
         cmp := (count_inp1 < input1_count)
 
-        $guard (cmp) $call readModule1 (index1 ($bitcast ($uint<32>)add_inp1)) (i1)
-        $guard (~cmp) $call readModule1 (index2 ($bitcast ($uint<32>)add_inp2)) (i2)
+        $guard (cmp) $call readModule_concat (index1 ($bitcast ($uint<32>)add_inp1)) (i1)
+        $guard (~cmp) $call readModule_concat (index2 ($bitcast ($uint<32>)add_inp2)) (i2)
         o := ($mux cmp i1 i2)
-        $call writeModule1 (index3 add_out o) (done)
+        $call writeModule_concat (index3 add_out o) (done)
 
         my_flag := (count_inp1 == (total_size - 1))
         next_count_inp1 := ($mux my_flag 0 (count_inp1 + 1))

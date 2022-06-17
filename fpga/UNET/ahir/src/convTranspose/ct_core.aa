@@ -24,7 +24,7 @@ $module [ct_core] $in(inp_d0:$uint<16> inp_d1:$uint<16> inp_d2:$uint<16> ker_d1:
     $merge bbx_xnph451_forx_xbody266 forx_xbody266_forx_xbody266
     $phi indvar469 :=  ( $cast ($uint<32>) ( $bitcast ($uint<32> ) 0 ) ) $on bbx_xnph451_forx_xbody266 ( $cast ($uint<32>) indvarx_xnext470) $on forx_xbody266_forx_xbody266 
     $endmerge
-    $call writeModule1 (index3 indvar469 ($bitcast ($uint<64>) 0)) (done) 
+    $call writeModule_convTranspose (index3 indvar469 ($bitcast ($uint<64>) 0)) (done) 
     indvarx_xnext470 := (indvar469 + ( $bitcast ($uint<32> ) 1 ) )
     // compare instruction
     exitcond := (indvarx_xnext470 == tmp481 )
@@ -63,8 +63,8 @@ $module [ct_core] $in(inp_d0:$uint<16> inp_d1:$uint<16> inp_d2:$uint<16> ker_d1:
     $volatile nao3 := (input_dim2 + nao2)
     $volatile add_out := (nao3 >> 3)
 
-    $call readModule1 (index1 ($bitcast ($uint<32>)add_src)) (i1)
-    $call writeModule1 (index3 ($bitcast ($uint<32>)add_out) i1) (done1)
+    $call readModule_convTranspose (index1 ($bitcast ($uint<32>)add_src)) (i1)
+    $call writeModule_convTranspose (index3 ($bitcast ($uint<32>)add_out) i1) (done1)
 
     dim2_limit := (inp_d2 - 8)
     

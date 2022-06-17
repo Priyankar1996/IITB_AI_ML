@@ -6,6 +6,17 @@
 #include <Pipes.h>
 #include "pipeHandler.h"
 #include "sized_tensor.h"
+#include "concat.h"
+#include "zeropad.h"
+#include "convolution.h"
+#include "convTranspose.h"
+#include "maxPool.h"
+
+void concat(uint16_t input1_dim0, uint16_t input1_dim1,uint16_t input1_dim2,uint16_t input2_dim0,      uint16_t input2_dim1,uint16_t input2_dim2,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index0,uint8_t index1,uint8_t index2);
+void zeropad(uint16_t input_dim0,uint16_t input_dim1,uint16_t input_dim2,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index1, uint8_t index2);
+void convolution3D(uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct, uint8_t activation);
+void convTranspose(uint16_t inp_dim0,uint16_t inp_dim1,uint16_t inp_dim2,uint16_t ker_dim0,uint16_t ker_dim1,uint16_t ker_dim2,uint16_t ker_dim3,uint16_t stride0,uint16_t padding,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index1, uint8_t index2);
+void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t index_in, uint8_t index_out);
 
 SizedTensor_64K input, output;
 SizedTensor_64K KE3_1, KT2, KD2_1;
@@ -27,55 +38,55 @@ SizedTensor_1M CO1;
 void systemTOP()
 {
     fill_input();
-	zeropadE1_1();
+	zeropad(224,224,3,226,226,30,0,0);
     convolution3D(224,224,64,3,0,0,0,226,relu);
-    zeropadE1_2();
+    zeropad(224,224,64,226,226,64,1,1);
     convolution3D(224,224,64,64,1,1,1,226,relu);
     maxPool3D(112,112,224,64,0,0);
-    zeropadE2_1();
+    zeropad(112,112,64,114,114,64,2,2);
     convolution3D(112,112,128,64,2,2,2,114,relu);
-    zeropadE2_2();
+    zeropad(112,112,128,114,114,128,3,3);
     convolution3D(112,112,128,128,3,3,3,114,relu);
     maxPool3D(56,56,112,128,1,1);
-    zeropadE3_1();
+    zeropad(56,56,112,58,58,112,4,4);
     convolution3D(56,56,256,128,4,4,4,58,relu);
-    zeropadE3_2();
+    zeropad(56,56,256,58,58,256,5,5);
     convolution3D(56,56,256,256,5,5,5,58,relu);
     maxPool3D(28,28,56,256,2,2);
 
-    zeropadM_1();
+    zeropad(28,28,512,30,30,512,6,6);
     convolution3D(28,28,512,256,6,6,6,30,relu);
-    zeropadM_2();
+    zeropad(28,28,512,30,30,512,7,7);
     convolution3D(28,28,512,512,7,7,7,30,relu);
 
     convTranspose3();
-    zeropadT_3();
+    zeropad(56,56,512,58,58,512,8,8);
     convolution3D(56,56,256,512,8,8,8,58,relu);
-    concat3();
-    zeropadD3_1();
+    concat3(56,56,256,56,56,256,56,56,512,5,8,3);
+    zeropad(56,56,512,58,58,512,9,9);
     convolution3D(56,56,256,512,9,9,9,58,relu);
-    zeropadD3_2();
+    zeropad(56,56,256,58,58,256,10,10);
     convolution3D(56,56,256,256,10,10,10,58,relu);
 
     convTranspose2();
-    zeropadT_2();
+    zeropad(112,112,256,114,114,256,11,11);
     convolution3D(112,112,128,256,11,11,11,114,relu);
-    concat2();
-    zeropadD2_1();
+    concat2(112,112,128,112,112,128,112,112,256,3,11,2);
+    zeropad(112,112,256,114,114,256,12,12);
     convolution3D(112,112,128,256,12,12,12,114,relu);
-    zeropadD2_2();
+    zeropad(112,112,128,114,114,128,13,13);
     convolution3D(112,112,128,128,13,13,13,114,relu);
 
     convTranspose1();
-    zeropadT_1();
+    zeropad(224,224,64,226,226,64,14,14);
     convolution3D(224,224,64,128,14,14,14,226,relu);
-    concat1();
-    zeropadD1_1();
+    concat(224,224,64,224,224,64,224,224,128,1,14,1);
+    zeropad(224,224,128,226,226,128,15,15);
     convolution3D(224,224,64,128,15,15,15,226,relu);
-    zeropadD1_2();
+    zeropad(224,224,64,226,226,64,16,16);
     convolution3D(224,224,64,64,16,16,16,226,relu);
 
-    zeropadL();
+    zeropad(224,224,64,226,226,64,17,17);
     convolution3D(224,224,3,64,17,17,17,226,sigmoid);
     //Final stage is a sigmoid activation       
 }

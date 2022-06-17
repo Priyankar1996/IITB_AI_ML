@@ -23,7 +23,7 @@ $record [structx_x__SizedTensor_64K] < $array [{64*1024}] $of $uint<64> >
 $record [structx_x__SizedTensor_128K] < $array [{128*1024}] $of $uint<64> > 
 $record [structx_x__SizedTensor_256K] < $array [{256*1024}] $of $uint<64> > 
 $record [structx_x__SizedTensor_512K] < $array [{512*1024}] $of $uint<64> > 
-$record [structx_x__SizedTensor_1M] < $array [{{64*1024}*1024}] $of $uint<64> > 
+$record [structx_x__SizedTensor_1M] < $array [{1024*1024}] $of $uint<64> > 
 
 $storage KE1_1 KL : structx_x__SizedTensor_512
 $storage KE1_2 KD1_2 : structx_x__SizedTensor_8K

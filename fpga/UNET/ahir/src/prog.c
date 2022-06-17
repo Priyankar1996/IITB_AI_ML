@@ -12,15 +12,90 @@
 #include "convTranspose.h"
 #include "maxPool.h"
 
+uint64_t readModule1 (uint32_t);
+void writeModule1 (uint8_t, uint32_t, uint64_t);
+
 void concat(uint16_t input1_dim0, uint16_t input1_dim1,uint16_t input1_dim2,uint16_t input2_dim0,      uint16_t input2_dim1,uint16_t input2_dim2,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index0,uint8_t index1,uint8_t index2);
+
 void zeropad(uint16_t input_dim0,uint16_t input_dim1,uint16_t input_dim2,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index1, uint8_t index2);
+
 void convolution3D(uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct, uint8_t activation);
+
 void convTranspose(uint16_t inp_dim0,uint16_t inp_dim1,uint16_t inp_dim2,uint16_t ker_dim1,uint16_t ker_dim2,uint16_t stride0,uint16_t padding,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index1, uint8_t index2);
+
 void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t index_in, uint8_t index_out);
+
+#define __get8xi8__(element) ({\
+	element = read_uint8("system_input_pipe");\
+	element = (element << 8) + read_uint8("system_input_pipe");\
+	element = (element << 8) + read_uint8("system_input_pipe");\
+	element = (element << 8) + read_uint8("system_input_pipe");\
+	element = (element << 8) + read_uint8("system_input_pipe");\
+	element = (element << 8) + read_uint8("system_input_pipe");\
+	element = (element << 8) + read_uint8("system_input_pipe");\
+	element = (element << 8) + read_uint8("system_input_pipe");\
+})
+
+#define __set8xi8__(addr) ({\
+	uint64_t element = readModule1(addr);\
+	uint8_t out_data[8];\
+	out_data[7] = element & 0xFF;\
+	element>>=8;\
+	out_data[6] = element & 0xFF;\
+	element>>=8;\
+	out_data[5] = element & 0xFF;\
+	element>>=8;\
+	out_data[4] = element & 0xFF;\
+	element>>=8;\
+	out_data[3] = element & 0xFF;\
+	element>>=8;\
+	out_data[2] = element & 0xFF;\
+	element>>=8;\
+	out_data[1] = element & 0xFF;\
+	element>>=8;\
+	out_data[0] = element & 0xFF;\
+	write_uint8 ("system_output_pipe",out_data[0]);\
+	write_uint8 ("system_output_pipe",out_data[1]);\
+	write_uint8 ("system_output_pipe",out_data[2]);\
+	write_uint8 ("system_output_pipe",out_data[3]);\
+	write_uint8 ("system_output_pipe",out_data[4]);\
+	write_uint8 ("system_output_pipe",out_data[5]);\
+	write_uint8 ("system_output_pipe",out_data[6]);\
+	write_uint8 ("system_output_pipe",out_data[7]);\
+})
+
+void readFromSystemPipe(uint8_t index)
+{
+    uint32_t word_count = read_uint8("system_input_pipe"), i;
+    word_count = (word_count << 8) + read_uint8("system_input_pipe");
+    word_count = (word_count << 8) + read_uint8("system_input_pipe");
+	uint64_t element;
+	for (i = 0; i < word_count; i++)
+	{
+		__get8xi8__(element);
+		writeModule1 (index,i,element);
+	}
+}
+
+void fill_input()
+{
+    // kernels followed by input tensor
+    uint8_t i;
+    for (i = 0; i < 19; i++) readFromSystemPipe(i);
+}
+
+void sendOutput()
+{
+	uint32_t i;
+	for(i=0; i < 18816; i++)
+	{
+		__set8xi8__(i);
+	}
+}
 
 void systemTOP()
 {
-    //fill_input();
+    fill_input();
 	zeropad(224,224,3,226,226,30,0,0);
     convolution3D(224,224,64,3,0,0,0,226,relu);
     zeropad(224,224,64,226,226,64,1,1);
@@ -69,4 +144,6 @@ void systemTOP()
     zeropad(224,224,64,226,226,64,17,17);
     convolution3D(224,224,3,64,17,17,17,226,sigmoid);
     //Final stage is a sigmoid activation       
+    
+    sendOutput();
 }

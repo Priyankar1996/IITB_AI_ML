@@ -1,3 +1,77 @@
+$opaque $module [readModule1]
+$in (address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+    tmp1 := @(output[($bitcast ($uint<32>) 0)][address])
+    data := ->(tmp1)
+}
+
+$opaque $module [writeModule1]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out ()
+$is
+{
+    tmp1 := @(KE1_1[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(KE1_2[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(KE2_1[($bitcast ($uint<32>) 0)][address])
+    tmp4 := @(KE2_2[($bitcast ($uint<32>) 0)][address])
+    tmp5 := @(KE3_1[($bitcast ($uint<32>) 0)][address])
+    tmp6 := @(KE3_2[($bitcast ($uint<32>) 0)][address])
+    tmp7 := @(KM1[($bitcast ($uint<32>) 0)][address])
+    tmp8 := @(KM2[($bitcast ($uint<32>) 0)][address])
+    tmp9 := @(KT3[($bitcast ($uint<32>) 0)][address])
+    tmp10 := @(KD3_1[($bitcast ($uint<32>) 0)][address])
+    tmp11 := @(KD3_2[($bitcast ($uint<32>) 0)][address])
+    tmp12 := @(KT2[($bitcast ($uint<32>) 0)][address])
+    tmp13 := @(KD2_1[($bitcast ($uint<32>) 0)][address])
+    tmp14 := @(KD2_2[($bitcast ($uint<32>) 0)][address])
+    tmp15 := @(KT1[($bitcast ($uint<32>) 0)][address])
+    tmp16 := @(KD1_1[($bitcast ($uint<32>) 0)][address])
+    tmp17 := @(KD1_2[($bitcast ($uint<32>) 0)][address])
+    tmp18 := @(KL[($bitcast ($uint<32>) 0)][address])
+    tmp19 := @(input[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 0)
+    cnd2 := (index == 1)
+    cnd3 := (index == 2)
+    cnd4 := (index == 3)
+    cnd5 := (index == 4)
+    cnd6 := (index == 5)
+    cnd7 := (index == 6)
+    cnd8 := (index == 7)
+    cnd9 := (index == 8)
+    cnd10 := (index == 9)
+    cnd11 := (index == 10)
+    cnd12 := (index == 11)
+    cnd13 := (index == 12)
+    cnd14 := (index == 13)
+    cnd15 := (index == 14)
+    cnd16 := (index == 15)
+    cnd17 := (index == 16)
+    cnd18 := (index == 17)
+    cnd19 := (index == 18)
+    $guard (cnd1) ->(tmp1) := data
+    $guard (cnd2) ->(tmp2) := data
+    $guard (cnd3) ->(tmp3) := data
+    $guard (cnd4) ->(tmp4) := data
+    $guard (cnd5) ->(tmp5) := data
+    $guard (cnd6) ->(tmp6) := data
+    $guard (cnd7) ->(tmp7) := data
+    $guard (cnd8) ->(tmp8) := data
+    $guard (cnd9) ->(tmp9) := data
+    $guard (cnd10) ->(tmp10) := data
+    $guard (cnd11) ->(tmp11) := data
+    $guard (cnd12) ->(tmp12) := data
+    $guard (cnd13) ->(tmp13) := data
+    $guard (cnd14) ->(tmp14) := data
+    $guard (cnd15) ->(tmp15) := data
+    $guard (cnd16) ->(tmp16) := data
+    $guard (cnd17) ->(tmp17) := data
+    $guard (cnd18) ->(tmp18) := data
+    $guard (cnd19) ->(tmp19) := data
+    
+}
+
 $pipeline $depth 8 $buffering 1 $fullrate
 $opaque $module [readModule_maxPool]
 $in (index : $uint<8> address : $uint<32>)

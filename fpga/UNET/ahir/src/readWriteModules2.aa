@@ -1,0 +1,80 @@
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [writeModule_maxPool]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out (done : $uint<1>)
+$is
+{
+    tmp1 := @(M1[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(M2[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(M3[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 0)
+    cnd2 := (index == 1)
+    cnd3 := (index == 2)
+    $guard (cnd1) ->(tmp1) := data
+    $guard (cnd2) ->(tmp2) := data
+    $guard (cnd3) ->(tmp3) := data
+    done := (index [] 0)
+}
+
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [writeModule_convolution]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out (done : $uint<1>)
+$is
+{
+    tmp1 := @(CE1_1[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(CE1_2[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(CE2_1[($bitcast ($uint<32>) 0)][address])
+    tmp4 := @(CE2_2[($bitcast ($uint<32>) 0)][address])
+    tmp5 := @(CE3_1[($bitcast ($uint<32>) 0)][address])
+    tmp6 := @(CE3_2[($bitcast ($uint<32>) 0)][address])
+    tmp7 := @(CM1[($bitcast ($uint<32>) 0)][address])
+    tmp8 := @(CM2[($bitcast ($uint<32>) 0)][address])
+    tmp9 := @(CT3[($bitcast ($uint<32>) 0)][address])
+    tmp10 := @(CD3_1[($bitcast ($uint<32>) 0)][address])
+    tmp11 := @(CD3_2[($bitcast ($uint<32>) 0)][address])
+    tmp12 := @(CT2[($bitcast ($uint<32>) 0)][address])
+    tmp13 := @(CD2_1[($bitcast ($uint<32>) 0)][address])
+    tmp14 := @(CD2_2[($bitcast ($uint<32>) 0)][address])
+    tmp15 := @(CT1[($bitcast ($uint<32>) 0)][address])
+    tmp16 := @(CD1_1[($bitcast ($uint<32>) 0)][address])
+    tmp17 := @(CD1_2[($bitcast ($uint<32>) 0)][address])
+    tmp18 := @(output[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 0)
+    cnd2 := (index == 1)
+    cnd3 := (index == 2)
+    cnd4 := (index == 3)
+    cnd5 := (index == 4)
+    cnd6 := (index == 5)
+    cnd7 := (index == 6)
+    cnd8 := (index == 7)
+    cnd9 := (index == 8)
+    cnd10 := (index == 9)
+    cnd11 := (index == 10)
+    cnd12 := (index == 11)
+    cnd13 := (index == 12)
+    cnd14 := (index == 13)
+    cnd15 := (index == 14)
+    cnd16 := (index == 15)
+    cnd17 := (index == 16)
+    cnd18 := (index == 17)
+    $guard (cnd1) ->(tmp1) := data
+    $guard (cnd2) ->(tmp2) := data
+    $guard (cnd3) ->(tmp3) := data
+    $guard (cnd4) ->(tmp4) := data
+    $guard (cnd5) ->(tmp5) := data
+    $guard (cnd6) ->(tmp6) := data
+    $guard (cnd7) ->(tmp7) := data
+    $guard (cnd8) ->(tmp8) := data
+    $guard (cnd9) ->(tmp9) := data
+    $guard (cnd10) ->(tmp10) := data
+    $guard (cnd11) ->(tmp11) := data
+    $guard (cnd12) ->(tmp12) := data
+    $guard (cnd13) ->(tmp13) := data
+    $guard (cnd14) ->(tmp14) := data
+    $guard (cnd15) ->(tmp15) := data
+    $guard (cnd16) ->(tmp16) := data
+    $guard (cnd17) ->(tmp17) := data
+    $guard (cnd18) ->(tmp18) := data
+    done := (index [] 0)
+}

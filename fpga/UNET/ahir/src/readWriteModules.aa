@@ -1,44 +1,4 @@
 $pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [readModule1]
-$in (index : $uint<8> address : $uint<32>)
-$out (data : $uint<64>)
-$is
-{
-    tmp1 := @(input[($bitcast ($uint<32>) 0)][address])
-    tmp2 := @(kernel[($bitcast ($uint<32>) 0)][address])
-    tmp3 := @(output[($bitcast ($uint<32>) 0)][address])
-    cnd1 := (index == 0)
-    cnd2 := (index == 1)
-    cnd3 := (index == 2)
-    $guard (cnd1) val1 := ->(tmp1)
-    $guard (cnd2) val2 := ->(tmp2)
-    $guard (cnd3) val3 := ->(tmp3)
-    
-    data := ( $excmux cnd1 val1 cnd2 val2 cnd3 val3 )
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [readModule2]
-$in (index : $uint<8> address : $uint<32>)
-$out (data : $uint<64>)
-$is
-{
-    ptr := @(input[($bitcast ($uint<32>) 0)][address])
-    data := ->(ptr)
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [writeModule1]
-$in (index : $uint<8> address : $uint<32> data : $uint<64>)
-$out (done : $uint<1>)
-$is
-{
-    ptr := @(input[($bitcast ($uint<32>) 0)][address])
-    ->(ptr) := data
-    done := (index [] 0)
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
 $opaque $module [readModule_maxPool]
 $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
@@ -55,24 +15,6 @@ $is
     $guard (cnd3) val3 := ->(tmp3)
     
     data := ( $excmux cnd1 val1 cnd2 val2 cnd3 val3 )
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [writeModule_maxPool]
-$in (index : $uint<8> address : $uint<32> data : $uint<64>)
-$out (done : $uint<1>)
-$is
-{
-    tmp1 := @(M1[($bitcast ($uint<32>) 0)][address])
-    tmp2 := @(M2[($bitcast ($uint<32>) 0)][address])
-    tmp3 := @(M3[($bitcast ($uint<32>) 0)][address])
-    cnd1 := (index == 0)
-    cnd2 := (index == 1)
-    cnd3 := (index == 2)
-    $guard (cnd1) val1 := ->(tmp1)
-    $guard (cnd2) val2 := ->(tmp2)
-    $guard (cnd3) val3 := ->(tmp3)
-    done := (index [] 0)
 }
 
 $pipeline $depth 8 $buffering 1 $fullrate

@@ -17,7 +17,7 @@ void ct_core(uint16_t,uint16_t,uint16_t,uint16_t,uint16_t,uint16_t,uint16_t,uint
 	#define __aa_barrier__() {;}
 #endif
 
-void convTranspose(uint16_t inp_dim0,uint16_t inp_dim1,uint16_t inp_dim2,uint16_t ker_dim0,uint16_t ker_dim1,uint16_t ker_dim2,uint16_t ker_dim3,uint16_t stride0,uint16_t padding,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index1, uint8_t index2)
+void convTranspose(uint16_t inp_dim0,uint16_t inp_dim1,uint16_t inp_dim2,uint16_t ker_dim1,uint16_t ker_dim2,uint16_t stride0,uint16_t padding,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index1, uint8_t index2)
 {
     ct_core(inp_dim0,inp_dim1,inp_dim2,ker_dim1,ker_dim2,out_dim0,out_dim1,out_dim2,stride0,padding,index1,index2);
 }

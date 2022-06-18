@@ -39,6 +39,7 @@ uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4
 		address += 1;\
 		if (row == re) break;\
 	}\
+	row;
 })
 
 void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t index_in, uint8_t index_out)
@@ -47,5 +48,6 @@ void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t 
 	uint16_t re = rb;
 	uint16_t dim1d = ct;
 	uint16_t offset1 = chl_out>>3, offset2 = dim1d*offset1;
-	__maxPoolOfTensors3D_div__(re,ce,dim1d,ce,offset1,offset2, index_in, index_out);
+	uint8_t row = __maxPoolOfTensors3D_div__(re,ce,dim1d,ce,offset1,offset2, index_in, index_out);
+	write_uint8("system_output_pipe",row);
 }

@@ -60,6 +60,7 @@ $is
         
         cnd := (chl_num == 7)
         $guard (cnd) convStartPipe := 1
+        $guard (last3_7) startNext := nextKernelChannelPipe
         //maxpool_output_pipe := 127
 
         $if (n_chl_num != chl_out) $then $place [loopback] $endif

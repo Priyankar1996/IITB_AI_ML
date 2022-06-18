@@ -1,4 +1,4 @@
-$module [ct_core] $in(inp_d0:$uint<16> inp_d1:$uint<16> inp_d2:$uint<16> ker_d1:$uint<16> ker_d2:$uint<16> out_d0:$uint<16> out_d1:$uint<16> out_d2:$uint<16> stride:$uint<16> padding:$uint<16> index1:$uint<8> index3:$uint<8>) $out(done:$uint<8>) $is
+$module [ct_core] $in(inp_d0:$uint<16> inp_d1:$uint<16> inp_d2:$uint<16> ker_d1:$uint<16> ker_d2:$uint<16> out_d0:$uint<16> out_d1:$uint<16> out_d2:$uint<16> stride:$uint<16> padding:$uint<16> index1:$uint<8> index3:$uint<8>) $out(done2:$uint<8>) $is
 {
     $branchblock[body]
     {
@@ -92,7 +92,7 @@ $module [ct_core] $in(inp_d0:$uint<16> inp_d1:$uint<16> inp_d2:$uint<16> ker_d1:
     dim0_end := (input_dim0 < (inp_d0-1))
     continue_flag := (dim0_end | (~cmp_dim0))
     $while continue_flag
-    done := index1
+    done2 := index1
     //ENDING OF CONVTRANSPOSE MODULE
     }
 } 

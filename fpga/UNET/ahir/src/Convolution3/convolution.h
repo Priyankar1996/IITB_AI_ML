@@ -30,4 +30,5 @@ void convolution3D(uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, 
 	write_uint16("input_module_pipe",chl_out);
 	write_uint16("input_module_pipe",index_in);
 	uint8_t ret = read_uint8("input_done_pipe");
+	write_uint8("system_output_pipe",ret);
 }

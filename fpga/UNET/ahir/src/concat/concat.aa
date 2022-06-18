@@ -1,4 +1,4 @@
-$module[concat_core] $in(input1_count:$uint<16> input2_count:$uint<16> output_size:$uint<32> index1:$uint<8> index2:$uint<8> index3:$uint<8>) $out() $is
+$module[concat_core] $in(input1_count:$uint<16> input2_count:$uint<16> output_size:$uint<32> index1:$uint<8> index2:$uint<8> index3:$uint<8>) $out(done:$uint<8>) $is
 {
     $branchblock[body]
     {
@@ -31,6 +31,7 @@ $module[concat_core] $in(input1_count:$uint<16> input2_count:$uint<16> output_si
         next_add_out := (add_out + 1)
         continue_flag := ((~my_flag) | (add_out < (out_concat-1)))
         $while continue_flag
+        done := index1
     }
 }
 

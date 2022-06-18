@@ -1,0 +1,126 @@
+// Perform convolution operation
+$module [convolveCore ]
+$in ()
+$out ()
+$is
+{
+    $pipe conv_ip1 : $uint<PIPE_WIDTH> $depth IP_DEPTH
+    $pipe conv_ip2 : $uint<PIPE_WIDTH> $depth IP_DEPTH
+    $pipe conv_ip3 : $uint<PIPE_WIDTH> $depth IP_DEPTH
+    $pipe conv_ip4 : $uint<PIPE_WIDTH> $depth IP_DEPTH
+    $branchblock [conv_block]
+    {
+        num_row := (num_out_pipe - 1)
+        num_col := (num_out_pipe - 1)
+        chl_in := (num_out_pipe - 1)
+        
+        $merge $entry loopback
+        $endmerge
+
+        start := convStartPipe
+        
+        $dopipeline $depth 15 $buffering 2 $fullrate
+        $merge $entry $loopback
+        $phi acc1_1 := ($bitcast ($int<8>) 0) $on $entry nacc1_1 $on $loopback
+        $phi acc1_2 := ($bitcast ($int<8>) 0) $on $entry nacc1_2 $on $loopback
+        $phi acc2_1 := ($bitcast ($int<8>) 0) $on $entry nacc2_1 $on $loopback
+        $phi acc2_2 := ($bitcast ($int<8>) 0) $on $entry nacc2_2 $on $loopback
+        $phi acc3_1 := ($bitcast ($int<8>) 0) $on $entry nacc3_1 $on $loopback
+        $phi acc3_2 := ($bitcast ($int<8>) 0) $on $entry nacc3_2 $on $loopback
+        $phi acc4_1 := ($bitcast ($int<8>) 0) $on $entry nacc4_1 $on $loopback
+        $phi acc4_2 := ($bitcast ($int<8>) 0) $on $entry nacc4_2 $on $loopback
+        $phi acc5_1 := ($bitcast ($int<8>) 0) $on $entry nacc5_1 $on $loopback
+        $phi acc5_2 := ($bitcast ($int<8>) 0) $on $entry nacc5_2 $on $loopback
+        $phi acc6_1 := ($bitcast ($int<8>) 0) $on $entry nacc6_1 $on $loopback
+        $phi acc6_2 := ($bitcast ($int<8>) 0) $on $entry nacc6_2 $on $loopback
+        $phi acc7_1 := ($bitcast ($int<8>) 0) $on $entry nacc7_1 $on $loopback
+        $phi acc7_2 := ($bitcast ($int<8>) 0) $on $entry nacc7_2 $on $loopback
+        $phi acc8_1 := ($bitcast ($int<8>) 0) $on $entry nacc8_1 $on $loopback
+        $phi acc8_2 := ($bitcast ($int<8>) 0) $on $entry nacc8_2 $on $loopback
+        $phi row := ($bitcast ($uint<16>) 0) $on $entry n_row $on $loopback
+        $phi col := ($bitcast ($uint<16>) 0) $on $entry n_col $on $loopback
+        $phi num := ($bitcast ($uint<2>) 0) $on $entry n_num $on $loopback
+        $phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
+        $endmerge
+
+        $volatile read_ip := ((col == 0) | (num == 2))
+        $volatile write_input := ((col < num_col) & (num > 0))
+        $volatile read_k := ((col == 0) & (row == 0))
+        $volatile chl_done := (chl == chl_in)
+        $volatile num_done := ((num == 2) & chl_done)
+        $volatile col_done := (col == num_col)
+        $volatile row_done := (col_done & num_done)
+        $volatile out_done_flag := (row >= (num_row - 1))
+        $volatile store_kernel := (~(out_done_flag & col_done))
+        $volatile all_done_flag := (out_done_flag & row_done)
+        
+        #define num 1
+        #include macro_file2.aa
+        #define num 2
+        #include macro_file2.aa
+        #define num 3
+        #include macro_file2.aa
+        #define num 4
+        #include macro_file2.aa
+        
+        #define core_num 1
+        #include convInner.aa
+        #define core_num 2
+        #include convInner.aa
+        #define core_num 3
+        #include convInner.aa
+        #define core_num 4
+        #include convInner.aa
+        #define core_num 5
+        #include convInner.aa
+        #define core_num 6
+        #include convInner.aa
+        #define core_num 7
+        #include convInner.aa
+        #define core_num 8
+        #include convInner.aa
+        
+        $volatile n_chl := ($mux chl_done 0 (chl + 1))
+        $volatile n_num := ($mux chl_done ($mux num_done 0 (num+1)) num)
+        $volatile n_col := ($mux num_done ($mux col_done 0 (col + 1)) col)
+        $volatile n_row := ($mux row_done (row+N_ROWS_S) row)
+        $volatile nacc1_1 := ($mux num_done 0 acc_val1_1)
+        $volatile nacc1_2 := ($mux num_done 0 acc_val1_2)
+        $volatile nacc2_1 := ($mux num_done 0 acc_val2_1)
+        $volatile nacc2_2 := ($mux num_done 0 acc_val2_2)
+        $volatile nacc3_1 := ($mux num_done 0 acc_val3_1)
+        $volatile nacc3_2 := ($mux num_done 0 acc_val3_2)
+        $volatile nacc4_1 := ($mux num_done 0 acc_val4_1)
+        $volatile nacc4_2 := ($mux num_done 0 acc_val4_2)
+        $volatile nacc5_1 := ($mux num_done 0 acc_val5_1)
+        $volatile nacc5_2 := ($mux num_done 0 acc_val5_2)
+        $volatile nacc6_1 := ($mux num_done 0 acc_val6_1)
+        $volatile nacc6_2 := ($mux num_done 0 acc_val6_2)
+        $volatile nacc7_1 := ($mux num_done 0 acc_val7_1)
+        $volatile nacc7_2 := ($mux num_done 0 acc_val7_2)
+        $volatile nacc8_1 := ($mux num_done 0 acc_val8_1)
+        $volatile nacc8_2 := ($mux num_done 0 acc_val8_2)
+        
+        $volatile start_next_kernel := ((~store_kernel) & ((chl == 0) & (num == 0)))
+        $guard (start_next_kernel) nextKernelChannelPipe := 1
+        
+        //send_val := ($mux (acc_val < 0) 0 acc_val)
+        $guard (num_done) $call writeOutput  
+        (
+        ($concat ($bitcast ($uint<8>) acc_val1_1) ($bitcast ($uint<8>) acc_val2_1) ($bitcast ($uint<8>) acc_val3_1) ($bitcast ($uint<8>) acc_val4_1) ($bitcast ($uint<8>) acc_val5_1) ($bitcast ($uint<8>) acc_val6_1) ($bitcast ($uint<8>) acc_val7_1) ($bitcast ($uint<8>) acc_val8_1)) 
+        ($concat ($bitcast ($uint<8>) acc_val1_2) ($bitcast ($uint<8>) acc_val2_2) ($bitcast ($uint<8>) acc_val3_2) ($bitcast ($uint<8>) acc_val4_2) ($bitcast ($uint<8>) acc_val5_2) ($bitcast ($uint<8>) acc_val6_2) ($bitcast ($uint<8>) acc_val7_2) ($bitcast ($uint<8>) acc_val8_2))
+        ) (d1)
+
+        $while (~all_done_flag)
+
+        $place [loopback]
+    }
+}
+
+$pipeline $depth 15 $buffering 2 $fullrate
+$opaque $module [writeOutput ] $in (in_data1 in_data2: $uint<64>) $out (done : $uint<1>) $is
+{
+	output_pipe1 := in_data1
+	output_pipe2 := in_data2
+	done := (in_data1 [] 0)
+}

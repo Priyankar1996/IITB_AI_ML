@@ -39,7 +39,7 @@ uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4
 		address += 1;\
 		if (row == re) break;\
 	}\
-	row;
+	row;\
 })
 
 void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t index_in, uint8_t index_out)

@@ -2,8 +2,8 @@
 # Vivado v2017.1 (64-bit)
 # SW Build 1846317 on Fri Apr 14 18:54:47 MDT 2017
 # IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
-# Start of session at: Sun Jun 12 22:49:38 2022
-# Process ID: 24350
+# Start of session at: Sat Jun 18 20:48:55 2022
+# Process ID: 19485
 # Current directory: /home/AIML/IITB_AI_ML/fpga/zeropad/vivado_synth
 # Command line: vivado
 # Log file: /home/AIML/IITB_AI_ML/fpga/zeropad/vivado_synth/vivado.log
@@ -14,6 +14,7 @@ open_hw
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/AIML/my_xil_dir/Vivado/2017.1/data/ip'.
+open_hw: Time (s): cpu = 00:00:06 ; elapsed = 00:00:50 . Memory (MB): peak = 5989.012 ; gain = 35.652 ; free physical = 189 ; free virtual = 12123
 connect_hw_server
 INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
 INFO: [Labtools 27-2222] Launching hw_server...
@@ -24,22 +25,18 @@ INFO: [Labtools 27-2221] Launch Output:
     ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 
 
+connect_hw_server: Time (s): cpu = 00:00:01 ; elapsed = 00:00:06 . Memory (MB): peak = 6034.203 ; gain = 8.129 ; free physical = 139 ; free virtual = 12116
 open_hw_target
 INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210203A01F9DA
 current_hw_device [get_hw_devices xc7k325t_0]
 refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xc7k325t_0] 0]
-INFO: [Labtools 27-1434] Device xc7k325t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it.
-WARNING: [Labtools 27-3361] The debug hub core was not detected.
-Resolution: 
-1. Make sure the clock connected to the debug hub (dbg_hub) core is a free running clock and is active.
-2. Make sure the BSCAN_SWITCH_USER_MASK device property in Vivado Hardware Manager reflects the user scan chain setting in the design and refresh the device.  To determine the user scan chain setting in the design, open the implemented design and use 'get_property C_USER_SCAN_CHAIN [get_debug_cores dbg_hub]'.
-For more details on setting the scan chain property, consult the Vivado Debug and Programming User Guide (UG908).
+INFO: [Labtools 27-1435] Device xc7k325t (JTAG device index = 0) is not programmed (DONE status = 0).
 set_property PROBES.FILE {} [get_hw_devices xc7k325t_0]
 set_property FULL_PROBES.FILE {} [get_hw_devices xc7k325t_0]
 set_property PROGRAM.FILE {/home/AIML/IITB_AI_ML/fpga/zeropad/vivado_synth/sample_project.kc705.bit} [get_hw_devices xc7k325t_0]
 program_hw_devices [get_hw_devices xc7k325t_0]
 INFO: [Labtools 27-3164] End of startup status: HIGH
-program_hw_devices: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 6168.641 ; gain = 0.000 ; free physical = 2659 ; free virtual = 19240
+program_hw_devices: Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 6148.625 ; gain = 0.000 ; free physical = 378 ; free virtual = 11711
 refresh_hw_device [lindex [get_hw_devices xc7k325t_0] 0]
 INFO: [Labtools 27-1434] Device xc7k325t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it.
 WARNING: [Labtools 27-3361] The debug hub core was not detected.
@@ -48,4 +45,4 @@ Resolution:
 2. Make sure the BSCAN_SWITCH_USER_MASK device property in Vivado Hardware Manager reflects the user scan chain setting in the design and refresh the device.  To determine the user scan chain setting in the design, open the implemented design and use 'get_property C_USER_SCAN_CHAIN [get_debug_cores dbg_hub]'.
 For more details on setting the scan chain property, consult the Vivado Debug and Programming User Guide (UG908).
 exit
-INFO: [Common 17-206] Exiting Vivado at Sun Jun 12 23:31:32 2022...
+INFO: [Common 17-206] Exiting Vivado at Sat Jun 18 21:06:25 2022...

@@ -21,7 +21,7 @@ INCLUDES=-Isrc/Convolution3 -Isrc/concat -Isrc/maxPool -Isrc/convTranspose -Isrc
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T systemTOP -T timerDaemon
+TOPMODULES=-T systemTOP -T timerDaemon -T loadKernel -T access_T -T convolveCore -T sendModule
 
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl

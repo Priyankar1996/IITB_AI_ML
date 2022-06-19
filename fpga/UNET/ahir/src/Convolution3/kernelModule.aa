@@ -40,9 +40,9 @@ $is
     
             $volatile nmycount := (mycount + 1)
             
-            $call readModule1 (index mycount) (fetch_val1)
-            $call readModule1 (index (mycount+ ( $bitcast ($uint<32> ) row_size))) (fetch_val2)
-            $call readModule1 (index (mycount+ ( $bitcast ($uint<32> ) (row_size<<1)))) (fetch_val3)
+            $call readModule_convolutionk (index mycount) (fetch_val1)
+            $call readModule_convolutionk (index (mycount+ ( $bitcast ($uint<32> ) row_size))) (fetch_val2)
+            $call readModule_convolutionk (index (mycount+ ( $bitcast ($uint<32> ) (row_size<<1)))) (fetch_val3)
 
             $guard (last3_0) $call writeToPipe1 (fetch_val1 fetch_val2 fetch_val3) (a1)
             $guard (last3_1) $call writeToPipe2 (fetch_val1 fetch_val2 fetch_val3) (a2)
@@ -60,6 +60,7 @@ $is
         
         cnd := (chl_num == 7)
         $guard (cnd) convStartPipe := 1
+        $guard (last3_7) startNext := nextKernelChannelPipe
         //maxpool_output_pipe := 127
 
         $if (n_chl_num != chl_out) $then $place [loopback] $endif

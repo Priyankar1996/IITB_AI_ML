@@ -6,7 +6,7 @@
 #include <Pipes.h>
 #include "pipeHandler.h"
 #include "sized_tensor.h"
-
+#include "zeropad_same.h"
 
 SizedTensor_16K T[2];
 
@@ -87,16 +87,12 @@ void zeropad()
         T[0].data_array[i] = element;
     }
 
-    for(i = 0; i < (output_size >> 3); i ++)
-    {
-        T[1].data_array[i] = 0;
-    }
     __aa_barrier__();
 #ifndef SW
     uint64_t start_time = timer();
     __aa_barrier__();
 #endif
-    zeropad_same(input_dim0,input_dim1,input_dim2,out_dim0,out_dim1,out_dim2,0,1);
+    zeropad1(input_dim0,input_dim1,input_dim2,out_dim0,out_dim1,out_dim2);
     __aa_barrier__();
 #ifndef SW
     uint64_t stop_time = timer();

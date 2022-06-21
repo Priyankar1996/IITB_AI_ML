@@ -13,8 +13,9 @@ int main(int argc, char* argv[])
 {
 	while(1)
 	{
-		uint16_t r;
-		r = tbGetUint16();
-		fprintf(stdout,"%hu\n", r);
+		uint8_t r;
+		r = tbGetUint8();
+		fprintf(stdout,"%hhu\n", r);
 	}
 }
+

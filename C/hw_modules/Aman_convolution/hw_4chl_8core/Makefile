@@ -24,7 +24,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T convolution3D -T convolveCore1 -T convolveCore2 -T convolveCore3 -T convolveCore4 -T convolveCore5 -T convolveCore6 -T convolveCore7 -T convolveCore8 -T sendModule -T loadKernel -T access_T
+TOPMODULES=-T timerDaemon -T convolution3D -T convolveCore -T sendModule -T loadKernel -T access_T
 
 
 # compile with SW defined.
@@ -42,7 +42,7 @@ AA2VHDL: aa2vc vc2vhdl vhdlsim
 
 # C to llvm byte-code.. use clang.
 c2llvmbc: src/prog.c src/$(CONVH_FILE)
-	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
+	clang -O3 -m32 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
 	opt --indvars --loopsimplify prog.o -o prog.opt.o
 	llvm-dis prog.opt.o
 

@@ -1,0 +1,988 @@
+Info: ptr_deref_1457_addr_1 included in vcBinarySplitOperator group 75
+Info: ptr_deref_1457_addr_2 included in vcBinarySplitOperator group 76
+Info: ptr_deref_1457_addr_3 included in vcBinarySplitOperator group 77
+Info: ptr_deref_1457_load_0 included in vcLoad group 1
+Info: ptr_deref_1457_load_1 included in vcLoad group 1
+Info: ptr_deref_1457_load_2 included in vcLoad group 1
+Info: ptr_deref_1457_load_3 included in vcLoad group 1
+Info: ptr_deref_1469_load_0 included in vcLoad group 2
+Info: ptr_deref_1481_load_0 included in vcLoad group 2
+Info: ptr_deref_1493_addr_0 included in vcBinarySplitOperator group 78
+Info: ptr_deref_1493_addr_1 included in vcBinarySplitOperator group 79
+Info: ptr_deref_1493_addr_2 included in vcBinarySplitOperator group 80
+Info: ptr_deref_1493_addr_3 included in vcBinarySplitOperator group 81
+Info: ptr_deref_1493_load_0 included in vcLoad group 1
+Info: ptr_deref_1493_load_1 included in vcLoad group 1
+Info: ptr_deref_1493_load_2 included in vcLoad group 1
+Info: ptr_deref_1493_load_3 included in vcLoad group 1
+Info: ptr_deref_1790_store_0 included in vcStore group 0
+Info: ptr_deref_1816_store_0 included in vcStore group 0
+Info: ptr_deref_1842_store_0 included in vcStore group 0
+Info: ptr_deref_1868_store_0 included in vcStore group 0
+Info: ptr_deref_1897_load_0 included in vcLoad group 3
+Info: ptr_deref_1921_store_0 included in vcStore group 0
+Info: ptr_deref_1947_load_0 included in vcLoad group 3
+Info: ptr_deref_1971_store_0 included in vcStore group 0
+Info: ptr_deref_1997_load_0 included in vcLoad group 3
+Info: ptr_deref_2021_store_0 included in vcStore group 0
+Info: ptr_deref_2047_load_0 included in vcLoad group 3
+Info: ptr_deref_2071_store_0 included in vcStore group 0
+Info: type_cast_1779_inst included in vcUnarySplitOperator group 82
+Info: type_cast_1805_inst included in vcUnarySplitOperator group 83
+Info: type_cast_1831_inst included in vcUnarySplitOperator group 84
+Info: type_cast_1857_inst included in vcUnarySplitOperator group 85
+Info: type_cast_1885_inst included in vcUnarySplitOperator group 86
+Info: type_cast_1910_inst included in vcUnarySplitOperator group 87
+Info: type_cast_1935_inst included in vcUnarySplitOperator group 88
+Info: type_cast_1960_inst included in vcUnarySplitOperator group 89
+Info: type_cast_1985_inst included in vcUnarySplitOperator group 90
+Info: type_cast_2010_inst included in vcUnarySplitOperator group 91
+Info: type_cast_2035_inst included in vcUnarySplitOperator group 92
+Info: type_cast_2060_inst included in vcUnarySplitOperator group 93
+Info: ADD_u32_u32_2248_inst included in vcBinarySplitOperator group 0
+Info: ADD_u32_u32_2254_inst included in vcBinarySplitOperator group 1
+Info: ADD_u32_u32_2311_inst included in vcBinarySplitOperator group 2
+Info: ADD_u32_u32_2316_inst included in vcBinarySplitOperator group 3
+Info: ADD_u32_u32_2326_inst included in vcBinarySplitOperator group 4
+Info: ADD_u32_u32_2337_inst included in vcBinarySplitOperator group 5
+Info: ADD_u32_u32_2343_inst included in vcBinarySplitOperator group 6
+Info: ADD_u32_u32_2349_inst included in vcBinarySplitOperator group 7
+Info: ADD_u32_u32_2359_inst included in vcBinarySplitOperator group 8
+Info: ADD_u32_u32_2370_inst included in vcBinarySplitOperator group 9
+Info: ADD_u32_u32_2376_inst included in vcBinarySplitOperator group 10
+Info: ADD_u32_u32_2382_inst included in vcBinarySplitOperator group 11
+Info: ADD_u32_u32_2403_inst included in vcBinarySplitOperator group 12
+Info: ADD_u32_u32_2408_inst included in vcBinarySplitOperator group 13
+Info: ADD_u32_u32_2413_inst included in vcBinarySplitOperator group 14
+Info: ADD_u32_u32_2418_inst included in vcBinarySplitOperator group 15
+Info: ADD_u32_u32_2423_inst included in vcBinarySplitOperator group 16
+Info: ADD_u32_u32_2428_inst included in vcBinarySplitOperator group 17
+Info: ADD_u32_u32_2433_inst included in vcBinarySplitOperator group 18
+Info: ADD_u32_u32_2438_inst included in vcBinarySplitOperator group 19
+Info: ADD_u32_u32_2444_inst included in vcBinarySplitOperator group 20
+Info: ADD_u32_u32_2462_inst included in vcBinarySplitOperator group 21
+Info: ADD_u32_u32_2484_inst included in vcBinarySplitOperator group 22
+Info: ADD_u32_u32_2817_inst included in vcBinarySplitOperator group 23
+Info: ADD_u32_u32_2830_inst included in vcBinarySplitOperator group 24
+Info: ADD_u32_u32_2835_inst included in vcBinarySplitOperator group 25
+Info: ADD_u32_u32_2849_inst included in vcBinarySplitOperator group 26
+Info: AND_u1_u1_2472_inst included in vcBinarySplitOperator group 27
+Info: ASHR_i32_i32_2504_inst included in vcBinarySplitOperator group 28
+Info: ASHR_i32_i32_2530_inst included in vcBinarySplitOperator group 29
+Info: ASHR_i32_i32_2556_inst included in vcBinarySplitOperator group 30
+Info: ASHR_i32_i32_2582_inst included in vcBinarySplitOperator group 31
+Info: ASHR_i32_i32_2610_inst included in vcBinarySplitOperator group 32
+Info: ASHR_i32_i32_2635_inst included in vcBinarySplitOperator group 33
+Info: ASHR_i32_i32_2660_inst included in vcBinarySplitOperator group 34
+Info: ASHR_i32_i32_2685_inst included in vcBinarySplitOperator group 35
+Info: ASHR_i32_i32_2710_inst included in vcBinarySplitOperator group 36
+Info: ASHR_i32_i32_2735_inst included in vcBinarySplitOperator group 37
+Info: ASHR_i32_i32_2760_inst included in vcBinarySplitOperator group 38
+Info: ASHR_i32_i32_2785_inst included in vcBinarySplitOperator group 39
+Info: EQ_u32_u1_2840_inst included in vcBinarySplitOperator group 40
+Info: LOAD_pad_2179_load_0 included in vcLoad group 0
+Info: LSHR_u32_u32_2176_inst included in vcBinarySplitOperator group 41
+Info: LSHR_u32_u32_2237_inst included in vcBinarySplitOperator group 42
+Info: LSHR_u32_u32_2457_inst included in vcBinarySplitOperator group 43
+Info: MUL_u32_u32_2321_inst included in vcBinarySplitOperator group 44
+Info: MUL_u32_u32_2331_inst included in vcBinarySplitOperator group 45
+Info: MUL_u32_u32_2354_inst included in vcBinarySplitOperator group 46
+Info: MUL_u32_u32_2364_inst included in vcBinarySplitOperator group 47
+Info: MUL_u32_u32_2398_inst included in vcBinarySplitOperator group 48
+Info: RPIPE_Block1_starting_2157_inst included in vcInport group 0
+Info: SGT_i32_u1_2292_inst included in vcBinarySplitOperator group 49
+Info: SGT_i32_u1_2299_inst included in vcBinarySplitOperator group 50
+Info: SHL_u32_u32_2243_inst included in vcBinarySplitOperator group 51
+Info: SLT_i32_u1_2811_inst included in vcBinarySplitOperator group 52
+Info: SUB_u32_u32_2264_inst included in vcBinarySplitOperator group 53
+Info: UGT_u32_u1_2489_inst included in vcBinarySplitOperator group 54
+Info: ULE_u32_u1_2467_inst included in vcBinarySplitOperator group 55
+Info: ULT_u32_u1_2285_inst included in vcBinarySplitOperator group 56
+Info: WPIPE_Block1_complete_2870_inst included in vcOutport group 0
+Info: array_obj_ref_2516_index_offset included in vcBinarySplitOperator group 57
+Info: array_obj_ref_2542_index_offset included in vcBinarySplitOperator group 58
+Info: array_obj_ref_2568_index_offset included in vcBinarySplitOperator group 59
+Info: array_obj_ref_2594_index_offset included in vcBinarySplitOperator group 60
+Info: array_obj_ref_2622_index_offset included in vcBinarySplitOperator group 61
+Info: array_obj_ref_2647_index_offset included in vcBinarySplitOperator group 62
+Info: array_obj_ref_2672_index_offset included in vcBinarySplitOperator group 63
+Info: array_obj_ref_2697_index_offset included in vcBinarySplitOperator group 64
+Info: array_obj_ref_2722_index_offset included in vcBinarySplitOperator group 65
+Info: array_obj_ref_2747_index_offset included in vcBinarySplitOperator group 66
+Info: array_obj_ref_2772_index_offset included in vcBinarySplitOperator group 67
+Info: array_obj_ref_2797_index_offset included in vcBinarySplitOperator group 68
+Info: ptr_deref_2170_addr_0 included in vcBinarySplitOperator group 69
+Info: ptr_deref_2170_addr_1 included in vcBinarySplitOperator group 70
+Info: ptr_deref_2170_addr_2 included in vcBinarySplitOperator group 71
+Info: ptr_deref_2170_addr_3 included in vcBinarySplitOperator group 72
+Info: ptr_deref_2170_load_0 included in vcLoad group 1
+Info: ptr_deref_2170_load_1 included in vcLoad group 1
+Info: ptr_deref_2170_load_2 included in vcLoad group 1
+Info: ptr_deref_2170_load_3 included in vcLoad group 1
+Info: ptr_deref_2195_addr_0 included in vcBinarySplitOperator group 73
+Info: ptr_deref_2195_addr_1 included in vcBinarySplitOperator group 74
+Info: ptr_deref_2195_addr_2 included in vcBinarySplitOperator group 75
+Info: ptr_deref_2195_addr_3 included in vcBinarySplitOperator group 76
+Info: ptr_deref_2195_load_0 included in vcLoad group 1
+Info: ptr_deref_2195_load_1 included in vcLoad group 1
+Info: ptr_deref_2195_load_2 included in vcLoad group 1
+Info: ptr_deref_2195_load_3 included in vcLoad group 1
+Info: ptr_deref_2207_load_0 included in vcLoad group 2
+Info: ptr_deref_2219_load_0 included in vcLoad group 2
+Info: ptr_deref_2231_addr_0 included in vcBinarySplitOperator group 77
+Info: ptr_deref_2231_addr_1 included in vcBinarySplitOperator group 78
+Info: ptr_deref_2231_addr_2 included in vcBinarySplitOperator group 79
+Info: ptr_deref_2231_addr_3 included in vcBinarySplitOperator group 80
+Info: ptr_deref_2231_load_0 included in vcLoad group 1
+Info: ptr_deref_2231_load_1 included in vcLoad group 1
+Info: ptr_deref_2231_load_2 included in vcLoad group 1
+Info: ptr_deref_2231_load_3 included in vcLoad group 1
+Info: ptr_deref_2520_store_0 included in vcStore group 0
+Info: ptr_deref_2546_store_0 included in vcStore group 0
+Info: ptr_deref_2572_store_0 included in vcStore group 0
+Info: ptr_deref_2598_store_0 included in vcStore group 0
+Info: ptr_deref_2627_load_0 included in vcLoad group 3
+Info: ptr_deref_2651_store_0 included in vcStore group 0
+Info: ptr_deref_2677_load_0 included in vcLoad group 3
+Info: ptr_deref_2701_store_0 included in vcStore group 0
+Info: ptr_deref_2727_load_0 included in vcLoad group 3
+Info: ptr_deref_2751_store_0 included in vcStore group 0
+Info: ptr_deref_2777_load_0 included in vcLoad group 3
+Info: ptr_deref_2801_store_0 included in vcStore group 0
+Info: type_cast_2509_inst included in vcUnarySplitOperator group 81
+Info: type_cast_2535_inst included in vcUnarySplitOperator group 82
+Info: type_cast_2561_inst included in vcUnarySplitOperator group 83
+Info: type_cast_2587_inst included in vcUnarySplitOperator group 84
+Info: type_cast_2615_inst included in vcUnarySplitOperator group 85
+Info: type_cast_2640_inst included in vcUnarySplitOperator group 86
+Info: type_cast_2665_inst included in vcUnarySplitOperator group 87
+Info: type_cast_2690_inst included in vcUnarySplitOperator group 88
+Info: type_cast_2715_inst included in vcUnarySplitOperator group 89
+Info: type_cast_2740_inst included in vcUnarySplitOperator group 90
+Info: type_cast_2765_inst included in vcUnarySplitOperator group 91
+Info: type_cast_2790_inst included in vcUnarySplitOperator group 92
+Info: ADD_u32_u32_2965_inst included in vcBinarySplitOperator group 0
+Info: ADD_u32_u32_2971_inst included in vcBinarySplitOperator group 1
+Info: ADD_u32_u32_3028_inst included in vcBinarySplitOperator group 2
+Info: ADD_u32_u32_3033_inst included in vcBinarySplitOperator group 3
+Info: ADD_u32_u32_3043_inst included in vcBinarySplitOperator group 4
+Info: ADD_u32_u32_3054_inst included in vcBinarySplitOperator group 5
+Info: ADD_u32_u32_3060_inst included in vcBinarySplitOperator group 6
+Info: ADD_u32_u32_3066_inst included in vcBinarySplitOperator group 7
+Info: ADD_u32_u32_3076_inst included in vcBinarySplitOperator group 8
+Info: ADD_u32_u32_3087_inst included in vcBinarySplitOperator group 9
+Info: ADD_u32_u32_3093_inst included in vcBinarySplitOperator group 10
+Info: ADD_u32_u32_3099_inst included in vcBinarySplitOperator group 11
+Info: ADD_u32_u32_3120_inst included in vcBinarySplitOperator group 12
+Info: ADD_u32_u32_3125_inst included in vcBinarySplitOperator group 13
+Info: ADD_u32_u32_3130_inst included in vcBinarySplitOperator group 14
+Info: ADD_u32_u32_3135_inst included in vcBinarySplitOperator group 15
+Info: ADD_u32_u32_3140_inst included in vcBinarySplitOperator group 16
+Info: ADD_u32_u32_3145_inst included in vcBinarySplitOperator group 17
+Info: ADD_u32_u32_3150_inst included in vcBinarySplitOperator group 18
+Info: ADD_u32_u32_3155_inst included in vcBinarySplitOperator group 19
+Info: ADD_u32_u32_3161_inst included in vcBinarySplitOperator group 20
+Info: ADD_u32_u32_3173_inst included in vcBinarySplitOperator group 21
+Info: ADD_u32_u32_3201_inst included in vcBinarySplitOperator group 22
+Info: ADD_u32_u32_3534_inst included in vcBinarySplitOperator group 23
+Info: ADD_u32_u32_3547_inst included in vcBinarySplitOperator group 24
+Info: ADD_u32_u32_3558_inst included in vcBinarySplitOperator group 25
+Info: ADD_u32_u32_3572_inst included in vcBinarySplitOperator group 26
+Info: AND_u1_u1_3183_inst included in vcBinarySplitOperator group 27
+Info: ASHR_i32_i32_3221_inst included in vcBinarySplitOperator group 28
+Info: ASHR_i32_i32_3247_inst included in vcBinarySplitOperator group 29
+Info: ASHR_i32_i32_3273_inst included in vcBinarySplitOperator group 30
+Info: ASHR_i32_i32_3299_inst included in vcBinarySplitOperator group 31
+Info: ASHR_i32_i32_3327_inst included in vcBinarySplitOperator group 32
+Info: ASHR_i32_i32_3352_inst included in vcBinarySplitOperator group 33
+Info: ASHR_i32_i32_3377_inst included in vcBinarySplitOperator group 34
+Info: ASHR_i32_i32_3402_inst included in vcBinarySplitOperator group 35
+Info: ASHR_i32_i32_3427_inst included in vcBinarySplitOperator group 36
+Info: ASHR_i32_i32_3452_inst included in vcBinarySplitOperator group 37
+Info: ASHR_i32_i32_3477_inst included in vcBinarySplitOperator group 38
+Info: ASHR_i32_i32_3502_inst included in vcBinarySplitOperator group 39
+Info: EQ_u32_u1_3563_inst included in vcBinarySplitOperator group 40
+Info: LOAD_pad_2902_load_0 included in vcLoad group 0
+Info: LSHR_u32_u32_2899_inst included in vcBinarySplitOperator group 41
+Info: LSHR_u32_u32_3196_inst included in vcBinarySplitOperator group 42
+Info: LSHR_u32_u32_3553_inst included in vcBinarySplitOperator group 43
+Info: MUL_u32_u32_3038_inst included in vcBinarySplitOperator group 44
+Info: MUL_u32_u32_3048_inst included in vcBinarySplitOperator group 45
+Info: MUL_u32_u32_3071_inst included in vcBinarySplitOperator group 46
+Info: MUL_u32_u32_3081_inst included in vcBinarySplitOperator group 47
+Info: MUL_u32_u32_3115_inst included in vcBinarySplitOperator group 48
+Info: RPIPE_Block2_starting_2880_inst included in vcInport group 0
+Info: SGT_i32_u1_3009_inst included in vcBinarySplitOperator group 49
+Info: SGT_i32_u1_3016_inst included in vcBinarySplitOperator group 50
+Info: SHL_u32_u32_2960_inst included in vcBinarySplitOperator group 51
+Info: SLT_i32_u1_3528_inst included in vcBinarySplitOperator group 52
+Info: SUB_u32_u32_2981_inst included in vcBinarySplitOperator group 53
+Info: UGT_u32_u1_3206_inst included in vcBinarySplitOperator group 54
+Info: ULE_u32_u1_3178_inst included in vcBinarySplitOperator group 55
+Info: ULT_u32_u1_3002_inst included in vcBinarySplitOperator group 56
+Info: WPIPE_Block2_complete_3594_inst included in vcOutport group 0
+Info: array_obj_ref_3233_index_offset included in vcBinarySplitOperator group 57
+Info: array_obj_ref_3259_index_offset included in vcBinarySplitOperator group 58
+Info: array_obj_ref_3285_index_offset included in vcBinarySplitOperator group 59
+Info: array_obj_ref_3311_index_offset included in vcBinarySplitOperator group 60
+Info: array_obj_ref_3339_index_offset included in vcBinarySplitOperator group 61
+Info: array_obj_ref_3364_index_offset included in vcBinarySplitOperator group 62
+Info: array_obj_ref_3389_index_offset included in vcBinarySplitOperator group 63
+Info: array_obj_ref_3414_index_offset included in vcBinarySplitOperator group 64
+Info: array_obj_ref_3439_index_offset included in vcBinarySplitOperator group 65
+Info: array_obj_ref_3464_index_offset included in vcBinarySplitOperator group 66
+Info: array_obj_ref_3489_index_offset included in vcBinarySplitOperator group 67
+Info: array_obj_ref_3514_index_offset included in vcBinarySplitOperator group 68
+Info: ptr_deref_2893_addr_0 included in vcBinarySplitOperator group 69
+Info: ptr_deref_2893_addr_1 included in vcBinarySplitOperator group 70
+Info: ptr_deref_2893_addr_2 included in vcBinarySplitOperator group 71
+Info: ptr_deref_2893_addr_3 included in vcBinarySplitOperator group 72
+Info: ptr_deref_2893_load_0 included in vcLoad group 1
+Info: ptr_deref_2893_load_1 included in vcLoad group 1
+Info: ptr_deref_2893_load_2 included in vcLoad group 1
+Info: ptr_deref_2893_load_3 included in vcLoad group 1
+Info: ptr_deref_2918_addr_0 included in vcBinarySplitOperator group 73
+Info: ptr_deref_2918_addr_1 included in vcBinarySplitOperator group 74
+Info: ptr_deref_2918_addr_2 included in vcBinarySplitOperator group 75
+Info: ptr_deref_2918_addr_3 included in vcBinarySplitOperator group 76
+Info: ptr_deref_2918_load_0 included in vcLoad group 1
+Info: ptr_deref_2918_load_1 included in vcLoad group 1
+Info: ptr_deref_2918_load_2 included in vcLoad group 1
+Info: ptr_deref_2918_load_3 included in vcLoad group 1
+Info: ptr_deref_2930_addr_0 included in vcBinarySplitOperator group 77
+Info: ptr_deref_2930_addr_1 included in vcBinarySplitOperator group 78
+Info: ptr_deref_2930_addr_2 included in vcBinarySplitOperator group 79
+Info: ptr_deref_2930_addr_3 included in vcBinarySplitOperator group 80
+Info: ptr_deref_2930_load_0 included in vcLoad group 1
+Info: ptr_deref_2930_load_1 included in vcLoad group 1
+Info: ptr_deref_2930_load_2 included in vcLoad group 1
+Info: ptr_deref_2930_load_3 included in vcLoad group 1
+Info: ptr_deref_2942_load_0 included in vcLoad group 2
+Info: ptr_deref_2954_load_0 included in vcLoad group 2
+Info: ptr_deref_3237_store_0 included in vcStore group 0
+Info: ptr_deref_3263_store_0 included in vcStore group 0
+Info: ptr_deref_3289_store_0 included in vcStore group 0
+Info: ptr_deref_3315_store_0 included in vcStore group 0
+Info: ptr_deref_3344_load_0 included in vcLoad group 3
+Info: ptr_deref_3368_store_0 included in vcStore group 0
+Info: ptr_deref_3394_load_0 included in vcLoad group 3
+Info: ptr_deref_3418_store_0 included in vcStore group 0
+Info: ptr_deref_3444_load_0 included in vcLoad group 3
+Info: ptr_deref_3468_store_0 included in vcStore group 0
+Info: ptr_deref_3494_load_0 included in vcLoad group 3
+Info: ptr_deref_3518_store_0 included in vcStore group 0
+Info: type_cast_3226_inst included in vcUnarySplitOperator group 81
+Info: type_cast_3252_inst included in vcUnarySplitOperator group 82
+Info: type_cast_3278_inst included in vcUnarySplitOperator group 83
+Info: type_cast_3304_inst included in vcUnarySplitOperator group 84
+Info: type_cast_3332_inst included in vcUnarySplitOperator group 85
+Info: type_cast_3357_inst included in vcUnarySplitOperator group 86
+Info: type_cast_3382_inst included in vcUnarySplitOperator group 87
+Info: type_cast_3407_inst included in vcUnarySplitOperator group 88
+Info: type_cast_3432_inst included in vcUnarySplitOperator group 89
+Info: type_cast_3457_inst included in vcUnarySplitOperator group 90
+Info: type_cast_3482_inst included in vcUnarySplitOperator group 91
+Info: type_cast_3507_inst included in vcUnarySplitOperator group 92
+Info: ADD_u32_u32_3695_inst included in vcBinarySplitOperator group 0
+Info: ADD_u32_u32_3701_inst included in vcBinarySplitOperator group 1
+Info: ADD_u32_u32_3757_inst included in vcBinarySplitOperator group 2
+Info: ADD_u32_u32_3762_inst included in vcBinarySplitOperator group 3
+Info: ADD_u32_u32_3772_inst included in vcBinarySplitOperator group 4
+Info: ADD_u32_u32_3783_inst included in vcBinarySplitOperator group 5
+Info: ADD_u32_u32_3789_inst included in vcBinarySplitOperator group 6
+Info: ADD_u32_u32_3795_inst included in vcBinarySplitOperator group 7
+Info: ADD_u32_u32_3805_inst included in vcBinarySplitOperator group 8
+Info: ADD_u32_u32_3816_inst included in vcBinarySplitOperator group 9
+Info: ADD_u32_u32_3822_inst included in vcBinarySplitOperator group 10
+Info: ADD_u32_u32_3828_inst included in vcBinarySplitOperator group 11
+Info: ADD_u32_u32_3849_inst included in vcBinarySplitOperator group 12
+Info: ADD_u32_u32_3854_inst included in vcBinarySplitOperator group 13
+Info: ADD_u32_u32_3859_inst included in vcBinarySplitOperator group 14
+Info: ADD_u32_u32_3864_inst included in vcBinarySplitOperator group 15
+Info: ADD_u32_u32_3869_inst included in vcBinarySplitOperator group 16
+Info: ADD_u32_u32_3874_inst included in vcBinarySplitOperator group 17
+Info: ADD_u32_u32_3879_inst included in vcBinarySplitOperator group 18
+Info: ADD_u32_u32_3884_inst included in vcBinarySplitOperator group 19
+Info: ADD_u32_u32_3890_inst included in vcBinarySplitOperator group 20
+Info: ADD_u32_u32_3902_inst included in vcBinarySplitOperator group 21
+Info: ADD_u32_u32_3924_inst included in vcBinarySplitOperator group 22
+Info: ADD_u32_u32_4257_inst included in vcBinarySplitOperator group 23
+Info: ADD_u32_u32_4270_inst included in vcBinarySplitOperator group 24
+Info: ADD_u32_u32_4275_inst included in vcBinarySplitOperator group 25
+Info: ADD_u32_u32_4289_inst included in vcBinarySplitOperator group 26
+Info: AND_u1_u1_3912_inst included in vcBinarySplitOperator group 27
+Info: ASHR_i32_i32_3944_inst included in vcBinarySplitOperator group 28
+Info: ASHR_i32_i32_3970_inst included in vcBinarySplitOperator group 29
+Info: ASHR_i32_i32_3996_inst included in vcBinarySplitOperator group 30
+Info: ASHR_i32_i32_4022_inst included in vcBinarySplitOperator group 31
+Info: ASHR_i32_i32_4050_inst included in vcBinarySplitOperator group 32
+Info: ASHR_i32_i32_4075_inst included in vcBinarySplitOperator group 33
+Info: ASHR_i32_i32_4100_inst included in vcBinarySplitOperator group 34
+Info: ASHR_i32_i32_4125_inst included in vcBinarySplitOperator group 35
+Info: ASHR_i32_i32_4150_inst included in vcBinarySplitOperator group 36
+Info: ASHR_i32_i32_4175_inst included in vcBinarySplitOperator group 37
+Info: ASHR_i32_i32_4200_inst included in vcBinarySplitOperator group 38
+Info: ASHR_i32_i32_4225_inst included in vcBinarySplitOperator group 39
+Info: EQ_u32_u1_4280_inst included in vcBinarySplitOperator group 40
+Info: LOAD_pad_3644_load_0 included in vcLoad group 0
+Info: LSHR_u32_u32_3623_inst included in vcBinarySplitOperator group 41
+Info: LSHR_u32_u32_3641_inst included in vcBinarySplitOperator group 42
+Info: MUL_u32_u32_3767_inst included in vcBinarySplitOperator group 43
+Info: MUL_u32_u32_3777_inst included in vcBinarySplitOperator group 44
+Info: MUL_u32_u32_3800_inst included in vcBinarySplitOperator group 45
+Info: MUL_u32_u32_3810_inst included in vcBinarySplitOperator group 46
+Info: MUL_u32_u32_3844_inst included in vcBinarySplitOperator group 47
+Info: RPIPE_Block3_starting_3604_inst included in vcInport group 0
+Info: SGT_i32_u1_3738_inst included in vcBinarySplitOperator group 48
+Info: SGT_i32_u1_3745_inst included in vcBinarySplitOperator group 49
+Info: SHL_u32_u32_3690_inst included in vcBinarySplitOperator group 50
+Info: SLT_i32_u1_4251_inst included in vcBinarySplitOperator group 51
+Info: SUB_u32_u32_3711_inst included in vcBinarySplitOperator group 52
+Info: UGT_u32_u1_3929_inst included in vcBinarySplitOperator group 53
+Info: ULE_u32_u1_3907_inst included in vcBinarySplitOperator group 54
+Info: ULT_u32_u1_3731_inst included in vcBinarySplitOperator group 55
+Info: WPIPE_Block3_complete_4310_inst included in vcOutport group 0
+Info: array_obj_ref_3956_index_offset included in vcBinarySplitOperator group 56
+Info: array_obj_ref_3982_index_offset included in vcBinarySplitOperator group 57
+Info: array_obj_ref_4008_index_offset included in vcBinarySplitOperator group 58
+Info: array_obj_ref_4034_index_offset included in vcBinarySplitOperator group 59
+Info: array_obj_ref_4062_index_offset included in vcBinarySplitOperator group 60
+Info: array_obj_ref_4087_index_offset included in vcBinarySplitOperator group 61
+Info: array_obj_ref_4112_index_offset included in vcBinarySplitOperator group 62
+Info: array_obj_ref_4137_index_offset included in vcBinarySplitOperator group 63
+Info: array_obj_ref_4162_index_offset included in vcBinarySplitOperator group 64
+Info: array_obj_ref_4187_index_offset included in vcBinarySplitOperator group 65
+Info: array_obj_ref_4212_index_offset included in vcBinarySplitOperator group 66
+Info: array_obj_ref_4237_index_offset included in vcBinarySplitOperator group 67
+Info: ptr_deref_3617_addr_0 included in vcBinarySplitOperator group 68
+Info: ptr_deref_3617_addr_1 included in vcBinarySplitOperator group 69
+Info: ptr_deref_3617_addr_2 included in vcBinarySplitOperator group 70
+Info: ptr_deref_3617_addr_3 included in vcBinarySplitOperator group 71
+Info: ptr_deref_3617_load_0 included in vcLoad group 1
+Info: ptr_deref_3617_load_1 included in vcLoad group 1
+Info: ptr_deref_3617_load_2 included in vcLoad group 1
+Info: ptr_deref_3617_load_3 included in vcLoad group 1
+Info: ptr_deref_3635_addr_0 included in vcBinarySplitOperator group 72
+Info: ptr_deref_3635_addr_1 included in vcBinarySplitOperator group 73
+Info: ptr_deref_3635_addr_2 included in vcBinarySplitOperator group 74
+Info: ptr_deref_3635_addr_3 included in vcBinarySplitOperator group 75
+Info: ptr_deref_3635_load_0 included in vcLoad group 1
+Info: ptr_deref_3635_load_1 included in vcLoad group 1
+Info: ptr_deref_3635_load_2 included in vcLoad group 1
+Info: ptr_deref_3635_load_3 included in vcLoad group 1
+Info: ptr_deref_3660_addr_0 included in vcBinarySplitOperator group 76
+Info: ptr_deref_3660_addr_1 included in vcBinarySplitOperator group 77
+Info: ptr_deref_3660_addr_2 included in vcBinarySplitOperator group 78
+Info: ptr_deref_3660_addr_3 included in vcBinarySplitOperator group 79
+Info: ptr_deref_3660_load_0 included in vcLoad group 1
+Info: ptr_deref_3660_load_1 included in vcLoad group 1
+Info: ptr_deref_3660_load_2 included in vcLoad group 1
+Info: ptr_deref_3660_load_3 included in vcLoad group 1
+Info: ptr_deref_3672_load_0 included in vcLoad group 2
+Info: ptr_deref_3684_load_0 included in vcLoad group 2
+Info: ptr_deref_3960_store_0 included in vcStore group 0
+Info: ptr_deref_3986_store_0 included in vcStore group 0
+Info: ptr_deref_4012_store_0 included in vcStore group 0
+Info: ptr_deref_4038_store_0 included in vcStore group 0
+Info: ptr_deref_4067_load_0 included in vcLoad group 3
+Info: ptr_deref_4091_store_0 included in vcStore group 0
+Info: ptr_deref_4117_load_0 included in vcLoad group 3
+Info: ptr_deref_4141_store_0 included in vcStore group 0
+Info: ptr_deref_4167_load_0 included in vcLoad group 3
+Info: ptr_deref_4191_store_0 included in vcStore group 0
+Info: ptr_deref_4217_load_0 included in vcLoad group 3
+Info: ptr_deref_4241_store_0 included in vcStore group 0
+Info: type_cast_3949_inst included in vcUnarySplitOperator group 80
+Info: type_cast_3975_inst included in vcUnarySplitOperator group 81
+Info: type_cast_4001_inst included in vcUnarySplitOperator group 82
+Info: type_cast_4027_inst included in vcUnarySplitOperator group 83
+Info: type_cast_4055_inst included in vcUnarySplitOperator group 84
+Info: type_cast_4080_inst included in vcUnarySplitOperator group 85
+Info: type_cast_4105_inst included in vcUnarySplitOperator group 86
+Info: type_cast_4130_inst included in vcUnarySplitOperator group 87
+Info: type_cast_4155_inst included in vcUnarySplitOperator group 88
+Info: type_cast_4180_inst included in vcUnarySplitOperator group 89
+Info: type_cast_4205_inst included in vcUnarySplitOperator group 90
+Info: type_cast_4230_inst included in vcUnarySplitOperator group 91
+Info: printing VHDL global package
+Info: printing top-level system VHDL file ahir_system.unformatted_vhdl
+Info: printing VHDL model
+Info: printing VHDL model for module sendOutput
+Info: resources used by CP sendOutput_CP_328: ff-count=32 (saved 0), mux2-count= 32, and2-count= 19
+Info: estimated buffering for operator addr_of_285_final_reg = 32
+Info: estimated buffering for operator addr_of_406_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_284_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_405_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_561_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_561_index_offset = 2
+Info: estimated buffering for operator phi_stmt_272 = 64
+Info: estimated buffering for operator phi_stmt_370 = 64
+Info: estimated buffering for operator phi_stmt_543 = 64
+Info: estimated buffering for operator ptr_deref_166_load_0 = 32
+Info: estimated buffering for operator ptr_deref_178_load_0 = 32
+Info: estimated buffering for operator ptr_deref_190_load_0 = 32
+Info: estimated buffering for operator ptr_deref_289_load_0 = 64
+Info: estimated buffering for operator ptr_deref_410_load_0 = 64
+Info: estimated buffering for operator ptr_deref_565_load_0 = 16
+Info: estimated buffering for operator type_cast_204_inst = 64
+Info: estimated buffering for operator type_cast_249_inst = 64
+Info: estimated buffering for operator type_cast_278_inst = 64
+Info: estimated buffering for operator type_cast_293_inst = 16
+Info: estimated buffering for operator type_cast_303_inst = 16
+Info: estimated buffering for operator type_cast_313_inst = 16
+Info: estimated buffering for operator type_cast_323_inst = 16
+Info: estimated buffering for operator type_cast_373_inst = 64
+Info: estimated buffering for operator type_cast_399_inst = 16
+Info: estimated buffering for operator type_cast_420_inst = 16
+Info: estimated buffering for operator type_cast_441_inst = 16
+Info: estimated buffering for operator type_cast_462_inst = 16
+Info: estimated buffering for operator type_cast_546_inst = 64
+Info: estimated buffering in module sendOutput is 1006
+Info: printing VHDL model for module testConfigure
+Info: resources used by CP testConfigure_CP_2233: ff-count=209 (saved 0), mux2-count= 209, and2-count= 146
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_1142_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_1155_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_1173_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_1191_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_1303_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_815_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_832_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_855_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_927_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_954_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_973_inst = 16
+Info: estimated buffering for operator RPIPE_zeropad_input_pipe_992_inst = 16
+Info: estimated buffering for operator addr_of_1139_final_reg = 32
+Info: estimated buffering for operator addr_of_1371_final_reg = 32
+Info: estimated buffering for operator addr_of_895_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_1138_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1370_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_894_index_1_scale = 9
+Info: estimated buffering for operator array_obj_ref_894_index_offset = 9
+Info: estimated buffering for operator phi_stmt_1126 = 64
+Info: estimated buffering for operator phi_stmt_1239 = 64
+Info: estimated buffering for operator phi_stmt_1287 = 16
+Info: estimated buffering for operator phi_stmt_1294 = 64
+Info: estimated buffering for operator phi_stmt_1338 = 64
+Info: estimated buffering for operator phi_stmt_866 = 64
+Info: estimated buffering for operator phi_stmt_873 = 16
+Info: estimated buffering for operator phi_stmt_936 = 16
+Info: estimated buffering for operator phi_stmt_943 = 16
+Info: estimated buffering for operator ptr_deref_1020_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_1020_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_1020_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_1020_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_1020_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1020_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1020_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1020_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1032_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_1032_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_1032_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_1032_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_1032_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1032_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1032_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1032_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1044_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_1044_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_1044_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_1044_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_1044_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1044_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1044_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1044_load_3 = 8
+Info: estimated buffering for operator ptr_deref_810_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_810_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_810_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_810_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_845_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_845_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_845_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_845_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_902_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_902_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_902_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_902_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_919_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_919_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_919_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_919_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_919_load_0 = 8
+Info: estimated buffering for operator ptr_deref_919_load_1 = 8
+Info: estimated buffering for operator ptr_deref_919_load_2 = 8
+Info: estimated buffering for operator ptr_deref_919_load_3 = 8
+Info: estimated buffering for operator type_cast_1058_inst = 64
+Info: estimated buffering for operator type_cast_1103_inst = 64
+Info: estimated buffering for operator type_cast_1132_inst = 64
+Info: estimated buffering for operator type_cast_1146_inst = 64
+Info: estimated buffering for operator type_cast_1159_inst = 64
+Info: estimated buffering for operator type_cast_1177_inst = 64
+Info: estimated buffering for operator type_cast_1195_inst = 64
+Info: estimated buffering for operator type_cast_1242_inst = 64
+Info: estimated buffering for operator type_cast_1279_inst = 2
+Info: estimated buffering for operator type_cast_1283_inst = 16
+Info: estimated buffering for operator type_cast_1290_inst = 16
+Info: estimated buffering for operator type_cast_1297_inst = 64
+Info: estimated buffering for operator type_cast_1307_inst = 64
+Info: estimated buffering for operator type_cast_1341_inst = 64
+Info: estimated buffering for operator type_cast_1381_inst = 16
+Info: estimated buffering for operator type_cast_819_inst = 8
+Info: estimated buffering for operator type_cast_836_inst = 32
+Info: estimated buffering for operator type_cast_869_inst = 64
+Info: estimated buffering for operator type_cast_876_inst = 16
+Info: estimated buffering for operator type_cast_878_inst = 16
+Info: estimated buffering for operator type_cast_888_inst = 32
+Info: estimated buffering for operator type_cast_899_inst = 32
+Info: estimated buffering for operator type_cast_939_inst = 16
+Info: estimated buffering for operator type_cast_946_inst = 16
+Info: estimated buffering for operator type_cast_948_inst = 16
+Info: estimated buffering for operator type_cast_958_inst = 32
+Info: estimated buffering for operator type_cast_977_inst = 32
+Info: estimated buffering for operator type_cast_996_inst = 32
+Info: estimated buffering in module testConfigure is 2196
+Info: printing VHDL model for module zeropad3D
+Info: resources used by CP zeropad3D_CP_4613: ff-count=8 (saved 0), mux2-count= 8, and2-count= 7
+Info: estimated buffering for operator RPIPE_Block0_complete_1405_inst = 16
+Info: estimated buffering for operator RPIPE_Block1_complete_1408_inst = 16
+Info: estimated buffering for operator RPIPE_Block2_complete_1411_inst = 16
+Info: estimated buffering for operator RPIPE_Block3_complete_1414_inst = 16
+Info: estimated buffering for operator call_stmt_1390_call = 16
+Info: estimated buffering for operator call_stmt_1390_call (call to testConfigure)  = 16
+Info: estimated buffering in module zeropad3D is 80
+Info: printing VHDL model for module zeropad3D_A
+Info: resources used by CP zeropad3D_A_CP_4786: ff-count=115 (saved 0), mux2-count= 115, and2-count= 83
+Info: estimated buffering for operator LOAD_pad_1429_load_0 = 16
+Info: estimated buffering for operator RPIPE_Block0_starting_1425_inst = 16
+Info: estimated buffering for operator addr_of_1787_final_reg = 32
+Info: estimated buffering for operator addr_of_1813_final_reg = 32
+Info: estimated buffering for operator addr_of_1839_final_reg = 32
+Info: estimated buffering for operator addr_of_1865_final_reg = 32
+Info: estimated buffering for operator addr_of_1893_final_reg = 32
+Info: estimated buffering for operator addr_of_1918_final_reg = 32
+Info: estimated buffering for operator addr_of_1943_final_reg = 32
+Info: estimated buffering for operator addr_of_1968_final_reg = 32
+Info: estimated buffering for operator addr_of_1993_final_reg = 32
+Info: estimated buffering for operator addr_of_2018_final_reg = 32
+Info: estimated buffering for operator addr_of_2043_final_reg = 32
+Info: estimated buffering for operator addr_of_2068_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_1786_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1812_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1838_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1864_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1892_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1917_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1942_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1967_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_1992_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2017_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2042_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2067_index_offset = 14
+Info: estimated buffering for operator phi_stmt_1530 = 32
+Info: estimated buffering for operator phi_stmt_1537 = 32
+Info: estimated buffering for operator phi_stmt_1650 = 32
+Info: estimated buffering for operator phi_stmt_2134 = 32
+Info: estimated buffering for operator ptr_deref_1445_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_1445_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_1445_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_1445_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_1445_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1445_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1445_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1445_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1457_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_1457_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_1457_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_1457_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_1457_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1457_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1457_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1457_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1469_load_0 = 32
+Info: estimated buffering for operator ptr_deref_1481_load_0 = 32
+Info: estimated buffering for operator ptr_deref_1493_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_1493_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_1493_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_1493_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_1493_load_0 = 8
+Info: estimated buffering for operator ptr_deref_1493_load_1 = 8
+Info: estimated buffering for operator ptr_deref_1493_load_2 = 8
+Info: estimated buffering for operator ptr_deref_1493_load_3 = 8
+Info: estimated buffering for operator ptr_deref_1897_load_0 = 64
+Info: estimated buffering for operator ptr_deref_1947_load_0 = 64
+Info: estimated buffering for operator ptr_deref_1997_load_0 = 64
+Info: estimated buffering for operator ptr_deref_2047_load_0 = 64
+Info: estimated buffering for operator type_cast_1433_inst = 32
+Info: estimated buffering for operator type_cast_1520_inst = 32
+Info: estimated buffering for operator type_cast_1536_inst = 32
+Info: estimated buffering for operator type_cast_1543_inst = 32
+Info: estimated buffering for operator type_cast_1653_inst = 32
+Info: estimated buffering for operator type_cast_1780_inst = 64
+Info: estimated buffering for operator type_cast_1806_inst = 64
+Info: estimated buffering for operator type_cast_1832_inst = 64
+Info: estimated buffering for operator type_cast_1858_inst = 64
+Info: estimated buffering for operator type_cast_1886_inst = 64
+Info: estimated buffering for operator type_cast_1911_inst = 64
+Info: estimated buffering for operator type_cast_1936_inst = 64
+Info: estimated buffering for operator type_cast_1961_inst = 64
+Info: estimated buffering for operator type_cast_1986_inst = 64
+Info: estimated buffering for operator type_cast_2011_inst = 64
+Info: estimated buffering for operator type_cast_2036_inst = 64
+Info: estimated buffering for operator type_cast_2061_inst = 64
+Info: estimated buffering for operator type_cast_2120_inst = 32
+Info: estimated buffering for operator type_cast_2140_inst = 32
+Info: estimated buffering in module zeropad3D_A is 2228
+Info: printing VHDL model for module zeropad3D_B
+Info: resources used by CP zeropad3D_B_CP_7163: ff-count=119 (saved 0), mux2-count= 119, and2-count= 85
+Info: estimated buffering for operator LOAD_pad_2179_load_0 = 16
+Info: estimated buffering for operator RPIPE_Block1_starting_2157_inst = 16
+Info: estimated buffering for operator addr_of_2517_final_reg = 32
+Info: estimated buffering for operator addr_of_2543_final_reg = 32
+Info: estimated buffering for operator addr_of_2569_final_reg = 32
+Info: estimated buffering for operator addr_of_2595_final_reg = 32
+Info: estimated buffering for operator addr_of_2623_final_reg = 32
+Info: estimated buffering for operator addr_of_2648_final_reg = 32
+Info: estimated buffering for operator addr_of_2673_final_reg = 32
+Info: estimated buffering for operator addr_of_2698_final_reg = 32
+Info: estimated buffering for operator addr_of_2723_final_reg = 32
+Info: estimated buffering for operator addr_of_2748_final_reg = 32
+Info: estimated buffering for operator addr_of_2773_final_reg = 32
+Info: estimated buffering for operator addr_of_2798_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_2516_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2542_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2568_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2594_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2622_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2647_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2672_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2697_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2722_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2747_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2772_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_2797_index_offset = 14
+Info: estimated buffering for operator phi_stmt_2268 = 32
+Info: estimated buffering for operator phi_stmt_2274 = 32
+Info: estimated buffering for operator phi_stmt_2386 = 32
+Info: estimated buffering for operator phi_stmt_2858 = 32
+Info: estimated buffering for operator ptr_deref_2170_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_2170_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_2170_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_2170_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_2170_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2170_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2170_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2170_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2195_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_2195_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_2195_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_2195_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_2195_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2195_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2195_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2195_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2207_load_0 = 32
+Info: estimated buffering for operator ptr_deref_2219_load_0 = 32
+Info: estimated buffering for operator ptr_deref_2231_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_2231_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_2231_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_2231_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_2231_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2231_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2231_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2231_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2627_load_0 = 64
+Info: estimated buffering for operator ptr_deref_2677_load_0 = 64
+Info: estimated buffering for operator ptr_deref_2727_load_0 = 64
+Info: estimated buffering for operator ptr_deref_2777_load_0 = 64
+Info: estimated buffering for operator type_cast_2183_inst = 32
+Info: estimated buffering for operator type_cast_2258_inst = 32
+Info: estimated buffering for operator type_cast_2271_inst = 32
+Info: estimated buffering for operator type_cast_2273_inst = 32
+Info: estimated buffering for operator type_cast_2280_inst = 32
+Info: estimated buffering for operator type_cast_2389_inst = 32
+Info: estimated buffering for operator type_cast_2510_inst = 64
+Info: estimated buffering for operator type_cast_2536_inst = 64
+Info: estimated buffering for operator type_cast_2562_inst = 64
+Info: estimated buffering for operator type_cast_2588_inst = 64
+Info: estimated buffering for operator type_cast_2616_inst = 64
+Info: estimated buffering for operator type_cast_2641_inst = 64
+Info: estimated buffering for operator type_cast_2666_inst = 64
+Info: estimated buffering for operator type_cast_2691_inst = 64
+Info: estimated buffering for operator type_cast_2716_inst = 64
+Info: estimated buffering for operator type_cast_2741_inst = 64
+Info: estimated buffering for operator type_cast_2766_inst = 64
+Info: estimated buffering for operator type_cast_2791_inst = 64
+Info: estimated buffering for operator type_cast_2844_inst = 32
+Info: estimated buffering for operator type_cast_2861_inst = 32
+Info: estimated buffering for operator type_cast_2863_inst = 32
+Info: estimated buffering in module zeropad3D_B is 2292
+Info: printing VHDL model for module zeropad3D_C
+Info: resources used by CP zeropad3D_C_CP_9570: ff-count=117 (saved 0), mux2-count= 117, and2-count= 84
+Info: estimated buffering for operator LOAD_pad_2902_load_0 = 16
+Info: estimated buffering for operator RPIPE_Block2_starting_2880_inst = 16
+Info: estimated buffering for operator addr_of_3234_final_reg = 32
+Info: estimated buffering for operator addr_of_3260_final_reg = 32
+Info: estimated buffering for operator addr_of_3286_final_reg = 32
+Info: estimated buffering for operator addr_of_3312_final_reg = 32
+Info: estimated buffering for operator addr_of_3340_final_reg = 32
+Info: estimated buffering for operator addr_of_3365_final_reg = 32
+Info: estimated buffering for operator addr_of_3390_final_reg = 32
+Info: estimated buffering for operator addr_of_3415_final_reg = 32
+Info: estimated buffering for operator addr_of_3440_final_reg = 32
+Info: estimated buffering for operator addr_of_3465_final_reg = 32
+Info: estimated buffering for operator addr_of_3490_final_reg = 32
+Info: estimated buffering for operator addr_of_3515_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_3233_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3259_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3285_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3311_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3339_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3364_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3389_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3414_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3439_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3464_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3489_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3514_index_offset = 14
+Info: estimated buffering for operator phi_stmt_2985 = 32
+Info: estimated buffering for operator phi_stmt_2992 = 32
+Info: estimated buffering for operator phi_stmt_3103 = 32
+Info: estimated buffering for operator phi_stmt_3581 = 32
+Info: estimated buffering for operator ptr_deref_2893_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_2893_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_2893_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_2893_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_2893_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2893_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2893_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2893_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2918_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_2918_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_2918_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_2918_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_2918_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2918_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2918_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2918_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2930_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_2930_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_2930_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_2930_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_2930_load_0 = 8
+Info: estimated buffering for operator ptr_deref_2930_load_1 = 8
+Info: estimated buffering for operator ptr_deref_2930_load_2 = 8
+Info: estimated buffering for operator ptr_deref_2930_load_3 = 8
+Info: estimated buffering for operator ptr_deref_2942_load_0 = 32
+Info: estimated buffering for operator ptr_deref_2954_load_0 = 32
+Info: estimated buffering for operator ptr_deref_3344_load_0 = 64
+Info: estimated buffering for operator ptr_deref_3394_load_0 = 64
+Info: estimated buffering for operator ptr_deref_3444_load_0 = 64
+Info: estimated buffering for operator ptr_deref_3494_load_0 = 64
+Info: estimated buffering for operator type_cast_2906_inst = 32
+Info: estimated buffering for operator type_cast_2975_inst = 32
+Info: estimated buffering for operator type_cast_2991_inst = 32
+Info: estimated buffering for operator type_cast_2995_inst = 32
+Info: estimated buffering for operator type_cast_2997_inst = 32
+Info: estimated buffering for operator type_cast_3109_inst = 32
+Info: estimated buffering for operator type_cast_3227_inst = 64
+Info: estimated buffering for operator type_cast_3253_inst = 64
+Info: estimated buffering for operator type_cast_3279_inst = 64
+Info: estimated buffering for operator type_cast_3305_inst = 64
+Info: estimated buffering for operator type_cast_3333_inst = 64
+Info: estimated buffering for operator type_cast_3358_inst = 64
+Info: estimated buffering for operator type_cast_3383_inst = 64
+Info: estimated buffering for operator type_cast_3408_inst = 64
+Info: estimated buffering for operator type_cast_3433_inst = 64
+Info: estimated buffering for operator type_cast_3458_inst = 64
+Info: estimated buffering for operator type_cast_3483_inst = 64
+Info: estimated buffering for operator type_cast_3508_inst = 64
+Info: estimated buffering for operator type_cast_3567_inst = 32
+Info: estimated buffering for operator type_cast_3587_inst = 32
+Info: estimated buffering in module zeropad3D_C is 2260
+Info: printing VHDL model for module zeropad3D_D
+Info: resources used by CP zeropad3D_D_CP_11962: ff-count=121 (saved 0), mux2-count= 121, and2-count= 86
+Info: estimated buffering for operator LOAD_pad_3644_load_0 = 16
+Info: estimated buffering for operator RPIPE_Block3_starting_3604_inst = 16
+Info: estimated buffering for operator addr_of_3957_final_reg = 32
+Info: estimated buffering for operator addr_of_3983_final_reg = 32
+Info: estimated buffering for operator addr_of_4009_final_reg = 32
+Info: estimated buffering for operator addr_of_4035_final_reg = 32
+Info: estimated buffering for operator addr_of_4063_final_reg = 32
+Info: estimated buffering for operator addr_of_4088_final_reg = 32
+Info: estimated buffering for operator addr_of_4113_final_reg = 32
+Info: estimated buffering for operator addr_of_4138_final_reg = 32
+Info: estimated buffering for operator addr_of_4163_final_reg = 32
+Info: estimated buffering for operator addr_of_4188_final_reg = 32
+Info: estimated buffering for operator addr_of_4213_final_reg = 32
+Info: estimated buffering for operator addr_of_4238_final_reg = 32
+Info: estimated buffering for operator array_obj_ref_3956_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_3982_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4008_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4034_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4062_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4087_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4112_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4137_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4162_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4187_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4212_index_offset = 14
+Info: estimated buffering for operator array_obj_ref_4237_index_offset = 14
+Info: estimated buffering for operator phi_stmt_3715 = 32
+Info: estimated buffering for operator phi_stmt_3721 = 32
+Info: estimated buffering for operator phi_stmt_3832 = 32
+Info: estimated buffering for operator phi_stmt_4298 = 32
+Info: estimated buffering for operator ptr_deref_3617_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_3617_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_3617_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_3617_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_3617_load_0 = 8
+Info: estimated buffering for operator ptr_deref_3617_load_1 = 8
+Info: estimated buffering for operator ptr_deref_3617_load_2 = 8
+Info: estimated buffering for operator ptr_deref_3617_load_3 = 8
+Info: estimated buffering for operator ptr_deref_3635_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_3635_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_3635_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_3635_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_3635_load_0 = 8
+Info: estimated buffering for operator ptr_deref_3635_load_1 = 8
+Info: estimated buffering for operator ptr_deref_3635_load_2 = 8
+Info: estimated buffering for operator ptr_deref_3635_load_3 = 8
+Info: estimated buffering for operator ptr_deref_3660_addr_0 = 9
+Info: estimated buffering for operator ptr_deref_3660_addr_1 = 9
+Info: estimated buffering for operator ptr_deref_3660_addr_2 = 9
+Info: estimated buffering for operator ptr_deref_3660_addr_3 = 9
+Info: estimated buffering for operator ptr_deref_3660_load_0 = 8
+Info: estimated buffering for operator ptr_deref_3660_load_1 = 8
+Info: estimated buffering for operator ptr_deref_3660_load_2 = 8
+Info: estimated buffering for operator ptr_deref_3660_load_3 = 8
+Info: estimated buffering for operator ptr_deref_3672_load_0 = 32
+Info: estimated buffering for operator ptr_deref_3684_load_0 = 32
+Info: estimated buffering for operator ptr_deref_4067_load_0 = 64
+Info: estimated buffering for operator ptr_deref_4117_load_0 = 64
+Info: estimated buffering for operator ptr_deref_4167_load_0 = 64
+Info: estimated buffering for operator ptr_deref_4217_load_0 = 64
+Info: estimated buffering for operator type_cast_3648_inst = 32
+Info: estimated buffering for operator type_cast_3705_inst = 32
+Info: estimated buffering for operator type_cast_3718_inst = 32
+Info: estimated buffering for operator type_cast_3720_inst = 32
+Info: estimated buffering for operator type_cast_3724_inst = 32
+Info: estimated buffering for operator type_cast_3726_inst = 32
+Info: estimated buffering for operator type_cast_3838_inst = 32
+Info: estimated buffering for operator type_cast_3950_inst = 64
+Info: estimated buffering for operator type_cast_3976_inst = 64
+Info: estimated buffering for operator type_cast_4002_inst = 64
+Info: estimated buffering for operator type_cast_4028_inst = 64
+Info: estimated buffering for operator type_cast_4056_inst = 64
+Info: estimated buffering for operator type_cast_4081_inst = 64
+Info: estimated buffering for operator type_cast_4106_inst = 64
+Info: estimated buffering for operator type_cast_4131_inst = 64
+Info: estimated buffering for operator type_cast_4156_inst = 64
+Info: estimated buffering for operator type_cast_4181_inst = 64
+Info: estimated buffering for operator type_cast_4206_inst = 64
+Info: estimated buffering for operator type_cast_4231_inst = 64
+Info: estimated buffering for operator type_cast_4284_inst = 32
+Info: estimated buffering for operator type_cast_4301_inst = 32
+Info: estimated buffering for operator type_cast_4303_inst = 32
+Info: estimated buffering in module zeropad3D_D is 2324
+Info: total estimated buffering in system ahir_system is 12386
+Info: finished printing VHDL model
+Info: number of register bits used in FIFO's = 192
+Info: printing Dot-file of CP for module sendOutput
+Info: printing Dot-file of CP for module testConfigure
+Info: printing Dot-file of CP for module zeropad3D
+Info: printing Dot-file of CP for module zeropad3D_A
+Info: printing Dot-file of CP for module zeropad3D_B
+Info: printing Dot-file of CP for module zeropad3D_C
+Info: printing Dot-file of CP for module zeropad3D_D
+Info: printing Dot-file of DP for module sendOutput
+Info: printing Dot-file of DP for module testConfigure
+Info: printing Dot-file of DP for module zeropad3D
+Info: printing Dot-file of DP for module zeropad3D_A
+Info: printing Dot-file of DP for module zeropad3D_B
+Info: printing Dot-file of DP for module zeropad3D_C
+Info: printing Dot-file of DP for module zeropad3D_D
+vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
+vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
+vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl
+rm -f *unformatted_vhdl
+ajinkya@Ajinkya:~/IITB_AI_ML/fpga/zeropad/ahir$ cd ../misc_vhdl/
+ajinkya@Ajinkya:~/IITB_AI_ML/fpga/zeropad/misc_vhdl$ ./build.sh 
+AaLinkExtMem ./src/core.aa | vcFormat > core.linked.aa
+Info: parsed and added pipe CLK_FREQUENCY_SIG width = 32 depth = 1
+Info: parsed and added pipe BAUD_RATE_SIG width = 32 depth = 1
+Info: parsed and added pipe BAUD_CONTROL_WORD_SIG width = 32 depth = 1
+Info: parsed and added pipe BAUD_CONTROL_WORD_VALID width = 1 depth = 1
+Info: parsed and added pipe CLOCK_FREQUENCY_VALID width = 1 depth = 1
+./src/core.aa:24:42: unexpected char: '$'
+AaLinkExtMem Error: Parsing Exception: ./src/core.aa:24:47: unexpected token: <
+AaLinkExtMem Error: Parsing Exception: ./src/core.aa:24:48: unexpected token: 32
+Info: Added module my_gcd
+./src/core.aa:40:37: unexpected char: '$'
+AaLinkExtMem Error: Parsing Exception: ./src/core.aa:40:42: unexpected token: <
+Info: Added module my_div
+./src/core.aa:69:73: unexpected char: '$'
+./src/core.aa:71:71: unexpected char: '$'
+./src/core.aa:78:76: unexpected char: '$'
+Info: Added module baudControlCalculatorDaemon
+Info: finished parsing file ./src/core.aa
+Error: there were errors while parsing file ./src/core.aa, check the log
+AaOpt -B core.linked.aa | vcFormat > core.linked.opt.aa
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+Info: marking modules reachable from root-modules ... 
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
+Info: propagating constants in the program ... 
+Info: added 0 bits of buffering during path balancing.
+Aa2VC -O -C core.linked.opt.aa | vcFormat > core.vc
+Info: -O option selected, will parallelize straight-line sequences
+Info: -C option selected, will generate C-stubs for mixed C-VHDL simulation
+Info: elaborating the program .... initializing the call-graph
+Info: mapping target object references..
+Info: mapping source object references..
+Info: checking for cycles in the call-graph ... 
+Info: module order:
+Info: marking modules reachable from root-modules ... 
+Info: propagating types in the program ... 
+Info: coalescing storage into distinct memory spaces ... 
+Info: Marking foreign pointers in modules which are not called from the program
+Info: Coalescing storage from native objects..
+Info: Finished coalescing storage.. identified 0 disjoint memory space(s)
+Info: propagating constants in the program ... 
+Info: Writing optimized VC model.. 
+Info: Done writing optimized VC model.. 
+vc2vhdl -H -O -S 4 -I 2 -a -C -e baud_control_calculator -W RtUart -w -s ghdl -T baudControlCalculatorDaemon -f core.vc 
+Info: hierarchical system file (.hsys) printing turned on.
+Info: -O option selected, will try to compress control-path..
+Info: -S option selected: bypass stride will be set to 4.
+Info: -I will treat errors as warnings.
+Info: -a option selected: will try for minimum overall circuit area.
+Info: -C option selected: will generate testbench which connects to foreign link.
+Info: -e baud_control_calculator top-level VHDL entity will have name baud_control_calculator.unformatted_vhdl
+Info: -W option selected: generated VHDL will be in library RtUart
+Info: -w baud_control_calculator will write separate system and testbench VHDL files.
+Info: -s ghdl option selected: will generate testbench with VHPI link.
+Info: module baudControlCalculatorDaemon set as one of the ever-running top modules. 
+   NOTE: baudControlCalculatorDaemon cannot have any input/output arguments.
+vc2vhdl Error: did not find module baudControlCalculatorDaemon in the system
+vc2vhdl Error: did not find module baudControlCalculatorDaemon in the system
+There were errors during elaboration ... will not print VHDL
+Info: printing VHDL global package
+Info: printing top-level system VHDL file baud_control_calculator.unformatted_vhdl
+Info: printing VHDL model
+Info: total estimated buffering in system baud_control_calculator is 0
+Info: finished printing VHDL model
+Info: number of register bits used in FIFO's = 0
+rm -rf vhdl
+mkdir vhdl
+mkdir vhdl/RtUart
+vhdlFormat < baud_control_calculator_global_package.unformatted_vhdl > vhdl/RtUart/baud_control_calculator_global_package.vhdl
+vhdlFormat < baud_control_calculator.unformatted_vhdl > vhdl/RtUart/baud_control_calculator.vhdl
+vhdlFormat < baud_control_calculator_test_bench.unformatted_vhdl > vhdl/RtUart/baud_control_calculator_test_bench.vhdl
+rm *.unformatted_vhdl

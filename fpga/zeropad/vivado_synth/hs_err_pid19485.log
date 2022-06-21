@@ -1,0 +1,14 @@
+#
+# An unexpected error has occurred (11)
+#
+Stack:
+/home/AIML/my_xil_dir/Vivado/2017.1/tps/lnx64/jre/lib/amd64/server/libjvm.so(+0x923da9) [0x7f13df712da9]
+/home/AIML/my_xil_dir/Vivado/2017.1/tps/lnx64/jre/lib/amd64/server/libjvm.so(JVM_handle_linux_signal+0xb6) [0x7f13df7193f6]
+/home/AIML/my_xil_dir/Vivado/2017.1/tps/lnx64/jre/lib/amd64/server/libjvm.so(+0x9209d3) [0x7f13df70f9d3]
+/lib/x86_64-linux-gnu/libc.so.6(+0x354c0) [0x7f1418ad84c0]
+/home/AIML/my_xil_dir/Vivado/2017.1/lib/lnx64.o/librdi_common.so(+0x4b675f) [0x7f1419ac475f]
+/home/AIML/my_xil_dir/Vivado/2017.1/lib/lnx64.o/librdi_common.so(HPAParamMgr::getValueAsBool(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) const+0x1f) [0x7f1419ac4d7f]
+/home/AIML/my_xil_dir/Vivado/2017.1/lib/lnx64.o/librdi_labtools.so(LTDTimer::run()+0x3a6) [0x7f13e69ef1f6]
+/home/AIML/my_xil_dir/Vivado/2017.1/lib/lnx64.o/libboost_thread.so(+0xfa46) [0x7f1416b4ea46]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x76ba) [0x7f141888d6ba]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x6d) [0x7f1418baa51d]

@@ -64,23 +64,46 @@ uint8_t stride;
 
 void getInput()
 {
-	desc_T.row_major_form = read_uint8 ("conv_input_pipe");
-    desc_T.number_of_dimensions = read_uint8 ("conv_input_pipe"); 
-    int i;
-    for(i = 0;i < desc_T.number_of_dimensions;i++){
-        desc_T.dimensions[i] = read_uint8 ("conv_input_pipe");
-    }
+    uint16_t row_major_form = read_uint8 ("conv_input_pipe");
+    row_major_form = (row_major_form << 8) + read_uint8 ("conv_input_pipe");
+    uint16_t number_of_dimensions = read_uint8 ("conv_input_pipe");
+    number_of_dimensions = (number_of_dimensions << 8) + read_uint8 ("conv_input_pipe");
+    desc_T.row_major_form = row_major_form;
+    desc_T.number_of_dimensions = number_of_dimensions;
+    uint16_t row_high_T = read_uint8 ("conv_input_pipe");
+    row_high_T = (row_high_T << 8) + read_uint8 ("conv_input_pipe");
+    uint16_t col_high_T = read_uint8 ("conv_input_pipe");
+    col_high_T = (col_high_T << 8) + read_uint8 ("conv_input_pipe");
+    uint16_t depth_high_T = read_uint8 ("conv_input_pipe");
+    depth_high_T = (depth_high_T << 8) + read_uint8 ("conv_input_pipe");
+    desc_T.dimensions[0] = row_high_T;
+    desc_T.dimensions[1] = col_high_T;
+    desc_T.dimensions[2] = depth_high_T;
 
-	stride = read_uint8 ("conv_input_pipe");
+    stride = read_uint8 ("conv_input_pipe");
 
-	desc_K.row_major_form = read_uint8 ("conv_input_pipe");
-    desc_K.number_of_dimensions = read_uint8 ("conv_input_pipe");
-    for(i = 0;i < desc_K.number_of_dimensions;i++){
-        desc_K.dimensions[i] = read_uint8 ("conv_input_pipe");
-    }
+	row_major_form = read_uint8 ("conv_input_pipe");
+    row_major_form = (row_major_form << 8) + read_uint8 ("conv_input_pipe");
+    number_of_dimensions = read_uint8 ("conv_input_pipe");
+    number_of_dimensions = (number_of_dimensions << 8) + read_uint8 ("conv_input_pipe");
+    desc_K.row_major_form = row_major_form;
+    desc_K.number_of_dimensions = number_of_dimensions;
+	uint16_t channel_high_K = read_uint8 ("conv_input_pipe");
+    channel_high_K = (channel_high_K << 8) + read_uint8 ("conv_input_pipe");
+    uint16_t row_high_K = read_uint8 ("conv_input_pipe");
+    row_high_K = (row_high_K << 8) + read_uint8 ("conv_input_pipe");
+    uint16_t col_high_K = read_uint8 ("conv_input_pipe");
+    col_high_K = (col_high_K << 8) + read_uint8 ("conv_input_pipe");
+    uint16_t depth_high_K = read_uint8 ("conv_input_pipe");
+    depth_high_K = (depth_high_K << 8) + read_uint8 ("conv_input_pipe");
+    desc_K.dimensions[1] = row_high_K;
+    desc_K.dimensions[2] = col_high_K;
+    desc_K.dimensions[3] = depth_high_K;
+    desc_K.dimensions[0] = channel_high_K;
     
 	uint32_t input_size = desc_T.dimensions[0]*desc_T.dimensions[1]*desc_T.dimensions[2];
     uint32_t kernel_size = desc_K.dimensions[0]*desc_K.dimensions[1]*desc_K.dimensions[2]*desc_K.dimensions[3];
+	int i;
     for(i = 0; i < (input_size >> 2)+1; i++)
     {
         uint64_t element;
@@ -217,9 +240,7 @@ void conv2D()
 	uint16_t q_end5 = 4;
 	uint16_t r_end5 = 0;
 	__aa_barrier__();
-#ifndef SW
-	uint64_t start_time = timer();
-#endif
+
 	write_uint16("core1_req_pipe",p_start1);
 	write_uint16("core1_req_pipe",q_start1);
 	write_uint16("core1_req_pipe",r_start1);
@@ -257,12 +278,6 @@ void conv2D()
 	uint8_t done3 = read_uint16("core3_ack_pipe");
 	uint8_t done4 = read_uint16("core4_ack_pipe");
 	uint8_t done5 = read_uint16("core5_ack_pipe");
-	__aa_barrier__();
-#ifndef SW
-	uint64_t stop_time = timer();
-	uint64_t elapsed_time = stop_time - start_time;
-	write_uint64("elapsed_time_pipe", elapsed_time);
-#endif
 	__aa_barrier__();
     sendOutput();
 }

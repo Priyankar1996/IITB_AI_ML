@@ -47,12 +47,12 @@ int main(int argc, char* argv[])
 
 	while(1)
 	{
-		uint16_t x;
-		fscanf(stdin,"%hu",&x);
-		if(x == 65535)
-		break;
-		tbSendUint16 (x);
-		fprintf(stderr,"sent %hu.\n", x);
+		uint8_t x;
+		fscanf(stdin,"%hhu",&x);
+		//if(x == 65535)
+		//break;
+		tbSendUint8 (x);
+		fprintf(stderr,"sent %hhu.\n", x);
 	}
 
 	return(0);

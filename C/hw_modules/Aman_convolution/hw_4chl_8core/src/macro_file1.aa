@@ -1,8 +1,5 @@
         
-        fetch_addr##num := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) address##num )])
         $volatile n_row##num := ($mux next_row (row##num + N_ROWS_S) row##num )
-        $volatile n_address##num := ((address##num + 1) + ($mux next_row m3_factor  0))
+        $volatile n_address##num := ((address##num + 1) + ($mux next_row m_factor  0))
         $volatile send_flag##num := (row##num < row_in)
-        $guard (send_flag##num ) fetch_val##num := ->(fetch_addr##num )
-        $guard (send_flag##num ) $call writeToInputPipe##num (fetch_val##num ) (done_flag##num )
-
+        $guard (send_flag##num ) $call readModule2 (0 address##num ) (core_ip##num )

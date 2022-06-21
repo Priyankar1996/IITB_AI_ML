@@ -1,0 +1,80 @@
+$module [zeropad_same] $in(inp_d0:$uint<16> inp_d1:$uint<16> inp_d2:$uint<16> out_d0:$uint<16> out_d1:$uint<16> out_d2:$uint<16> index1:$uint<8> index2:$uint<8>) $out() $is
+{
+    $branchblock [body]
+    { 
+    $volatile input_dim0_init := ($bitcast ($uint<16>) 0)
+    $volatile input_dim1_init := ($bitcast ($uint<16>) 0)
+    $volatile input_dim2_init := ($bitcast ($uint<16>) 0)
+    $volatile pad := ((out_d0 - inp_d0) >> 1)
+    $volatile add_dest_dim0_init := pad
+    $volatile add_dest_dim1_init := pad
+    $volatile add_src_init := ($bitcast ($uint<32>) 0) 
+    
+    $dopipeline $depth 15 $buffering 1 $fullrate
+    $merge $entry $loopback
+    $phi input_dim0 := input_dim0_init $on $entry next_input_dim0 $on $loopback
+    $phi input_dim1 := input_dim1_init $on $entry next_input_dim1 $on $loopback
+    $phi input_dim2 := input_dim2_init $on $entry next_input_dim2 $on $loopback
+    $phi add_dest_dim0 := add_dest_dim0_init $on $entry next_add_dest_dim0 $on $loopback
+    $phi add_dest_dim1 := add_dest_dim1_init $on $entry next_add_dest_dim1 $on $loopback
+    $phi add_src := add_src_init $on $entry next_add_src $on $loopback
+    $endmerge
+    
+    $volatile nao := (out_d1 * add_dest_dim0)
+    $volatile nao1 := (nao + add_dest_dim1)
+    $volatile nao2 := (out_d2 * nao1)
+    $volatile nao3 := (input_dim2 + nao2)
+    $volatile add_out := (nao3 >> 3)
+
+    $call readModule1 (index1 ($bitcast ($uint<32>)add_src)) (i1)
+    $call writeModule1 (index2 ($bitcast ($uint<32>)add_out) i1) (done)
+
+    dim2_limit := (inp_d2 - 8)
+    
+    cmp_dim2 := (input_dim2 < dim2_limit)
+    cmp_dim1 := (input_dim1 == (inp_d1-1))
+    cmp_dim0 := ((~cmp_dim2) & cmp_dim1)
+    
+    nid2_true := (input_dim2 + 8)
+    nid2_false := (input_dim1 + 1) 
+    nid2_false1 := (add_dest_dim1 + 1)
+    
+    nid1_true := (input_dim0 + 1)
+    nid1_true1 := (add_dest_dim0 + 1)
+    nid1_true4 := pad
+    
+    next_add_src := (add_src + 1)
+    next_add_dest_dim1 := ($mux (~cmp_dim2) ($mux cmp_dim1 nid1_true4 nid2_false1) add_dest_dim1)
+    next_add_dest_dim0 := ($mux cmp_dim0 nid1_true1 add_dest_dim0)
+    next_input_dim2 := ($mux cmp_dim2 nid2_true 0)
+    next_input_dim1 := ($mux (~cmp_dim2) ($mux cmp_dim1 pad nid2_false) input_dim1)
+    next_input_dim0 := ($mux cmp_dim0 nid1_true input_dim0)
+
+    dim0_end := (input_dim0 < (inp_d0-1))
+    continue_flag := (dim0_end | (~cmp_dim0))
+    $while continue_flag
+    
+    //ENDING OF CONVTRANSPOSE MODULE
+    }
+} 
+
+$pipeline $depth 8 $buffering 2 $fullrate
+$opaque $module [readModule1]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+    ptr := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    data := ->(ptr)
+}
+
+$pipeline $depth 8 $buffering 2 $fullrate
+$opaque $module [writeModule1]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out (done : $uint<1>)
+$is
+{
+    ptr := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][address])
+    ->(ptr) := data
+    done := (index [] 0)
+}

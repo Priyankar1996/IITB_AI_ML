@@ -35,14 +35,7 @@ $record [structx_x__SizedTensor_1M] < $array [{1024*1024}] $of $uint<64> >
 //$storage KM2 ZE1_1 ZE1_2 CE1_1 CE1_2 CO2 T1 CD1_1 CD1_2 ZD1_1 ZD1_2 ZL : structx_x__SizedTensor_512K
 //$storage CO1 : structx_x__SizedTensor_1M
 
-$storage KE1_1 KL : structx_x__SizedTensor_512
-$storage KE1_2 KD1_2 : structx_x__SizedTensor_8K
-$storage KT1 KE2_1 KD1_1 : structx_x__SizedTensor_16K
-$storage KE2_2 KD2_2 : structx_x__SizedTensor_32K
-$storage KE3_1 KT2 KD2_1 : structx_x__SizedTensor_64K
-$storage KE3_2 KD3_2 : structx_x__SizedTensor_128K
-$storage KM1 KT3 KD3_1 : structx_x__SizedTensor_256K
-$storage KM2 : structx_x__SizedTensor_512K
+$storage Kernel : structx_x__SizedTensor_512K
 
 $storage Tensor0 : structx_x__SizedTensor_512K
 $storage Tensor1 : structx_x__SizedTensor_1M

@@ -23,29 +23,33 @@ $is
             // Pipeline for sending inputs
             $dopipeline $depth 15 $buffering 2 $fullrate
             $merge $entry $loopback
-            $phi address1 := ($bitcast ($uint<32>) 0) $on $entry n_address1 $on $loopback
+            $phi address := ($bitcast ($uint<32>) 0) $on $entry n_address $on $loopback
             $phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
-            $phi address2 := ($bitcast ($uint<32>) m_factor) $on $entry n_address2 $on $loopback
-            $phi row2 := ($bitcast ($uint<16>) 0) $on $entry n_row2 $on $loopback
-            $phi address3 := ($bitcast ($uint<32>) m2_factor) $on $entry n_address3 $on $loopback
-            $phi row3 := ($bitcast ($uint<16>) 0) $on $entry n_row3 $on $loopback
-            $phi address4 := ($bitcast ($uint<32>) m3_factor) $on $entry n_address4 $on $loopback
-            $phi row4 := ($bitcast ($uint<16>) 1) $on $entry n_row4 $on $loopback
+
             $phi mycounter := ($bitcast ($uint<32>) m_factor) $on $entry n_mycounter $on $loopback
+            $phi row_count := ($bitcast ($uint<2>) 0) $on $entry n_rowcount $on $loopback
             $endmerge
             
-            $volatile next_row := (mycounter == 1)
+            //$call timer (4) (time_pipe)
+            //$volatile nxt_cnt := (row_count == 3)
+            $volatile next_row :=  (mycounter == 1)
             $volatile tmp_cnt := (mycounter - 1)
-            $volatile n_mycounter := ($mux next_row m_factor tmp_cnt )
-
-            #define num 1
-            #include macro_file1.aa
-            #define num 2
-            #include macro_file1.aa
-            #define num 3
-            #include macro_file1.aa
-            #define num 4
-            #include macro_file1.aa
+            $volatile n_mycounter := ($mux next_row m_factor tmp_cnt ) 
+            $volatile n_rowcount := (row_count + 1)
+            
+            $volatile n_row1 := ($mux next_row (row1 + N_ROWS_S) row1 )
+            $volatile n_address := ((address + 1) + ($mux next_row m_factor  0))
+            $volatile send_flag1 := (row1 < row_in)
+            $volatile send_flag2 := (row1 < (row_in-1))
+            ptr1 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<32>) 0)][address])
+            ptr2 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<32>) 0)][(address+($bitcast ($uint<32>) m_factor) )])
+            ptr3 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<32>) 0)][(address+($bitcast ($uint<32>) m2_factor) )])
+            ptr4 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<32>) 0)][(address+($bitcast ($uint<32>) m3_factor) )])
+            
+            $guard (send_flag1 ) core_ip1 := ->(ptr1)
+            $guard (send_flag1 ) core_ip2 := ->(ptr2)
+            $guard (send_flag1 ) core_ip3 := ->(ptr3)
+            $guard (send_flag2 ) core_ip4 := ->(ptr4)
 
             $volatile continue_flag1 := (n_row1 < row_in)
 

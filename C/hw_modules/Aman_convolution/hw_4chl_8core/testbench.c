@@ -9,11 +9,10 @@
 #include "sized_tensor.h"
 #include "convolution_multipipe.h"
  
-#ifdef SW
 #include <pipeHandler.h>
 #include <Pipes.h>
 #include <pthreadUtils.h>
-#else
+#ifndef SW
 #include "vhdlCStubs.h"
 #endif
 
@@ -22,6 +21,20 @@ DEFINE_THREAD(convolution3D);
 #endif
 
 TensorDescriptor desc_T,desc_B,desc_K;
+
+void hear_timer()
+{
+    fprintf(stderr,"hear_timer is running.\n");
+    while(1)
+    {
+    uint32_t t;
+    uint64_t time_taken = read_uint64("time_pipe");
+    t = time_taken>>32;
+    fprintf(stderr,"Time taken at call %u is %u \n",t,time_taken);
+    }
+}
+
+DEFINE_THREAD(hear_timer);
 
 int main(int argc, char**argv){
 
@@ -49,12 +62,15 @@ int main(int argc, char**argv){
 	init_pipe_handler();
 	register_pipe ("maxpool_input_pipe", 2, 8, PIPE_FIFO_MODE);
 	register_pipe ("maxpool_output_pipe", 2, 8, PIPE_FIFO_MODE);
+	register_pipe ("time_pipe", 2, 64, PIPE_FIFO_MODE);
 
 	PTHREAD_DECL(convolution3D);
 
 	PTHREAD_CREATE(convolution3D);
 
 #endif
+	PTHREAD_DECL(hear_timer);
+	PTHREAD_CREATE(hear_timer);
 
 	fprintf(stderr,"Reading files\n");
 
@@ -182,7 +198,9 @@ int main(int argc, char**argv){
 	fprintf(stderr,"Size of output is %d\n",size );
 	fprintf(stderr,"Reading back the values from hardware\n");
 	
-	int16_t val;
+	
+	
+	int8_t val;
 	// val = read_uint8("maxpool_output_pipe");
 	// val = (val << 8) + read_uint8("maxpool_output_pipe");
 	for (i = 0; i < size; i++)
@@ -205,17 +223,7 @@ int main(int argc, char**argv){
 	system(arr);
 
 	printf("If no message is printed after this one, there is no error!!\n");
-#ifndef SW
-	uint64_t time_taken = read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	fprintf(stderr,"Time taken is %lu\n",time_taken);
-#endif
+
 	system("cmp COutFile.txt OctaveOutFile.txt");
 
 #ifdef SW

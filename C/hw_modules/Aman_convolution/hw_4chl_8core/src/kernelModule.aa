@@ -38,7 +38,7 @@ $is
         $volatile n_chl_num := ($mux nxt_chl (chl_num + 1) chl_num)
         $volatile n_ea := (ea + ($mux nxt_chl (row3_size<<3) 0))
         $volatile n_ind := ($mux next_row 1 (ind + 1))
-        $volatile add_val := ($bitcast ($uint<32> )($excmux (index == 2) row_size (index == 3) row2_size))
+        $volatile add_val := ($bitcast ($uint<32> )($excmux (ind == 2) row_size (ind == 3) row2_size))
         //$call timer (3) (time_pipe)
         
         ptr1 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+add_val)])

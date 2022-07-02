@@ -14,6 +14,7 @@ $is
         chl_in := kernel_module_pipe
         chl_out := kernel_module_pipe
         row_size := (chl_in + (chl_in << 1))
+        row2_size := (row_size << 1)
         row3_size := ($bitcast ($uint<32> ) (row_size + (row_size << 1)))
         row3_size2 := (row3_size << 1)
         row3_size3 := (row3_size + row3_size2)
@@ -31,25 +32,30 @@ $is
         $phi ind := ($bitcast ($uint<2>) 1) $on $entry n_ind $on $loopback
         $endmerge
 
-        nxt_chl := (mycount == ea)
-        $volatile nmycount := ((mycount + 1) + ($mux nxt_chl row3_size 0))
+        $volatile next_row := (ind == 3)
+        $volatile nxt_chl := ( (mycount == ea) & next_row)
+        $volatile nmycount := (mycount + ($mux next_row (1 + ($mux nxt_chl row3_size 0)) 0))
+        $volatile n_chl_num := ($mux nxt_chl (chl_num + 1) chl_num)
+        $volatile n_ea := (ea + ($mux nxt_chl (row3_size<<3) 0))
+        $volatile n_ind := ($mux next_row 1 (ind + 1))
+        $volatile add_val := ($bitcast ($uint<32> )($excmux (index == 2) row_size (index == 3) row2_size))
         //$call timer (3) (time_pipe)
         
-        ptr1 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][mycount])
+        ptr1 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+add_val)])
         fetch_val1 := ->(ptr1)
-        ptr2 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+row3_size)])
+        ptr2 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][((mycount+add_val)+row3_size)])
         fetch_val2 := ->(ptr2)
-        ptr3 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+row3_size2)])
+        ptr3 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][((mycount+add_val)+row3_size2)])
         fetch_val3 := ->(ptr3)
-        ptr4 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+row3_size3)])
+        ptr4 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][((mycount+add_val)+row3_size3)])
         fetch_val4 := ->(ptr4)
-        ptr5 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+row3_size4)])
+        ptr5 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][((mycount+add_val)+row3_size4)])
         fetch_val5 := ->(ptr5)
-        ptr6 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+row3_size5)])
+        ptr6 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][((mycount+add_val)+row3_size5)])
         fetch_val6 := ->(ptr6)
-        ptr7 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+row3_size6)])
+        ptr7 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][((mycount+add_val)+row3_size6)])
         fetch_val7 := ->(ptr7)
-        ptr8 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][(mycount+row3_size7)])
+        ptr8 := @(T[( $bitcast ($uint<32> ) index ) ][($bitcast ($uint<32>) 0)][((mycount+add_val)+row3_size7)])
         fetch_val8 := ->(ptr8)
 
         $call writeToPipe1 (ind fetch_val1) (a1)
@@ -61,9 +67,6 @@ $is
         $call writeToPipe7 (ind fetch_val7) (a7)
         $call writeToPipe8 (ind fetch_val8) (a8)
 
-        $volatile n_chl_num := ($mux nxt_chl (chl_num + 1) chl_num)
-        $volatile n_ea := (ea + ($mux nxt_chl (row3_size<<3) 0))
-        $volatile n_ind := ($mux (ind == 3) 1 (ind + 1))
 
         $volatile exit_cond := (nxt_chl & (chl_num == (chl_out-1)))
         $while (~exit_cond)

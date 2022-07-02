@@ -1,3 +1,4 @@
+//
 
 $module [sendModule] $in () $out () $is
 {
@@ -20,7 +21,7 @@ $module [sendModule] $in () $out () $is
 
         $volatile row_change := (col == cb)
         
-        $call timer (6) (time_pipe)
+        //$call timer (6) (time_pipe)
 
         // Check this later - odd values of row will be incorrect
         $volatile chl_change := (row_change & (row >= (rb - 1)))

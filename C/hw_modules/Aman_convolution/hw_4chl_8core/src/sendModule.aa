@@ -1,3 +1,4 @@
+//
 
 $module [sendModule] $in () $out () $is
 {
@@ -7,7 +8,7 @@ $module [sendModule] $in () $out () $is
         chl_out := output_pipe
         max_count := ($bitcast ($uint<32>) (rb*cb))
         row_size := ($bitcast ($uint<32>) (chl_out*cb))
-        three_row_size := (row_size*3)
+        three_row_size := (row_size+(row_size<<1))
 
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
@@ -19,6 +20,8 @@ $module [sendModule] $in () $out () $is
         $endmerge
 
         $volatile row_change := (col == cb)
+        
+        //$call timer (6) (time_pipe)
 
         // Check this later - odd values of row will be incorrect
         $volatile chl_change := (row_change & (row >= (rb - 1)))
@@ -31,8 +34,11 @@ $module [sendModule] $in () $out () $is
         $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) ($mux row_change (tmp1+row_size) tmp1))
         $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) ($mux row_change (tmp2+row_size) tmp2))
         
-        $call writeModule1 (2 address1 output_pipe1) (d1)
-        $call writeModule1 (2 address2 output_pipe2) (d2)
+        ptr1 := @(T[( $bitcast ($uint<32> ) 2 ) ][($bitcast ($uint<32>) 0)][address1])
+        ptr2 := @(T[( $bitcast ($uint<32> ) 2 ) ][($bitcast ($uint<32>) 0)][address2])
+        ->(ptr1) := output_pipe1
+        ->(ptr2) := output_pipe2
+
 //        maxpool_output_pipe := 100
         continue_flag := ((chl < (chl_out - 1)) | (~chl_change))
         $while continue_flag

@@ -8,6 +8,30 @@ $is
     $pipe conv_ip2 : $uint<PIPE_WIDTH> $depth IP_DEPTH
     $pipe conv_ip3 : $uint<PIPE_WIDTH> $depth IP_DEPTH
     $pipe conv_ip4 : $uint<PIPE_WIDTH> $depth IP_DEPTH
+    $pipe conv1_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv1_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv1_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv2_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv2_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv2_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv3_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv3_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv3_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv4_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv4_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv4_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv5_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv5_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv5_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv6_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv6_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv6_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv7_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv7_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv7_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv8_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv8_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    $pipe conv8_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
     $branchblock [conv_block]
     {
         num_row := (num_out_pipe - 1)
@@ -16,8 +40,6 @@ $is
         
         $merge $entry loopback
         $endmerge
-
-        start := convStartPipe
         
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
@@ -42,6 +64,8 @@ $is
         $phi num := ($bitcast ($uint<2>) 0) $on $entry n_num $on $loopback
         $phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
         $endmerge
+        
+        //$call timer (7) (time_pipe)
 
         $volatile read_ip := ((col == 0) | (num == 2))
         $volatile write_input := ((col < num_col) & (num > 0))
@@ -101,15 +125,9 @@ $is
         $volatile nacc8_1 := ($mux num_done 0 acc_val8_1)
         $volatile nacc8_2 := ($mux num_done 0 acc_val8_2)
         
-        $volatile start_next_kernel := ((~store_kernel) & ((chl == 0) & (num == 0)))
-        $guard (start_next_kernel) nextKernelChannelPipe := 1
-        
         //send_val := ($mux (acc_val < 0) 0 acc_val)
-        $guard (num_done) $call writeOutput  
-        (
-        ($concat ($bitcast ($uint<8>) acc_val1_1) ($bitcast ($uint<8>) acc_val2_1) ($bitcast ($uint<8>) acc_val3_1) ($bitcast ($uint<8>) acc_val4_1) ($bitcast ($uint<8>) acc_val5_1) ($bitcast ($uint<8>) acc_val6_1) ($bitcast ($uint<8>) acc_val7_1) ($bitcast ($uint<8>) acc_val8_1)) 
-        ($concat ($bitcast ($uint<8>) acc_val1_2) ($bitcast ($uint<8>) acc_val2_2) ($bitcast ($uint<8>) acc_val3_2) ($bitcast ($uint<8>) acc_val4_2) ($bitcast ($uint<8>) acc_val5_2) ($bitcast ($uint<8>) acc_val6_2) ($bitcast ($uint<8>) acc_val7_2) ($bitcast ($uint<8>) acc_val8_2))
-        ) (d1)
+        $guard (num_done) output_pipe1 := ($concat ($bitcast ($uint<8>) acc_val1_1) ($bitcast ($uint<8>) acc_val2_1) ($bitcast ($uint<8>) acc_val3_1) ($bitcast ($uint<8>) acc_val4_1) ($bitcast ($uint<8>) acc_val5_1) ($bitcast ($uint<8>) acc_val6_1) ($bitcast ($uint<8>) acc_val7_1) ($bitcast ($uint<8>) acc_val8_1))
+        $guard (num_done) output_pipe2 := ($concat ($bitcast ($uint<8>) acc_val1_2) ($bitcast ($uint<8>) acc_val2_2) ($bitcast ($uint<8>) acc_val3_2) ($bitcast ($uint<8>) acc_val4_2) ($bitcast ($uint<8>) acc_val5_2) ($bitcast ($uint<8>) acc_val6_2) ($bitcast ($uint<8>) acc_val7_2) ($bitcast ($uint<8>) acc_val8_2))
 
         $while (~all_done_flag)
 

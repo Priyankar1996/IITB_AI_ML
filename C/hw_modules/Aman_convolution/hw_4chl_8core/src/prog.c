@@ -107,7 +107,7 @@ void convolution3D()
 	chl_out >>= 3;
 	__aa_barrier__();
 #ifndef SW
-	uint64_t start_time = timer();
+    write_uint64("time_pipe",timer(1));
 #endif
 	write_uint16("output_pipe",rb);
 	write_uint16("output_pipe",cb);
@@ -128,33 +128,7 @@ void convolution3D()
 #ifndef SW
 	uint8_t done = read_uint8("input_done_pipe");
 	__aa_barrier__();
-	uint64_t stop_time = timer();
-	uint64_t elapsed_time = stop_time - start_time;
+    write_uint64("time_pipe",timer(2));
 	sendB (cb*rb*chl_out);
-	__aa_barrier__();
-	uint8_t time_data[8];
-	time_data[7] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[6] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[5]= elapsed_time & 0xFF;
-	elapsed_time>>=8;
-    time_data[4] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[3] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[2] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-    time_data[1] = elapsed_time & 0xFF;
-	elapsed_time>>=8;
-	time_data[0] = elapsed_time & 0xFF;
-	write_uint8 ("maxpool_output_pipe",time_data[0]);
-	write_uint8 ("maxpool_output_pipe",time_data[1]);
-	write_uint8 ("maxpool_output_pipe",time_data[2]);
-	write_uint8 ("maxpool_output_pipe",time_data[3]);
-	write_uint8 ("maxpool_output_pipe",time_data[4]);
-	write_uint8 ("maxpool_output_pipe",time_data[5]);
-	write_uint8 ("maxpool_output_pipe",time_data[6]);
-	write_uint8 ("maxpool_output_pipe",time_data[7]);
 #endif
 }

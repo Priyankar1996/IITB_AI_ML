@@ -17,9 +17,9 @@ $module [timerDaemon] $in () $out () $is
 	}
 }
 
-
-$module [timer] $in () $out (T: $uint<64>) $is
+$pipeline $depth 7 $fullrate
+$module [timer] $in (index : $uint<8>) $out (T: $uint<64>) $is
 {
 	timer_req := $one<1>
-	T := timer_resp
+	T := ($concat ($bitcast ($uint<32>) index) ($bitcast ($uint<32>) timer_resp))
 }

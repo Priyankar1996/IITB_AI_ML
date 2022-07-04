@@ -10,6 +10,7 @@
 void convolution3D();
 void convolve();
 void sendModule();
+uint64_t timer(uint8_t);
 
 #define __I16 1
 

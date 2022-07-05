@@ -1,11 +1,8 @@
 $parameter PIPE_WIDTH 64
-$parameter INTERMEDIATE_PIPE_DEPTH 4
+$parameter INTERMEDIATE_PIPE_DEPTH 64
 $parameter IP_DEPTH 128
 $parameter K_DEPTH 256
 $parameter N_ROWS_S 2
-
-$pipe nextKernelChannelPipe : $uint<1> $depth 1
-$pipe convStartPipe : $uint<1> $depth 1
 
 $pipe core1_kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core1_kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
@@ -39,3 +36,8 @@ $pipe core_ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 
 $pipe output_pipe1 : $uint<64> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe output_pipe2 : $uint<64> $depth INTERMEDIATE_PIPE_DEPTH
+
+$pipe acc_pipe1 : $uint<64> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe acc_pipe2 : $uint<64> $depth INTERMEDIATE_PIPE_DEPTH
+
+$pipe acc_in_pipe : $uint<16> $depth 1

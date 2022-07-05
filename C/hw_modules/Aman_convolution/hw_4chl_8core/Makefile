@@ -24,7 +24,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T convolution3D -T convolveCore -T sendModule -T loadKernel -T access_T
+TOPMODULES=-T timerDaemon -T convolution3D -T convolveCore -T sendModule -T loadKernel -T access_T -T accumulator
 
 
 # compile with SW defined.
@@ -52,9 +52,9 @@ llvmbc2aa:  prog.opt.o
 
 
 # link and optimize
-aalink:  src/timer.aa prog.aa $(CONVAA_FILE) src/conv_macro.aa src/macro_file1.aa
+aalink:  src/timer.aa src/prog.aa $(CONVAA_FILE) src/conv_macro.aa src/macro_file1.aa
 	AaPreprocess -I src/ src/conv_macro.aa -o conv_2.aa
-	AaLinkExtMem src/timer.aa prog.aa conv_2.aa| vcFormat > prog.linked.aa
+	AaLinkExtMem src/timer.aa src/prog.aa conv_2.aa| vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 

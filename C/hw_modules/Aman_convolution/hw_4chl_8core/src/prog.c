@@ -88,23 +88,23 @@ void convolution3D()
 	uint16_t ck = read_uint8("maxpool_input_pipe");
 	ck = ( ck<<8 ) + read_uint8("maxpool_input_pipe");
 
+	chl_in >>= 3;
+	chl_out >>= 3;
 	// size = number of 16-bit values in data array..
 	uint32_t size = rt*ct*chl_in;
 	uint64_t element;
-	for (i = 0; i < (size >> 3); i++)
+	for (i = 0; i < size; i++)
 	{
 		__get8xi8__(element);
 		T[0].data_array[i] = element;
 	}
 	
-	size =  chl_in*ck*rk*chl_out;
-	for (i = 0; i < (size >> 3); i++)
+	size =  (chl_in*ck)*(rk*chl_out);
+	for (i = 0; i < (size <<3); i++)
 	{
 		__get8xi8__(element);
 		T[1].data_array[i] = element;
 	}
-	chl_in >>= 3;
-	chl_out >>= 3;
 	__aa_barrier__();
 #ifndef SW
     write_uint64("time_pipe",timer(1));
@@ -115,6 +115,7 @@ void convolution3D()
 	write_uint16("num_out_pipe",rb);
 	write_uint16("num_out_pipe",cb);
 	write_uint16("num_out_pipe",chl_in);
+	write_uint16("num_out_pipe",0);
 	write_uint16("kernel_module_pipe",chl_in);
 	write_uint16("kernel_module_pipe",chl_out);
 	write_uint16("kernel_module_pipe",1);

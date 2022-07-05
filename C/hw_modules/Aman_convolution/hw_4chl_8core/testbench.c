@@ -164,12 +164,12 @@ int main(int argc, char**argv){
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
 
-	int16_t temp[4];
+	int8_t temp[4];
 	for (i = 0; i < size; i++)
 	{
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
-		fprintf(octaveInFile,"%hd\n",temp[i&3]);
+		fprintf(octaveInFile,"%hhd\n",temp[i&3]);
 		write_uint8("maxpool_input_pipe",temp[i&3]);
 		fprintf(stderr,"Sent element %d\n",i);
 	}
@@ -180,7 +180,7 @@ int main(int argc, char**argv){
 	{
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
-		fprintf(octaveInFile,"%hd\n",temp[i&3]);
+		fprintf(octaveInFile,"%hhd\n",temp[i&3]);
 		write_uint8("maxpool_input_pipe",temp[i&3]);
 		fprintf(stderr,"Sent kernel element %d\n",i);
 	}

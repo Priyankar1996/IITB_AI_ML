@@ -29,8 +29,8 @@
         #define in_num 4
         #include macro_file3.aa
 
-        acc_val##core_num\_1 :=  ((acc##core_num\_1 + t_acc_val_##core_num\_1) + (t_acc_val_##core_num\_2 + t_acc_val_##core_num\_3))
-        acc_val##core_num\_2 :=  ((acc##core_num\_2 + t_acc_val_##core_num\_4) + (t_acc_val_##core_num\_5 + t_acc_val_##core_num\_6))
+        acc_val##core_num\_1 :=  (t_acc_val_##core_num\_1 + (t_acc_val_##core_num\_2 + t_acc_val_##core_num\_3))
+        acc_val##core_num\_2 :=  (t_acc_val_##core_num\_4 + (t_acc_val_##core_num\_5 + t_acc_val_##core_num\_6))
 
 
         $guard (store_kernel) conv##core_num\_kp1 := kread_##core_num\_1

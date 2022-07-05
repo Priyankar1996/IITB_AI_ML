@@ -13,6 +13,8 @@ $is
         
         chl_in := kernel_module_pipe
         chl_out := kernel_module_pipe
+        index := ($bitcast ($uint<8>) kernel_module_pipe)
+
         row_size := (chl_in + (chl_in << 1))
         row2_size := (row_size << 1)
         row3_size := ($bitcast ($uint<32> ) (row_size + (row_size << 1)))
@@ -22,7 +24,6 @@ $is
         row3_size5 := (row3_size4 + row3_size)
         row3_size6 := (row3_size4 + row3_size2)
         row3_size7 := (row3_size4 + row3_size3)
-        index := ($bitcast ($uint<8>) kernel_module_pipe)
         
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback

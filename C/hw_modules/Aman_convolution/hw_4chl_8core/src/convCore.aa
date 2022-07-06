@@ -4,34 +4,7 @@ $in ()
 $out ()
 $is
 {
-    $pipe conv_ip1 : $uint<PIPE_WIDTH> $depth IP_DEPTH
-    $pipe conv_ip2 : $uint<PIPE_WIDTH> $depth IP_DEPTH
-    $pipe conv_ip3 : $uint<PIPE_WIDTH> $depth IP_DEPTH
-    $pipe conv_ip4 : $uint<PIPE_WIDTH> $depth IP_DEPTH
-    $pipe conv1_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv1_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv1_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv2_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv2_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv2_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv3_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv3_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv3_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv4_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv4_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv4_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv5_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv5_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv5_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv6_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv6_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv6_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv7_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv7_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv7_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv8_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv8_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
-    $pipe conv8_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+    
     $branchblock [conv_block]
     {
         num_row := (num_out_pipe - {1+{N_ROWS_S - 1}})
@@ -197,6 +170,58 @@ $module [accumulator] $in () $out () $is
 			)
 			
 //		$guard (num_done) $call timer (9) (time_pipe)
+        
+        $while 1
+    }
+}
+
+$module [writeBack_K] $in () $out () $is
+{
+    $branchblock [wb_blk]
+    {
+        $dopipeline $depth 15 $buffering 2 $fullrate
+        $merge $entry $loopback
+        $endmerge
+        conv1_kp1 := tmp_conv1_kp1
+        conv1_kp2 := tmp_conv1_kp2
+        conv1_kp3 := tmp_conv1_kp3
+        conv2_kp1 := tmp_conv2_kp1
+        conv2_kp2 := tmp_conv2_kp2
+        conv2_kp3 := tmp_conv2_kp3
+        conv3_kp1 := tmp_conv3_kp1
+        conv3_kp2 := tmp_conv3_kp2
+        conv3_kp3 := tmp_conv3_kp3
+        conv4_kp1 := tmp_conv4_kp1
+        conv4_kp2 := tmp_conv4_kp2
+        conv4_kp3 := tmp_conv4_kp3
+        conv5_kp1 := tmp_conv5_kp1
+        conv5_kp2 := tmp_conv5_kp2
+        conv5_kp3 := tmp_conv5_kp3
+        conv6_kp1 := tmp_conv6_kp1
+        conv6_kp2 := tmp_conv6_kp2
+        conv6_kp3 := tmp_conv6_kp3
+        conv7_kp1 := tmp_conv7_kp1
+        conv7_kp2 := tmp_conv7_kp2
+        conv7_kp3 := tmp_conv7_kp3
+        conv8_kp1 := tmp_conv8_kp1
+        conv8_kp2 := tmp_conv8_kp2
+        conv8_kp3 := tmp_conv8_kp3
+        
+        $while 1
+    }
+}
+
+$module [writeBack_I] $in () $out () $is
+{
+    $branchblock [wb_blk]
+    {
+        $dopipeline $depth 15 $buffering 2 $fullrate
+        $merge $entry $loopback
+        $endmerge
+        conv_ip1 := tmp_conv_ip1
+        conv_ip2 := tmp_conv_ip2
+        conv_ip3 := tmp_conv_ip3
+        conv_ip4 := tmp_conv_ip4
         
         $while 1
     }

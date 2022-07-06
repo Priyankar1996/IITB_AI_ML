@@ -34,8 +34,8 @@ $module [sendModule] $in () $out () $is
         $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) ($mux row_change (tmp1+row_size) tmp1))
         $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) ($mux row_change (tmp2+row_size) tmp2))
         
-        ptr1 := @(T[( $bitcast ($uint<32> ) 2 ) ][($bitcast ($uint<32>) 0)][address1])
-        ptr2 := @(T[( $bitcast ($uint<32> ) 2 ) ][($bitcast ($uint<32>) 0)][address2])
+        ptr1 := @(B[($bitcast ($uint<32>) 0)][address1])
+        ptr2 := @(B[($bitcast ($uint<32>) 0)][address2])
         ->(ptr1) := output_pipe1
         ->(ptr2) := output_pipe2
 

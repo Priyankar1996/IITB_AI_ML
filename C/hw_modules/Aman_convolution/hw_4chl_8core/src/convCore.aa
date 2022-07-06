@@ -103,22 +103,22 @@ $module [accumulator] $in () $out () $is
         acc_count := ((acc_in_pipe * 3) - 1)
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
-        $phi acc1_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
-        $phi acc1_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
-        $phi acc2_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val2_1) $on $loopback
-        $phi acc2_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val2_2) $on $loopback
-        $phi acc3_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val3_1) $on $loopback
-        $phi acc3_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val3_2) $on $loopback
-        $phi acc4_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val4_1) $on $loopback
-        $phi acc4_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val4_2) $on $loopback
-        $phi acc5_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val5_1) $on $loopback
-        $phi acc5_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val5_2) $on $loopback
-        $phi acc6_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val6_1) $on $loopback
-        $phi acc6_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val6_2) $on $loopback
-        $phi acc7_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val7_1) $on $loopback
-        $phi acc7_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val7_2) $on $loopback
-        $phi acc8_1 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val8_1) $on $loopback
-        $phi acc8_2 := ($bitcast ($int<8>) 0) $on $entry ($mux num_done 0 acc_val8_2) $on $loopback
+        $phi acc1_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
+        $phi acc1_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
+        $phi acc2_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val2_1) $on $loopback
+        $phi acc2_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val2_2) $on $loopback
+        $phi acc3_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val3_1) $on $loopback
+        $phi acc3_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val3_2) $on $loopback
+        $phi acc4_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val4_1) $on $loopback
+        $phi acc4_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val4_2) $on $loopback
+        $phi acc5_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val5_1) $on $loopback
+        $phi acc5_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val5_2) $on $loopback
+        $phi acc6_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val6_1) $on $loopback
+        $phi acc6_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val6_2) $on $loopback
+        $phi acc7_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val7_1) $on $loopback
+        $phi acc7_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val7_2) $on $loopback
+        $phi acc8_1 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val8_1) $on $loopback
+        $phi acc8_2 := ($bitcast ($uint<8>) 0) $on $entry ($mux num_done 0 acc_val8_2) $on $loopback
         $phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
         $endmerge
         
@@ -129,44 +129,44 @@ $module [accumulator] $in () $out () $is
         rd1 := acc_pipe1
         rd2 := acc_pipe2
         $split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
-        acc_val1_1 := (acc1_1 + ($cast ($int<8>) t1))
-        acc_val2_1 := (acc2_1 + ($cast ($int<8>) t2))
-        acc_val3_1 := (acc3_1 + ($cast ($int<8>) t3))
-        acc_val4_1 := (acc4_1 + ($cast ($int<8>) t4))
-        acc_val5_1 := (acc5_1 + ($cast ($int<8>) t5))
-        acc_val6_1 := (acc6_1 + ($cast ($int<8>) t6))
-        acc_val7_1 := (acc7_1 + ($cast ($int<8>) t7))
-        acc_val8_1 := (acc8_1 + ($cast ($int<8>) t8))
+        acc_val1_1 := (acc1_1 + t1)
+        acc_val2_1 := (acc2_1 + t2)
+        acc_val3_1 := (acc3_1 + t3)
+        acc_val4_1 := (acc4_1 + t4)
+        acc_val5_1 := (acc5_1 + t5)
+        acc_val6_1 := (acc6_1 + t6)
+        acc_val7_1 := (acc7_1 + t7)
+        acc_val8_1 := (acc8_1 + t8)
         
         $split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
-        acc_val1_2 := (acc1_2 + ($cast ($int<8>) r1))
-        acc_val2_2 := (acc2_2 + ($cast ($int<8>) r2))
-        acc_val3_2 := (acc3_2 + ($cast ($int<8>) r3))
-        acc_val4_2 := (acc4_2 + ($cast ($int<8>) r4))
-        acc_val5_2 := (acc5_2 + ($cast ($int<8>) r5))
-        acc_val6_2 := (acc6_2 + ($cast ($int<8>) r6))
-        acc_val7_2 := (acc7_2 + ($cast ($int<8>) r7))
-        acc_val8_2 := (acc8_2 + ($cast ($int<8>) r8))
+        acc_val1_2 := (acc1_2 + r1)
+        acc_val2_2 := (acc2_2 + r2)
+        acc_val3_2 := (acc3_2 + r3)
+        acc_val4_2 := (acc4_2 + r4)
+        acc_val5_2 := (acc5_2 + r5)
+        acc_val6_2 := (acc6_2 + r6)
+        acc_val7_2 := (acc7_2 + r7)
+        acc_val8_2 := (acc8_2 + r8)
         
         $guard (num_done) output_pipe1 := ($concat 
-            ($bitcast ($uint<8>) acc_val1_1)
-			($bitcast ($uint<8>) acc_val2_1)
-			($bitcast ($uint<8>) acc_val3_1)
-			($bitcast ($uint<8>) acc_val4_1)
-			($bitcast ($uint<8>) acc_val5_1)
-			($bitcast ($uint<8>) acc_val6_1)
-			($bitcast ($uint<8>) acc_val7_1)
-			($bitcast ($uint<8>) acc_val8_1)
+            acc_val1_1
+			acc_val2_1
+			acc_val3_1
+			acc_val4_1
+			acc_val5_1
+			acc_val6_1
+			acc_val7_1
+			acc_val8_1
 			)
         $guard (num_done) output_pipe2 := ($concat
-			($bitcast ($uint<8>) acc_val1_2)
-			($bitcast ($uint<8>) acc_val2_2)
-			($bitcast ($uint<8>) acc_val3_2)
-			($bitcast ($uint<8>) acc_val4_2)
-			($bitcast ($uint<8>) acc_val5_2)
-			($bitcast ($uint<8>) acc_val6_2)
-			($bitcast ($uint<8>) acc_val7_2)
-			($bitcast ($uint<8>) acc_val8_2)
+			acc_val1_2
+			acc_val2_2
+			acc_val3_2
+			acc_val4_2
+			acc_val5_2
+			acc_val6_2
+			acc_val7_2
+			acc_val8_2
 			)
 			
 //		$guard (num_done) $call timer (9) (time_pipe)

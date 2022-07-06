@@ -8,7 +8,9 @@ $pipe maxpool_output_pipe : $uint<8> $depth 2
 $pipe num_out_pipe : $uint<16> $depth 1
 $pipe output_pipe : $uint<16> $depth 2
 $pipe time_pipe : $uint<64> $depth 2
-$storage T:$array [3] $of structx_x__SizedTensor_16K
+$storage T:structx_x__SizedTensor_16K
+$storage K:structx_x__SizedTensor_16K
+$storage B:structx_x__SizedTensor_16K
 $module [progx_xoptx_xo_storage_initializer_] $in () $out () $is 
 {
   $null
@@ -27,7 +29,7 @@ $is
     $merge forx_xbody_forx_xbody forx_xbodyx_xpreheader_forx_xbody
     $phi ix_x067 :=  ( $cast ($uint<32>) inc) $on forx_xbody_forx_xbody 0 $on forx_xbodyx_xpreheader_forx_xbody 
     $endmerge
-    arrayidx := @(T[2][0][ix_x067])
+    arrayidx := @(B[0][ix_x067])
     // load 
     tmp4 := ->(arrayidx)
     $split (tmp4 8 8 8 8 8 8 8 8) (conv47 conv41 conv35 conv29 conv23 conv17 conv11 conv)
@@ -80,7 +82,7 @@ $is
     $merge bbx_xnph244_forx_xbody forx_xbody_forx_xbody
     $phi ix_x0243 :=  0 $on bbx_xnph244_forx_xbody ( $cast ($uint<32>) inc) $on forx_xbody_forx_xbody 
     $endmerge
-    arrayidx := @(T[0][0][ix_x0243])
+    arrayidx := @(T[0][ix_x0243])
     add137 := ($concat maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe)
     ->(arrayidx) := add137
     inc := (ix_x0243 + 1  )
@@ -98,7 +100,7 @@ $is
     $merge bbx_xnph_forx_xbody158 forx_xbody158_forx_xbody158
     $phi ix_x1241 :=  0 $on bbx_xnph_forx_xbody158 ( $cast ($uint<32>) inc208) $on forx_xbody158_forx_xbody158 
     $endmerge
-    arrayidx205 := @(T[1][0][ix_x1241])
+    arrayidx205 := @(K[0][ix_x1241])
     add202 := ($concat maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe maxpool_input_pipe)
     ->(arrayidx205) := add202
     inc208 := (ix_x1241 + 1 )

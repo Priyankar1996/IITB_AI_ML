@@ -24,7 +24,7 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T convolution3D -T convolveCore -T sendModule -T loadKernel -T access_T -T accumulator
+TOPMODULES=-T timerDaemon -T convolution3D -T convolveCore -T sendModule -T loadKernel -T access_T -T accumulator -T writeBack_I -T writeBack_K
 
 
 # compile with SW defined.

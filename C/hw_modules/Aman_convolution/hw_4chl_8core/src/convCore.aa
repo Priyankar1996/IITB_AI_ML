@@ -7,7 +7,7 @@ $is
     
     $branchblock [conv_block]
     {
-        num_row := (num_out_pipe - {1+{N_ROWS_S - 1}})
+        num_row := (num_out_pipe - N_ROWS_S)
         num_col := (num_out_pipe - 1)
         chl_in_read := num_out_pipe
         chl_in := (chl_in_read - 1)
@@ -67,28 +67,22 @@ $is
         #include convInner.aa
         
         //send_val := ($mux (acc_val < 0) 0 acc_val)
-        acc_pipe1 := 
-            ($concat 
-            ($bitcast ($uint<8>) (acc_val1_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val2_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val3_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val4_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val5_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val6_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val7_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val8_1 >> shift_val) )
-			)
-        acc_pipe2 := 
-            ($concat
-			($bitcast ($uint<8>) (acc_val1_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val2_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val3_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val4_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val5_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val6_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val7_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val8_2 >> shift_val) )
-			)
+            acc_pipe1_1 := ($bitcast ($uint<8>) (acc_val1_1 >> shift_val) )
+			acc_pipe1_2 := ($bitcast ($uint<8>) (acc_val2_1 >> shift_val) )
+			acc_pipe1_3 := ($bitcast ($uint<8>) (acc_val3_1 >> shift_val) )
+			acc_pipe1_4 := ($bitcast ($uint<8>) (acc_val4_1 >> shift_val) )
+			acc_pipe1_5 := ($bitcast ($uint<8>) (acc_val5_1 >> shift_val) )
+			acc_pipe1_6 := ($bitcast ($uint<8>) (acc_val6_1 >> shift_val) )
+			acc_pipe1_7 := ($bitcast ($uint<8>) (acc_val7_1 >> shift_val) )
+			acc_pipe1_8 := ($bitcast ($uint<8>) (acc_val8_1 >> shift_val) )
+			acc_pipe2_1 := ($bitcast ($uint<8>) (acc_val1_2 >> shift_val) )
+			acc_pipe2_2 := ($bitcast ($uint<8>) (acc_val2_2 >> shift_val) )
+			acc_pipe2_3 := ($bitcast ($uint<8>) (acc_val3_2 >> shift_val) )
+            acc_pipe2_4 := ($bitcast ($uint<8>) (acc_val4_2 >> shift_val) )
+            acc_pipe2_5 := ($bitcast ($uint<8>) (acc_val5_2 >> shift_val) )
+			acc_pipe2_6 := ($bitcast ($uint<8>) (acc_val6_2 >> shift_val) )
+			acc_pipe2_7 := ($bitcast ($uint<8>) (acc_val7_2 >> shift_val) )
+			acc_pipe2_8 := ($bitcast ($uint<8>) (acc_val8_2 >> shift_val) )
 
         $while (~all_done_flag)
 
@@ -126,9 +120,25 @@ $module [accumulator] $in () $out () $is
         
         num_done := (c_count == acc_count)
         nc_count := ($mux num_done 0 (c_count+1))
-        rd1 := acc_pipe1
-        rd2 := acc_pipe2
-        $split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
+        //rd1 := acc_pipe1
+        //rd2 := acc_pipe2
+        //$split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
+        t1 := acc_pipe1_1
+        t2 := acc_pipe1_2
+        t3 := acc_pipe1_3
+        t4 := acc_pipe1_4
+        t5 := acc_pipe1_5
+        t6 := acc_pipe1_6
+        t7 := acc_pipe1_7
+        t8 := acc_pipe1_8
+        r1 := acc_pipe2_1
+        r2 := acc_pipe2_2
+        r3 := acc_pipe2_3
+        r4 := acc_pipe2_4
+        r5 := acc_pipe2_5
+        r6 := acc_pipe2_6
+        r7 := acc_pipe2_7
+        r8 := acc_pipe2_8
         acc_val1_1 := (acc1_1 + t1)
         acc_val2_1 := (acc2_1 + t2)
         acc_val3_1 := (acc3_1 + t3)
@@ -138,7 +148,7 @@ $module [accumulator] $in () $out () $is
         acc_val7_1 := (acc7_1 + t7)
         acc_val8_1 := (acc8_1 + t8)
         
-        $split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
+//        $split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
         acc_val1_2 := (acc1_2 + r1)
         acc_val2_2 := (acc2_2 + r2)
         acc_val3_2 := (acc3_2 + r3)
@@ -148,80 +158,24 @@ $module [accumulator] $in () $out () $is
         acc_val7_2 := (acc7_2 + r7)
         acc_val8_2 := (acc8_2 + r8)
         
-        $guard (num_done) output_pipe1 := ($concat 
-            acc_val1_1
-			acc_val2_1
-			acc_val3_1
-			acc_val4_1
-			acc_val5_1
-			acc_val6_1
-			acc_val7_1
-			acc_val8_1
-			)
-        $guard (num_done) output_pipe2 := ($concat
-			acc_val1_2
-			acc_val2_2
-			acc_val3_2
-			acc_val4_2
-			acc_val5_2
-			acc_val6_2
-			acc_val7_2
-			acc_val8_2
-			)
+        $guard (num_done) output_pipe1_1 := acc_val1_1
+        $guard (num_done) output_pipe1_2 := acc_val1_2
+        $guard (num_done) output_pipe2_1 := acc_val2_1
+        $guard (num_done) output_pipe2_2 := acc_val2_2
+        $guard (num_done) output_pipe3_1 := acc_val3_1
+        $guard (num_done) output_pipe3_2 := acc_val3_2
+        $guard (num_done) output_pipe4_1 := acc_val4_1
+        $guard (num_done) output_pipe4_2 := acc_val4_2
+        $guard (num_done) output_pipe5_1 := acc_val5_1
+        $guard (num_done) output_pipe5_2 := acc_val5_2
+        $guard (num_done) output_pipe6_1 := acc_val6_1
+        $guard (num_done) output_pipe6_2 := acc_val6_2
+        $guard (num_done) output_pipe7_1 := acc_val7_1
+        $guard (num_done) output_pipe7_2 := acc_val7_2
+        $guard (num_done) output_pipe8_1 := acc_val8_1
+        $guard (num_done) output_pipe8_2 := acc_val8_2
 			
 //		$guard (num_done) $call timer (9) (time_pipe)
-        
-        $while 1
-    }
-}
-
-$module [writeBack_K] $in () $out () $is
-{
-    $branchblock [wb_blk]
-    {
-        $dopipeline $depth 15 $buffering 2 $fullrate
-        $merge $entry $loopback
-        $endmerge
-        conv1_kp1 := tmp_conv1_kp1
-        conv1_kp2 := tmp_conv1_kp2
-        conv1_kp3 := tmp_conv1_kp3
-        conv2_kp1 := tmp_conv2_kp1
-        conv2_kp2 := tmp_conv2_kp2
-        conv2_kp3 := tmp_conv2_kp3
-        conv3_kp1 := tmp_conv3_kp1
-        conv3_kp2 := tmp_conv3_kp2
-        conv3_kp3 := tmp_conv3_kp3
-        conv4_kp1 := tmp_conv4_kp1
-        conv4_kp2 := tmp_conv4_kp2
-        conv4_kp3 := tmp_conv4_kp3
-        conv5_kp1 := tmp_conv5_kp1
-        conv5_kp2 := tmp_conv5_kp2
-        conv5_kp3 := tmp_conv5_kp3
-        conv6_kp1 := tmp_conv6_kp1
-        conv6_kp2 := tmp_conv6_kp2
-        conv6_kp3 := tmp_conv6_kp3
-        conv7_kp1 := tmp_conv7_kp1
-        conv7_kp2 := tmp_conv7_kp2
-        conv7_kp3 := tmp_conv7_kp3
-        conv8_kp1 := tmp_conv8_kp1
-        conv8_kp2 := tmp_conv8_kp2
-        conv8_kp3 := tmp_conv8_kp3
-        
-        $while 1
-    }
-}
-
-$module [writeBack_I] $in () $out () $is
-{
-    $branchblock [wb_blk]
-    {
-        $dopipeline $depth 15 $buffering 2 $fullrate
-        $merge $entry $loopback
-        $endmerge
-        conv_ip1 := tmp_conv_ip1
-        conv_ip2 := tmp_conv_ip2
-        conv_ip3 := tmp_conv_ip3
-        conv_ip4 := tmp_conv_ip4
         
         $while 1
     }

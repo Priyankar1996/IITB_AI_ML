@@ -36,8 +36,10 @@ $module [sendModule] $in () $out () $is
         
         ptr1 := @(B[($bitcast ($uint<32>) 0)][address1])
         ptr2 := @(B[($bitcast ($uint<32>) 0)][address2])
-        ->(ptr1) := output_pipe1
-        ->(ptr2) := output_pipe2
+        rd1 := ($concat output_pipe1_1 output_pipe2_1 output_pipe3_1 output_pipe4_1 output_pipe5_1 output_pipe6_1 output_pipe7_1 output_pipe8_1)
+        rd2 := ($concat output_pipe1_2 output_pipe2_2 output_pipe3_2 output_pipe4_2 output_pipe5_2 output_pipe6_2 output_pipe7_2 output_pipe8_2)
+        ->(ptr1) := rd1
+        ->(ptr2) := rd2
 
 //        maxpool_output_pipe := 100
         continue_flag := ((chl < (chl_out - 1)) | (~chl_change))

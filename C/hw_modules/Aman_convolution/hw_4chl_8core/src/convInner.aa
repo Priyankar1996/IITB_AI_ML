@@ -1,3 +1,4 @@
+// Start of convInner
 
         #define k_num 1
         #include macro_file4.aa
@@ -36,3 +37,5 @@
         $guard (store_kernel) conv##core_num\_kp1 := kread_##core_num\_1
         $guard (store_kernel) conv##core_num\_kp2 := kread_##core_num\_2
         $guard (store_kernel) conv##core_num\_kp3 := kread_##core_num\_3
+        
+// End of convInner

@@ -7,10 +7,6 @@ $is
     
     $branchblock [load_block]
     { 
-        
-        $merge $entry reentry
-        $endmerge
-        
         chl_in := kernel_module_pipe
         chl_out := kernel_module_pipe
         index := ($bitcast ($uint<8>) kernel_module_pipe)
@@ -71,8 +67,6 @@ $is
 
         $volatile exit_cond := (nxt_chl & (chl_num == (chl_out-1)))
         $while (~exit_cond)
-        
-        $place [reentry]
     }
 }
 

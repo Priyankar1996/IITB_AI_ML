@@ -1,11 +1,11 @@
 // Aa code produced by llvm2aa (version 1.0)
 $record [structx_x__SizedTensor_16K] < $array [16384] $of $uint<64> > 
 $pipe input_done_pipe : $uint<8> $depth 1
-$pipe input_module_pipe : $uint<16> $depth 1
-$pipe kernel_module_pipe : $uint<16> $depth 1
+$pipe input_module_pipe : $uint<16> $depth 2
+$pipe kernel_module_pipe : $uint<16> $depth 2
 $pipe maxpool_input_pipe : $uint<8> $depth 2
 $pipe maxpool_output_pipe : $uint<8> $depth 2
-$pipe num_out_pipe : $uint<16> $depth 1
+$pipe num_out_pipe : $uint<16> $depth 2
 $pipe output_pipe : $uint<16> $depth 2
 $pipe time_pipe : $uint<64> $depth 2
 $storage T:structx_x__SizedTensor_16K
@@ -51,6 +51,20 @@ $is
     $endmerge
   }
 }
+
+$module [topModule] $in () $out() $is
+{
+    $parallelblock [topBlocks]
+    {
+		$call convolveCore () ()
+        $call convolution3D () ()
+		$call sendModule () ()
+		$call loadKernel () ()
+		$call access_T () ()
+		$call accumulator () ()
+    }
+}
+
 $module [convolution3D] 
 $in ()
 $out ()
@@ -116,10 +130,10 @@ $is
     output_pipe := add33
     output_pipe := add43
     output_pipe := shr80235
+    output_pipe := 0
     num_out_pipe := add33
     num_out_pipe := add43
     num_out_pipe := shr234
-    num_out_pipe := 0
     kernel_module_pipe := shr234
     kernel_module_pipe := shr80235
     kernel_module_pipe := 1  

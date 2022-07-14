@@ -50,22 +50,19 @@ $is
     done := (index [] 0)
 }
 
-$pipeline $depth 8 $buffering 1 $fullrate
+$pipeline $depth 7 $buffering 1 $fullrate
 $opaque $module [readModule_convolution]
 $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
 $is
 {
-    tmp1 := @(Tensor0[($bitcast ($uint<32>) 0)][address])
-    tmp2 := @(Tensor1[($bitcast ($uint<32>) 0)][address])
-    cnd1 := (index == 0)
-    cnd2 := (index == 1)
-    $guard (cnd1) val1 := ->(tmp1)
-    $guard (cnd2) val2 := ->(tmp2)
+    $volatile  cnd1 := (index == 0)
+    $volatile  cnd2 := (index == 1)
+
+    $guard (cnd1) val1 := Tensor0[($bitcast ($uint<32>) 0)][address]
+    $guard (cnd2) val2 := Tensor1[($bitcast ($uint<32>) 0)][address]
     
-    data := ( $excmux 
-                cnd1 val1 cnd2 val2
-             )
+    data := ($mux cnd1 val1 val2)
 }
 
 $pipeline $depth 8 $buffering 1 $fullrate

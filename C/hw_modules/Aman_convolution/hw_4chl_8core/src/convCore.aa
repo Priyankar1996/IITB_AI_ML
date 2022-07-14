@@ -67,22 +67,32 @@ $is
         #include convInner.aa
         
         //send_val := ($mux (acc_val < 0) 0 acc_val)
-            acc_pipe1_1 := ($bitcast ($uint<8>) (acc_val1_1 >> shift_val) )
-			acc_pipe1_2 := ($bitcast ($uint<8>) (acc_val2_1 >> shift_val) )
-			acc_pipe1_3 := ($bitcast ($uint<8>) (acc_val3_1 >> shift_val) )
-			acc_pipe1_4 := ($bitcast ($uint<8>) (acc_val4_1 >> shift_val) )
-			acc_pipe1_5 := ($bitcast ($uint<8>) (acc_val5_1 >> shift_val) )
-			acc_pipe1_6 := ($bitcast ($uint<8>) (acc_val6_1 >> shift_val) )
-			acc_pipe1_7 := ($bitcast ($uint<8>) (acc_val7_1 >> shift_val) )
-			acc_pipe1_8 := ($bitcast ($uint<8>) (acc_val8_1 >> shift_val) )
-			acc_pipe2_1 := ($bitcast ($uint<8>) (acc_val1_2 >> shift_val) )
-			acc_pipe2_2 := ($bitcast ($uint<8>) (acc_val2_2 >> shift_val) )
-			acc_pipe2_3 := ($bitcast ($uint<8>) (acc_val3_2 >> shift_val) )
-            acc_pipe2_4 := ($bitcast ($uint<8>) (acc_val4_2 >> shift_val) )
-            acc_pipe2_5 := ($bitcast ($uint<8>) (acc_val5_2 >> shift_val) )
-			acc_pipe2_6 := ($bitcast ($uint<8>) (acc_val6_2 >> shift_val) )
-			acc_pipe2_7 := ($bitcast ($uint<8>) (acc_val7_2 >> shift_val) )
-			acc_pipe2_8 := ($bitcast ($uint<8>) (acc_val8_2 >> shift_val) )
+
+        $volatile to_pipe_1 := 
+            ($concat 
+            ($bitcast ($uint<8>) (acc_val1_1 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val2_1 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val3_1 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val4_1 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val5_1 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val6_1 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val7_1 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val8_1 >> shift_val) )
+			)
+        acc_pipe1 :=  to_pipe_1
+
+        $volatile to_pipe_2 := 
+            ($concat
+			($bitcast ($uint<8>) (acc_val1_2 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val2_2 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val3_2 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val4_2 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val5_2 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val6_2 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val7_2 >> shift_val) )
+			($bitcast ($uint<8>) (acc_val8_2 >> shift_val) )
+			)
+        acc_pipe2 := to_pipe_2
 
         $while (~all_done_flag)
 

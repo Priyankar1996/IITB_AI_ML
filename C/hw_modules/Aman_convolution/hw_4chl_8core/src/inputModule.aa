@@ -1,16 +1,11 @@
 // Access the input tensor and write to iput pipe
 $module [access_T]
-$in()
+$in(row_in ct chl_in chl_out: $uint<16>)
 $out()
 $is
 {
     $branchblock [access_block]
     {
-        row_in := input_module_pipe
-        ct := input_module_pipe
-        chl_in := input_module_pipe
-        chl_out := input_module_pipe
-
         m_factor := ($bitcast ($uint<32>) (ct * chl_in))
         m2_factor := (m_factor << 1)
         m3_factor := (m2_factor+m_factor)

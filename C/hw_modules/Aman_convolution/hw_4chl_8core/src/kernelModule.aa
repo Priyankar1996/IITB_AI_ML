@@ -1,16 +1,12 @@
 // Load the kernel channel into the kernel pipes
 $module [loadKernel]
-$in ()
+$in (chl_in chl_out : $uint<16> index : $uint<8>)
 $out ()
 $is
 {  
     
     $branchblock [load_block]
     { 
-        chl_in := kernel_module_pipe
-        chl_out := kernel_module_pipe
-        index := ($bitcast ($uint<8>) kernel_module_pipe)
-
         row_size := (chl_in + (chl_in << 1))
         row2_size := (row_size << 1)
         row3_size := ($bitcast ($uint<32> ) (row_size + (row_size << 1)))
@@ -24,7 +20,7 @@ $is
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
         $phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
-        $phi ea := (row3_size - 1) $on $entry n_ea $on $loopback
+        $phi ea := ($bitcast ($uint<32>) (row_size - 1)) $on $entry n_ea $on $loopback
         $phi mycount := ($bitcast ($uint<32>) 0) $on $entry nmycount $on $loopback
         $phi ind := ($bitcast ($uint<2>) 1) $on $entry n_ind $on $loopback
         $endmerge
@@ -63,7 +59,6 @@ $is
         $call writeToPipe6 (ind fetch_val6) (a6)
         $call writeToPipe7 (ind fetch_val7) (a7)
         $call writeToPipe8 (ind fetch_val8) (a8)
-
 
         $volatile exit_cond := (nxt_chl & (chl_num == (chl_out-1)))
         $while (~exit_cond)

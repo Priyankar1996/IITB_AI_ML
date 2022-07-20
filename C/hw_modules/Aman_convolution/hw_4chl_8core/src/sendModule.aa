@@ -1,12 +1,8 @@
 //
 
-$module [sendModule] $in () $out () $is
+$module [sendModule] $in (rb cb chl_out shift_val : $uint<16>) $out () $is
 {
     $branchblock [sendBlock]{
-        rb := output_pipe
-        cb := output_pipe
-        chl_out := output_pipe
-        shift_val := output_pipe
         max_count := ($bitcast ($uint<32>) (rb*cb))
         row_size := ($bitcast ($uint<32>) (chl_out*cb))
         three_row_size := (row_size+(row_size<<1))
@@ -30,10 +26,11 @@ $module [sendModule] $in () $out () $is
         $volatile n_row := ($mux chl_change 1 ($mux row_change (row + N_ROWS_S) row))
         $volatile n_chl := ($mux chl_change (chl+1) chl)
         
-        tmp1 := (address1 + ($bitcast ($uint<32>) chl_out))
-        tmp2 := (address2 + ($bitcast ($uint<32>) chl_out))
-        $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) ($mux row_change (tmp1+row_size) tmp1))
-        $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) ($mux row_change (tmp2+row_size) tmp2))
+        $volatile tmp1 := (address1 + ($bitcast ($uint<32>) chl_out))
+        $volatile tmp2 := (address2 + ($bitcast ($uint<32>) chl_out))
+        $volatile tmp_sum := ($mux row_change row_size 0)
+        $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) (tmp1 + tmp_sum))
+        $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) (tmp2 + tmp_sum))
         
         ptr1 := @(B[($bitcast ($uint<32>) 0)][address1])
         ptr2 := @(B[($bitcast ($uint<32>) 0)][address2])
@@ -58,9 +55,7 @@ $module [sendModule] $in () $out () $is
         ->(ptr1) := rd1
         ->(ptr2) := rd2
 
-//        maxpool_output_pipe := 100
         continue_flag := ((chl < (chl_out - 1)) | (~chl_change))
         $while continue_flag
-        input_done_pipe := 1
     }
 }

@@ -1,17 +1,15 @@
 // Perform convolution operation
 $module [convolveCore ]
-$in ()
+$in (rb cb chl_in_read : $uint<16>)
 $out ()
 $is
 {
     
     $branchblock [conv_block]
     {
-        num_row := (num_out_pipe - N_ROWS_S)
-        num_col := (num_out_pipe - 1)
-        chl_in_read := num_out_pipe
+        num_row := (rb - N_ROWS_S)
+        num_col := (cb - 1)
         chl_in := (chl_in_read - 1)
-        acc_in_pipe := chl_in_read
         
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
@@ -63,34 +61,6 @@ $is
         #include convInner.aa
         
         //send_val := ($mux (acc_val < 0) 0 acc_val)
-<<<<<<< Updated upstream
-
-        $volatile to_pipe_1 := 
-            ($concat 
-            ($bitcast ($uint<8>) (acc_val1_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val2_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val3_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val4_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val5_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val6_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val7_1 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val8_1 >> shift_val) )
-			)
-        acc_pipe1 :=  to_pipe_1
-
-        $volatile to_pipe_2 := 
-            ($concat
-			($bitcast ($uint<8>) (acc_val1_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val2_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val3_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val4_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val5_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val6_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val7_2 >> shift_val) )
-			($bitcast ($uint<8>) (acc_val8_2 >> shift_val) )
-			)
-        acc_pipe2 := to_pipe_2
-=======
             acc_pipe1_1 := ($bitcast ($uint<16>) acc_val1_1)
 			acc_pipe1_2 := ($bitcast ($uint<16>) acc_val2_1)
 			acc_pipe1_3 := ($bitcast ($uint<16>) acc_val3_1)
@@ -107,17 +77,16 @@ $is
 			acc_pipe2_6 := ($bitcast ($uint<16>) acc_val6_2)
 			acc_pipe2_7 := ($bitcast ($uint<16>) acc_val7_2)
 			acc_pipe2_8 := ($bitcast ($uint<16>) acc_val8_2)
->>>>>>> Stashed changes
 
         $while (~all_done_flag)
     }
 }
 
-$module [accumulator] $in () $out () $is
+$module [accumulator] $in (chl_in : $uint<16> op_size : $uint<32>) $out () $is
 {
     $branchblock [acc_blk]
     {
-        acc_count := ((acc_in_pipe * 3) - 1)
+        acc_count := ((chl_in * 3) - 1)
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
         $phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
@@ -137,12 +106,14 @@ $module [accumulator] $in () $out () $is
         $phi acc8_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val8_1) $on $loopback
         $phi acc8_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val8_2) $on $loopback
         $phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
+        $phi op_count := ($bitcast ($uint<32>) 0) $on $entry nop_count $on $loopback
         $endmerge
         
 //        $call timer (8) (time_pipe)
         
         num_done := (c_count == acc_count)
         nc_count := ($mux num_done 0 (c_count+1))
+        nop_count := ($mux num_done (op_count+1) op_count)
         //rd1 := acc_pipe1
         //rd2 := acc_pipe2
         //$split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
@@ -200,6 +171,6 @@ $module [accumulator] $in () $out () $is
 			
 //		$guard (num_done) $call timer (9) (time_pipe)
         
-        $while 1
+        $while (nop_count < op_size)
     }
 }

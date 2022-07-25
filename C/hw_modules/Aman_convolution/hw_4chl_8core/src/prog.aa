@@ -3,6 +3,8 @@ $record [structx_x__SizedTensor_16K] < $array [16384] $of $uint<64> >
 $pipe maxpool_input_pipe : $uint<8> $depth 2
 $pipe maxpool_output_pipe : $uint<8> $depth 2
 $pipe time_pipe : $uint<64> $depth 2
+$parameter NO_ACT 0
+$parameter RELU 1
 $storage T:structx_x__SizedTensor_16K
 $storage K:structx_x__SizedTensor_16K
 $storage B:structx_x__SizedTensor_16K
@@ -51,7 +53,7 @@ $module [topModule] $in () $out() $is
 {
     $seriesblock [seriesBlock]
     {
-        $call configureConvolution() (rt ct chl_in rb cb chl_out rk ck op_size)
+        $call configureConvolution() (rt ct chl_in rb cb chl_out rk ck shift_val op_size )
         
         $parallelblock [topBlocks]
         {
@@ -62,9 +64,10 @@ $module [topModule] $in () $out() $is
 		    }(start_time => start_time)
 		    
 		    $call loadKernel (chl_in chl_out rk ck 1) ()
-		    $call convolveCore (rb cb chl_in) ()
-		    $call sendModule (rb cb chl_out 0) ()
-		    $call access_T (rb ct chl_in chl_out) ()
+		    $call convolveCore (rb cb chl_in chl_out rk ck) ()
+		    $call sendModule (rb cb chl_out shift_val RELU ) ()
+		    $call access_T (rb ct chl_in chl_out rk) ()
+		    $call accumulator (chl_in ck (op_size >> 1)) ()
         }(start_time => start_time)
         
         $call timer (2)  (end_time)
@@ -81,7 +84,7 @@ $module [topModule] $in () $out() $is
 
 $module [configureConvolution]
 $in ()
-$out (add add13 shr234 add33 add43 shr80235 add63 add73 : $uint<16> mul233 : $uint<32> )
+$out (add add13 shr234 add33 add43 shr80235 add63 add73 shft : $uint<16> mul233 : $uint<32> )
 $is
 {
     $branchblock [body] 
@@ -96,6 +99,7 @@ $is
         add53 := (maxpool_input_pipe && maxpool_input_pipe)
         add63 := (maxpool_input_pipe && maxpool_input_pipe)
         add73 := (maxpool_input_pipe && maxpool_input_pipe)
+        shft := (maxpool_input_pipe && maxpool_input_pipe)
         shr80235 := (add53 >> 3)
         shr234 := (add23 >> 3 )
         $place [entry_bbx_xnph244]

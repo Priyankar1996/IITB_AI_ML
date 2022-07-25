@@ -1,6 +1,6 @@
 // Access the input tensor and write to iput pipe
 $module [access_T]
-$in(row_in ct chl_in chl_out: $uint<16>)
+$in(row_in ct chl_in chl_out rk: $uint<16>)
 $out()
 $is
 {
@@ -22,15 +22,12 @@ $is
             $phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
 
             $phi mycounter := ($bitcast ($uint<32>) m_factor) $on $entry n_mycounter $on $loopback
-            $phi row_count := ($bitcast ($uint<2>) 0) $on $entry n_rowcount $on $loopback
             $endmerge
             
             //$call timer (4) (time_pipe)
-            //$volatile nxt_cnt := (row_count == 3)
             $volatile next_row :=  (mycounter == 1)
             $volatile tmp_cnt := (mycounter - 1)
             $volatile n_mycounter := ($mux next_row m_factor tmp_cnt ) 
-            $volatile n_rowcount := (row_count + 1)
             
             $volatile n_row1 := ($mux next_row (row1 + N_ROWS_S) row1 )
             $volatile n_address := ((address + 1) + ($mux next_row m_factor  0))
@@ -51,5 +48,6 @@ $is
         n_chl_num := (chl_num + 1)
         //maxpool_output_pipe := 126
         $if (n_chl_num != chl_out) $then $place [loopback] $endif
+//        $call timer (101) (time_pipe)
     }
 }

@@ -1,11 +1,12 @@
 //
 
-$module [sendModule] $in (rb cb chl_out shift_val : $uint<16>) $out () $is
+$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation : $uint<1>) $out () $is
 {
     $branchblock [sendBlock]{
         max_count := ($bitcast ($uint<32>) (rb*cb))
         row_size := ($bitcast ($uint<32>) (chl_out*cb))
         three_row_size := (row_size+(row_size<<1))
+        chl_out_1 := (chl_out - 1)
 
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
@@ -32,30 +33,48 @@ $module [sendModule] $in (rb cb chl_out shift_val : $uint<16>) $out () $is
         $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) (tmp1 + tmp_sum))
         $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) (tmp2 + tmp_sum))
         
+        $volatile apply_relu := (activation == 1)
         ptr1 := @(B[($bitcast ($uint<32>) 0)][address1])
         ptr2 := @(B[($bitcast ($uint<32>) 0)][address2])
-        tmp1_1 := ($bitcast ($uint<8>) (output_pipe1_1 >> shift_val))
-        tmp2_1 := ($bitcast ($uint<8>) (output_pipe2_1 >> shift_val))
-        tmp3_1 := ($bitcast ($uint<8>) (output_pipe3_1 >> shift_val))
-        tmp4_1 := ($bitcast ($uint<8>) (output_pipe4_1 >> shift_val))
-        tmp5_1 := ($bitcast ($uint<8>) (output_pipe5_1 >> shift_val))
-        tmp6_1 := ($bitcast ($uint<8>) (output_pipe6_1 >> shift_val))
-        tmp7_1 := ($bitcast ($uint<8>) (output_pipe7_1 >> shift_val))
-        tmp8_1 := ($bitcast ($uint<8>) (output_pipe8_1 >> shift_val))
-        tmp1_2 := ($bitcast ($uint<8>) (output_pipe1_2 >> shift_val))
-        tmp2_2 := ($bitcast ($uint<8>) (output_pipe2_2 >> shift_val))
-        tmp3_2 := ($bitcast ($uint<8>) (output_pipe3_2 >> shift_val))
-        tmp4_2 := ($bitcast ($uint<8>) (output_pipe4_2 >> shift_val))
-        tmp5_2 := ($bitcast ($uint<8>) (output_pipe5_2 >> shift_val))
-        tmp6_2 := ($bitcast ($uint<8>) (output_pipe6_2 >> shift_val))
-        tmp7_2 := ($bitcast ($uint<8>) (output_pipe7_2 >> shift_val))
-        tmp8_2 := ($bitcast ($uint<8>) (output_pipe8_2 >> shift_val))
+        read_val1_1 := output_pipe1_1
+        read_val2_1 := output_pipe2_1
+        read_val3_1 := output_pipe3_1
+        read_val4_1 := output_pipe4_1
+        read_val5_1 := output_pipe5_1
+        read_val6_1 := output_pipe6_1
+        read_val7_1 := output_pipe7_1
+        read_val8_1 := output_pipe8_1
+        read_val1_2 := output_pipe1_2
+        read_val2_2 := output_pipe2_2
+        read_val3_2 := output_pipe3_2
+        read_val4_2 := output_pipe4_2
+        read_val5_2 := output_pipe5_2
+        read_val6_2 := output_pipe6_2
+        read_val7_2 := output_pipe7_2
+        read_val8_2 := output_pipe8_2
+        tmp1_1 := ($mux (apply_relu & ((read_val1_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val1_1 >> shift_val)))
+        tmp2_1 := ($mux (apply_relu & ((read_val2_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val2_1 >> shift_val)))
+        tmp3_1 := ($mux (apply_relu & ((read_val3_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val3_1 >> shift_val)))
+        tmp4_1 := ($mux (apply_relu & ((read_val4_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val4_1 >> shift_val)))
+        tmp5_1 := ($mux (apply_relu & ((read_val5_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val5_1 >> shift_val)))
+        tmp6_1 := ($mux (apply_relu & ((read_val6_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val6_1 >> shift_val)))
+        tmp7_1 := ($mux (apply_relu & ((read_val7_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val7_1 >> shift_val)))
+        tmp8_1 := ($mux (apply_relu & ((read_val8_1[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val8_1 >> shift_val)))
+        tmp1_2 := ($mux (apply_relu & ((read_val1_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val1_2 >> shift_val)))
+        tmp2_2 := ($mux (apply_relu & ((read_val2_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val2_2 >> shift_val)))
+        tmp3_2 := ($mux (apply_relu & ((read_val3_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val3_2 >> shift_val)))
+        tmp4_2 := ($mux (apply_relu & ((read_val4_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val4_2 >> shift_val)))
+        tmp5_2 := ($mux (apply_relu & ((read_val5_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val5_2 >> shift_val)))
+        tmp6_2 := ($mux (apply_relu & ((read_val6_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val6_2 >> shift_val)))
+        tmp7_2 := ($mux (apply_relu & ((read_val7_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val7_2 >> shift_val)))
+        tmp8_2 := ($mux (apply_relu & ((read_val8_2[]15) == 1)) 0 ($bitcast ($uint<8>) (read_val8_2 >> shift_val)))
         $volatile rd1 := ($concat tmp1_1 tmp2_1 tmp3_1 tmp4_1 tmp5_1 tmp6_1 tmp7_1 tmp8_1)
         $volatile rd2 := ($concat tmp1_2 tmp2_2 tmp3_2 tmp4_2 tmp5_2 tmp6_2 tmp7_2 tmp8_2)
         ->(ptr1) := rd1
         ->(ptr2) := rd2
 
-        continue_flag := ((chl < (chl_out - 1)) | (~chl_change))
+        continue_flag := ((chl < chl_out_1) | (~chl_change))
         $while continue_flag
+//        $call timer (104) (time_pipe)
     }
 }

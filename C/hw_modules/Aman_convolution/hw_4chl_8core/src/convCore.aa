@@ -125,50 +125,51 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
         $phi acc8_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val8_2) $on $loopback
         $phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
         $phi op_count := ($bitcast ($uint<32>) 0) $on $entry nop_count $on $loopback
+        $phi t1 := acc_pipe1_1 $on $entry, $loopback
+        $phi t2 := acc_pipe1_2 $on $entry, $loopback
+        $phi t3 := acc_pipe1_3 $on $entry, $loopback
+        $phi t4 := acc_pipe1_4 $on $entry, $loopback
+        $phi t5 := acc_pipe1_5 $on $entry, $loopback
+        $phi t6 := acc_pipe1_6 $on $entry, $loopback
+        $phi t7 := acc_pipe1_7 $on $entry, $loopback
+        $phi t8 := acc_pipe1_8 $on $entry, $loopback
+        $phi r1 := acc_pipe2_1 $on $entry, $loopback
+        $phi r2 := acc_pipe2_2 $on $entry, $loopback
+        $phi r3 := acc_pipe2_3 $on $entry, $loopback
+        $phi r4 := acc_pipe2_4 $on $entry, $loopback
+        $phi r5 := acc_pipe2_5 $on $entry, $loopback
+        $phi r6 := acc_pipe2_6 $on $entry, $loopback
+        $phi r7 := acc_pipe2_7 $on $entry, $loopback
+        $phi r8 := acc_pipe2_8 $on $entry, $loopback
         $endmerge
         
 //        $call timer (8) (time_pipe)
         
-        num_done := (c_count == acc_count)
-        nc_count := ($mux num_done 0 (c_count+1))
-        nop_count := ($mux num_done (op_count+1) op_count)
+        $volatile num_done := (c_count == acc_count)
+        $volatile nc_count := ($mux num_done 0 (c_count+1))
+        $volatile nop_count := ($mux num_done (op_count+1) op_count)
+
         //rd1 := acc_pipe1
         //rd2 := acc_pipe2
         //$split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
-        t1 := acc_pipe1_1
-        t2 := acc_pipe1_2
-        t3 := acc_pipe1_3
-        t4 := acc_pipe1_4
-        t5 := acc_pipe1_5
-        t6 := acc_pipe1_6
-        t7 := acc_pipe1_7
-        t8 := acc_pipe1_8
-        r1 := acc_pipe2_1
-        r2 := acc_pipe2_2
-        r3 := acc_pipe2_3
-        r4 := acc_pipe2_4
-        r5 := acc_pipe2_5
-        r6 := acc_pipe2_6
-        r7 := acc_pipe2_7
-        r8 := acc_pipe2_8
-        acc_val1_1 := (acc1_1 + t1)
-        acc_val2_1 := (acc2_1 + t2)
-        acc_val3_1 := (acc3_1 + t3)
-        acc_val4_1 := (acc4_1 + t4)
-        acc_val5_1 := (acc5_1 + t5)
-        acc_val6_1 := (acc6_1 + t6)
-        acc_val7_1 := (acc7_1 + t7)
-        acc_val8_1 := (acc8_1 + t8)
+        $volatile acc_val1_1 := (acc1_1 + t1)
+        $volatile acc_val2_1 := (acc2_1 + t2)
+        $volatile acc_val3_1 := (acc3_1 + t3)
+        $volatile acc_val4_1 := (acc4_1 + t4)
+        $volatile acc_val5_1 := (acc5_1 + t5)
+        $volatile acc_val6_1 := (acc6_1 + t6)
+        $volatile acc_val7_1 := (acc7_1 + t7)
+        $volatile acc_val8_1 := (acc8_1 + t8)
         
 //        $split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
-        acc_val1_2 := (acc1_2 + r1)
-        acc_val2_2 := (acc2_2 + r2)
-        acc_val3_2 := (acc3_2 + r3)
-        acc_val4_2 := (acc4_2 + r4)
-        acc_val5_2 := (acc5_2 + r5)
-        acc_val6_2 := (acc6_2 + r6)
-        acc_val7_2 := (acc7_2 + r7)
-        acc_val8_2 := (acc8_2 + r8)
+        $volatile acc_val1_2 := (acc1_2 + r1)
+        $volatile acc_val2_2 := (acc2_2 + r2)
+        $volatile acc_val3_2 := (acc3_2 + r3)
+        $volatile acc_val4_2 := (acc4_2 + r4)
+        $volatile acc_val5_2 := (acc5_2 + r5)
+        $volatile acc_val6_2 := (acc6_2 + r6)
+        $volatile acc_val7_2 := (acc7_2 + r7)
+        $volatile acc_val8_2 := (acc8_2 + r8)
         
         $guard (num_done) output_pipe1_1 := acc_val1_1
         $guard (num_done) output_pipe1_2 := acc_val1_2

@@ -10,6 +10,7 @@ $is
         m2_factor := (m_factor << 1)
         m3_factor := (m2_factor+m_factor)
         m4_factor := (m_factor << 2)
+        mode_3 := (rk == 3)
 
         $merge $entry loopback
         $phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on loopback
@@ -39,7 +40,7 @@ $is
             core_ip1 := ->(ptr1)
             core_ip2 := ->(ptr2)
             core_ip3 := ->(ptr3)
-            core_ip4 := ->(ptr4)
+            $guard (mode_3) core_ip4 := ->(ptr4)
 
             $volatile continue_flag1 := (n_row1 < row_in)
 

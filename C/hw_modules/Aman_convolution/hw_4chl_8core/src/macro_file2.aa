@@ -1,8 +1,13 @@
 // Start of macro_file2
 
-        $guard (read_ip) temp2_##num := core_ip##num
-        $guard (not_read_ip) temp1_##num := conv_ip##num
+        $guard (##guard_for_ip1 ) temp2_##num := core_ip##num
+        $guard (##guard_for_ip2 ) temp1_##num := conv_ip##num
+        #if normal_ip
         $volatile iread##num := ($mux read_ip temp2_##num temp1_##num )
+        #endif
+        #if abnormal_ip
+        $volatile iread##num := ($mux mode_2 0 ($mux read_ip temp2_##num temp1_##num ))
+        #endif
 
         $guard (write_input) conv_ip##num := iread##num
 

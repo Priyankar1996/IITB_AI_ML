@@ -9,3 +9,9 @@ $opaque $module [writeToPipe##num ] $in (index : $uint<2> in_data1 : $uint<64>) 
 	$guard (c3) core##num\_kp3 := in_data1
 	done := (in_data1 [] 0)
 }
+
+// $pipeline $depth 15 $fullrate
+// $module [multiplier##num ] $in (input kernel : $int<8> ) $out (mul_val : $int<16>) $is
+//{
+//    mul_val := ($cast ($int<16>) (input * kernel))
+//}

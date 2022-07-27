@@ -38,14 +38,27 @@ $is
         $volatile chl_done_flag := (out_done_flag & row_done)
         $volatile all_done_flag := ((chl_out_var == chl_out) & chl_done_flag)
         
+        $volatile read_ip3 := ((~mode_2) & read_ip)
+        $volatile not_read_ip3 := ((~mode_2) & not_read_ip)
+        #define guard_for_ip1 read_ip
+        #define guard_for_ip2 not_read_ip
+        #define normal_ip 1
         #define num 1
         #include macro_file2.aa
         #define num 2
         #include macro_file2.aa
         #define num 3
         #include macro_file2.aa
+        #define guard_for_ip1 read_ip3
+        #define guard_for_ip2 not_read_ip3
+        #define normal_ip 0
+        #define abnormal_ip 1
         #define num 4
         #include macro_file2.aa
+        
+        $volatile readk_3 := (read_k & (~mode_2))
+        $volatile not_readk_3 := (not_read_k & (~mode_2))
+        $volatile store_3 := (store_kernel & (~mode_2))
         
         #define core_num 1
         #include convInner.aa

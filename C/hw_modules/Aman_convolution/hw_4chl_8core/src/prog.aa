@@ -65,7 +65,7 @@ $module [topModule] $in () $out() $is
 		    
 		    $call loadKernel (chl_in chl_out rk ck 1) ()
 		    $call convolveCore (rb cb chl_in chl_out rk ck) ()
-		    $call sendModule (rb cb chl_out rk ck shift_val NO_ACT ) ()
+		    $call sendModule (rb cb chl_out shift_val NO_ACT ) ()
 		    $call access_T (rb ct chl_in chl_out rk) ()
 		    $call accumulator (chl_in ck (op_size >> 1)) ()
         }(start_time => start_time)

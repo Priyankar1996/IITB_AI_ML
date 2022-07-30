@@ -28,41 +28,31 @@ architecture VhpiLink of ahir_system_Test_Bench is --
     port (-- 
       clk : in std_logic;
       reset : in std_logic;
-      elapsed_time_pipe_pipe_read_data: out std_logic_vector(63 downto 0);
-      elapsed_time_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
-      elapsed_time_pipe_pipe_read_ack : out std_logic_vector(0 downto 0);
       maxpool_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
       maxpool_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
       maxpool_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
       maxpool_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
       maxpool_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
-      maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
+      maxpool_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0);
+      time_pipe_pipe_read_data: out std_logic_vector(63 downto 0);
+      time_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
+      time_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
     -- 
   end component;
   signal clk: std_logic := '0';
   signal reset: std_logic := '1';
-  signal convolution3D_tag_in: std_logic_vector(1 downto 0);
-  signal convolution3D_tag_out: std_logic_vector(1 downto 0);
-  signal convolution3D_start_req : std_logic := '0';
-  signal convolution3D_start_ack : std_logic := '0';
-  signal convolution3D_fin_req   : std_logic := '0';
-  signal convolution3D_fin_ack   : std_logic := '0';
-  signal convolve_tag_in: std_logic_vector(1 downto 0);
-  signal convolve_tag_out: std_logic_vector(1 downto 0);
-  signal convolve_start_req : std_logic := '0';
-  signal convolve_start_ack : std_logic := '0';
-  signal convolve_fin_req   : std_logic := '0';
-  signal convolve_fin_ack   : std_logic := '0';
   signal timerDaemon_tag_in: std_logic_vector(1 downto 0);
   signal timerDaemon_tag_out: std_logic_vector(1 downto 0);
   signal timerDaemon_start_req : std_logic := '0';
   signal timerDaemon_start_ack : std_logic := '0';
   signal timerDaemon_fin_req   : std_logic := '0';
   signal timerDaemon_fin_ack   : std_logic := '0';
-  -- read from pipe elapsed_time_pipe
-  signal elapsed_time_pipe_pipe_read_data: std_logic_vector(63 downto 0);
-  signal elapsed_time_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
-  signal elapsed_time_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
+  signal topModule_tag_in: std_logic_vector(1 downto 0);
+  signal topModule_tag_out: std_logic_vector(1 downto 0);
+  signal topModule_start_req : std_logic := '0';
+  signal topModule_start_ack : std_logic := '0';
+  signal topModule_fin_req   : std_logic := '0';
+  signal topModule_fin_ack   : std_logic := '0';
   -- write to pipe maxpool_input_pipe
   signal maxpool_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
   signal maxpool_input_pipe_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
@@ -71,6 +61,10 @@ architecture VhpiLink of ahir_system_Test_Bench is --
   signal maxpool_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
   signal maxpool_output_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
   signal maxpool_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
+  -- read from pipe time_pipe
+  signal time_pipe_pipe_read_data: std_logic_vector(63 downto 0);
+  signal time_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
+  signal time_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
   -- 
 begin --
   -- clock/reset generation 
@@ -94,49 +88,6 @@ begin --
     --
   end process;
   -- connect all the top-level modules to Vhpi
-  process
-  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
-  begin --
-    wait until reset = '0';
-    -- let the DUT come out of reset.... give it 4 cycles.
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    while true loop -- 
-      wait until clk = '0';
-      wait for 1 ns; 
-      obj_ref := Pack_String_To_Vhpi_String("elapsed_time_pipe req");
-      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
-      elapsed_time_pipe_pipe_read_req <= Unpack_String(req_val_string,1);
-      wait until clk = '1';
-      obj_ref := Pack_String_To_Vhpi_String("elapsed_time_pipe ack");
-      ack_val_string := Pack_SLV_To_Vhpi_String(elapsed_time_pipe_pipe_read_ack);
-      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
-      obj_ref := Pack_String_To_Vhpi_String("elapsed_time_pipe 0");
-      port_val_string := Pack_SLV_To_Vhpi_String(elapsed_time_pipe_pipe_read_data);
-      Vhpi_Set_Port_Value(obj_ref,port_val_string,64);
-      -- 
-    end loop;
-    --
-  end process;
-  process
-  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
-  begin --
-    wait until reset = '0';
-    -- let the DUT come out of reset.... give it 4 cycles.
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    wait until clk = '1';
-    while true loop -- 
-      wait until clk = '0';
-      wait for 1 ns; 
-      wait until clk = '1';
-      -- 
-    end loop;
-    --
-  end process;
   process
   variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
   begin --
@@ -189,18 +140,44 @@ begin --
     end loop;
     --
   end process;
+  process
+  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
+  begin --
+    wait until reset = '0';
+    -- let the DUT come out of reset.... give it 4 cycles.
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    while true loop -- 
+      wait until clk = '0';
+      wait for 1 ns; 
+      obj_ref := Pack_String_To_Vhpi_String("time_pipe req");
+      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
+      time_pipe_pipe_read_req <= Unpack_String(req_val_string,1);
+      wait until clk = '1';
+      obj_ref := Pack_String_To_Vhpi_String("time_pipe ack");
+      ack_val_string := Pack_SLV_To_Vhpi_String(time_pipe_pipe_read_ack);
+      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
+      obj_ref := Pack_String_To_Vhpi_String("time_pipe 0");
+      port_val_string := Pack_SLV_To_Vhpi_String(time_pipe_pipe_read_data);
+      Vhpi_Set_Port_Value(obj_ref,port_val_string,64);
+      -- 
+    end loop;
+    --
+  end process;
   ahir_system_instance: ahir_system -- 
     port map ( -- 
       clk => clk,
       reset => reset,
-      elapsed_time_pipe_pipe_read_data  => elapsed_time_pipe_pipe_read_data, 
-      elapsed_time_pipe_pipe_read_req  => elapsed_time_pipe_pipe_read_req, 
-      elapsed_time_pipe_pipe_read_ack  => elapsed_time_pipe_pipe_read_ack ,
       maxpool_input_pipe_pipe_write_data  => maxpool_input_pipe_pipe_write_data, 
       maxpool_input_pipe_pipe_write_req  => maxpool_input_pipe_pipe_write_req, 
       maxpool_input_pipe_pipe_write_ack  => maxpool_input_pipe_pipe_write_ack,
       maxpool_output_pipe_pipe_read_data  => maxpool_output_pipe_pipe_read_data, 
       maxpool_output_pipe_pipe_read_req  => maxpool_output_pipe_pipe_read_req, 
-      maxpool_output_pipe_pipe_read_ack  => maxpool_output_pipe_pipe_read_ack ); -- 
+      maxpool_output_pipe_pipe_read_ack  => maxpool_output_pipe_pipe_read_ack ,
+      time_pipe_pipe_read_data  => time_pipe_pipe_read_data, 
+      time_pipe_pipe_read_req  => time_pipe_pipe_read_req, 
+      time_pipe_pipe_read_ack  => time_pipe_pipe_read_ack ); -- 
   -- 
 end VhpiLink;

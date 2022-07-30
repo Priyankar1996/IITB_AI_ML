@@ -7,17 +7,12 @@
 #include <signal.h>
 
 #include "sized_tensor.h"
-#include "convolution_multipipe.h"
  
 #include <pipeHandler.h>
 #include <Pipes.h>
 #include <pthreadUtils.h>
 #ifndef SW
 #include "vhdlCStubs.h"
-#endif
-
-#ifdef SW
-DEFINE_THREAD(convolution3D);
 #endif
 
 TensorDescriptor desc_T,desc_B,desc_K;
@@ -58,17 +53,6 @@ int main(int argc, char**argv){
 	}
 	fprintf(stderr,"Defined and opened files\n");
 
-#ifdef SW
-	init_pipe_handler();
-	register_pipe ("maxpool_input_pipe", 2, 8, PIPE_FIFO_MODE);
-	register_pipe ("maxpool_output_pipe", 2, 8, PIPE_FIFO_MODE);
-	register_pipe ("time_pipe", 2, 64, PIPE_FIFO_MODE);
-
-	PTHREAD_DECL(convolution3D);
-
-	PTHREAD_CREATE(convolution3D);
-
-#endif
 	PTHREAD_DECL(hear_timer);
 	PTHREAD_CREATE(hear_timer);
 
@@ -160,6 +144,11 @@ int main(int argc, char**argv){
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]&0xFF);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]>>8);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]&0xFF);
+	uint16_t shft_val;
+	fscanf(file,"%hu",&shft_val);
+	write_uint8("maxpool_input_pipe",shft_val>>8);
+	write_uint8("maxpool_input_pipe",shft_val&0xFF);
+	fprintf(octaveInFile,"%d\n",shft_val);
 	
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
@@ -226,10 +215,6 @@ int main(int argc, char**argv){
 
 	system("cmp COutFile.txt OctaveOutFile.txt");
 
-#ifdef SW
-	PTHREAD_CANCEL(convolution3D);
-	close_pipe_handler();
-#endif
 return 0;
 
 }

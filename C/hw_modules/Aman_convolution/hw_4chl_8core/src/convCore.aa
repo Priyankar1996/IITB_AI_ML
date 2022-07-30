@@ -11,6 +11,7 @@ $is
         chl_in := (chl_in_read - 1)
         ck_s := (($bitcast ($uint<2>) ck) - 1)
         mode_2 := (rk == 2)
+        not_mode_2 := (~mode_2)
         
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
@@ -21,7 +22,7 @@ $is
         $phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry (chl_out_var + ($mux chl_done_flag 1 0)) $on $loopback
         $endmerge
         
-        //$call timer (7) (time_pipe)
+        // $call timer (7) (time_pipe)
 
         $volatile nd := (num == ck_s)
         $volatile read_ip := ((col == 0) | nd)
@@ -38,8 +39,9 @@ $is
         $volatile chl_done_flag := (out_done_flag & row_done)
         $volatile all_done_flag := ((chl_out_var == chl_out) & chl_done_flag)
         
-        $volatile read_ip3 := ((~mode_2) & read_ip)
-        $volatile not_read_ip3 := ((~mode_2) & not_read_ip)
+        $volatile read_ip3 := (not_mode_2 & read_ip)
+        $volatile not_read_ip3 := (not_mode_2 & not_read_ip)
+        $volatile write_input3 := (write_input & not_mode_2)
         #define guard_for_ip1 read_ip
         #define guard_for_ip2 not_read_ip
         #define normal_ip 1
@@ -56,9 +58,9 @@ $is
         #define num 4
         #include macro_file2.aa
         
-        $volatile readk_3 := (read_k & (~mode_2))
-        $volatile not_readk_3 := (not_read_k & (~mode_2))
-        $volatile store_3 := (store_kernel & (~mode_2))
+        $volatile readk_3 := (read_k & not_mode_2)
+        $volatile not_readk_3 := (not_read_k & not_mode_2)
+        $volatile store_3 := (store_kernel & not_mode_2)
         
         #define core_num 1
         #include convInner.aa
@@ -78,22 +80,22 @@ $is
         #include convInner.aa
         
         //send_val := ($mux (acc_val < 0) 0 acc_val)
-            acc_pipe1_1 := ($bitcast ($uint<16>) acc_val1_1)
-			acc_pipe1_2 := ($bitcast ($uint<16>) acc_val2_1)
-			acc_pipe1_3 := ($bitcast ($uint<16>) acc_val3_1)
-			acc_pipe1_4 := ($bitcast ($uint<16>) acc_val4_1)
-			acc_pipe1_5 := ($bitcast ($uint<16>) acc_val5_1)
-			acc_pipe1_6 := ($bitcast ($uint<16>) acc_val6_1)
-			acc_pipe1_7 := ($bitcast ($uint<16>) acc_val7_1)
-			acc_pipe1_8 := ($bitcast ($uint<16>) acc_val8_1)
-			acc_pipe2_1 := ($bitcast ($uint<16>) acc_val1_2)
-			acc_pipe2_2 := ($bitcast ($uint<16>) acc_val2_2)
-			acc_pipe2_3 := ($bitcast ($uint<16>) acc_val3_2)
-            acc_pipe2_4 := ($bitcast ($uint<16>) acc_val4_2)
-            acc_pipe2_5 := ($bitcast ($uint<16>) acc_val5_2)
-			acc_pipe2_6 := ($bitcast ($uint<16>) acc_val6_2)
-			acc_pipe2_7 := ($bitcast ($uint<16>) acc_val7_2)
-			acc_pipe2_8 := ($bitcast ($uint<16>) acc_val8_2)
+            acc_pipe1_1 := ($bitcast ($uint<ACC_WIDTH>) acc_val1_1)
+			acc_pipe1_2 := ($bitcast ($uint<ACC_WIDTH>) acc_val2_1)
+			acc_pipe1_3 := ($bitcast ($uint<ACC_WIDTH>) acc_val3_1)
+			acc_pipe1_4 := ($bitcast ($uint<ACC_WIDTH>) acc_val4_1)
+			acc_pipe1_5 := ($bitcast ($uint<ACC_WIDTH>) acc_val5_1)
+			acc_pipe1_6 := ($bitcast ($uint<ACC_WIDTH>) acc_val6_1)
+			acc_pipe1_7 := ($bitcast ($uint<ACC_WIDTH>) acc_val7_1)
+			acc_pipe1_8 := ($bitcast ($uint<ACC_WIDTH>) acc_val8_1)
+			acc_pipe2_1 := ($bitcast ($uint<ACC_WIDTH>) acc_val1_2)
+			acc_pipe2_2 := ($bitcast ($uint<ACC_WIDTH>) acc_val2_2)
+			acc_pipe2_3 := ($bitcast ($uint<ACC_WIDTH>) acc_val3_2)
+            acc_pipe2_4 := ($bitcast ($uint<ACC_WIDTH>) acc_val4_2)
+            acc_pipe2_5 := ($bitcast ($uint<ACC_WIDTH>) acc_val5_2)
+			acc_pipe2_6 := ($bitcast ($uint<ACC_WIDTH>) acc_val6_2)
+			acc_pipe2_7 := ($bitcast ($uint<ACC_WIDTH>) acc_val7_2)
+			acc_pipe2_8 := ($bitcast ($uint<ACC_WIDTH>) acc_val8_2)
 
         $while (~all_done_flag)
         // $call timer (102) (time_pipe)

@@ -17,7 +17,7 @@ CONVAA_FILE=src/conv.aa
 
 SIZED_TENSOR=../../../primitives/include
 
-all: SW HW 
+all: HW 
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
@@ -27,29 +27,11 @@ PROGDEFS=
 TOPMODULES=-T timerDaemon -T topModule
 
 
-# compile with SW defined.
-# note the use of IOLIB in building the testbench.
-SW: src/prog.c testbench.c 
-	gcc -g -c -DSW $(PROGDEFS) -I$(PIPEHANDLER_INCLUDE) src/prog.c -I$(SIZED_TENSOR)/ -Isrc
-	gcc -g -c -DSW $(PROGDEFS) -I$(PIPEHANDLER_INCLUDE) -I$(PTHREADUTILS_INCLUDE) -Isrc -I$(SIZED_TENSOR)/ testbench.c
-	gcc -g -o testbench_sw prog.o testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread
-
 # five steps from C to vhdl simulator.
-HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
-C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
-fpga : c2llvmbc llvmbc2aa  aalink aa2vc  fpga_vc2vhdl
+HW: aalink aa2vc  vc2vhdl  vhdlsim
+C2VHDL : aalink aa2vc  vc2vhdl
+fpga : aalink aa2vc  fpga_vc2vhdl
 AA2VHDL: aa2vc vc2vhdl vhdlsim
-
-# C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c src/$(CONVH_FILE)
-	clang -O3 -m32 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
-	opt --indvars --loopsimplify prog.o -o prog.opt.o
-	llvm-dis prog.opt.o
-
-# llvm byte-code to Aa..
-llvmbc2aa:  prog.opt.o 
-	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
-
 
 # link and optimize
 aalink:  src/timer.aa src/prog.aa $(CONVAA_FILE) src/conv_macro.aa src/macro_file1.aa

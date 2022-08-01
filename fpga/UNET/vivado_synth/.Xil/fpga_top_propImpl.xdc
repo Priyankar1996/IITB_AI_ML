@@ -1,4 +1,4 @@
-set_property SRC_FILE_INFO {cfile:/home/AIML/Priyankar/IITB_AI_ML/fpga/concat_p/constraint/kc705.xdc rfile:../../constraint/kc705.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:/home/AIML/Aman/IITB_AI_ML/fpga/UNET/constraint/kc705.xdc rfile:../../constraint/kc705.xdc id:1} [current_design]
 set_property src_info {type:XDC file:1 line:3 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN AD12 [get_ports clk_p]
 set_property src_info {type:XDC file:1 line:5 export:INPUT save:INPUT read:READ} [current_design]

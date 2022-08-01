@@ -13,46 +13,30 @@ VHDL_LIB=$(AHIR_RELEASE)/vhdl
 FPGA=../../../../fpga/Aman_convolution/ahir
 
 CONVH_FILE=convolution_multipipe.h
-CONVAA_FILE=conv.aa
+CONVAA_FILE=src/conv.aa
 
 SIZED_TENSOR=../../../primitives/include
 
-all: SW HW 
+all: HW 
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T timerDaemon -T convolution3D -T convolve -T sendModule
+TOPMODULES=-T timerDaemon -T topModule
 
-
-# compile with SW defined.
-# note the use of IOLIB in building the testbench.
-SW: src/prog.c testbench.c 
-	gcc -g -c -DSW $(PROGDEFS) -I$(PIPEHANDLER_INCLUDE) src/prog.c -I$(SIZED_TENSOR)/ -Isrc
-	gcc -g -c -DSW $(PROGDEFS) -I$(PIPEHANDLER_INCLUDE) -I$(PTHREADUTILS_INCLUDE) -Isrc -I$(SIZED_TENSOR)/ testbench.c
-	gcc -g -o testbench_sw prog.o testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread
 
 # five steps from C to vhdl simulator.
-HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl  vhdlsim
-C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
-fpga : c2llvmbc llvmbc2aa  aalink aa2vc  fpga_vc2vhdl
+HW: aalink aa2vc  vc2vhdl  vhdlsim
+C2VHDL : aalink aa2vc  vc2vhdl
+fpga : aalink aa2vc  fpga_vc2vhdl
 AA2VHDL: aa2vc vc2vhdl vhdlsim
 
-# C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c src/$(CONVH_FILE)
-	clang -O3 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c -I$(SIZED_TENSOR)
-	opt --indvars --loopsimplify prog.o -o prog.opt.o
-	llvm-dis prog.opt.o
-
-# llvm byte-code to Aa..
-llvmbc2aa:  prog.opt.o 
-	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
-
 # link and optimize
-aalink:  timer.aa prog.aa $(CONVAA_FILE)
-	AaLinkExtMem timer.aa prog.aa $(CONVAA_FILE)| vcFormat > prog.linked.aa
+aalink:  src/timer.aa src/prog.aa src/*
+	AaPreprocess -I src/ src/conv_macro.aa -o conv_2.aa
+	AaLinkExtMem src/timer.aa src/prog.aa conv_2.aa| vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 
@@ -93,6 +77,6 @@ GHDL: ahir_system.vhdl ahir_system_test_bench.vhdl testbench.c vhdlCStubs.h vhdl
 	ghdl -m --work=work -Wl,-L$(SOCKETLIB_LIB) -Wl,-lVhpi ahir_system_test_bench 
 
 clean:
-	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot
+	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.aa
 
 PHONY: all clean	

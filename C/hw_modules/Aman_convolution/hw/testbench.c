@@ -7,21 +7,29 @@
 #include <signal.h>
 
 #include "sized_tensor.h"
-#include "convolution_multipipe.h"
  
-#ifdef SW
 #include <pipeHandler.h>
 #include <Pipes.h>
 #include <pthreadUtils.h>
-#else
+#ifndef SW
 #include "vhdlCStubs.h"
 #endif
 
-#ifdef SW
-DEFINE_THREAD(convolution3D);
-#endif
-
 TensorDescriptor desc_T,desc_B,desc_K;
+
+void hear_timer()
+{
+    fprintf(stderr,"hear_timer is running.\n");
+    while(1)
+    {
+    uint32_t t;
+    uint64_t time_taken = read_uint64("time_pipe");
+    t = time_taken>>32;
+    fprintf(stderr,"Time taken at call %u is %u \n",t,time_taken);
+    }
+}
+
+DEFINE_THREAD(hear_timer);
 
 int main(int argc, char**argv){
 
@@ -45,16 +53,8 @@ int main(int argc, char**argv){
 	}
 	fprintf(stderr,"Defined and opened files\n");
 
-#ifdef SW
-	init_pipe_handler();
-	register_pipe ("maxpool_input_pipe", 2, 8, PIPE_FIFO_MODE);
-	register_pipe ("maxpool_output_pipe", 2, 8, PIPE_FIFO_MODE);
-
-	PTHREAD_DECL(convolution3D);
-
-	PTHREAD_CREATE(convolution3D);
-
-#endif
+	PTHREAD_DECL(hear_timer);
+	PTHREAD_CREATE(hear_timer);
 
 	fprintf(stderr,"Reading files\n");
 
@@ -144,18 +144,22 @@ int main(int argc, char**argv){
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]&0xFF);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]>>8);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]&0xFF);
+	uint16_t shft_val;
+	fscanf(file,"%hu",&shft_val);
+	write_uint8("maxpool_input_pipe",shft_val>>8);
+	write_uint8("maxpool_input_pipe",shft_val&0xFF);
+	fprintf(octaveInFile,"%d\n",shft_val);
 	
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
 
-	int16_t temp[4];
+	int8_t temp[4];
 	for (i = 0; i < size; i++)
 	{
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
-		fprintf(octaveInFile,"%hd\n",temp[i&3]);
-		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
-		write_uint8("maxpool_input_pipe",temp[i&3]&0xFF);
+		fprintf(octaveInFile,"%hhd\n",temp[i&3]);
+		write_uint8("maxpool_input_pipe",temp[i&3]);
 		fprintf(stderr,"Sent element %d\n",i);
 	}
 
@@ -165,9 +169,8 @@ int main(int argc, char**argv){
 	{
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
-		fprintf(octaveInFile,"%hd\n",temp[i&3]);
-		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
-		write_uint8("maxpool_input_pipe",temp[i&3]&0xFF);
+		fprintf(octaveInFile,"%hhd\n",temp[i&3]);
+		write_uint8("maxpool_input_pipe",temp[i&3]);
 		fprintf(stderr,"Sent kernel element %d\n",i);
 	}
 	fclose(octaveInFile);
@@ -184,15 +187,16 @@ int main(int argc, char**argv){
 	fprintf(stderr,"Size of output is %d\n",size );
 	fprintf(stderr,"Reading back the values from hardware\n");
 	
-	int16_t val;
+	
+	
+	int8_t val;
 	// val = read_uint8("maxpool_output_pipe");
 	// val = (val << 8) + read_uint8("maxpool_output_pipe");
 	for (i = 0; i < size; i++)
 	{
 		val = read_uint8("maxpool_output_pipe");
-		val = (val << 8) + read_uint8("maxpool_output_pipe");
-		fprintf(outFile,"%d %hd\n",i+1, val);
-		fprintf(stderr,"%d %hd\n",i+1, val);
+		fprintf(outFile,"%d %hhd\n",i+1, val);
+		fprintf(stderr,"%d %hhd\n",i+1, val);
 	}
 	
 	fprintf(stderr,"Read back the values from hardware\n");
@@ -208,23 +212,9 @@ int main(int argc, char**argv){
 	system(arr);
 
 	printf("If no message is printed after this one, there is no error!!\n");
-#ifndef SW
-	uint64_t time_taken = read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	time_taken = (time_taken << 8) + read_uint8("maxpool_output_pipe");
-	fprintf(stderr,"Time taken is %lu\n",time_taken);
-#endif
+
 	system("cmp COutFile.txt OctaveOutFile.txt");
 
-#ifdef SW
-	PTHREAD_CANCEL(convolution3D);
-	close_pipe_handler();
-#endif
 return 0;
 
 }

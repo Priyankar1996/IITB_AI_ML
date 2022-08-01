@@ -10,9 +10,12 @@ read_vhdl -library GenericGlueStuff ../vhdl_libs/GenericGlueStuff.vhdl
 read_vhdl -library GlueModules ../vhdl_libs/GlueModules.vhdl
 read_vhdl -library AxiBridgeLib ../vhdl_libs/AxiBridgeLib.vhdl
 
+read_vhdl -library work ../ahir/ahir_system_global_package.vhdl
+read_vhdl -library work ../ahir/ahir_system.vhdl
+
 read_verilog ../verilog_libs/ACB_to_UI_EA.v
 # the wrapper..
-read_vhdl -library work ../vhdl/dram_spi_wrapper_ui64.vhdl
+read_vhdl -library work ../vhdl/toplevel.vhdl
 
 
 ############# CONSTRAINT FILE ###########
@@ -62,6 +65,6 @@ write_checkpoint -force PostPlaceRouteCheckpoint.dcp
 report_timing_summary -file timing.rpt -nworst 10 -verbose
 report_utilization -file utilization_post_place_and_route.rpt
 report_utilization -hierarchical -file utilization_post_place_and_route.hierarchical.rpt
-write_bitstream -force processor_1x2x32_ACB_UI_kc705.bit
+write_bitstream -force aiml_accelerator_ACB_UI_kc705.bit
 
 

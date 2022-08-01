@@ -1,0 +1,62 @@
+//
+
+$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation : $uint<1>) $out () $is
+{
+	$branchblock [sendBlock]{
+		row_size := ($bitcast ($uint<32>) (chl_out*cb))
+		three_row_size := (row_size+(row_size<<1))
+		chl_out_1 := (chl_out - 1)
+		apply_relu := (activation == 1)
+
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address1 := ($bitcast ($uint<32>) 0) $on $entry n_address1 $on $loopback
+		$phi address2 := ($bitcast ($uint<32>) row_size) $on $entry n_address2 $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
+		$phi col := ($bitcast ($uint<16>) 1) $on $entry n_col $on $loopback
+		$phi row := ($bitcast ($uint<16>) 1) $on $entry n_row $on $loopback
+		$endmerge
+
+		$volatile row_change := (col == cb)
+		
+		// $call timer (6) (time_pipe)
+
+		// Check this later - odd values of row will be incorrect
+		$volatile chl_change := (row_change & (row >= (rb - 1)))
+		$volatile n_col := ($mux row_change 1 (col + 1))
+		$volatile n_row := ($mux chl_change 1 ($mux row_change (row + N_ROWS_S) row))
+		$volatile n_chl := ($mux chl_change (chl+1) chl)
+		
+		$volatile tmp1 := (address1 + ($bitcast ($uint<32>) chl_out))
+		$volatile tmp2 := (address2 + ($bitcast ($uint<32>) chl_out))
+		$volatile tmp_sum := ($mux row_change row_size 0)
+		$volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) (tmp1 + tmp_sum))
+		$volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) (tmp2 + tmp_sum))
+		
+		ptr1 := @(B[($bitcast ($uint<32>) 0)][(address1>>3)])
+		ptr2 := @(B[($bitcast ($uint<32>) 0)][(address2>>3)])
+		
+		read_val1_1 := output_pipe1_1
+		read_val1_2 := output_pipe1_2
+		$volatile tmp1_1 := ($mux (apply_relu & ((read_val1_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_1 >> shift_val)))
+		$volatile tmp1_2 := ($mux (apply_relu & ((read_val1_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_2 >> shift_val)))
+		$volatile shift1 := (($bitcast ($uint<64>) (7 - (address1 & 7)))<<3)
+		$volatile shift2 := (($bitcast ($uint<64>) (7 - (address2 & 7)))<<3)
+		$volatile bitmask1 := (($bitcast ($uint<64>) 255) << shift1)
+		$volatile rev_bm1 := (~bitmask1)
+		$volatile bitmask2 := (($bitcast ($uint<64>) 255) << shift2)
+		$volatile rev_bm2 := (~bitmask2)
+		
+		$volatile same_write := ((address1>>3) == (address2>>3))
+		fetch_val1 := ->(ptr1)
+		$guard (~same_write) fetch_val2 := ->(ptr2)
+		$volatile rd1 := ((($bitcast ($uint<64>) tmp1_1) << shift1) + ($mux same_write ((($bitcast ($uint<64>) tmp1_2) << shift2) + ((fetch_val1 & rev_bm1) & rev_bm2)) (fetch_val1 & rev_bm1)))
+		$guard (~same_write)  $volatile rd2 := ((($bitcast ($uint<64>) tmp1_2) << shift2) + (fetch_val2 & rev_bm2))
+		->(ptr1) := rd1
+		$guard (~same_write) ->(ptr2) := rd2
+
+		continue_flag := ((chl < chl_out_1) | (~chl_change))
+		$while continue_flag
+		// $call timer (104) (time_pipe)
+	}
+}

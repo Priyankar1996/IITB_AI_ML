@@ -1,5 +1,7 @@
 
-        kread_##core_num\_##k_num := core##core_num\_kp##k_num
+        $guard (read_k) tempk1_##core_num\_##k_num := core##core_num\_kp##k_num
+        $guard (not_read_k) tempk2_##core_num\_##k_num := conv##core_num\_kp##k_num
+        kread_##core_num\_##k_num := ($mux read_k tempk1_##core_num\_##k_num tempk2_##core_num\_##k_num )
 
         $split (kread_##core_num\_##k_num 8 8 8 8 8 8 8 8) (kr_##core_num\_1_##k_num kr_##core_num\_2_##k_num kr_##core_num\_3_##k_num kr_##core_num\_4_##k_num kr_##core_num\_5_##k_num kr_##core_num\_6_##k_num kr_##core_num\_7_##k_num kr_##core_num\_8_##k_num )
 

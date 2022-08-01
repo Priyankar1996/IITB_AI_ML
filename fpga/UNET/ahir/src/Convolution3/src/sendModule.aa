@@ -1,6 +1,6 @@
 //
 
-$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation : $uint<8> index : $uint<8>) $out () $is
+$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation : $uint<1>) $out () $is
 {
     $branchblock [sendBlock]{
         max_count := ($bitcast ($uint<32>) (rb*cb))
@@ -34,6 +34,8 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation
         $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) (tmp1 + tmp_sum))
         $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) (tmp2 + tmp_sum))
         
+        ptr1 := @(B[($bitcast ($uint<32>) 0)][address1])
+        ptr2 := @(B[($bitcast ($uint<32>) 0)][address2])
         read_val1_1 := output_pipe1_1
         read_val2_1 := output_pipe2_1
         read_val3_1 := output_pipe3_1
@@ -68,8 +70,8 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation
         tmp8_2 := ($mux (apply_relu & ((read_val8_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_2 >> shift_val)))
         $volatile rd1 := ($concat tmp1_1 tmp2_1 tmp3_1 tmp4_1 tmp5_1 tmp6_1 tmp7_1 tmp8_1)
         $volatile rd2 := ($concat tmp1_2 tmp2_2 tmp3_2 tmp4_2 tmp5_2 tmp6_2 tmp7_2 tmp8_2)
-        $call writeModule_convolution (index address1 rd1) (a1)
-        $call writeModule_convolution (index address2 rd2) (a2)
+        ->(ptr1) := rd1
+        ->(ptr2) := rd2
 
         continue_flag := ((chl < chl_out_1) | (~chl_change))
         $while continue_flag

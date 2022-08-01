@@ -99,3 +99,27 @@ $is
     $guard (cnd5) ->(tmp5) := data
     done := (index [] 0)
 }
+
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [readModule_convolution2]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+    tmp1 := @(Tensor0[($bitcast ($uint<32>) 0)][address])
+    tmp2 := @(Tensor1[($bitcast ($uint<32>) 0)][address])
+    tmp3 := @(Tensor2[($bitcast ($uint<32>) 0)][address])
+    tmp4 := @(Tensor3[($bitcast ($uint<32>) 0)][address])
+    tmp5 := @(Tensor4[($bitcast ($uint<32>) 0)][address])
+    cnd1 := (index == 0)
+    cnd2 := (index == 1)
+    cnd3 := (index == 2)
+    cnd4 := (index == 3)
+    cnd5 := (index == 4)
+    $guard (cnd1) val1 := ->(tmp1)
+    $guard (cnd2) val2 := ->(tmp2)
+    $guard (cnd3) val3 := ->(tmp3)
+    $guard (cnd4) val4 := ->(tmp4)
+    $guard (cnd5) val5 := ->(tmp5)
+    data := ($excmux cnd1 val1 cnd2 val2 cnd3 val3 cnd4 val4 cnd5 val5)
+}

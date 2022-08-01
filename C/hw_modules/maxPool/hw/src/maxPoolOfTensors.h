@@ -10,9 +10,9 @@
 void maxPool3D();
 
 #define __I16 1
-#define __dim0__(A) ({A.descriptor.descriptor.dimensions[0];})
-#define __dim1__(A) ({A.descriptor.descriptor.dimensions[1];})
-#define __dim2__(A) ({A.descriptor.descriptor.dimensions[2];})
+#define __dim0__(A) ({A.dimensions[0];})
+#define __dim1__(A) ({A.dimensions[1];})
+#define __dim2__(A) ({A.dimensions[2];})
 
 #define __dt__ int16_t
 #define __dt_min_val__ 0x8000
@@ -20,8 +20,10 @@ void maxPool3D();
 #ifndef SW
 void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_t full_rate);
 	#define __loop_pipeline_var__ __loop_pipelining_on__(15,1,1);
+void __aa_barrier__();
 #else
 	#define __loop_pipeline_var__ {;}
+	#define __aa_barrier__() {;}
 #endif
 	
 #define __increment__(row,col,chl,max_col,max_chl) ({\
@@ -61,12 +63,9 @@ void __loop_pipelining_on__(uint32_t pipeline_depth, uint32_t buffering, uint32_
 		min_val;\
 	})
 
-#define __maxPoolOfTensors3D__(src, dst, l, stride) ({\
+#define __maxPoolOfTensors3D__(src, dst, l, stride,offset1,dim1,dim1d,size) ({\
 	uint16_t address = 0, add_src;\
-	uint32_t offset1 = __dim2__(src);\
-	uint16_t dim1 = __dim1__(dst), dim1d = __dim1__(src);\
 	uint16_t row=0,col=0,chl=0;\
-	uint32_t size = __NumberOfElementsInSizedTensor__(dst);\
 	uint64_t element = 0;\
 	while(1)\
 	{\

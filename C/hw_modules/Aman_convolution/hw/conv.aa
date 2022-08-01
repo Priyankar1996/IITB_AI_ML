@@ -3,13 +3,13 @@
 
 $parameter IP_DEPTH 400
 $parameter K_DEPTH 400
-$pipe kernel_pipe1 : $uint<16> $depth K_DEPTH
-$pipe kernel_pipe2 : $uint<16> $depth K_DEPTH
-$pipe kernel_pipe3 : $uint<16> $depth K_DEPTH
-$pipe input_pipe1 : $uint<16> $depth IP_DEPTH
-$pipe input_pipe2 : $uint<16> $depth IP_DEPTH
-$pipe input_pipe3 : $uint<16> $depth IP_DEPTH
-$pipe input_pipe4 : $uint<16> $depth IP_DEPTH
+$pipe kernel_pipe1 : $uint<8> $depth K_DEPTH
+$pipe kernel_pipe2 : $uint<8> $depth K_DEPTH
+$pipe kernel_pipe3 : $uint<8> $depth K_DEPTH
+$pipe input_pipe1 : $uint<8> $depth IP_DEPTH
+$pipe input_pipe2 : $uint<8> $depth IP_DEPTH
+$pipe input_pipe3 : $uint<8> $depth IP_DEPTH
+$pipe input_pipe4 : $uint<8> $depth IP_DEPTH
 $pipe size_pipe : $uint<16> $depth 11
 $pipe kernel_done_pipe : $uint<1> $depth 1
 $pipe input_done_pipe : $uint<8> $depth 1
@@ -21,7 +21,7 @@ $out ()
 $is
 {   
     row_size := (num_chl + (num_chl << 1))
-    sh_start := (start_add>>2)
+    sh_start := (start_add>>3)
     fetch_addr := @(K[( $bitcast ($uint<32> ) 0 ) ][sh_start])
     my_fetch := ->(fetch_addr)
     ea1 := (start_add + ( $bitcast ($uint<64> ) row_size))
@@ -36,17 +36,17 @@ $is
         $phi mycount := start_add $on $entry nmycount $on $loopback
         $phi fetch_val := my_fetch $on $entry nfetch_val $on $loopback
         $endmerge
-        my_num1 := ((3-(mycount&3))<<4)
+        my_num1 := ((7-(mycount&7))<<3)
         $volatile nmycount := (mycount + 1)
-        var_val := ($bitcast ($uint<16>) (fetch_val>>my_num1))
+        var_val := ($bitcast ($uint<8>) (fetch_val>>my_num1))
         send_to_1 := (mycount < ea1)
         send_to_2 := ((~send_to_1) & (mycount < ea2))
         send_to_3 := (mycount >= ea2)
         $guard (send_to_1) kernel_pipe1 := var_val
         $guard (send_to_2) kernel_pipe2 := var_val
         $guard (send_to_3) kernel_pipe3 := var_val
-        fn := ((nmycount& 3) == 0)
-        fetch_addr := @(K[( $bitcast ($uint<32> ) 0 ) ][(nmycount >>2)])
+        fn := ((nmycount& 7) == 0)
+        fetch_addr := @(K[( $bitcast ($uint<32> ) 0 ) ][(nmycount >>3)])
         $guard (fn) fv := ->(fetch_addr)
         nfetch_val := ($mux fn fv fetch_val)
         $while (mycount < (ea3-1))
@@ -68,11 +68,11 @@ $is
         // Fetch first word for each row
         fetch_add1 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) 0)])
         my_fetch1 := ->(fetch_add1)
-        fetch_add2 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (m_factor >> 2))])
+        fetch_add2 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (m_factor >> 3))])
         my_fetch2 := ->(fetch_add2)
-        fetch_add3 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (m_factor >> 1))])
+        fetch_add3 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (m_factor >> 2))])
         my_fetch3 := ->(fetch_add3)
-        fetch_add4 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) ((m_factor >> 1)+(m_factor >> 2)))])
+        fetch_add4 := @(T[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) ((m_factor >> 2)+(m_factor >> 3)))])
         my_fetch4 := ->(fetch_add4)
         
         // Pipeline for sending inputs
@@ -100,39 +100,39 @@ $is
         $volatile continue1 := (n_row1 < row_in)
         $volatile continue2 := (n_row2 < row_in)
         
-        $volatile my_num1 := ((3-(address1 & 3))<<4)
-        $volatile var_val1 := ($bitcast ($uint<16>) (fetch_val1>>my_num1))
+        $volatile my_num1 := ((7-(address1 & 7))<<3)
+        $volatile var_val1 := ($bitcast ($uint<8>) (fetch_val1>>my_num1))
         $volatile temp_address1 := (address1 + 1)
         $volatile n_address1 := ($mux next_row (temp_address1 + ($bitcast ($uint<64>) m_factor)) temp_address1)
-        $volatile fn1 := (((n_address1 >> 2) != (address1 >> 2)) & continue1)
-        fetch_addr1 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address1 >> 2)])
+        $volatile fn1 := (((n_address1 >> 3) != (address1 >> 3)) & continue1)
+        fetch_addr1 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address1 >> 3)])
         $guard (fn1) fv1 := ->(fetch_addr1)
         $volatile n_fetch_val1 := ($mux fn1 fv1 fetch_val1)
 
-        $volatile my_num2 := ((3-(address2 & 3))<<4)
-        $volatile var_val2 := ($bitcast ($uint<16>) (fetch_val2>>my_num2))
+        $volatile my_num2 := ((7-(address2 & 7))<<3)
+        $volatile var_val2 := ($bitcast ($uint<8>) (fetch_val2>>my_num2))
         $volatile temp_address2 := (address2 + 1)
         $volatile n_address2 := ($mux next_row (temp_address2 + ($bitcast ($uint<64>) m_factor)) temp_address2)
-        $volatile fn2 := (((n_address2 >> 2) != (address2 >> 2)) & continue1)
-        fetch_addr2 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address2 >> 2)])
+        $volatile fn2 := (((n_address2 >> 3) != (address2 >> 3)) & continue1)
+        fetch_addr2 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address2 >> 3)])
         $guard (fn2) fv2 := ->(fetch_addr2)
         $volatile n_fetch_val2 := ($mux fn2 fv2 fetch_val2)
 
-        $volatile my_num3 := ((3-(address3 & 3))<<4)
-        $volatile var_val3 := ($bitcast ($uint<16>) (fetch_val3>>my_num3))
+        $volatile my_num3 := ((7-(address3 & 7))<<3)
+        $volatile var_val3 := ($bitcast ($uint<8>) (fetch_val3>>my_num3))
         $volatile temp_address3 := (address3 + 1)
         $volatile n_address3 := ($mux next_row (temp_address3 + ($bitcast ($uint<64>) m_factor)) temp_address3)
-        $volatile fn3 := (((n_address3 >> 2) != (address3 >> 2)) & continue1)
-        fetch_addr3 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address3 >> 2)])
+        $volatile fn3 := (((n_address3 >> 3) != (address3 >> 3)) & continue1)
+        fetch_addr3 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address3 >> 3)])
         $guard (fn3) fv3 := ->(fetch_addr3)
         $volatile n_fetch_val3 := ($mux fn3 fv3 fetch_val3)
 
-        $volatile my_num4 := ((3-(address4 & 3))<<4)
-        $volatile var_val4 := ($bitcast ($uint<16>) (fetch_val4>>my_num4))
+        $volatile my_num4 := ((7-(address4 & 7))<<3)
+        $volatile var_val4 := ($bitcast ($uint<8>) (fetch_val4>>my_num4))
         $volatile temp_address4 := (address4 + 1)
         $volatile n_address4 := ($mux next_row (temp_address4 + ($bitcast ($uint<64>) m_factor)) temp_address4)
-        $volatile fn4 := (((n_address4 >> 2) != (address4 >> 2)) & continue2)
-        fetch_addr4 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address4 >> 2)])
+        $volatile fn4 := (((n_address4 >> 3) != (address4 >> 3)) & continue2)
+        fetch_addr4 := @(T[( $bitcast ($uint<32> ) 0 ) ][(n_address4 >> 3)])
         $guard (fn4) fv4 := ->(fetch_addr4)
         $volatile n_fetch_val4 := ($mux fn4 fv4 fetch_val4)
         
@@ -151,13 +151,13 @@ $in ()
 $out ()
 $is
 {
-    $pipe conv_ip1 : $uint<16> $depth IP_DEPTH
-    $pipe conv_ip2 : $uint<16> $depth IP_DEPTH
-    $pipe conv_ip3 : $uint<16> $depth IP_DEPTH
-    $pipe conv_ip4 : $uint<16> $depth IP_DEPTH
-    $pipe conv_k1 : $uint<16> $depth K_DEPTH
-    $pipe conv_k2 : $uint<16> $depth K_DEPTH
-    $pipe conv_k3 : $uint<16> $depth K_DEPTH
+    $pipe conv_ip1 : $uint<8> $depth IP_DEPTH
+    $pipe conv_ip2 : $uint<8> $depth IP_DEPTH
+    $pipe conv_ip3 : $uint<8> $depth IP_DEPTH
+    $pipe conv_ip4 : $uint<8> $depth IP_DEPTH
+    $pipe conv_k1 : $uint<8> $depth K_DEPTH
+    $pipe conv_k2 : $uint<8> $depth K_DEPTH
+    $pipe conv_k3 : $uint<8> $depth K_DEPTH
     $branchblock [conv_block]
     {
         $merge $entry loopback
@@ -169,8 +169,8 @@ $is
         
         $dopipeline $depth 15 $buffering 2 $fullrate
         $merge $entry $loopback
-        $phi acc1 := ($bitcast ($int<16>) 0) $on $entry nacc1 $on $loopback
-        $phi acc2 := ($bitcast ($int<16>) 0) $on $entry nacc2 $on $loopback
+        $phi acc1 := ($bitcast ($int<8>) 0) $on $entry nacc1 $on $loopback
+        $phi acc2 := ($bitcast ($int<8>) 0) $on $entry nacc2 $on $loopback
         $phi row := ($bitcast ($uint<16>) 0) $on $entry n_row $on $loopback
         $phi col := ($bitcast ($uint<16>) 0) $on $entry n_col $on $loopback
         $phi num := ($bitcast ($uint<2>) 0) $on $entry n_num $on $loopback
@@ -198,10 +198,10 @@ $is
         $guard (write_input) conv_ip3 := iread3
         $guard (write_input) conv_ip4 := iread4
 
-        ival1 := ($bitcast ($int<16>) iread1)
-        ival2 := ($bitcast ($int<16>) iread2)
-        ival3 := ($bitcast ($int<16>) iread3)
-        ival4 := ($bitcast ($int<16>) iread4)
+        ival1 := ($bitcast ($int<8>) iread1)
+        ival2 := ($bitcast ($int<8>) iread2)
+        ival3 := ($bitcast ($int<8>) iread3)
+        ival4 := ($bitcast ($int<8>) iread4)
 
         $volatile read_k := ((col == 0) & (row == 0))
         $guard (read_k) tempk1_1 := kernel_pipe1
@@ -214,16 +214,16 @@ $is
         kread1 := ($mux read_k tempk1_1 tempk2_1)
         kread2 := ($mux read_k tempk1_2 tempk2_2)
         kread3 := ($mux read_k tempk1_3 tempk2_3)
-        kval1 := ($bitcast ($int<16>) kread1)
-        kval2 := ($bitcast ($int<16>) kread2)
-        kval3 := ($bitcast ($int<16>) kread3)
+        kval1 := ($bitcast ($int<8>) kread1)
+        kval2 := ($bitcast ($int<8>) kread2)
+        kval3 := ($bitcast ($int<8>) kread3)
 
-        mul_val1 := ($bitcast ($int<16>) (kval1*ival1))
-        mul_val2 := ($bitcast ($int<16>) (kval2*ival2))
-        mul_val3 := ($bitcast ($int<16>) (kval3*ival3))
-        mul_val4 := ($bitcast ($int<16>) (kval1*ival2))
-        mul_val5 := ($bitcast ($int<16>) (kval2*ival3))
-        mul_val6 := ($bitcast ($int<16>) (kval3*ival4))
+        mul_val1 := ($bitcast ($int<8>) (kval1*ival1))
+        mul_val2 := ($bitcast ($int<8>) (kval2*ival2))
+        mul_val3 := ($bitcast ($int<8>) (kval3*ival3))
+        mul_val4 := ($bitcast ($int<8>) (kval1*ival2))
+        mul_val5 := ($bitcast ($int<8>) (kval2*ival3))
+        mul_val6 := ($bitcast ($int<8>) (kval3*ival4))
         acc_val1 :=  ((acc1 + mul_val1) + (mul_val2 + mul_val3))
         acc_val2 :=  ((acc2 + mul_val4) + (mul_val5 + mul_val6))
         
@@ -250,8 +250,7 @@ $is
         //$guard (num_done) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_up)
         //$guard (num_done) maxpool_output_pipe := ($bitcast ($uint<8>) acc_val_dn)
         //send_val := ($mux (acc_val < 0) 0 acc_val)
-        $guard (num_done) output_pipe := ($bitcast ($uint<16>) acc_val1)
-        $guard (num_done) output_pipe := ($bitcast ($uint<16>) acc_val2)
+        $guard (num_done) output_pipe := ($concat ($bitcast ($uint<8>) acc_val1) ($bitcast ($uint<8>) acc_val2))
         $while (~all_done_flag)
         input_done_pipe := 1
         
@@ -291,27 +290,35 @@ $module [sendModule] $in () $out () $is
         $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) ($mux row_change (tmp1+row_size) tmp1))
         $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) ($mux row_change (tmp2+row_size) tmp2))
         
-        fetch_addr1 := @(B[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (address1 >> 2))])
-        fetch_addr2 := @(B[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (address2 >> 2))])
+        fetch_addr1 := @(B[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (address1 >> 3))])
+        fetch_addr2 := @(B[( $bitcast ($uint<32> ) 0 ) ][($bitcast ($uint<64>) (address2 >> 3))])
         fetch_val1 := ->(fetch_addr1)
         fetch_val2 := ->(fetch_addr2)
-        output_data1 := output_pipe
-        output_data2 := output_pipe
+        output_data_read := output_pipe
+        $split (output_data_read 8 8) (output_data1 output_data2)
 
-        $split (fetch_val1 16 16 16 16) (w11 w12 w13 w14)
-        $split (fetch_val2 16 16 16 16) (w21 w22 w23 w24)
-        $volatile location1 := ($bitcast ($uint<2>) address1)
-        $volatile location2 := ($bitcast ($uint<2>) address2)
+        $split (fetch_val1 8 8 8 8 8 8 8 8) (w11 w12 w13 w14 w15 w16 w17 w18)
+        $split (fetch_val2 8 8 8 8 8 8 8 8) (w21 w22 w23 w24 w25 w26 w27 w28)
+        $volatile location1 := ($bitcast ($uint<3>) address1)
+        $volatile location2 := ($bitcast ($uint<3>) address2)
         wb11 := ($mux (location1 == 0) output_data1 w11)
         wb12 := ($mux (location1 == 1) output_data1 w12)
         wb13 := ($mux (location1 == 2) output_data1 w13)
         wb14 := ($mux (location1 == 3) output_data1 w14)
+        wb15 := ($mux (location1 == 4) output_data1 w15)
+        wb16 := ($mux (location1 == 5) output_data1 w16)
+        wb17 := ($mux (location1 == 6) output_data1 w17)
+        wb18 := ($mux (location1 == 7) output_data1 w18)
         wb21 := ($mux (location2 == 0) output_data2 w21)
         wb22 := ($mux (location2 == 1) output_data2 w22)
         wb23 := ($mux (location2 == 2) output_data2 w23)
         wb24 := ($mux (location2 == 3) output_data2 w24)
-        ->(fetch_addr1) := ($concat wb11 wb12 wb13 wb14)
-        ->(fetch_addr2) := ($concat wb21 wb22 wb23 wb24)
+        wb25 := ($mux (location2 == 4) output_data2 w25)
+        wb26 := ($mux (location2 == 5) output_data2 w26)
+        wb27 := ($mux (location2 == 6) output_data2 w27)
+        wb28 := ($mux (location2 == 7) output_data2 w28)
+        ->(fetch_addr1) := ($concat wb11 wb12 wb13 wb14 wb15 wb16 wb17 wb18)
+        ->(fetch_addr2) := ($concat wb21 wb22 wb23 wb24 wb25 wb26 wb27 wb28)
         //maxpool_output_pipe := ($bitcast ($uint<8>) row)
         //maxpool_output_pipe := ($bitcast ($uint<8>) col)
         continue_flag := ((chl < (chl_out - 1)) | (~chl_change))

@@ -72,7 +72,7 @@
 					data =  (*((__dt__*)src.data_array + add_src));\
 				add_src+=__dim2__(src);\
 			}\
-			add_src+=(__dim1__(src)-1)*__dim2__(src);\
+			add_src+=(__dim1__(src)-l)*__dim2__(src);\
 		}\
 		data;\
 	})

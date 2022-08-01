@@ -21,7 +21,6 @@
 DEFINE_THREAD(maxPool3D);
 #endif
 
-SizedTensor_16K T,B;
 TensorDescriptor desc_T,desc_B;
 
 int main(int argc, char**argv){
@@ -134,18 +133,16 @@ int main(int argc, char**argv){
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
 
-	int16_t temp[4];
+	int8_t temp[4];
 	for (i = 0; i < size; i++)
 	{
 		if (rand_data)	temp[i&3] = rand();	//Random data
 		else temp[i&3] = i+1;					//Sequential data
-		fprintf(octaveInFile,"%hd\n",temp[i&3]);
-		write_uint8("maxpool_input_pipe",temp[i&3]>>8);
+		fprintf(octaveInFile,"%hhd\n",temp[i&3]);
 		write_uint8("maxpool_input_pipe",temp[i&3]);
 		fprintf(stderr,"Sent element %d\n",i);
-		if ((i&3)==3) T.data_array[i/4] = *(uint64_t*)temp;
 	}
-	T.data_array[i/4] = *(uint64_t*)temp;
+
 	fclose(octaveInFile);
 
 	fprintf(stderr,"Checkpoint\n");
@@ -160,13 +157,12 @@ int main(int argc, char**argv){
 	fprintf(stderr,"Size of output is %d\n",size );
 	fprintf(stderr,"Reading back the values from hardware\n");
 	
-	int16_t val;
+	int8_t val;
 	for (i = 0; i < size; i++)
 	{
 		val = read_uint8("maxpool_output_pipe");
-		val = (val << 8) + read_uint8("maxpool_output_pipe");
-		fprintf(outFile,"%d %hd\n",i+1, val);
-		fprintf(stderr,"%d %hd\n",i+1, val);
+		fprintf(outFile,"%d %hhd\n",i+1, val);
+		fprintf(stderr,"%d %hhd\n",i+1, val);
 	}
 	
 	fprintf(stderr,"Read back the values from hardware\n");

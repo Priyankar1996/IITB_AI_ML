@@ -27,6 +27,7 @@ SizedTensor_16K T;
 })
 #endif
 
+
 #define __get4xi16__(element) ({\
 	element = read_uint8 ("maxpool_input_pipe");\
 	element = (element << 8) + read_uint8 ("maxpool_input_pipe");\

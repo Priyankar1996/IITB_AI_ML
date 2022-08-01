@@ -9,6 +9,7 @@
 #include "maxPoolOfTensors.h"
 
 SizedTensor_16K T,B;
+TensorDescriptor desc_T,desc_B;
 uint16_t length, stride;
 
 #define __get4xi16__(element) ({\
@@ -63,18 +64,18 @@ void testConfigure()
 	stride = read_uint16 ("maxpool_input_pipe");
 
 	// configure the tensor T
-	T.descriptor.descriptor.data_type = u16;
-	T.descriptor.descriptor.row_major_form = 1;
-	T.descriptor.descriptor.number_of_dimensions = 3;
-	B.descriptor.descriptor.number_of_dimensions = 3;
+	desc_T.data_type = u16;
+	desc_T.row_major_form = 1;
+	desc_T.number_of_dimensions = 3;
+	desc_B.number_of_dimensions = 3;
 	int i;
-	for (i = 0;i < T.descriptor.descriptor.number_of_dimensions;i++){
-		T.descriptor.descriptor.dimensions[i] = read_uint16 ("maxpool_input_pipe");
-		B.descriptor.descriptor.dimensions[i] = read_uint16 ("maxpool_input_pipe");
+	for (i = 0;i < desc_T.number_of_dimensions;i++){
+		desc_T.dimensions[i] = read_uint16 ("maxpool_input_pipe");
+		desc_B.dimensions[i] = read_uint16 ("maxpool_input_pipe");
 	}
 
 	// size = number of 16-bit values in data array..
-	uint64_t size = __NumberOfElementsInSizedTensor__(T);
+	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
 	for (i = 0; i < (size >> 2); i++)
 	{
 		uint64_t element;
@@ -91,10 +92,7 @@ void testConfigure()
 // this sends B...
 void sendB()
 {
-	write_uint16("maxpool_output_pipe",__dim0__(B));
-	write_uint16("maxpool_output_pipe",__dim1__(B));
-	write_uint16("maxpool_output_pipe",__dim2__(B));
-	uint64_t size = __NumberOfElementsInSizedTensor__(B);
+	uint64_t size = __NumberOfElementsInSizedTensor__(desc_B);
 	int i;
 	for(i=0; i < (size>>2); i++)
 	{
@@ -107,11 +105,16 @@ void sendB()
 void maxPool3D()
 {
 	testConfigure();	
+	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();
 #endif
-	__maxPoolOfTensors3D__(T,B,length,stride);
+	uint32_t offset1 = __dim2__(desc_T);
+	uint16_t dim1 = __dim1__(desc_B), dim1d = __dim1__(desc_T);
+	uint32_t size = dim1*offset1*__dim0__(desc_B);\
+	__maxPoolOfTensors3D__(T,B,length,stride,offset1,dim1,dim1d,size);
 #ifndef SW
+	__aa_barrier__();
 	uint64_t stop_time = timer();
 	uint64_t elapsed_time = stop_time - start_time;
 	write_uint64("elapsed_time_pipe", elapsed_time);

@@ -33,7 +33,7 @@ void fill_T(uint64_t i);
 })
 #endif
 
-#define __get4xi16__(element) ({\
+#define __get8xi8__(element) ({\
 	element = read_uint8("maxpool_input_pipe");\
 	element = (element << 8) + read_uint8("maxpool_input_pipe");\
 	element = (element << 8) + read_uint8("maxpool_input_pipe");\
@@ -44,7 +44,7 @@ void fill_T(uint64_t i);
 	element = (element << 8) + read_uint8("maxpool_input_pipe");\
 })
 
-#define __set4xi16__(addr) ({\
+#define __set8xi8__(addr) ({\
 	uint64_t element = B.data_array[addr];\
 	uint8_t out_data[8];\
 	out_data[7] = element & 0xFF;\
@@ -73,56 +73,54 @@ void fill_T(uint64_t i);
 })
 
 // printf("val = 0%" PRIx64 "\n",element);
-uint64_t getRemainingElements(uint16_t ne){
+uint64_t getRemainingElements(uint8_t ne){
 	uint64_t element = 0;
-	for (uint16_t n = 0 ; n < (ne<<1); n++){
+	for (uint8_t n = 0 ; n < ne; n++){
 		element += read_uint8("maxpool_input_pipe");
 		element <<= 8;
 	}
-	element <<= 16*(3-ne) + 8;
+	element <<= 8*(7-ne);
 	return element;
 }
 
-void sendRemainingElements(int addr, uint16_t ne){
-	uint64_t element = B.data_array[addr];\
-	uint8_t out_data[6];\
-	element>>=16;\
+void sendRemainingElements(uint32_t addr, uint8_t ne){
+	uint64_t element = B.data_array[addr];
+	uint8_t out_data[7];
+	element>>=8;
+	out_data[6] = element & 0xFF;
+	element>>=8;
 	out_data[5] = element & 0xFF;
-	element>>=8;\
+	element>>=8;
 	out_data[4] = element & 0xFF;
-	element>>=8;\
+	element>>=8;
 	out_data[3] = element & 0xFF;
-	element>>=8;\
-	out_data[2] = element & 0xFF;\
-	element>>=8;\
+	element>>=8;
+	out_data[2] = element & 0xFF;
+	element>>=8;
 	out_data[1] = element & 0xFF;
-	element>>=8;\
+	element>>=8;
 	out_data[0] = element & 0xFF;
 	for (int n = 0; n < ne; n++)
 	{
-		write_uint8 ("maxpool_output_pipe",out_data[2*n]);
-		write_uint8 ("maxpool_output_pipe",out_data[2*n+1]);
+		write_uint8 ("maxpool_output_pipe",out_data[n]);
 	}
 }
 
 // this sends B...
-void sendB(uint64_t size)
+void sendB(uint32_t size)
 {
-	int i;
-	for(i=0; i < (size>>2); i++)
+	uint32_t i;
+	for(i=0; i < (size>>3); i++)
 	{
-		__set4xi16__(i);
+		__set8xi8__(i);
 	}
-	if (size & 3) sendRemainingElements(i,size&3);
+	if (size & 7) sendRemainingElements(i,size&7);
 }
 
 
 
 void convolution3D()
 {
-	// write_uint8("maxpool_output_pipe",100);
-	// write_uint8("maxpool_output_pipe",100);
-	__aa_barrier__();
 	int i;
 	uint16_t rt = read_uint8("maxpool_input_pipe");
 	rt = ( rt<<8 ) + read_uint8("maxpool_input_pipe");
@@ -142,23 +140,22 @@ void convolution3D()
 	ck = ( ck<<8 ) + read_uint8("maxpool_input_pipe");
 
 	// size = number of 16-bit values in data array..
-	uint64_t size = rt*ct*chl_in;
+	uint32_t size = rt*ct*chl_in;
 	uint64_t element;
-	for (i = 0; i < (size >> 2); i++)
+	for (i = 0; i < (size >> 3); i++)
 	{
-		__get4xi16__(element);
+		__get8xi8__(element);
 		T.data_array[i] = element;
 	}
-	if (size&3) T.data_array[i] = getRemainingElements(size&3);
+	if (size&7) T.data_array[i] = getRemainingElements(size&7);
 	
 	size =  chl_in*ck*rk*chl_out;
-	for (i = 0; i < (size >> 2); i++)
+	for (i = 0; i < (size >> 3); i++)
 	{
-		__get4xi16__(element);
+		__get8xi8__(element);
 		K.data_array[i] = element;
 	}
-	if (size&3) K.data_array[i] = getRemainingElements(size&3);
-	B.data_array[0] = 0;
+	if (size&7) K.data_array[i] = getRemainingElements(size&7);
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();

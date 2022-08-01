@@ -47,10 +47,10 @@ int main(int argc, char* argv[])
 
 	while(1)
 	{
-		uint8_t x;
+		uint16_t x;
 		fscanf(stdin,"%hhu",&x);
-		//if(x == 65535)
-		//break;
+		if(x == 65535)
+		break;
 		tbSendUint8 (x);
 		fprintf(stderr,"sent %hhu.\n", x);
 	}

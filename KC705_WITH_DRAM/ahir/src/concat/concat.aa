@@ -1,0 +1,37 @@
+$module[concat_core] $in(input1_count:$uint<16> input2_count:$uint<16> output_size:$uint<32> index1:$uint<8> index2:$uint<8> index3:$uint<8>) $out(done1:$uint<8>) $is
+{
+    $branchblock[body]
+    {
+        out_concat := (output_size >> ( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ))
+        $volatile add_out_init := ($bitcast ($uint<32>) 0)
+        $volatile add_inp1_init := ($bitcast ($uint<16>) 0)
+        $volatile add_inp2_init := ($bitcast ($uint<16>) 0)
+        $volatile count_inp1_init := ($bitcast ($uint<16>) 0)
+        $volatile total_size := (input1_count + input2_count)
+    
+        $dopipeline $depth 15 $buffering 1 $fullrate
+        $merge $entry $loopback
+        $phi add_out := add_out_init $on $entry next_add_out $on $loopback
+        $phi add_inp1 := add_inp1_init $on $entry next_add_inp1 $on $loopback
+        $phi add_inp2 := add_inp2_init $on $entry next_add_inp2 $on $loopback
+        $phi count_inp1 := count_inp1_init $on $entry next_count_inp1 $on $loopback
+        $endmerge
+    
+        cmp := (count_inp1 < input1_count)
+
+        $guard (cmp) $call readModule_concat (index1 ($bitcast ($uint<32>)add_inp1)) (i1)
+        $guard (~cmp) $call readModule_concat (index2 ($bitcast ($uint<32>)add_inp2)) (i2)
+        o := ($mux cmp i1 i2)
+        $call writeModule_concat (index3 add_out o) (done)
+
+        my_flag := (count_inp1 == (total_size - 1))
+        next_count_inp1 := ($mux my_flag 0 (count_inp1 + 1))
+        next_add_inp1 := ($mux cmp (add_inp1+1) add_inp1)
+        next_add_inp2 := ($mux cmp add_inp2 (add_inp2+1))
+        next_add_out := (add_out + 1)
+        continue_flag := ((~my_flag) | (add_out < (out_concat-1)))
+        $while continue_flag
+        done1 := index1
+    }
+}
+

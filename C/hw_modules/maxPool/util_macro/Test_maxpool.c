@@ -1,5 +1,5 @@
 // datatype
-#define __I64 1
+#define __U16 1
 
 #include <stdio.h>
 #include <string.h>
@@ -84,30 +84,16 @@ int main(int argc, char**argv){
 		fprintf(octaveInFile,"11\n");
 	#endif
 
-	//Take row-major-form as input
-	fscanf(file,"%hhd",&T.descriptor.descriptor.row_major_form);
 	
-	fprintf(octaveInFile,"%hhd\n",T.descriptor.descriptor.row_major_form);
-
-	//Take input tensor dimensions){ num_diminsions followed by size of each dimension
-	fscanf(file,"%d",&T.descriptor.descriptor.number_of_dimensions);
-	fprintf(octaveInFile,"%d\n",T.descriptor.descriptor.number_of_dimensions);
-	
+	T.descriptor.descriptor.number_of_dimensions=3;
 	int i;
 	for (i = 0;i < T.descriptor.descriptor.number_of_dimensions;i++){
 		fscanf(file,"%d",&T.descriptor.descriptor.dimensions[i]);
 		fprintf(octaveInFile,"%d\n",T.descriptor.descriptor.dimensions[i]);
 	}
-	int length,stride,mode,num_dims;
-	fscanf(file,"%d%d%d%d",&length,&stride,&mode,&num_dims);
-	fprintf(octaveInFile,"%d\n%d\n%d\n%d\n",length,stride,mode,num_dims);
-	// mode = 0 for floor, 1 for ceil
-	
-	int dims_to_pool[num_dims];
-	for (i = 0;i < num_dims;i++){
-		fscanf(file,"%d",&dims_to_pool[i]);
-		fprintf(octaveInFile,"%d\n",dims_to_pool[i]);	
-	}
+	int length,stride;
+	fscanf(file,"%d%d",&length,&stride);
+	fprintf(octaveInFile,"%d\n%d\n",length,stride);
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(T);
 

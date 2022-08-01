@@ -92,7 +92,7 @@ SizedTensor_16K T;
 void sendB(uint32_t size)
 {
 	int i;
-	for(i=0; i < (size>>2); i++)
+	for(i=0; i < (size>>3); i++)
 	{
 		__set4xi16__(i);
 	}
@@ -117,7 +117,7 @@ void maxPool3D()
 	__aa_barrier__();
 	uint32_t size = rt*ct*chl_in;
 	uint32_t i;
-	for (i = 0; i < (size >> 4); i++)
+	for (i = 0; i < (size >> 3); i++)
 	{
 		fill_T(i);
 	}
@@ -125,7 +125,7 @@ void maxPool3D()
 	uint16_t ce = cb;
 	uint16_t re = rb;
 	uint16_t dim1d = ct;
-	uint16_t offset1 = chl_out>>4, offset2 = dim1d*offset1;
+	uint16_t offset1 = chl_out>>3, offset2 = dim1d*offset1;
 	__aa_barrier__();
 #ifndef SW
 	uint64_t start_time = timer();

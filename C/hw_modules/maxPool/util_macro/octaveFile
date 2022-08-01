@@ -12,30 +12,17 @@ function dst = maxPool(src, tempsize, pool_size, stride, x, cs , outdims);
 endfunction
 
 datatype = input("");
-row_major = input("");
-num_dims = input("");
-dims = zeros(1,num_dims);
-for i = 1:num_dims
-  if (row_major) dims(num_dims+1-i) = input("");
-  else dims(i) = input("");
-  endif
-end
 pool_size = input("");
 stride = input("");
-mode = input("");
-num_dims_to_pool = input("");
-dims_to_pool = zeros(1,num_dims_to_pool);
-for i = 1:num_dims_to_pool
-  if (row_major) dims_to_pool(num_dims_to_pool+1-i) = num_dims - input("");
-  else dims_to_pool(i) = input("")+1;
-  endif
+num_dims = 3;
+dims = zeros(1,num_dims);
+for i = 1:num_dims
+  dims(num_dims+1-i) = input("");
 end
+num_dims_to_pool = 2;
+dims_to_pool = [2,3];
+src = zeros(dims);
 
-if (num_dims == 1)
-  src = zeros([1,dims]);
-else
-  src = zeros(dims);
-endif
 input_size = prod(dims);
 for i = 1:input_size
   src(i) = input("");
@@ -44,11 +31,7 @@ end
 out_dims = zeros(1,num_dims);
 out_dims = dims;
 for i = 1:num_dims_to_pool
-  if (mode == 1)
-    out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - 1)/stride);
-  else
     out_dims(dims_to_pool(i)) = 1 + floor((dims(dims_to_pool(i)) - pool_size)/stride);
-  endif
 end
 output_size = prod(out_dims);
 dst = zeros(size(src));
@@ -69,9 +52,7 @@ end
 
 printf("Size of output is ");
 for i = 1:num_dims
-  if (row_major) printf("%d ",out_dims(num_dims+1-i));
-  else printf("%d ",out_dims(i));
-  endif
+  printf("%d ",out_dims(num_dims+1-i));
 end
 printf("\n");
 switch(datatype)

@@ -13,7 +13,7 @@ int main(int argc, char**argv){
 
 	fprintf(stderr,"Entering testbench main program\n");
 	fprintf(stderr,"Start time %ld\n", read_uint64("output_pipe"));
-	int i_max = 10000;
+	int i_max = 100;
 	
 	for (int i = 1; i <= i_max; i++){
 		if (i < i_max)

@@ -1,0 +1,6 @@
+//
+		$guard (readk_3) tempk1__##k_num := core_kp##k_num
+		$guard (not_readk_3) tempk2__##k_num := conv_kp##k_num
+		kread__##k_num := ($mux mode_2 0 ($mux read_k tempk1__##k_num tempk2__##k_num ))
+
+		kval__1_##k_num := ($bitcast ($int<8>) kread__##k_num )

@@ -19,6 +19,13 @@ $module [sparseMult] $in() $out() $is
 	}
 }
 
+$pipeline $depth 15 $buffering 2 $fullrate
+$opaque $module [writeToPipe] $in (in_data : $uint<17>) $out (done : $uint<1>) $is
+{
+	sparseMult_in_pipe := in_data
+	done := (in_data [] 16)
+}
+
 $module [main_module] $in() $out() $is
 {
 	$branchblock [main]
@@ -36,10 +43,10 @@ $module [main_module] $in() $out() $is
 		send2 := (a2 != 0)
 		send3 := (a3 != 0)
 		send4 := (a4 != 0)
-		$guard (send1) sparseMult_in_pipe := ($concat $zero<1> a1 m1)
-		$guard (send2) sparseMult_in_pipe := ($concat $zero<1> a2 m2)
-		$guard (send3) sparseMult_in_pipe := ($concat $zero<1> a3 m3)
-		$guard (send4) sparseMult_in_pipe := ($concat $one<1> a4 m4)
+		$guard (send1) $call writeToPipe (($concat $zero<1> a1 m1)) (a)
+		$guard (send2) $call writeToPipe (($concat $zero<1> a2 m2)) (b)
+		$guard (send3) $call writeToPipe (($concat $zero<1> a3 m3)) (c)
+		$guard (send4) $call writeToPipe (($concat $one<1> a4 m4)) (d)
 		ncount := (count + 1)
 		$while (count < 99)
 		

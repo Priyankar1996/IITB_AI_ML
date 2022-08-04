@@ -1,0 +1,15 @@
+digraph data_path {
+  ADD_u32_u32_67_wire [shape=ellipse];
+  konst_64_wire_constant [shape=ellipse];
+  konst_65_wire_constant [shape=ellipse];
+  out1_70 [shape=ellipse];
+  ADD_u32_u32_67_inst [shape=diamond];
+address  -> ADD_u32_u32_67_inst;
+konst_65_wire_constant  -> ADD_u32_u32_67_inst;
+ADD_u32_u32_67_inst -> ADD_u32_u32_67_wire;
+  call_stmt_70_call [shape=rectangle];
+konst_64_wire_constant  -> call_stmt_70_call;
+ADD_u32_u32_67_wire  -> call_stmt_70_call;
+data  -> call_stmt_70_call;
+call_stmt_70_call -> out1_70;
+}

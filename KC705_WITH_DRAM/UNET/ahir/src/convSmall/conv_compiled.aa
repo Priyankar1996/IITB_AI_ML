@@ -1,0 +1,453 @@
+$parameter SMALL_PIPE_WIDTH 8
+$parameter INTERMEDIATE_PIPE_DEPTH_generic 16
+$parameter SMALL_PIPE_DEPTH_generic_generic_generic 4
+$parameter IP_DEPTH_SMALL 2048
+$parameter K_DEPTH_SMALL 2048
+$parameter N_ROWS_generic 2
+$parameter ACC_WIDTH_generic 16
+
+$pipe core_kp1 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_kp2 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_kp3 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+
+$pipe core_ip_generic1 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_ip_generic2 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_ip_generic3 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_ip_generic4 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+
+$pipe output_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+$pipe output_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+
+$pipe acc_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+$pipe acc_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+
+$pipe conv_ip_generic1 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_ip_generic2 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_ip_generic3 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_ip_generic4 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_kp1 : $uint<SMALL_PIPE_WIDTH> $depth K_DEPTH_SMALL
+$pipe conv_kp2 : $uint<SMALL_PIPE_WIDTH> $depth K_DEPTH_SMALL
+$pipe conv_kp3 : $uint<SMALL_PIPE_WIDTH> $depth K_DEPTH_SMALL
+
+
+// Aa code produced by llvm2aa (version 1.0)
+$parameter NO_ACT 0
+$parameter RELU 1
+
+$module [convolutionSmall] $in (rb cb chl_out chl_in rk ck: $uint<16> index_in index_k index_out : $uint<8> ct shift_val: $uint<16> activation : $uint<8>) $out() $is
+{
+	op_size := (($bitcast ($uint<32>) rb) * (($bitcast ($uint<32>)  (cb * chl_out)) >> 1))
+	$parallelblock [topBlocks]
+	{
+		$call kernelModule_generic (chl_in chl_out rk ck index_k) ()
+		$call core_generic (rb cb chl_in chl_out rk ck) ()
+		$call sendModule_generic (rb cb chl_out shift_val activation index_out) ()
+		$call inputModule_generic (rb ct chl_in chl_out rk index_in) ()
+		$call acc_generic (chl_in ck op_size) ()
+	}
+}
+
+
+
+// Load the kernel channel into the kernel pipes
+$module [kernelModule_generic]
+$in (chl_in chl_out rk ck : $uint<16> index : $uint<8>)
+$out ()
+$is
+{  
+	
+	$branchblock [load_block]
+	{ 
+		row_size := (chl_in * ck)
+		chl_size := ($bitcast ($uint<32>) (row_size * rk))
+		count_update := (chl_size - ($bitcast ($uint<32>) row_size))
+		rk_s := ($bitcast ($uint <2>) rk)
+		
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi chl_num := ($bitcast ($uint<16>) 1) $on $entry n_chl_num $on $loopback
+		$phi ea := ($bitcast ($uint<32>) (row_size - 1)) $on $entry n_ea $on $loopback
+		$phi mycount := ($bitcast ($uint<32>) 0) $on $entry nmycount $on $loopback
+		$phi ind := ($bitcast ($uint<2>) 1) $on $entry n_ind $on $loopback
+		$endmerge
+
+		$volatile next_row := (ind == rk_s)
+		$volatile nxt_chl := ( (mycount == ea) & next_row)
+		$volatile nmycount := (mycount + ($mux next_row (1 + ($mux nxt_chl count_update 0)) 0))
+		$volatile n_chl_num := ($mux nxt_chl (chl_num + 1) chl_num)
+		$volatile n_ea := (ea + ($mux nxt_chl chl_size 0))
+		$volatile n_ind := ($mux next_row 1 (ind + 1))
+		$volatile add_val := ($bitcast ($uint<32> )($excmux (ind == 2) row_size (ind == 3) (row_size<<1)))
+		// $call timer (3) (time_pipe)
+		
+		$call readModule_convolutionk (index ((mycount+add_val)>>3)) (fetch_val1)
+		
+		$volatile val1 := ($bitcast ($uint<8>) (fetch_val1 >> (($bitcast ($uint<64>) (7-((mycount+add_val)&7)))<<3)))
+
+		$call writeToPipe (ind val1) (a1)
+
+		$volatile exit_cond := (nxt_chl & (chl_num == chl_out))
+		$while (~exit_cond)
+		// $call timer (100) (time_pipe)
+	}
+}
+
+
+$pipeline $depth 15 $buffering 2 $fullrate
+$opaque $module [writeToPipe ] $in (index : $uint<2> in_data1 : $uint<SMALL_PIPE_WIDTH>) $out (done : $uint<1>) $is
+{
+    c1 := (index == 1)
+    c2 := (index == 2)
+    c3 := (index == 3)
+	$guard (c1) core_kp1 := in_data1
+	$guard (c2) core_kp2 := in_data1
+	$guard (c3) core_kp3 := in_data1
+	done := (in_data1 [] 0)
+}
+
+// $pipeline $depth 15 $fullrate
+// $module [multiplier1 ] $in (input kernel : $int<8> ) $out (mul_val : $int<16>) $is
+//{
+//    mul_val := ($cast ($int<16>) (input * kernel))
+//}
+
+
+// Access the input tensor and write to iput pipe
+$module [inputModule_generic]
+$in(row_in ct chl_in chl_out rk: $uint<16> index : $uint<8>)
+$out()
+$is
+{
+	$branchblock [access_block]
+	{
+		m_factor := ($bitcast ($uint<32>) (ct * chl_in))
+		m2_factor := (m_factor << 1)
+		m3_factor := (m2_factor+m_factor)
+		m4_factor := (m_factor << 2)
+		mode_3 := (rk == 3)
+
+		// Pipeline for sending inputs
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address := 0 $on $entry n_address $on $loopback
+		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+		$phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
+		$phi mycounter := ($bitcast ($uint<32>) 1) $on $entry n_mycounter $on $loopback
+		$endmerge
+		
+		// $call timer (4) (time_pipe)
+		$volatile next_row :=  (mycounter == m_factor)
+		$volatile tmp_cnt := (mycounter + 1)
+		$volatile n_mycounter := ($mux next_row 1 tmp_cnt )
+		$volatile update_row := ($mux next_row (row1 + N_ROWS_generic) row1 )
+		$volatile continue_flag1 := (update_row < row_in)
+		
+		$volatile n_row1 := ($mux continue_flag1 update_row 0)
+		$volatile n_address := ($mux continue_flag1 ((address + 1) + ($mux next_row m_factor  0)) 0)
+		
+		$call readModule_convolution (index (address>>3)) (val1)
+        $call readModule_convolution (index ((address+($bitcast ($uint<32>) m_factor))>>3)) (val2)
+        $call readModule_convolution (index ((address+($bitcast ($uint<32>) m2_factor))>>3)) (val3)
+        $guard (mode_3) $call readModule_convolution (index ((address+($bitcast ($uint<32>) m3_factor))>>3)) (val4)
+
+		$volatile rd1 := (val1 >> ($bitcast ($uint<64>) ((7-(address & 7))<<3)))
+		$volatile rd2 := (val2 >> ($bitcast ($uint<64>) ((7-((address+($bitcast ($uint<32>) m_factor)) & 7))<<3)))
+		$volatile rd3 := (val3 >> ($bitcast ($uint<64>) ((7-((address+($bitcast ($uint<32>) m2_factor)) & 7))<<3)))
+		$volatile rd4 := (val4 >> ($bitcast ($uint<64>) ((7-((address+($bitcast ($uint<32>) m3_factor)) & 7))<<3)))
+		core_ip_generic1 := ($bitcast ($uint<8>) rd1)
+		core_ip_generic2 := ($bitcast ($uint<8>) rd2)
+		core_ip_generic3 := ($bitcast ($uint<8>) rd3)
+		$guard (mode_3) core_ip_generic4 := ($bitcast ($uint<8>) rd4)
+
+		$volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
+		$volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
+
+		$while not_end_flag
+
+		// $call timer (101) (time_pipe)
+	}
+}
+
+
+// Perform convolution operation
+$module [core_generic ]
+$in (rb cb chl_in_read chl_out rk ck: $uint<16>)
+$out ()
+$is
+{
+	$branchblock [conv_block]
+	{
+		num_row := (rb - N_ROWS_generic)
+		num_col := (cb - 1)
+		chl_in := (chl_in_read - 1)
+		ck_s := (($bitcast ($uint<2>) ck) - 1)
+		mode_2 := (rk == 2)
+		not_mode_2 := (~mode_2)
+		
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi row := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done_flag 0 ($mux row_done (row+N_ROWS_generic) row)) $on $loopback
+		$phi col := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done ($mux col_done 0 (col + 1)) col) $on $loopback
+		$phi num := ($bitcast ($uint<2>) 0) $on $entry ($mux chl_done ($mux num_done 0 (num+1)) num) $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done 0 (chl + 1)) $on $loopback
+		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry (chl_out_var + ($mux chl_done_flag 1 0)) $on $loopback
+		$endmerge
+		
+		// $call timer (7) (time_pipe)
+
+		$volatile nd := (num == ck_s)
+		$volatile read_ip := ((col == 0) | nd)
+		$volatile not_read_ip := (~read_ip)
+		$volatile write_input := ((col < num_col) & (num > 0))
+		$volatile read_k := ((col == 0) & (row == 0))
+		$volatile not_read_k := (~read_k)
+		$volatile chl_done := (chl == chl_in)
+		$volatile num_done := (nd & chl_done)
+		$volatile col_done := (col == num_col)
+		$volatile row_done := (col_done & num_done)
+		$volatile out_done_flag := (row >= num_row)
+		$volatile store_kernel := (out_done_flag ~& col_done)
+		$volatile chl_done_flag := (out_done_flag & row_done)
+		$volatile all_done_flag := ((chl_out_var == chl_out) & chl_done_flag)
+		
+		$volatile read_ip3 := (not_mode_2 & read_ip)
+		$volatile not_read_ip3 := (not_mode_2 & not_read_ip)
+		$volatile write_input3 := (write_input & not_mode_2)
+		
+		
+		
+		
+		// Start of macro_file2
+
+		$guard (read_ip ) temp2_1 := core_ip_generic1
+		$guard (not_read_ip ) temp1_1 := conv_ip_generic1
+		
+		$volatile iread1 := ($mux read_ip temp2_1 temp1_1 )
+		$guard (write_input) conv_ip_generic1 := iread1
+				
+		$volatile ival1_1 := ($bitcast ($int<8>) iread1 )
+
+		
+// End of macro_file2
+
+		
+		// Start of macro_file2
+
+		$guard (read_ip ) temp2_2 := core_ip_generic2
+		$guard (not_read_ip ) temp1_2 := conv_ip_generic2
+		
+		$volatile iread2 := ($mux read_ip temp2_2 temp1_2 )
+		$guard (write_input) conv_ip_generic2 := iread2
+				
+		$volatile ival1_2 := ($bitcast ($int<8>) iread2 )
+
+		
+// End of macro_file2
+
+		
+		// Start of macro_file2
+
+		$guard (read_ip ) temp2_3 := core_ip_generic3
+		$guard (not_read_ip ) temp1_3 := conv_ip_generic3
+		
+		$volatile iread3 := ($mux read_ip temp2_3 temp1_3 )
+		$guard (write_input) conv_ip_generic3 := iread3
+				
+		$volatile ival1_3 := ($bitcast ($int<8>) iread3 )
+
+		
+// End of macro_file2
+
+		
+		
+		
+		
+		
+		// Start of macro_file2
+
+		$guard (read_ip3 ) temp2_4 := core_ip_generic4
+		$guard (not_read_ip3 ) temp1_4 := conv_ip_generic4
+				
+		$volatile iread4 := ($mux mode_2 0 ($mux read_ip temp2_4 temp1_4 ))
+		$guard (write_input3) conv_ip_generic4 := iread4
+		
+		$volatile ival1_4 := ($bitcast ($int<8>) iread4 )
+
+		
+// End of macro_file2
+
+		
+		
+		$volatile readk_3 := (read_k & not_mode_2)
+		$volatile not_readk_3 := (not_read_k & not_mode_2)
+		$volatile store_3 := (store_kernel & not_mode_2)
+		
+		// Start of convInner
+
+		
+		
+		$guard (read_k) tempk1__1 := core_kp1
+		$guard (not_read_k) tempk2__1 := conv_kp1
+		kread__1 := ($mux read_k tempk1__1 tempk2__1 )
+
+		kval__1_1 := ($bitcast ($int<8>) kread__1 )
+
+
+		
+		t_acc_val__1 := ($cast ($int<16>) (kval__1_1 * ival1_1 ))
+		
+		t_acc_val__4 := ($cast ($int<16>) (kval__1_1 * ival1_2 ))
+		
+		
+		
+		$guard (read_k) tempk1__2 := core_kp2
+		$guard (not_read_k) tempk2__2 := conv_kp2
+		kread__2 := ($mux read_k tempk1__2 tempk2__2 )
+
+		kval__1_2 := ($bitcast ($int<8>) kread__2 )
+
+
+		
+		t_acc_val__2 := ($cast ($int<16>) (kval__1_2 * ival1_2 ))
+		
+		t_acc_val__5 := ($cast ($int<16>) (kval__1_2 * ival1_3 ))
+		
+		
+		//
+		$guard (readk_3) tempk1__3 := core_kp3
+		$guard (not_readk_3) tempk2__3 := conv_kp3
+		kread__3 := ($mux mode_2 0 ($mux read_k tempk1__3 tempk2__3 ))
+
+		kval__1_3 := ($bitcast ($int<8>) kread__3 )
+
+
+		
+		t_acc_val__3 := ($cast ($int<16>) (kval__1_3 * ival1_3 ))
+		
+		t_acc_val__6 := ($cast ($int<16>) (kval__1_3 * ival1_4 ))
+
+		acc_val1 :=  ((t_acc_val__1 + t_acc_val__2) + t_acc_val__3)
+		acc_val2 :=  ((t_acc_val__4 + t_acc_val__5) + t_acc_val__6)
+
+
+		$guard (store_kernel) conv_kp1 := kread__1
+		$guard (store_kernel) conv_kp2 := kread__2
+		$guard (store_3) conv_kp3 := kread__3
+		
+// End of convInner
+
+		
+		//send_val := ($mux (acc_val < 0) 0 acc_val)
+			acc_pipe1 := ($bitcast ($uint<ACC_WIDTH_generic>) acc_val1)
+			acc_pipe2 := ($bitcast ($uint<ACC_WIDTH_generic>) acc_val2)
+
+		$while (~all_done_flag)
+		// $call timer (102) (time_pipe)
+	}
+}
+
+$module [acc_generic] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
+{
+	$branchblock [acc_blk]
+	{
+		acc_count := ((chl_in * ck) - 1)
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
+		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
+		$phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
+		$phi op_count := ($bitcast ($uint<32>) 0) $on $entry nop_count $on $loopback
+		$phi t1 := acc_pipe1 $on $entry, $loopback
+		$phi r1 := acc_pipe2 $on $entry, $loopback
+		$endmerge
+		
+//		$call timer (8) (time_pipe)
+		
+		$volatile num_done := (c_count == acc_count)
+		$volatile nc_count := ($mux num_done 0 (c_count+1))
+		$volatile nop_count := ($mux num_done (op_count+1) op_count)
+
+		//rd1 := acc_pipe1
+		//rd2 := acc_pipe2
+		//$split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
+		$volatile acc_val1_1 := (acc1_1 + t1)
+		
+//		$split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
+		$volatile acc_val1_2 := (acc1_2 + r1)
+		
+		$guard (num_done) output_pipe1 := acc_val1_1
+		$guard (num_done) output_pipe2 := acc_val1_2
+			
+//		$guard (num_done) $call timer (9) (time_pipe)
+		
+		$while (nop_count < op_size)
+		// $call timer (103) (time_pipe)
+	}
+}
+
+
+//
+
+$opaque $module [sendModule_generic] $in (rb cb chl_out shift_val : $uint<16> activation : $uint<8> index : $uint<8>) $out () $is
+{
+	$branchblock [sendBlock]{
+		row_size := ($bitcast ($uint<32>) (chl_out*cb))
+		three_row_size := (row_size+(row_size<<1))
+		chl_out_1 := (chl_out - 1)
+		apply_relu := (activation == 1)
+
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address1 := ($bitcast ($uint<32>) 0) $on $entry n_address1 $on $loopback
+		$phi address2 := ($bitcast ($uint<32>) row_size) $on $entry n_address2 $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
+		$phi col := ($bitcast ($uint<16>) 1) $on $entry n_col $on $loopback
+		$phi row := ($bitcast ($uint<16>) 1) $on $entry n_row $on $loopback
+		$endmerge
+
+		$volatile row_change := (col == cb)
+		
+		// $call timer (6) (time_pipe)
+
+		// Check this later - odd values of row will be incorrect
+		$volatile chl_change := (row_change & (row >= (rb - 1)))
+		$volatile n_col := ($mux row_change 1 (col + 1))
+		$volatile n_row := ($mux chl_change 1 ($mux row_change (row + N_ROWS_generic) row))
+		$volatile n_chl := ($mux chl_change (chl+1) chl)
+		
+		$volatile tmp1 := (address1 + ($bitcast ($uint<32>) chl_out))
+		$volatile tmp2 := (address2 + ($bitcast ($uint<32>) chl_out))
+		$volatile tmp_sum := ($mux row_change row_size 0)
+		$volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) (tmp1 + tmp_sum))
+		$volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) (tmp2 + tmp_sum))
+		
+		$volatile add1 := (address1>>3)
+		$volatile add2 := (address2>>3)
+		
+		read_val1_1 := output_pipe1
+		read_val1_2 := output_pipe2
+		$volatile tmp1_1 := ($mux (apply_relu & ((read_val1_1[]{ACC_WIDTH_generic-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_1 >> shift_val)))
+		$volatile tmp1_2 := ($mux (apply_relu & ((read_val1_2[]{ACC_WIDTH_generic-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_2 >> shift_val)))
+		$volatile shift1 := (($bitcast ($uint<64>) (7 - (address1 & 7)))<<3)
+		$volatile shift2 := (($bitcast ($uint<64>) (7 - (address2 & 7)))<<3)
+		$volatile bitmask1 := (($bitcast ($uint<64>) 255) << shift1)
+		$volatile rev_bm1 := (~bitmask1)
+		$volatile bitmask2 := (($bitcast ($uint<64>) 255) << shift2)
+		$volatile rev_bm2 := (~bitmask2)
+		
+		$volatile same_write := (add1 == add2)
+		$call readModule_convolution2 (index add1) (fetch_val1)
+		$guard (~same_write) $call readModule_convolution2 (index add2) (fetch_val2)
+		$volatile rd1 := ((($bitcast ($uint<64>) tmp1_1) << shift1) + ($mux same_write ((($bitcast ($uint<64>) tmp1_2) << shift2) + ((fetch_val1 & rev_bm1) & rev_bm2)) (fetch_val1 & rev_bm1)))
+		$guard (~same_write)  $volatile rd2 := ((($bitcast ($uint<64>) tmp1_2) << shift2) + (fetch_val2 & rev_bm2))
+		
+		$call writeModule_convolution (index add1 rd1) (a1)
+        $guard (~same_write) $call writeModule_convolution (index add2 rd2) (a2)
+
+		continue_flag := ((chl < chl_out_1) | (~chl_change))
+		$while continue_flag
+		// $call timer (104) (time_pipe)
+	}
+}
+
+

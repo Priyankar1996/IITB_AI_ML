@@ -1,0 +1,7 @@
+digraph data_path {
+  type_cast_1184_wire_constant [shape=ellipse];
+  RPIPE_timer_resp_1187_inst [shape=rectangle];
+RPIPE_timer_resp_1187_inst -> T;
+  WPIPE_timer_req_1182_inst [shape=rectangle];
+type_cast_1184_wire_constant  -> WPIPE_timer_req_1182_inst;
+}

@@ -1,0 +1,46 @@
+// Access the input tensor and write to iput pipe
+$module [access_T]
+$in(row_in ct chl_in chl_out rk: $uint<16> index : $uint<8>)
+$out()
+$is
+{
+    $branchblock [access_block]
+    {
+        m_factor := ($bitcast ($uint<32>) (ct * chl_in))
+        m2_factor := (m_factor << 1)
+        m3_factor := (m2_factor+m_factor)
+        m4_factor := (m_factor << 2)
+        mode_3 := (rk == 3)
+
+        // Pipeline for sending inputs
+        $dopipeline $depth 15 $buffering 2 $fullrate
+        $merge $entry $loopback
+        $phi address := 0 $on $entry n_address $on $loopback
+        $phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+        $phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
+        $phi mycounter := ($bitcast ($uint<32>) 1) $on $entry n_mycounter $on $loopback
+        $endmerge
+        
+        // $call timer (4) (time_pipe)
+        $volatile next_row :=  (mycounter == m_factor)
+		$volatile tmp_cnt := (mycounter + 1)
+		$volatile n_mycounter := ($mux next_row 1 tmp_cnt ) 
+        $volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
+        $volatile continue_flag1 := (update_row < row_in)
+        
+        $volatile n_row1 := ($mux continue_flag1 update_row 0)
+        $volatile n_address := ($mux continue_flag1 ((address + 1) + ($mux next_row m_factor  0)) 0)
+        
+        $call readModule_convolution (index address) (core_ip1)
+        $call readModule_convolution (index (address+($bitcast ($uint<32>) m_factor) )) (core_ip2)
+        $call readModule_convolution (index (address+($bitcast ($uint<32>) m2_factor) )) (core_ip3)
+        $guard (mode_3) $call readModule_convolution (index (address+($bitcast ($uint<32>) m3_factor) )) (core_ip4)
+
+        $volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
+        $volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
+
+        $while not_end_flag
+
+        // $call timer (101) (time_pipe)
+    }
+}

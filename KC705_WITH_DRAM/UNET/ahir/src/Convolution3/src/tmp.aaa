@@ -1,0 +1,118 @@
+//
+
+
+$module [sendModule] $in (rb cb chl_out chl_in shift_val : $uint<16>) $out () $is
+{
+    $branchblock [sendBlock]{
+        max_count := ($bitcast ($uint<32>) (rb*cb))
+        row_size := ($bitcast ($uint<32>) (chl_out*cb))
+        three_row_size := (row_size+(row_size<<1))
+        acc_count := ((chl_in * 3) - 1)
+
+        $dopipeline $depth 15 $buffering 2 $fullrate
+        $merge $entry $loopback
+        $phi address1 := ($bitcast ($uint<32>) 0) $on $entry n_address1 $on $loopback
+        $phi address2 := ($bitcast ($uint<32>) row_size) $on $entry n_address2 $on $loopback
+        $phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
+        $phi col := ($bitcast ($uint<16>) 1) $on $entry n_col $on $loopback
+        $phi row := ($bitcast ($uint<16>) 1) $on $entry n_row $on $loopback
+        $phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
+        $phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
+        $phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
+        $phi acc2_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val2_1) $on $loopback
+        $phi acc2_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val2_2) $on $loopback
+        $phi acc3_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val3_1) $on $loopback
+        $phi acc3_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val3_2) $on $loopback
+        $phi acc4_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val4_1) $on $loopback
+        $phi acc4_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val4_2) $on $loopback
+        $phi acc5_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val5_1) $on $loopback
+        $phi acc5_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val5_2) $on $loopback
+        $phi acc6_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val6_1) $on $loopback
+        $phi acc6_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val6_2) $on $loopback
+        $phi acc7_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val7_1) $on $loopback
+        $phi acc7_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val7_2) $on $loopback
+        $phi acc8_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val8_1) $on $loopback
+        $phi acc8_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val8_2) $on $loopback
+        $endmerge
+        
+        $volatile num_done := (c_count == acc_count)
+        $volatile nc_count := ($mux num_done 0 (c_count+1))
+
+        $volatile row_change := ((col == cb) & num_done)
+        
+        //$call timer (6) (time_pipe)
+
+        // Check this later - odd values of row will be incorrect
+        $volatile chl_change := (row_change & (row >= (rb - 1)))
+        $volatile n_col := ($mux num_done ($mux row_change 1 (col + 1)) col)
+        $volatile n_row := ($mux chl_change 1 ($mux row_change (row + N_ROWS_S) row))
+        $volatile n_chl := ($mux chl_change (chl+1) chl)
+        
+        t1 := acc_pipe1_1
+        t2 := acc_pipe1_2
+        t3 := acc_pipe1_3
+        t4 := acc_pipe1_4
+        t5 := acc_pipe1_5
+        t6 := acc_pipe1_6
+        t7 := acc_pipe1_7
+        t8 := acc_pipe1_8
+        r1 := acc_pipe2_1
+        r2 := acc_pipe2_2
+        r3 := acc_pipe2_3
+        r4 := acc_pipe2_4
+        r5 := acc_pipe2_5
+        r6 := acc_pipe2_6
+        r7 := acc_pipe2_7
+        r8 := acc_pipe2_8
+        acc_val1_1 := (acc1_1 + t1)
+        acc_val2_1 := (acc2_1 + t2)
+        acc_val3_1 := (acc3_1 + t3)
+        acc_val4_1 := (acc4_1 + t4)
+        acc_val5_1 := (acc5_1 + t5)
+        acc_val6_1 := (acc6_1 + t6)
+        acc_val7_1 := (acc7_1 + t7)
+        acc_val8_1 := (acc8_1 + t8)
+        
+        acc_val1_2 := (acc1_2 + r1)
+        acc_val2_2 := (acc2_2 + r2)
+        acc_val3_2 := (acc3_2 + r3)
+        acc_val4_2 := (acc4_2 + r4)
+        acc_val5_2 := (acc5_2 + r5)
+        acc_val6_2 := (acc6_2 + r6)
+        acc_val7_2 := (acc7_2 + r7)
+        acc_val8_2 := (acc8_2 + r8)
+        
+        $volatile tmp1 := (address1 + ($mux num_done ($bitcast ($uint<32>) chl_out) 0))
+        $volatile tmp2 := (address2 + ($mux num_done ($bitcast ($uint<32>) chl_out) 0))
+        $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) ($mux row_change (tmp1+row_size) tmp1))
+        $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) ($mux row_change (tmp2+row_size) tmp2))
+        
+        ptr1 := @(B[($bitcast ($uint<32>) 0)][address1])
+        ptr2 := @(B[($bitcast ($uint<32>) 0)][address2])
+        tmp1_1 := ($bitcast ($uint<8>) (acc_val1_1 >> shift_val))
+        tmp2_1 := ($bitcast ($uint<8>) (acc_val2_1 >> shift_val))
+        tmp3_1 := ($bitcast ($uint<8>) (acc_val3_1 >> shift_val))
+        tmp4_1 := ($bitcast ($uint<8>) (acc_val4_1 >> shift_val))
+        tmp5_1 := ($bitcast ($uint<8>) (acc_val5_1 >> shift_val))
+        tmp6_1 := ($bitcast ($uint<8>) (acc_val6_1 >> shift_val))
+        tmp7_1 := ($bitcast ($uint<8>) (acc_val7_1 >> shift_val))
+        tmp8_1 := ($bitcast ($uint<8>) (acc_val8_1 >> shift_val))
+        tmp1_2 := ($bitcast ($uint<8>) (acc_val1_2 >> shift_val))
+        tmp2_2 := ($bitcast ($uint<8>) (acc_val2_2 >> shift_val))
+        tmp3_2 := ($bitcast ($uint<8>) (acc_val3_2 >> shift_val))
+        tmp4_2 := ($bitcast ($uint<8>) (acc_val4_2 >> shift_val))
+        tmp5_2 := ($bitcast ($uint<8>) (acc_val5_2 >> shift_val))
+        tmp6_2 := ($bitcast ($uint<8>) (acc_val6_2 >> shift_val))
+        tmp7_2 := ($bitcast ($uint<8>) (acc_val7_2 >> shift_val))
+        tmp8_2 := ($bitcast ($uint<8>) (acc_val8_2 >> shift_val))
+        $volatile rd1 := ($concat tmp1_1 tmp2_1 tmp3_1 tmp4_1 tmp5_1 tmp6_1 tmp7_1 tmp8_1)
+        $volatile rd2 := ($concat tmp1_2 tmp2_2 tmp3_2 tmp4_2 tmp5_2 tmp6_2 tmp7_2 tmp8_2)
+        $guard (num_done) ->(ptr1) := rd1
+        $guard (num_done) ->(ptr2) := rd2
+
+        continue_flag := ((chl < (chl_out - 1)) | (~chl_change))
+        $while continue_flag
+        input_done_pipe := 1
+        $call timer (20) (time_pipe)
+    }
+}

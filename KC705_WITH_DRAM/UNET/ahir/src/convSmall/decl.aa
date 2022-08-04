@@ -1,0 +1,30 @@
+$parameter SMALL_PIPE_WIDTH 8
+$parameter INTERMEDIATE_PIPE_DEPTH_generic 16
+$parameter SMALL_PIPE_DEPTH_generic_generic_generic 4
+$parameter IP_DEPTH_SMALL 2048
+$parameter K_DEPTH_SMALL 2048
+$parameter N_ROWS_generic 2
+$parameter ACC_WIDTH_generic 16
+
+$pipe core_kp1 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_kp2 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_kp3 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+
+$pipe core_ip_generic1 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_ip_generic2 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_ip_generic3 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+$pipe core_ip_generic4 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
+
+$pipe output_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+$pipe output_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+
+$pipe acc_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+$pipe acc_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+
+$pipe conv_ip_generic1 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_ip_generic2 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_ip_generic3 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_ip_generic4 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
+$pipe conv_kp1 : $uint<SMALL_PIPE_WIDTH> $depth K_DEPTH_SMALL
+$pipe conv_kp2 : $uint<SMALL_PIPE_WIDTH> $depth K_DEPTH_SMALL
+$pipe conv_kp3 : $uint<SMALL_PIPE_WIDTH> $depth K_DEPTH_SMALL

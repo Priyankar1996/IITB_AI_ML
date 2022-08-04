@@ -1,0 +1,35 @@
+$opaque $module [readModule1]
+$in (address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+	$call memoryModule (1 (output_base + address) 0) (data)
+}
+
+$opaque $module [writeModule1]
+$in (address : $uint<32> data : $uint<64>)
+$out ()
+$is
+{
+	$call memoryModule (0 (input_base + address) data) (out1)
+}
+
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [readModule_maxPool]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+	$call memoryModule (1 (input_base + address) 0) (data)
+	
+}
+
+$pipeline $depth 8 $buffering 1 $fullrate
+$opaque $module [writeModule_maxPool]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out (done : $uint<1>)
+$is
+{
+	$call memoryModule (0 (output_base + address) data) (out1)
+	done := (index [] 0)
+}

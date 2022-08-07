@@ -1,3 +1,0 @@
-Info: Baudrate 115200 ClkFreq 100000000:  Baud-freq = 288, Baud-limit= 15337 Baud-control=0x3be90120
-Info: Baudrate 115200 ClkFreq 80000000:   Baud-freq = 72, Baud-limit= 3053 Baud-control=0x0bed0048
-Info: Baudrate 115200 ClkFreq 50000000:   Baud-freq = 576, Baud-limit= 15049 Baud-control=0x3ac90240

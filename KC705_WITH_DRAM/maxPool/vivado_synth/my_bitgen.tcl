@@ -39,8 +39,8 @@ read_ip ../ip/fifo_generator_4/fifo_generator_4.xci
 #read_ip ../ip/clk_wiz_0.xci
 
 ## core edif file
-read_edif ../ngc/processor_1x1x32.ngc 
-read_edif ../ngc/processor_1x2x32.ngc
+# read_edif ../ngc/processor_1x1x32.ngc 
+# read_edif ../ngc/processor_1x2x32.ngc
 
 ############### SYNTHESIZE ##############
 

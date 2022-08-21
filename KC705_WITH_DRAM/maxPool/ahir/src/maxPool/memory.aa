@@ -74,6 +74,7 @@ $is
     $volatile t82 := ($mux (a38 > a48) a38 a48)
     $volatile out8 := ($mux (t81 > t82) t81 t82)
     $call writeModule_maxPool (index2 addr ($concat ($bitcast ($uint<8>) out1) ($bitcast ($uint<8>) out2) ($bitcast ($uint<8>) out3) ($bitcast ($uint<8>) out4) ($bitcast ($uint<8>) out5) ($bitcast ($uint<8>) out6) ($bitcast ($uint<8>) out7) ($bitcast ($uint<8>) out8)) ) (d1)
+    system_output_pipe := ($bitcast ($uint<8>) addr1)
 
     output := ($bitcast ($uint<8>) out1)
 }

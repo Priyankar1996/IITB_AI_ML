@@ -375,12 +375,12 @@ begin
   CPU_MODE <= PROCESSOR_MODE ( 1 downto 0);
 
   processor: ahir_system port map(
-    				system_input_pipe_pipe_write_data  => CONSOLE_to_SERIAL_RX_pipe_write_data ,
-    				system_input_pipe_pipe_write_req  => CONSOLE_to_SERIAL_RX_pipe_write_req ,
-    				system_input_pipe_pipe_write_ack  => CONSOLE_to_SERIAL_RX_pipe_write_ack ,
-    				system_output_pipe_pipe_read_data => SERIAL_TX_to_CONSOLE_pipe_read_data,
-    				system_output_pipe_pipe_read_req  => SERIAL_TX_to_CONSOLE_pipe_read_req ,
-    				system_output_pipe_pipe_read_ack   => SERIAL_TX_to_CONSOLE_pipe_read_ack  ,
+    				system_input_pipe_pipe_write_data  => MONITOR_to_DEBUG_pipe_write_data ,
+    				system_input_pipe_pipe_write_req  => MONITOR_to_DEBUG_pipe_write_req ,
+    				system_input_pipe_pipe_write_ack  => MONITOR_to_DEBUG_pipe_write_ack ,
+    				system_output_pipe_pipe_read_data => DEBUG_to_MONITOR_pipe_read_data,
+    				system_output_pipe_pipe_read_req  => DEBUG_to_MONITOR_pipe_read_req ,
+    				system_output_pipe_pipe_read_ack   => DEBUG_to_MONITOR_pipe_read_ack  ,
       				MAIN_MEM_RESPONSE_pipe_write_data => MAIN_MEM_RESPONSE_pipe_write_data, 
       				MAIN_MEM_RESPONSE_pipe_write_req => MAIN_MEM_RESPONSE_pipe_write_req,
       				MAIN_MEM_RESPONSE_pipe_write_ack => MAIN_MEM_RESPONSE_pipe_write_ack,

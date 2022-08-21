@@ -33,10 +33,10 @@ uint8_t maxPool4(uint32_t ad, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4
 	while(1)\
 	{\
 		__loop_pipeline_var__\
+		address = ((chl+offset1*(col+dim1*row)));\
 		add_src = chl+((offset1*(col+dim1d*row))<<1);\
 		uint8_t done = maxPool4(address,add_src,add_src+offset1,add_src+offset2,add_src+offset3, index1, index2);\
 		__increment_mm__(row,col,chl,ce,offset1);\
-		address += 1;\
 		if (row == re) break;\
 	}\
 	row;\

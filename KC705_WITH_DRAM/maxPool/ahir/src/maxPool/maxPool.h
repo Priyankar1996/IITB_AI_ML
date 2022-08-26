@@ -49,5 +49,5 @@ void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t 
 	uint16_t dim1d = ct;
 	uint16_t offset1 = chl_out>>3, offset2 = dim1d*offset1;
 	uint8_t row = __maxPoolOfTensors3D_div__(re,ce,dim1d,ce,offset1,offset2, index_in, index_out);
-	write_uint8("system_output_pipe",row);
+	//write_uint8("system_output_pipe",row);
 }

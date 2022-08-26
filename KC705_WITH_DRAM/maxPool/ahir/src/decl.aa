@@ -45,8 +45,8 @@ $record [structx_x__SizedTensor_1M] < $array [{1024*1024}] $of $uint<64> >
 //$storage Tensor4 : structx_x__SizedTensor_128K
 
 
-$parameter input_base 0
-$parameter output_base 0
+$parameter input_base {8 * {4096*4096} }
+$parameter output_base {8 * {4096 * 4096} }
 
 $pipe MAIN_MEM_REQUEST : $uint<110> $depth 16
 $pipe MAIN_MEM_RESPONSE : $uint<65> $depth 16
@@ -57,6 +57,8 @@ $in (r_wbar : $uint<1> addr : $uint<32> data_in : $uint<64>)
 $out (data_out : $uint<64>)
 $is
 {
-	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar $one<8> $zero<4> addr data_in)
-	$split (MAIN_MEM_RESPONSE 1 64) (error data_out)
+	//system_output_pipe := 200
+	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar ($bitcast ($uint<8>) 255) $zero<1> addr $zero<3> data_in)
+	read_from_mem := MAIN_MEM_RESPONSE
+	$split (read_from_mem 1 64) (error data_out)
 }

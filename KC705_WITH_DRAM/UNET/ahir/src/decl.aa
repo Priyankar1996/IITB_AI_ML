@@ -55,6 +55,12 @@ $parameter K_base 0
 $pipe MAIN_MEM_REQUEST : $uint<110> $depth 16
 $pipe MAIN_MEM_RESPONSE : $uint<65> $depth 16
 
+$foreign $module [memoryModelC]
+ 	$in (rwbar: $uint<8> a32: $uint<32> wdata: $uint<64>
+	$out (rdata: $uint<64>)
+
+
+
 $pipeline $depth 15 $fullrate
 $module [memoryModule]
 $in (r_wbar : $uint<1> addr : $uint<32> data_in : $uint<64>)
@@ -63,5 +69,21 @@ $is
 {
 	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar $one<8> $zero<4> addr data_in)
 	$split (MAIN_MEM_RESPONSE 1 64) (error data_out)
+}
+
+$module [memoryModelDaemon]
+$in () $out ()
+$is
+{
+	$branchblock[loop] {
+		$merge $entry loopback $endmerge
+		req  := MAIN_MEM_REQUEST
+		$split (req 1 1 8 36 64) (lock rwbar bmask a36 wdata64)
+		$call memoryModelC (($bitcast ($uint<8>) rwbar ($slice a36 31 0) wdata64) (rdata64)
+
+		$volatile resp := ($concat $zero<1> rdata64)
+		MAIN_MEM_RESPONSE := resp
+		$place[loopback]
+	}
 }
 

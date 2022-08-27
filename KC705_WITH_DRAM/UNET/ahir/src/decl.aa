@@ -44,13 +44,15 @@ $record [structx_x__SizedTensor_1M] < $array [{1024*1024}] $of $uint<64> >
 //$storage Tensor3 : structx_x__SizedTensor_256K
 //$storage Tensor4 : structx_x__SizedTensor_128K
 
-
-$parameter T0_base 0
-$parameter T1_base 0
-$parameter T2_base 0
-$parameter T3_base 0
-$parameter T4_base 0
-$parameter K_base 0
+$parameter FLASH_END {8*{4096*4096}}
+$parameter KB2WORD 128
+$parameter MB2WORD {128*1024}
+$parameter T0_base FLASH_END
+$parameter T1_base {FLASH_END+{512*KB2WORD}}
+$parameter T2_base {T1_base + MB2WORD}
+$parameter T3_base {T2_base+{512*KB2WORD}}
+$parameter T4_base {T3_base+{256*KB2WORD}}
+$parameter K_base {T4_base+{128*KB2WORD}}
 
 $pipe MAIN_MEM_REQUEST : $uint<110> $depth 16
 $pipe MAIN_MEM_RESPONSE : $uint<65> $depth 16
@@ -60,15 +62,16 @@ $foreign $module [memoryModelC]
 	$out (rdata: $uint<64>)
 
 
-
 $pipeline $depth 15 $fullrate
 $module [memoryModule]
 $in (r_wbar : $uint<1> addr : $uint<32> data_in : $uint<64>)
 $out (data_out : $uint<64>)
 $is
 {
-	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar $one<8> $zero<4> addr data_in)
-	$split (MAIN_MEM_RESPONSE 1 64) (error data_out)
+	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar ($bitcast ($uint<8>) 255) $zero<1> addr $zero<3> data_in)
+    read_from_mem := MAIN_MEM_RESPONSE
+    $split (read_from_mem 1 64) (error data_out)
+
 }
 
 $module [memoryModelDaemon]

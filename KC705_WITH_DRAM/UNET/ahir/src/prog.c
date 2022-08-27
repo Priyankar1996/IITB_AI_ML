@@ -79,13 +79,6 @@ void readFromSystemPipe(uint8_t index)
 	}
 }
 
-void fill_input()
-{
-    // kernels followed by input tensor
-    uint8_t i;
-    for (i = 0; i < 19; i++) readFromSystemPipe(i);
-}
-
 void sendOutput()
 {
 	uint32_t i;
@@ -98,7 +91,8 @@ void sendOutput()
 void systemTOP()
 {
     // 0
-    fill_input();
+    readFromSystemPipe(1);
+    readFromSystemPipe(0);
     uint64_t start_time = timer();
 	// 0 -> 1
 	zeropad(224,224,3,226,226,3,0,1);
@@ -108,26 +102,31 @@ void systemTOP()
     zeropad(224,224,64,226,226,64,0,1);
     // 1 -> 2
     convolution3D_3(224,224,64,64,3,3,1,1,2,226,0,relu);
+    readFromSystemPipe(0);
     // 2 -> 0
     maxPool3D(112,112,224,64,2,0);
     // 0 -> 1
     zeropad(112,112,64,114,114,64,0,1);
     // 1 -> 0
     convolution3D_3(112,112,128,64,3,3,1,2,0,114,0,relu);
+    readFromSystemPipe(0);
     // 0 -> 1
     zeropad(112,112,128,114,114,128,0,1);
     // 1 -> 3
     convolution3D_3(112,112,128,128,3,3,1,3,3,114,0,relu);
+    readFromSystemPipe(0);
     // 3 -> 0
     maxPool3D(56,56,112,128,3,0);
     // 0 -> 1
     zeropad(56,56,112,58,58,112,0,1);
     // 1 -> 0
     convolution3D_3(56,56,256,128,3,3,1,4,0,58,0,relu);
+    readFromSystemPipe(0);
     // 0 -> 1
     zeropad(56,56,256,58,58,256,0,1);
     // 1 -> 4
     convolution3D_3(56,56,256,256,3,3,1,5,4,58,0,relu);
+    readFromSystemPipe(0);
     // 4 -> 0
     maxPool3D(28,28,56,256,4,0);
 
@@ -135,56 +134,66 @@ void systemTOP()
     zeropad(28,28,512,30,30,512,0,1);
     // 1 -> 0
     convolution3D_3(28,28,512,256,3,3,1,6,0,30,0,relu);
+    readFromSystemPipe(0);
     // 0 -> 1
     zeropad(28,28,512,30,30,512,0,1);
     // 1 -> 0
     convolution3D_3(28,28,512,512,3,3,1,7,0,30,0,relu);
-
+	readFromSystemPipe(0);
 
     // 0 -> 1
     convTranspose(28,28,512,2,2,2,0,57,57,512,0,1);
     // 1 -> 0
     convolution3D_3(56,56,256,512,2,2,1,8,0,57,0,relu);
+    readFromSystemPipe(0);
     // 4,0 -> 1
     concat(56,56,256,56,56,256,56,56,512,4,0,1);
     // 1 -> 0
     zeropad(56,56,512,58,58,512,1,0);
     // 0 -> 1
     convolution3D_3(56,56,256,512,3,3,0,9,1,58,0,relu);
+    readFromSystemPipe(0);
     // 1 -> 0
     zeropad(56,56,256,58,58,256,1,0);
     // 0 -> 1
     convolution3D_3(56,56,256,256,3,3,0,10,1,58,0,relu);
+    readFromSystemPipe(0);
     
     // 1 -> 0
     convTranspose(56,56,256,2,2,2,0,113,113,256,1,0);
     // 0 -> 1
     convolution3D_3(112,112,128,256,2,2,0,11,1,113,0,relu);
+    readFromSystemPipe(0);
     // 3,1 -> 0
     concat(112,112,128,112,112,128,112,112,256,3,1,0);
     // 0 -> 1
     zeropad(112,112,256,114,114,256,0,1);
     // 1 -> 0
     convolution3D_3(112,112,128,256,3,3,1,12,0,114,0,relu);
+    readFromSystemPipe(0);
     // 0 -> 1
     zeropad(112,112,128,114,114,128,0,1);
     // 1 -> 0
     convolution3D_3(112,112,128,128,3,3,1,13,0,114,0,relu);
+    readFromSystemPipe(0);
 
     // 0 -> 1
     convTranspose(112,112,256,2,2,2,0,225,225,256,0,1);
     // 1 -> 0
     convolution3D_3(224,224,64,128,2,2,1,14,0,225,0,relu);
+    readFromSystemPipe(0);
     // 2,0 -> 1
     concat(224,224,64,224,224,64,224,224,128,2,0,1);
     // 1 -> 0
     zeropad(224,224,128,226,226,128,1,0);
     // 0 -> 1
     convolution3D_3(224,224,64,128,3,3,0,15,1,226,0,relu);
+    readFromSystemPipe(0);
     // 1 -> 0
     zeropad(224,224,64,226,226,64,1,0);
     // 0 -> 1
     convolution3D_3(224,224,64,64,3,3,0,16,1,226,0,relu);
+    readFromSystemPipe(0);
 
     // 1 -> 0
     zeropad(224,224,64,226,226,64,1,0);

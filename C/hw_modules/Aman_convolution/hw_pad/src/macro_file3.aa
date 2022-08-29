@@ -1,0 +1,8 @@
+// Start of macro_file3
+
+		mul_val_##core_num\_1_##mul_num := ($cast ($int<16>) (kval_##core_num\_1_##k_num * ival1_##in_num ))
+//		$call multiplier##core_num (ival1_##in_num kval_##core_num\_1_##k_num ) ( mul_val_##core_num\_1_##mul_num )
+
+		t_acc_val_##core_num\_##mul_num := mul_val_##core_num\_1_##mul_num
+		
+// End of macro_file3

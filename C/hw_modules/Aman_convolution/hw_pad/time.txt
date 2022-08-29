@@ -1,0 +1,38 @@
+Input 6*6*3
+Kernel 3*3
+Output 4*4*3
+Time 2852 clock cycles
+
+No ping pong
+Input 6*6*3
+Kernel 3*3
+Output 4*4*3
+Time 4002 clock cycles
+
+30/31 May, 2022
+Using 3 pipes and a store module. No pingpong buffering
+Input 6*6*3
+Kernel 3*3
+Output 4*4*1
+Time 461 clock cycles
+
+Input 6*6*3
+Kernel 3*3
+Output 4*4*3
+Time 1341 clock cycles
+
+1 June, 2022
+Using 4 pipes, i.e. 2x MACs expected
+Input 6*6*3
+Kernel 3*3
+Output 4*4*3
+Time 889 clock cycles
+
+3 June, 2022
+Converted to 8-bit
+Input 6*6*3
+Kernel 3*3
+Output 4*4*3
+Implementation1 Time 856 clock cycles
+Implementation2 Time 914/856 clock cycles
+

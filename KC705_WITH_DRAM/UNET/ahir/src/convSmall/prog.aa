@@ -2,16 +2,16 @@
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionSmall] $in (rb cb chl_out chl_in rk ck: $uint<16> index_in index_k index_out : $uint<8> ct shift_val: $uint<16> activation : $uint<8>) $out() $is
+$module [convolutionSmall] $in (rb cb chl_out chl_in rk ck: $uint<16> index_in index_k index_out : $uint<8> ct shift_val pad : $uint<16> activation : $uint<8>) $out() $is
 {
 	op_size := (($bitcast ($uint<32>) rb) * (($bitcast ($uint<32>)  (cb * chl_out)) >> 1))
 	$parallelblock [topBlocks]
 	{
 		$call kernelModule_generic (chl_in chl_out rk ck index_k) ()
+		$call inputModule_generic (rb ct chl_in chl_out rk pad index_in) ()
 		$call core_generic (rb cb chl_in chl_out rk ck) ()
-		$call sendModule_generic (rb cb chl_out shift_val activation index_out) ()
-		$call inputModule_generic (rb ct chl_in chl_out rk index_in) ()
 		$call acc_generic (chl_in ck op_size) ()
+		$call sendModule_generic (rb cb chl_out shift_val activation index_out) ()
 	}
 }
 

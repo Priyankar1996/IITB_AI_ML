@@ -1,6 +1,6 @@
 $parameter SMALL_PIPE_WIDTH 8
 $parameter INTERMEDIATE_PIPE_DEPTH_generic {64*{1024*1024}} //16
-$parameter SMALL_PIPE_DEPTH_generic_generic_generic {64*{1024*1024}} //4
+$parameter SMALL_PIPE_DEPTH_generic {64*{1024*1024}} //4
 $parameter IP_DEPTH_SMALL  {64*{1024*1024}} //2048
 $parameter K_DEPTH_SMALL  {64*{1024*1024}} //2048
 $parameter N_ROWS_generic 2
@@ -15,11 +15,11 @@ $pipe core_ip_generic2 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_
 $pipe core_ip_generic3 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
 $pipe core_ip_generic4 : $uint<SMALL_PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH_generic
 
-$pipe output_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
-$pipe output_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+$pipe output_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic
+$pipe output_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic
 
-$pipe acc_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
-$pipe acc_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic_generic_generic
+$pipe acc_pipe1 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic
+$pipe acc_pipe2 : $uint<ACC_WIDTH_generic> $depth SMALL_PIPE_DEPTH_generic
 
 $pipe conv_ip_generic1 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
 $pipe conv_ip_generic2 : $uint<SMALL_PIPE_WIDTH> $depth IP_DEPTH_SMALL
@@ -373,8 +373,8 @@ $module [acc_generic] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
 		$phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
 		$phi op_count := ($bitcast ($uint<32>) 0) $on $entry nop_count $on $loopback
-		$phi t1 := acc_pipe1_1 $on $entry, $loopback
-		$phi r1 := acc_pipe2_1 $on $entry, $loopback
+		$phi t1 := acc_pipe1 $on $entry, $loopback
+		$phi r1 := acc_pipe2 $on $entry, $loopback
 		$endmerge
 		
 //		$call timer (8) (time_pipe)

@@ -1,5 +1,0 @@
-        
-        output_data_read##core_num\_1 := output_pipe##core_num
-        output_data_read##core_num\_2 := output_pipe##core_num
-        $split (output_data_read##core_num\_1 8 8) (od##core_num\_1 od##core_num\_2)
-        $split (output_data_read##core_num\_2 8 8) (od##core_num\_3 od##core_num\_4)

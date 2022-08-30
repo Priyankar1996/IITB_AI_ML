@@ -1,8 +1,8 @@
 $parameter SMALL_PIPE_WIDTH 8
-$parameter INTERMEDIATE_PIPE_DEPTH_generic 16
-$parameter SMALL_PIPE_DEPTH_generic_generic_generic 4
-$parameter IP_DEPTH_SMALL 2048
-$parameter K_DEPTH_SMALL 2048
+$parameter INTERMEDIATE_PIPE_DEPTH_generic {64*{1024*1024}} //16
+$parameter SMALL_PIPE_DEPTH_generic_generic_generic {64*{1024*1024}} //4
+$parameter IP_DEPTH_SMALL  {64*{1024*1024}} //2048
+$parameter K_DEPTH_SMALL  {64*{1024*1024}} //2048
 $parameter N_ROWS_generic 2
 $parameter ACC_WIDTH_generic 16
 

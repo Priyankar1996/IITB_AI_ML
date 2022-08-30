@@ -23,7 +23,6 @@ $is
 		$endmerge
 		
 		// $call timer (7) (time_pipe)
-
 		$volatile nd := (num == ck_s)
 		$volatile read_ip := ((col == 0) | nd)
 		$volatile not_read_ip := (~read_ip)
@@ -38,6 +37,7 @@ $is
 		$volatile store_kernel := (out_done_flag ~& col_done)
 		$volatile chl_done_flag := (out_done_flag & row_done)
 		$volatile all_done_flag := ((chl_out_var == chl_out) & chl_done_flag)
+		time_pipe := (($bitcast ($uint<32>) chl_out_var) && ($bitcast ($uint<32>) row))
 		
 		$volatile read_ip3 := (not_mode_2 & read_ip)
 		$volatile not_read_ip3 := (not_mode_2 & not_read_ip)
@@ -71,6 +71,7 @@ $is
 
 		$while (~all_done_flag)
 		// $call timer (102) (time_pipe)
+		time_pipe := 45231
 	}
 }
 
@@ -110,5 +111,6 @@ $module [acc_generic] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		
 		$while (nop_count < op_size)
 		// $call timer (103) (time_pipe)
+		time_pipe := 64521
 	}
 }

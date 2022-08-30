@@ -37,7 +37,7 @@ $is
 
 		$volatile exit_cond := (nxt_chl & (chl_num == chl_out))
 		$while (~exit_cond)
-		// $call timer (100) (time_pipe)
+		time_pipe := 12039
 	}
 }
 

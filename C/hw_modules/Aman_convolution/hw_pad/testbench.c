@@ -145,11 +145,11 @@ int main(int argc, char**argv){
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]&0xFF);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]>>8);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]&0xFF);
-	uint16_t shft_val;
-	fscanf(file,"%hu",&shft_val);
+	uint16_t shft_val = 0;
+	//fscanf(file,"%hu",&shft_val);
 	write_uint8("maxpool_input_pipe",shft_val>>8);
 	write_uint8("maxpool_input_pipe",shft_val&0xFF);
-	fprintf(octaveInFile,"%d\n",shft_val);
+	//fprintf(octaveInFile,"%d\n",shft_val);
 	
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);

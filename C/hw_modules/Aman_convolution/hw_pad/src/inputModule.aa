@@ -14,17 +14,17 @@ $is
 		m3_factor := (m2_factor+m_factor)
 		m4_factor := (m2_factor << 2)
 		mode_3 := (rk == 3)
+		addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
 
 		// Pipeline for sending inputs
 		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
-		$phi address := (-1*(($bitcast ($uint<32>) pad)*m_factor)) $on $entry n_address $on $loopback
+		$phi address := addr_init $on $entry n_address $on $loopback
 		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
 		$phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
 		$phi mycounter := ($bitcast ($uint<32>) 1) $on $entry n_mycounter $on $loopback
 		$endmerge
 		
-		$call timer (4) (time_pipe)
 		$volatile next_row :=  (mycounter == row_size_total)
 		$volatile tmp_cnt := (mycounter + 1)
 		$volatile n_mycounter := ($mux next_row 1 tmp_cnt )
@@ -33,12 +33,12 @@ $is
 		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
 		
 		$volatile n_row1 := ($mux continue_flag1 update_row 0)
-		$volatile n_address := ($mux continue_flag1 (address + ($mux next_row (m_factor + 1) ($mux mc_lt_p 0 1))) 0)
+		$volatile n_address := ($mux continue_flag1 (address + ($mux next_row m_factor ($mux mc_lt_p 0 1))) addr_init)
 		
-	 	$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= (row_in - (pad-3)))))
-	 	$volatile p2_zero := (mc_lt_p | ((row1 < (pad-1)) | (row1 >= (row_in - (pad-2)))))
-	 	$volatile p3_zero := (mc_lt_p | ((row1 < (pad-2)) | (row1 >= (row_in - (pad-1)))))
-	 	$volatile p4_zero := (mc_lt_p | ((row1 < (pad-3)) | (row1 >= (row_in - pad))))
+	 	$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
+	 	$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
+	 	$volatile p3_zero := (mc_lt_p | (((row1+2) < pad) | (row1 >= ((row_in + 1)- pad))))
+	 	$volatile p4_zero := (mc_lt_p | (((row1+3) < pad) | (row1 >= (row_in - pad))))
 		$volatile addr2 := (address+ m_factor)
 		$volatile addr3 := (address+ m2_factor)
 		$volatile addr4 := (address+ m3_factor)

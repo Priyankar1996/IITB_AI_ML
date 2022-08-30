@@ -25,14 +25,14 @@ LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
 TOPMODULES=-T timerDaemon -T topModule
-
+SRC=./
 
 # five steps from C to vhdl simulator.
 HW: aalink aa2vc  vc2vhdl  vhdlsim
 C2VHDL : aalink aa2vc  vc2vhdl
 fpga : aalink aa2vc  fpga_vc2vhdl
 AA2VHDL: aa2vc vc2vhdl vhdlsim
-
+AA2C : aalink aa2c aa2cbuild
 # link and optimize
 aalink:  src/timer.aa src/prog.aa src/*
 	AaPreprocess -I src/ src/conv_macro.aa -o conv_2.aa
@@ -57,6 +57,15 @@ fpga_vc2vhdl: prog.vc
 	vhdlFormat < ahir_system.unformatted_vhdl > $(FPGA)/ahir_system.vhdl
 	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > $(FPGA)/ahir_system_test_bench.vhdl
 
+aa2c: prog.linked.opt.aa
+	Aa2C $(TOPMODULES) -o aa2c prog.linked.opt.aa
+
+aa2cbuild: aa2c/aa_c_model.c  aa2c/aa_c_model_internal.h aa2c/aa_c_model.h
+	gcc -g -c -DSW -I$(PIPEHANDLER_INCLUDE) -Iaa2c/ aa2c/aa_c_model.c -o aa2c/aa_c_model.o
+	gcc -g -c -DSW -I$(PIPEHANDLER_INCLUDE) -I$(PTHREADUTILS_INCLUDE) -I$(SIZED_TENSOR) -Iaa2c/ -I$(SRC) $(SRC)/testbench.c -o aa2c/testbench.o
+	gcc -g -o testbench_sw aa2c/aa_c_model.o aa2c/testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread -lBitVectors -lSockPipes
+
+
 # build testbench and ghdl executable
 # note the use of SOCKETLIB in building the testbench.
 vhdlsim: TB GHDL
@@ -77,6 +86,6 @@ GHDL: ahir_system.vhdl ahir_system_test_bench.vhdl testbench.c vhdlCStubs.h vhdl
 	ghdl -m --work=work -Wl,-L$(SOCKETLIB_LIB) -Wl,-lVhpi ahir_system_test_bench 
 
 clean:
-	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.aa
+	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.aa aa2c/*
 
 PHONY: all clean	

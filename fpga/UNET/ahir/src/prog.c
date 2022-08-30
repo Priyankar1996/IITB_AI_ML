@@ -23,9 +23,9 @@ void convTranspose(uint16_t inp_dim0,uint16_t inp_dim1,uint16_t inp_dim2,uint16_
 
 void maxPool3D(uint16_t cb, uint16_t rb, uint16_t ct, uint16_t chl_out, uint8_t index_in, uint8_t index_out);
 
-void convolution3D_3 (uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct, uint16_t shift_val, uint8_t activation );
+void convolution3D_3 (uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct, uint16_t shift_val,uint16_t pad,  uint8_t activation );
 
-void convolutionSmall (uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct, uint16_t shift_val, uint8_t activation );
+void convolutionSmall (uint16_t rb, uint16_t cb, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint8_t index_in, uint8_t index_k, uint8_t index_out, uint16_t ct, uint16_t shift_val,uint16_t pad, uint8_t activation );
 
 #define __get8xi8__(element) ({\
 	element = read_uint8("system_input_pipe");\
@@ -71,6 +71,7 @@ void readFromSystemPipe(uint8_t index)
     uint32_t word_count = read_uint8("system_input_pipe"), i;
     word_count = (word_count << 8) + read_uint8("system_input_pipe");
     word_count = (word_count << 8) + read_uint8("system_input_pipe");
+    write_uint64("time_pipe",1000+word_count);
 	uint64_t element;
 	for (i = 0; i < word_count; i++)
 	{
@@ -84,6 +85,7 @@ void fill_input()
     // kernels followed by input tensor
     uint8_t i;
     for (i = 0; i < 19; i++) readFromSystemPipe(i);
+    write_uint64("time_pipe",100+i);
 }
 
 void sendOutput()
@@ -98,98 +100,80 @@ void sendOutput()
 void systemTOP()
 {
     // 0
+    write_uint64("time_pipe",9);
     fill_input();
+    write_uint64("time_pipe",10);
     uint64_t start_time = timer();
-	// 0 -> 1
-	zeropad(224,224,3,226,226,3,0,1);
-    // 1 -> 0
-    convolutionSmall(224,224,64,3,3,3,1,0,0,226,0,relu);
+	write_uint64("time_pipe",11);
     // 0 -> 1
-    zeropad(224,224,64,226,226,64,0,1);
+    convolutionSmall(224,224,64,3,3,3,0,0,1,224,0,1,relu);
+    write_uint64("time_pipe",12);
     // 1 -> 2
-    convolution3D_3(224,224,64,64,3,3,1,1,2,226,0,relu);
+    convolution3D_3(224,224,64,64,3,3,1,1,2,224,0,1,relu);
+    write_uint64("time_pipe",14);
     // 2 -> 0
     maxPool3D(112,112,224,64,2,0);
+    write_uint64("time_pipe",15);
     // 0 -> 1
-    zeropad(112,112,64,114,114,64,0,1);
-    // 1 -> 0
-    convolution3D_3(112,112,128,64,3,3,1,2,0,114,0,relu);
-    // 0 -> 1
-    zeropad(112,112,128,114,114,128,0,1);
+    convolution3D_3(112,112,128,64,3,3,0,2,1,112,0,1,relu);
+    write_uint64("time_pipe",17);
     // 1 -> 3
-    convolution3D_3(112,112,128,128,3,3,1,3,3,114,0,relu);
+    convolution3D_3(112,112,128,128,3,3,1,3,3,112,0,1,relu);
+    write_uint64("time_pipe",19);
     // 3 -> 0
     maxPool3D(56,56,112,128,3,0);
+    write_uint64("time_pipe",20);
     // 0 -> 1
-    zeropad(56,56,112,58,58,112,0,1);
-    // 1 -> 0
-    convolution3D_3(56,56,256,128,3,3,1,4,0,58,0,relu);
-    // 0 -> 1
-    zeropad(56,56,256,58,58,256,0,1);
+    convolution3D_3(56,56,256,128,3,3,0,4,1,56,0,1,relu);
+    write_uint64("time_pipe",22);
     // 1 -> 4
-    convolution3D_3(56,56,256,256,3,3,1,5,4,58,0,relu);
+    convolution3D_3(56,56,256,256,3,3,1,5,4,56,0,1,relu);
+    write_uint64("time_pipe",24);
     // 4 -> 0
     maxPool3D(28,28,56,256,4,0);
+    write_uint64("time_pipe",25);
 
     // 0 -> 1
-    zeropad(28,28,512,30,30,512,0,1);
+    convolution3D_3(28,28,512,256,3,3,0,6,1,28,0,1,relu);
     // 1 -> 0
-    convolution3D_3(28,28,512,256,3,3,1,6,0,30,0,relu);
-    // 0 -> 1
-    zeropad(28,28,512,30,30,512,0,1);
-    // 1 -> 0
-    convolution3D_3(28,28,512,512,3,3,1,7,0,30,0,relu);
+    convolution3D_3(28,28,512,512,3,3,1,7,0,28,0,1,relu);
 
 
     // 0 -> 1
     convTranspose(28,28,512,2,2,2,0,57,57,512,0,1);
     // 1 -> 0
-    convolution3D_3(56,56,256,512,2,2,1,8,0,57,0,relu);
+    convolution3D_3(56,56,256,512,2,2,1,8,0,57,0,0,relu);
     // 4,0 -> 1
     concat(56,56,256,56,56,256,56,56,512,4,0,1);
     // 1 -> 0
-    zeropad(56,56,512,58,58,512,1,0);
+    convolution3D_3(56,56,256,512,3,3,1,9,0,56,0,1,relu);
     // 0 -> 1
-    convolution3D_3(56,56,256,512,3,3,0,9,1,58,0,relu);
-    // 1 -> 0
-    zeropad(56,56,256,58,58,256,1,0);
-    // 0 -> 1
-    convolution3D_3(56,56,256,256,3,3,0,10,1,58,0,relu);
+    convolution3D_3(56,56,256,256,3,3,0,10,1,56,0,1,relu);
     
     // 1 -> 0
     convTranspose(56,56,256,2,2,2,0,113,113,256,1,0);
     // 0 -> 1
-    convolution3D_3(112,112,128,256,2,2,0,11,1,113,0,relu);
+    convolution3D_3(112,112,128,256,2,2,0,11,1,113,0,0,relu);
     // 3,1 -> 0
     concat(112,112,128,112,112,128,112,112,256,3,1,0);
     // 0 -> 1
-    zeropad(112,112,256,114,114,256,0,1);
+    convolution3D_3(112,112,128,256,3,3,0,12,1,112,0,1,relu);
     // 1 -> 0
-    convolution3D_3(112,112,128,256,3,3,1,12,0,114,0,relu);
-    // 0 -> 1
-    zeropad(112,112,128,114,114,128,0,1);
-    // 1 -> 0
-    convolution3D_3(112,112,128,128,3,3,1,13,0,114,0,relu);
+    convolution3D_3(112,112,128,128,3,3,1,13,0,112,0,1,relu);
 
     // 0 -> 1
     convTranspose(112,112,256,2,2,2,0,225,225,256,0,1);
     // 1 -> 0
-    convolution3D_3(224,224,64,128,2,2,1,14,0,225,0,relu);
+    convolution3D_3(224,224,64,128,2,2,1,14,0,225,0,0,relu);
     // 2,0 -> 1
     concat(224,224,64,224,224,64,224,224,128,2,0,1);
     // 1 -> 0
-    zeropad(224,224,128,226,226,128,1,0);
+    convolution3D_3(224,224,64,128,3,3,1,15,0,224,0,1,relu);
     // 0 -> 1
-    convolution3D_3(224,224,64,128,3,3,0,15,1,226,0,relu);
-    // 1 -> 0
-    zeropad(224,224,64,226,226,64,1,0);
-    // 0 -> 1
-    convolution3D_3(224,224,64,64,3,3,0,16,1,226,0,relu);
+    convolution3D_3(224,224,64,64,3,3,0,16,1,224,0,1,relu);
 
     // 1 -> 0
-    zeropad(224,224,64,226,226,64,1,0);
-    // 0 -> 1
-    convolutionSmall(224,224,3,64,3,3,0,17,1,226,0,sigmoid);
+    convolutionSmall(224,224,3,64,3,3,1,17,0,224,0,1,sigmoid);
     uint64_t stop_time = timer();
     uint64_t elapsed_time = stop_time-start_time;
 	uint8_t out_data[8];\

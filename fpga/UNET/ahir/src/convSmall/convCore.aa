@@ -86,8 +86,8 @@ $module [acc_generic] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
 		$phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
 		$phi op_count := ($bitcast ($uint<32>) 0) $on $entry nop_count $on $loopback
-		$phi t1 := acc_pipe1_1 $on $entry, $loopback
-		$phi r1 := acc_pipe2_1 $on $entry, $loopback
+		$phi t1 := acc_pipe1 $on $entry, $loopback
+		$phi r1 := acc_pipe2 $on $entry, $loopback
 		$endmerge
 		
 //		$call timer (8) (time_pipe)
@@ -104,8 +104,8 @@ $module [acc_generic] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 //		$split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
 		$volatile acc_val1_2 := (acc1_2 + r1)
 		
-		$guard (num_done) output_pipe1_1 := acc_val1_1
-		$guard (num_done) output_pipe1_2 := acc_val1_2
+		$guard (num_done) output_pipe1 := acc_val1_1
+		$guard (num_done) output_pipe2 := acc_val1_2
 			
 //		$guard (num_done) $call timer (9) (time_pipe)
 		

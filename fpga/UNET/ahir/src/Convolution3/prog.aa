@@ -1,8 +1,9 @@
 
-$module [convolution3D_3] $in (rb cb chl_out_in chl_in_in rk ck: $uint<16> index_in index_k index_out : $uint<8> ct shift_val pad: $uint<16> activation : $uint<8>) $out() $is
+$module [convolution3D_3] $in (rb cb chl_out_in chl_in_in rk ck: $uint<16> index_in index_k index_out : $uint<8> ct shift_val pad: $uint<16> activation pool: $uint<8>) $out() $is
 {
 	chl_out := (chl_out_in >> 3)
 	chl_in := (chl_in_in >> 3)
+	pool_var := (pool == 0)
     op_size := (($bitcast ($uint<32>) rb) * (($bitcast ($uint<32>)  (cb * chl_out)) >> 1))
     $parallelblock [topBlocks]
     {
@@ -10,7 +11,8 @@ $module [convolution3D_3] $in (rb cb chl_out_in chl_in_in rk ck: $uint<16> index
 	    $call access_T (rb ct chl_in chl_out rk pad index_in) ()
 	    $call convolveCore (rb cb chl_in chl_out rk ck) ()
 	    $call accumulator (chl_in ck op_size) ()
-	    $call sendModule (rb cb chl_out shift_val activation index_out) ()
+	    $guard (pool_var) $call sendModule (rb cb chl_out shift_val activation index_out) ()
+	    $guard (~pool_var) $call sendModulePool (rb cb chl_out shift_val activation index_out) ()
     }        
 }
 

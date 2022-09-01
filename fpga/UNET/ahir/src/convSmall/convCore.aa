@@ -22,7 +22,6 @@ $is
 		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry (chl_out_var + ($mux chl_done_flag 1 0)) $on $loopback
 		$endmerge
 		
-		// $call timer (7) (time_pipe)
 		$volatile nd := (num == ck_s)
 		$volatile read_ip := ((col == 0) | nd)
 		$volatile not_read_ip := (~read_ip)
@@ -65,12 +64,10 @@ $is
 		
 		#include convInner.aa
 		
-		//send_val := ($mux (acc_val < 0) 0 acc_val)
-			acc_pipe1 := ($bitcast ($uint<ACC_WIDTH_generic>) acc_val1)
-			acc_pipe2 := ($bitcast ($uint<ACC_WIDTH_generic>) acc_val2)
+		acc_pipe1 := ($bitcast ($uint<ACC_WIDTH_generic>) acc_val1)
+		acc_pipe2 := ($bitcast ($uint<ACC_WIDTH_generic>) acc_val2)
 
 		$while (~all_done_flag)
-		// $call timer (102) (time_pipe)
 		time_pipe := 45231
 	}
 }
@@ -90,27 +87,18 @@ $module [acc_generic] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$phi r1 := acc_pipe2 $on $entry, $loopback
 		$endmerge
 		
-//		$call timer (8) (time_pipe)
-		
 		$volatile num_done := (c_count == acc_count)
 		$volatile nc_count := ($mux num_done 0 (c_count+1))
 		$volatile nop_count := ($mux num_done (op_count+1) op_count)
 
-		//rd1 := acc_pipe1
-		//rd2 := acc_pipe2
-		//$split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
 		$volatile acc_val1_1 := (acc1_1 + t1)
-		
-//		$split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
 		$volatile acc_val1_2 := (acc1_2 + r1)
-		
+			
 		$guard (num_done) output_pipe1 := acc_val1_1
 		$guard (num_done) output_pipe2 := acc_val1_2
-			
-//		$guard (num_done) $call timer (9) (time_pipe)
+		time_pipe := (($bitcast ($uint<32>) 12345) && ($bitcast ($uint<32>) op_count))
 		
 		$while (nop_count < op_size)
-		// $call timer (103) (time_pipe)
 		time_pipe := 64521
 	}
 }

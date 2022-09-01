@@ -123,6 +123,7 @@ void systemTOP()
     // 1 -> 4
     convolution3D_3(56,56,256,256,3,3,1,5,4,56,0,1,1,relu);
     write_uint64("time_pipe",24);
+    
     // 4 -> 1
     convolution3D_3(28,28,512,256,3,3,4,6,1,28,0,1,0,relu);
     // 1 -> 0

@@ -59,7 +59,7 @@ $is
 		$volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
 		$volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
 
-		$while not_end_flag
+		$while not_end_flg
 
 		// $call timer (101) (time_pipe)
 	}

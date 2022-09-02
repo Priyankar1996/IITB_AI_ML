@@ -339,7 +339,13 @@ end component mig_7series_0;
     system_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
     system_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
     system_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
-    system_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
+    system_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0); -- 
+    debug_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
+    debug_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
+    debug_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
+    debug_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
+    debug_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
+    debug_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0)); -- 
   -- 
 end component; 
   
@@ -381,6 +387,12 @@ begin
     				system_output_pipe_pipe_read_data => DEBUG_to_MONITOR_pipe_read_data,
     				system_output_pipe_pipe_read_req  => DEBUG_to_MONITOR_pipe_read_req ,
     				system_output_pipe_pipe_read_ack   => DEBUG_to_MONITOR_pipe_read_ack  ,
+    				debug_input_pipe_pipe_write_data  => CONSOLE_to_SERIAL_RX_pipe_write_data ,
+    				debug_input_pipe_pipe_write_req  => CONSOLE_to_SERIAL_RX_pipe_write_req ,
+    				debug_input_pipe_pipe_write_ack  => CONSOLE_to_SERIAL_RX_pipe_write_ack ,
+    				debug_output_pipe_pipe_read_data => SERIAL_TX_to_CONSOLE_pipe_read_data,
+    				debug_output_pipe_pipe_read_req  => SERIAL_TX_to_CONSOLE_pipe_read_req ,
+    				debug_output_pipe_pipe_read_ack   => SERIAL_TX_to_CONSOLE_pipe_read_ack  ,
       				MAIN_MEM_RESPONSE_pipe_write_data => MAIN_MEM_RESPONSE_pipe_write_data, 
       				MAIN_MEM_RESPONSE_pipe_write_req => MAIN_MEM_RESPONSE_pipe_write_req,
       				MAIN_MEM_RESPONSE_pipe_write_ack => MAIN_MEM_RESPONSE_pipe_write_ack,
@@ -568,6 +580,7 @@ mig_7series_0_inst:  mig_7series_0
     				SPI_MASTER_RESPONSE_pipe_write_req  => FLASH_SPI_MASTER_RESPONSE_pipe_write_req,
     				SPI_MASTER_RESPONSE_pipe_write_ack  => FLASH_SPI_MASTER_RESPONSE_pipe_write_ack,
 				WRITE_PROTECT => ZSLV1);
+	ZSLV1(0) <= '1';
 
 
 	flash_spi_master_inst: spi_master_stub

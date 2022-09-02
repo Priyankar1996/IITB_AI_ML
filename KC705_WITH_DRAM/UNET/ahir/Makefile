@@ -11,13 +11,14 @@ PTHREADUTILS_INCLUDE=$(AHIR_INCLUDE)
 VHDL_LIB=$(AHIR_RELEASE)/vhdl
 
 SIZED_TENSOR=../../../C/primitives/include
+SRC=./src
 
 all: HW 
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
-MODULES=src/readWriteModules.aa src/readWriteModules2.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/Convolution3/conv_compiled.aa src/maxPool/memory.aa src/zeropad_same/zeropad_same.aa src/convSmall/conv_compiled.aa
-INCLUDES=-Isrc/Convolution3 -Isrc/concat -Isrc/maxPool -Isrc/convTranspose -Isrc/zeropad_same -Isrc/convSmall
+MODULES=src/readWriteModules.aa src/readWriteModules2.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/Convolution3/conv_compiled.aa src/convSmall/conv_compiled.aa
+INCLUDES=-Isrc/Convolution3 -Isrc/concat -Isrc/convTranspose -Isrc/convSmall
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
@@ -27,6 +28,7 @@ TOPMODULES=-T systemTOP -T timerDaemon
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
 C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
 AA2VHDL: aalink aa2vc vc2vhdl
+AA2C : c2llvmbc llvmbc2aa aalink aa2c aa2cbuild
 
 # C to llvm byte-code.. use clang.
 c2llvmbc: src/prog.c
@@ -57,6 +59,14 @@ vc2vhdl: prog.vc
 	vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
 	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl
 	rm -f *unformatted_vhdl
+
+aa2c: prog.linked.opt.aa
+	Aa2C $(TOPMODULES) -o aa2c prog.linked.opt.aa
+
+aa2cbuild: aa2c/aa_c_model.c  aa2c/aa_c_model_internal.h aa2c/aa_c_model.h
+	gcc -g -c -DSW -I$(PIPEHANDLER_INCLUDE) -Iaa2c/ aa2c/aa_c_model.c -o aa2c/aa_c_model.o
+	gcc -g -c -DSW -I$(PIPEHANDLER_INCLUDE) -I$(PTHREADUTILS_INCLUDE) -Iaa2c/ -I$(SRC) $(SRC)/testbench.c -o aa2c/testbench.o
+	gcc -g -o testbench_sw aa2c/aa_c_model.o aa2c/testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread -lBitVectors -lSockPipes
 
 clean:
 	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.aa

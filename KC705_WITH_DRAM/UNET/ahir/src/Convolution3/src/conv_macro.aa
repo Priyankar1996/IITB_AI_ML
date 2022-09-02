@@ -1,9 +1,0 @@
-#include decl.aa
-
-#include kernelModule.aa
-#include inputModule.aa
-
-#include convCore.aa
-
-#include sendModule.aa
-

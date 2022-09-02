@@ -61,5 +61,6 @@ $is
 		$volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
 
 		$while not_end_flag
+		// $call timer (101) (time_pipe)
 	}
 }

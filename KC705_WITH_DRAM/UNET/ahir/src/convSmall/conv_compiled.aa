@@ -34,16 +34,16 @@ $pipe conv_kp3 : $uint<SMALL_PIPE_WIDTH> $depth K_DEPTH_SMALL
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionSmall] $in (rb cb chl_out chl_in rk ck: $uint<16> index_in index_k index_out : $uint<8> ct shift_val: $uint<16> activation : $uint<8>) $out() $is
+$module [convolutionSmall] $in (rb cb chl_out chl_in rk ck: $uint<16> index_in index_k index_out : $uint<8> ct shift_val pad : $uint<16> activation : $uint<8>) $out() $is
 {
 	op_size := (($bitcast ($uint<32>) rb) * (($bitcast ($uint<32>)  (cb * chl_out)) >> 1))
 	$parallelblock [topBlocks]
 	{
 		$call kernelModule_generic (chl_in chl_out rk ck index_k) ()
+		$call inputModule_generic (rb ct chl_in chl_out rk pad index_in) ()
 		$call core_generic (rb cb chl_in chl_out rk ck) ()
-		$call sendModule_generic (rb cb chl_out shift_val activation index_out) ()
-		$call inputModule_generic (rb ct chl_in chl_out rk index_in) ()
 		$call acc_generic (chl_in ck op_size) ()
+		$call sendModule_generic (rb cb chl_out shift_val activation index_out) ()
 	}
 }
 
@@ -114,56 +114,67 @@ $opaque $module [writeToPipe ] $in (index : $uint<2> in_data1 : $uint<SMALL_PIPE
 
 // Access the input tensor and write to iput pipe
 $module [inputModule_generic]
-$in(row_in ct chl_in chl_out rk: $uint<16> index : $uint<8>)
+$in(row_in ct chl_in chl_out rk pad : $uint<16> index : $uint<8>)
 $out()
 $is
 {
 	$branchblock [access_block]
 	{
-		m_factor := ($bitcast ($uint<32>) (ct * chl_in))
+		ct_new := (ct + (pad<<1))
+		row_size_total := ($bitcast ($uint<32>) (ct_new * chl_in))
+		p_chl_in := ($bitcast ($uint<32>) (pad*chl_in))
+		m_factor := ($bitcast ($uint<32>) (ct*chl_in))
 		m2_factor := (m_factor << 1)
 		m3_factor := (m2_factor+m_factor)
-		m4_factor := (m_factor << 2)
+		m4_factor := (m2_factor << 2)
 		mode_3 := (rk == 3)
+		addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
 
 		// Pipeline for sending inputs
 		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
-		$phi address := 0 $on $entry n_address $on $loopback
+		$phi address := addr_init $on $entry n_address $on $loopback
 		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
 		$phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
 		$phi mycounter := ($bitcast ($uint<32>) 1) $on $entry n_mycounter $on $loopback
 		$endmerge
 		
-		// $call timer (4) (time_pipe)
-		$volatile next_row :=  (mycounter == m_factor)
+		$volatile next_row :=  (mycounter == row_size_total)
 		$volatile tmp_cnt := (mycounter + 1)
 		$volatile n_mycounter := ($mux next_row 1 tmp_cnt )
-		$volatile update_row := ($mux next_row (row1 + N_ROWS_generic) row1 )
+		$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
 		$volatile continue_flag1 := (update_row < row_in)
+		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
 		
 		$volatile n_row1 := ($mux continue_flag1 update_row 0)
-		$volatile n_address := ($mux continue_flag1 ((address + 1) + ($mux next_row m_factor  0)) 0)
+		$volatile n_address := ($mux continue_flag1 (address + ($mux next_row m_factor ($mux mc_lt_p 0 1))) addr_init)
 		
-		$call readModule_convolution (index (address>>3)) (val1)
-        $call readModule_convolution (index ((address+($bitcast ($uint<32>) m_factor))>>3)) (val2)
-        $call readModule_convolution (index ((address+($bitcast ($uint<32>) m2_factor))>>3)) (val3)
-        $guard (mode_3) $call readModule_convolution (index ((address+($bitcast ($uint<32>) m3_factor))>>3)) (val4)
+	 	$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
+	 	$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
+	 	$volatile p3_zero := (mc_lt_p | (((row1+2) < pad) | (row1 >= ((row_in + 1)- pad))))
+	 	$volatile p4_zero := (mc_lt_p | (((row1+3) < pad) | (row1 >= (row_in - pad))))
+		$volatile addr2 := (address+ m_factor)
+		$volatile addr3 := (address+ m2_factor)
+		$volatile addr4 := (address+ m3_factor)
+		$volatile guard_4 := (mode_3 & (~p4_zero))
+		$guard (~p1_zero) $call readModule_convolution (index (address>>3)) (val1)
+		$guard (~p2_zero) $call readModule_convolution (index (addr2>>3)) (val2)
+		$guard (~p3_zero) $call readModule_convolution (index (addr3>>3)) (val3)
+		$guard (guard_4) $call readModule_convolution (index (addr4>>3)) (val4)
+		
 
-		$volatile rd1 := (val1 >> ($bitcast ($uint<64>) ((7-(address & 7))<<3)))
-		$volatile rd2 := (val2 >> ($bitcast ($uint<64>) ((7-((address+($bitcast ($uint<32>) m_factor)) & 7))<<3)))
-		$volatile rd3 := (val3 >> ($bitcast ($uint<64>) ((7-((address+($bitcast ($uint<32>) m2_factor)) & 7))<<3)))
-		$volatile rd4 := (val4 >> ($bitcast ($uint<64>) ((7-((address+($bitcast ($uint<32>) m3_factor)) & 7))<<3)))
+		$volatile rd1 := ($mux p1_zero 0 (val1 >> ($bitcast ($uint<64>) ((7-(address & 7))<<3))))
+		$volatile rd2 := ($mux p2_zero 0 (val2 >> ($bitcast ($uint<64>) ((7-(addr2 & 7))<<3))))
+		$volatile rd3 := ($mux p3_zero 0 (val3 >> ($bitcast ($uint<64>) ((7-(addr3 & 7))<<3))))
+		$volatile rd4 := ($mux p4_zero 0 (val4 >> ($bitcast ($uint<64>) ((7-(addr4 & 7))<<3))))
 		core_ip_generic1 := ($bitcast ($uint<8>) rd1)
 		core_ip_generic2 := ($bitcast ($uint<8>) rd2)
 		core_ip_generic3 := ($bitcast ($uint<8>) rd3)
 		$guard (mode_3) core_ip_generic4 := ($bitcast ($uint<8>) rd4)
-
 		$volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
 		$volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
 
 		$while not_end_flag
-
 		// $call timer (101) (time_pipe)
 	}
 }

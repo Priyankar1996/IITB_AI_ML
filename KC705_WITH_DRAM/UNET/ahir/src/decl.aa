@@ -69,8 +69,8 @@ $out (data_out : $uint<64>)
 $is
 {
 	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar ($bitcast ($uint<8>) 255) $zero<1> addr $zero<3> data_in)
-    read_from_mem := MAIN_MEM_RESPONSE
-    $split (read_from_mem 1 64) (error data_out)
+	read_from_mem := MAIN_MEM_RESPONSE
+	$split (read_from_mem 1 64) (error data_out)
 
 }
 

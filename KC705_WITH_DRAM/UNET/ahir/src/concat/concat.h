@@ -24,4 +24,5 @@ void concat(uint16_t input1_dim0,uint16_t input1_dim1,uint16_t input1_dim2,uint1
     uint16_t count1 = (input1_dim2)>>3;
     uint16_t count2 = (input2_dim2)>>3; 
     uint8_t done_flag = concat_core(count1,count2,output_size,index0,index1,index2);
+    write_uint8("debug_output_pipe",80);
 }

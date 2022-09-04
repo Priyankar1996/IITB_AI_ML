@@ -101,7 +101,7 @@ void systemTOP()
 	write_uint8("debug_output_pipe",10);
 	__aa_barrier__();
 	uint64_t start_time = timer();
-write_uint8("debug_output_pipe",11);
+	write_uint8("debug_output_pipe",11);
 	// 0 -> 1
 	convolutionSmall(224,224,64,3,3,3,0,0,1,224,0,1,relu);
 	write_uint8("debug_output_pipe",11);

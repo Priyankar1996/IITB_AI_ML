@@ -62,5 +62,7 @@ $is
 
 		$while not_end_flag
 		// $call timer (101) (time_pipe)
+		
+		//debug_output_pipe := 72
 	}
 }

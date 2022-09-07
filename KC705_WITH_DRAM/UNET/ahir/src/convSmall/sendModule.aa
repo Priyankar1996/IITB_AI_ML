@@ -18,8 +18,6 @@ $opaque $module [sendModule_generic] $in (rb cb chl_out shift_val : $uint<16> ac
 		$endmerge
 
 		$volatile row_change := (col == cb)
-		
-		// $call timer (6) (time_pipe)
 
 		// Check this later - odd values of row will be incorrect
 		$volatile chl_change := (row_change & (row >= (rb - 1)))
@@ -54,10 +52,12 @@ $opaque $module [sendModule_generic] $in (rb cb chl_out shift_val : $uint<16> ac
 		$guard (~same_write)  $volatile rd2 := ((($bitcast ($uint<64>) tmp1_2) << shift2) + (fetch_val2 & rev_bm2))
 		
 		$call writeModule_convolution (index add1 rd1) (a1)
-        $guard (~same_write) $call writeModule_convolution (index add2 rd2) (a2)
+		$guard (~same_write) $call writeModule_convolution (index add2 rd2) (a2)
+			
+		////debug_output_pipe := ($bitcast ($uint<8>) chl)
 
 		continue_flag := ((chl < chl_out_1) | (~chl_change))
 		$while continue_flag
-		// $call timer (104) (time_pipe)
+		//debug_output_pipe := 75
 	}
 }

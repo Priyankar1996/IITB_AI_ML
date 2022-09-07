@@ -1,5 +1,5 @@
 $parameter SMALL_PIPE_WIDTH 8
-$parameter INTERMEDIATE_PIPE_DEPTH_generic 16
+$parameter INTERMEDIATE_PIPE_DEPTH_generic 1024
 $parameter SMALL_PIPE_DEPTH_generic 4
 $parameter IP_DEPTH_SMALL 2048
 $parameter K_DEPTH_SMALL 2048
@@ -45,6 +45,7 @@ $module [convolutionSmall] $in (rb cb chl_out chl_in rk ck: $uint<16> index_in i
 		$call acc_generic (chl_in ck op_size) ()
 		$call sendModule_generic (rb cb chl_out shift_val activation index_out) ()
 	}
+	//debug_output_pipe := 70
 }
 
 
@@ -78,17 +79,19 @@ $is
 		$volatile n_ea := (ea + ($mux nxt_chl chl_size 0))
 		$volatile n_ind := ($mux next_row 1 (ind + 1))
 		$volatile add_val := ($bitcast ($uint<32> )($excmux (ind == 2) row_size (ind == 3) (row_size<<1)))
-		// $call timer (3) (time_pipe)
 		
 		$call readModule_convolutionk (index ((mycount+add_val)>>3)) (fetch_val1)
 		
 		$volatile val1 := ($bitcast ($uint<8>) (fetch_val1 >> (($bitcast ($uint<64>) (7-((mycount+add_val)&7)))<<3)))
 
 		$call writeToPipe (ind val1) (a1)
-
+		
 		$volatile exit_cond := (nxt_chl & (chl_num == chl_out))
+
+		//debug_output_pipe := ($bitcast ($uint<8>) chl_num)
+
 		$while (~exit_cond)
-		// $call timer (100) (time_pipe)
+		//debug_output_pipe := 71
 	}
 }
 
@@ -176,6 +179,8 @@ $is
 
 		$while not_end_flag
 		// $call timer (101) (time_pipe)
+		
+		//debug_output_pipe := 72
 	}
 }
 
@@ -372,24 +377,15 @@ $module [acc_generic] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$phi r1 := acc_pipe2 $on $entry, $loopback
 		$endmerge
 		
-//		$call timer (8) (time_pipe)
-		
 		$volatile num_done := (c_count == acc_count)
 		$volatile nc_count := ($mux num_done 0 (c_count+1))
 		$volatile nop_count := ($mux num_done (op_count+1) op_count)
 
-		//rd1 := acc_pipe1
-		//rd2 := acc_pipe2
-		//$split (rd1 8 8 8 8 8 8 8 8) (t1 t2 t3 t4 t5 t6 t7 t8)
 		$volatile acc_val1_1 := (acc1_1 + t1)
-		
-//		$split (rd2 8 8 8 8 8 8 8 8) (r1 r2 r3 r4 r5 r6 r7 r8)
 		$volatile acc_val1_2 := (acc1_2 + r1)
 		
 		$guard (num_done) output_pipe1 := acc_val1_1
 		$guard (num_done) output_pipe2 := acc_val1_2
-			
-//		$guard (num_done) $call timer (9) (time_pipe)
 		
 		$while (nop_count < op_size)
 		// $call timer (103) (time_pipe)
@@ -417,8 +413,6 @@ $opaque $module [sendModule_generic] $in (rb cb chl_out shift_val : $uint<16> ac
 		$endmerge
 
 		$volatile row_change := (col == cb)
-		
-		// $call timer (6) (time_pipe)
 
 		// Check this later - odd values of row will be incorrect
 		$volatile chl_change := (row_change & (row >= (rb - 1)))
@@ -453,11 +447,13 @@ $opaque $module [sendModule_generic] $in (rb cb chl_out shift_val : $uint<16> ac
 		$guard (~same_write)  $volatile rd2 := ((($bitcast ($uint<64>) tmp1_2) << shift2) + (fetch_val2 & rev_bm2))
 		
 		$call writeModule_convolution (index add1 rd1) (a1)
-        $guard (~same_write) $call writeModule_convolution (index add2 rd2) (a2)
+		$guard (~same_write) $call writeModule_convolution (index add2 rd2) (a2)
+			
+		////debug_output_pipe := ($bitcast ($uint<8>) chl)
 
 		continue_flag := ((chl < chl_out_1) | (~chl_change))
 		$while continue_flag
-		// $call timer (104) (time_pipe)
+		//debug_output_pipe := 75
 	}
 }
 

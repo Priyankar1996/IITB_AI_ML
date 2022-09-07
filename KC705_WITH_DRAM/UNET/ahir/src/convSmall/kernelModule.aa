@@ -27,17 +27,19 @@ $is
 		$volatile n_ea := (ea + ($mux nxt_chl chl_size 0))
 		$volatile n_ind := ($mux next_row 1 (ind + 1))
 		$volatile add_val := ($bitcast ($uint<32> )($excmux (ind == 2) row_size (ind == 3) (row_size<<1)))
-		// $call timer (3) (time_pipe)
 		
 		$call readModule_convolutionk (index ((mycount+add_val)>>3)) (fetch_val1)
 		
 		$volatile val1 := ($bitcast ($uint<8>) (fetch_val1 >> (($bitcast ($uint<64>) (7-((mycount+add_val)&7)))<<3)))
 
 		$call writeToPipe (ind val1) (a1)
-
+		
 		$volatile exit_cond := (nxt_chl & (chl_num == chl_out))
+
+		//debug_output_pipe := ($bitcast ($uint<8>) chl_num)
+
 		$while (~exit_cond)
-		// $call timer (100) (time_pipe)
+		//debug_output_pipe := 71
 	}
 }
 

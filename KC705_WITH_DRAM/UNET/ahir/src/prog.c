@@ -80,7 +80,6 @@ void fill_input()
 	// kernels followed by input tensor
 	uint8_t i;
 	for (i = 0; i < 2; i++) readFromSystemPipe(i);
-	write_uint8("debug_output_pipe",100+i);
 }
 
 void sendOutput()
@@ -224,14 +223,14 @@ void systemTOP()
 	elapsed_time>>=8;\
 	out_data[0] = elapsed_time & 0xFF;\
 	__aa_barrier__();
-	write_uint8 ("system_output_pipe",out_data[0]);\
-	write_uint8 ("system_output_pipe",out_data[1]);\
-	write_uint8 ("system_output_pipe",out_data[2]);\
-	write_uint8 ("system_output_pipe",out_data[3]);\
-	write_uint8 ("system_output_pipe",out_data[4]);\
-	write_uint8 ("system_output_pipe",out_data[5]);\
-	write_uint8 ("system_output_pipe",out_data[6]);\
-	write_uint8 ("system_output_pipe",out_data[7]);\
+	write_uint8 ("debug_output_pipe",out_data[0]);\
+	write_uint8 ("debug_output_pipe",out_data[1]);\
+	write_uint8 ("debug_output_pipe",out_data[2]);\
+	write_uint8 ("debug_output_pipe",out_data[3]);\
+	write_uint8 ("debug_output_pipe",out_data[4]);\
+	write_uint8 ("debug_output_pipe",out_data[5]);\
+	write_uint8 ("debug_output_pipe",out_data[6]);\
+	write_uint8 ("debug_output_pipe",out_data[7]);\
 	
 	write_uint8("debug_output_pipe",50);
 	__aa_barrier__();

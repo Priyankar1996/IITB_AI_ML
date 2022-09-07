@@ -13,5 +13,6 @@ $module [convolutionSmall] $in (rb cb chl_out chl_in rk ck: $uint<16> index_in i
 		$call acc_generic (chl_in ck op_size) ()
 		$call sendModule_generic (rb cb chl_out shift_val activation index_out) ()
 	}
+	//debug_output_pipe := 70
 }
 

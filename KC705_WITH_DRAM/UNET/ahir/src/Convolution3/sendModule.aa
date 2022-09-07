@@ -1,39 +1,41 @@
 //
 
-$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation : $uint<8> index : $uint<8>) $out () $is
+$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> index : $uint<8>) $out () $is
 {
     $branchblock [sendBlock]{
-        max_count := ($bitcast ($uint<32>) (rb*cb))
-        row_size := ($bitcast ($uint<32>) (chl_out*cb))
-        three_row_size := (row_size+(row_size<<1))
-        chl_out_1 := (chl_out - 1)
-        apply_relu := (activation == 1)
+    	row_size := ($bitcast ($uint<32>) (chl_out*cb))
+		apply_relu := (activation == 1)
+		
+		$merge $entry loopback
+		$phi p_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on loopback
+		$phi chl_max_itr := max_chl $on $entry n_cmi $on loopback
+		$phi chl_left := (chl_out - max_chl) $on $entry n_chl_left $on loopback
+		$phi addr := ($bitcast ($uint<32>) 0) $on $entry n_addr $on loopback
+		$endmerge
 
-        $dopipeline $depth 15 $buffering 2 $fullrate
-        $merge $entry $loopback
-        $phi address1 := ($bitcast ($uint<32>) 0) $on $entry n_address1 $on $loopback
-        $phi address2 := ($bitcast ($uint<32>) row_size) $on $entry n_address2 $on $loopback
-        $phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
-        $phi col := ($bitcast ($uint<16>) 1) $on $entry n_col $on $loopback
-        $phi row := ($bitcast ($uint<16>) 1) $on $entry n_row $on $loopback
-        $endmerge
+		chl_change_inc := ($bitcast ($uint<32>) (chl_out - chl_max_itr))
+		rs_1 := (row_size + chl_change_inc)
 
-        $volatile row_change := (col == cb)
-        
-        //// $call timer (6) (time_pipe)
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address1 := ($bitcast ($uint<32>) addr) $on $entry n_address1 $on $loopback
+		$phi address2 := ($bitcast ($uint<32>) (row_size+addr)) $on $entry n_address2 $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 1) $on $entry n_chl $on $loopback
+		$phi col := ($bitcast ($uint<16>) 1) $on $entry n_col $on $loopback
+		$phi row := ($bitcast ($uint<16>) 1) $on $entry n_row $on $loopback
+		$endmerge
 
-        // Check this later - odd values of row will be incorrect
-        $volatile chl_change := (row_change & (row >= (rb - 1)))
-        $volatile n_col := ($mux row_change 1 (col + 1))
-        $volatile n_row := ($mux chl_change 1 ($mux row_change (row + N_ROWS_S) row))
-        $volatile n_chl := ($mux chl_change (chl+1) chl)
-        
-        $volatile tmp1 := (address1 + ($bitcast ($uint<32>) chl_out))
-        $volatile tmp2 := (address2 + ($bitcast ($uint<32>) chl_out))
-        $volatile tmp_sum := ($mux row_change row_size 0)
-        $volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) (tmp1 + tmp_sum))
-        $volatile n_address2 := ($mux chl_change (($bitcast ($uint<32>) n_chl)+row_size) (tmp2 + tmp_sum))
-        
+		// Check this later - odd values of row will be incorrect
+		$volatile chl_change := (chl == chl_max_itr)
+		$volatile row_change := ((col == cb) & chl_change)
+		$volatile n_chl := ($mux chl_change 1 (chl+1))
+		$volatile n_col := ($mux row_change 1 ($mux chl_change (col + 1) col))
+		$volatile n_row := ($mux row_change (row + N_ROWS_S) row)
+		
+		$volatile tmp_sum := (1 + ($mux row_change rs_1 ($mux chl_change chl_change_inc 0)))
+		$volatile n_address1 := (address1 + tmp_sum)
+		$volatile n_address2 := (address2 + tmp_sum)
+		
         read_val1_1 := output_pipe1_1
         read_val2_1 := output_pipe2_1
         read_val3_1 := output_pipe3_1
@@ -71,8 +73,17 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation
         $call writeModule_convolution (index address1 rd1) (a1)
         $call writeModule_convolution (index address2 rd2) (a2)
 
-        continue_flag := ((chl < chl_out_1) | (~chl_change))
-        $while continue_flag
+		continue_flag := ((row >= (rb -1)) ~& row_change)
+		$while continue_flag
+		
+		$volatile np_cnt := (p_cnt + 1)
+		$volatile n_cmi := ($mux (chl_left > max_chl) max_chl chl_left)
+		$volatile n_chl_left := (chl_left - n_cmi)
+		$volatile n_addr := (addr + ($bitcast ($uint<32>) chl_max_itr))
+				
+		$if (p_cnt < num_parts) $then $place [loopback] $endif
         // $call timer (104) (time_pipe)
+		//debug_output_pipe := 95
+
     }
 }

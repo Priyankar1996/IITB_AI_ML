@@ -5,14 +5,54 @@ $module [convolution3D_3] $in (rb cb chl_out_in chl_in_in rk ck: $uint<16> index
 	chl_in := (chl_in_in >> 3)
 	pool_var := (pool == 0)
     op_size := (($bitcast ($uint<32>) rb) * (($bitcast ($uint<32>)  (cb * chl_out)) >> 1))
+	$call Divider (K_DEPTH (chl_in*ck)) (alpha)
+	cnd_partition := (alpha < chl_out)
+	$guard (cnd_partition) $call Divider ((chl_out-1) alpha) (tmp1)
+	parts := ($bitcast ($uint<8>) ($mux cnd_partition tmp1 0))
+	max_per_part := ($mux cnd_partition alpha chl_out)
     $parallelblock [topBlocks]
     {
 	    $call loadKernel (chl_in chl_out rk ck index_k) ()
-	    $call access_T (rb ct chl_in chl_out rk pad index_in) ()
-	    $call convolveCore (rb cb chl_in chl_out rk ck) ()
+	    $call access_T (rb ct chl_in chl_out rk pad parts index_in) ()
+	    $call convolveCore (rb cb chl_in chl_out rk ck parts max_per_part) ()
 	    $call accumulator (chl_in ck op_size) ()
-	    $guard (pool_var) $call sendModule (rb cb chl_out shift_val activation index_out) ()
+	    $guard (pool_var) $call sendModule (rb cb chl_out shift_val parts max_per_part activation index_out) ()
 	    $guard (~pool_var) $call sendModulePool (rb cb chl_out shift_val activation index_out) ()
     }        
+		//debug_output_pipe := 90
 }
 
+$opaque $module [Divider] $in (dividend : $uint<16> $divisor : $uint<16>) $out (quotient : $uint<16>) $is
+{
+	//quotient := dividend/divisor
+	$branchblock [DivBlock]
+	{
+		$volatile ext_div := ($bitcast ($uint<17>) dividend)
+		
+		$dopipeline $depth 7 $fullrate
+		$merge $entry $loopback
+		$phi div := ($bitcast ($uint<17>) divisor) $on $entry ndiv $on $loopback
+		$phi cnt := ($bitcast ($uint<5>) 0) $on $entry ncnt $on $loopback
+		$endmerge
+		$volatile cmp := (div >= ext_div)
+		$volatile ndiv := (div<<1)
+		$volatile ncnt := (cnt + 1)
+		$while (~cmp)
+		
+		$dopipeline $depth 7 $fullrate
+		$merge $entry $loopback
+		$phi div_2 := div $on $entry ndiv_2 $on $loopback
+		$phi ediv_2 := ext_div $on $entry nediv_2 $on $loopback
+		$phi quo := ($bitcast ($uint<16>) 0) $on $entry nq $on $loopback
+		$phi cnt2 := cnt $on $entry ncnt2 $on $loopback
+		$endmerge
+		$volatile cmp2 := (div_2 > ediv_2)
+		$volatile ndiv_2 := (div_2 >> 1)
+		$volatile nediv_2 := (ediv_2 - ($mux cmp2 0 div_2))
+		$volatile ncnt2 := (cnt2 - 1) 
+		nq := ((quo << 1) + ($mux cmp2 0 1))
+		$while (cnt2 > 0)
+		
+		quotient := nq
+	}	
+}

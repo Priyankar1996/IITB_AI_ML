@@ -1,5 +1,5 @@
 $parameter SMALL_PIPE_WIDTH 8
-$parameter INTERMEDIATE_PIPE_DEPTH_generic 16
+$parameter INTERMEDIATE_PIPE_DEPTH_generic 1024
 $parameter SMALL_PIPE_DEPTH_generic 4
 $parameter IP_DEPTH_SMALL 2048
 $parameter K_DEPTH_SMALL 2048

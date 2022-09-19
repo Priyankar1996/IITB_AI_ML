@@ -8,12 +8,8 @@ $is
 	$branchblock [load_block]
 	{
 		row_size := (chl_in * ck)
-		row2_size := (row_size << 1)
-		chl_size := (row_size * rk)
-		count_update := (chl_size - row_size)
+		count_update := (row_size*(rk-1))
 		
-		$call timer ((5 + ##num )) (time_pipe)
-
 		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
 		$phi chl_num := ($bitcast ($uint<16>) 1) $on $entry n_chl_num $on $loopback
@@ -26,7 +22,7 @@ $is
 		$phi addr1 := 0 $on $entry n_addr1 $on $loopback
 		$phi fn := ($bitcast ($uint<1>) 1) $on $entry n_fn $on $loopback
 		$endmerge
-
+		
 		$volatile chl_3 := ($bitcast ($uint<3>) (chl_num & 7))
 
 		// Compute number of elements to send
@@ -51,14 +47,14 @@ $is
 		$volatile ncv1 := ($mux send 0 send_data)
 		
 		// Send if done
-		$volatile send_to_1 := (send & (chl_num==0))
-		$volatile send_to_2 := (send & (chl_num==1))
-		$volatile send_to_3 := (send & (chl_num==2))
-		$volatile send_to_4 := (send & (chl_num==3))
-		$volatile send_to_5 := (send & (chl_num==4))
-		$volatile send_to_6 := (send & (chl_num==5))
-		$volatile send_to_7 := (send & (chl_num==6))
-		$volatile send_to_8 := (send & (chl_num==7))
+		$volatile send_to_1 := (send & (chl_3==1))
+		$volatile send_to_2 := (send & (chl_3==2))
+		$volatile send_to_3 := (send & (chl_3==3))
+		$volatile send_to_4 := (send & (chl_3==4))
+		$volatile send_to_5 := (send & (chl_3==5))
+		$volatile send_to_6 := (send & (chl_3==6))
+		$volatile send_to_7 := (send & (chl_3==7))
+		$volatile send_to_8 := (send & (chl_3==8))
 		$guard (send_to_1) core1_kp##num := send_data
 		$guard (send_to_2) core2_kp##num := send_data
 		$guard (send_to_3) core3_kp##num := send_data
@@ -67,7 +63,6 @@ $is
 		$guard (send_to_6) core6_kp##num := send_data
 		$guard (send_to_7) core7_kp##num := send_data
 		$guard (send_to_8) core8_kp##num := send_data
-		
 		$volatile n_sent := ($mux done ($mux (sent == (ck-1)) 0 (sent+1)) sent)
 		
 		// Update head and start pointers
@@ -86,7 +81,6 @@ $is
 		
 		$volatile exit_cond := (nxt_chl & (chl_num == chl_out))
 		$while (~exit_cond)
-		$call timer ((10 + ##num )) (time_pipe)
 	}
 }
 

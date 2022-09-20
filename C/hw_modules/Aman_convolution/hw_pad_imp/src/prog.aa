@@ -57,6 +57,15 @@ $module [topModule] $in () $out() $is
 		chl_in8 := (chl_in >> 3)
 		chl_out8 := (chl_out >> 3)
 		chl_out_ceil := ((chl_out + 7)>>3)
+		chl_in_ceil := ((chl_in + 7)>>3)
+		
+		// Creating partitions
+		$call Divider (K_DEPTH (chl_in_ceil*ck)) (alpha)
+		cnd_partition := (alpha < chl_out_ceil)
+		$guard (cnd_partition) $call Divider ((chl_out_ceil-1) alpha) (tmp1)
+		parts := ($bitcast ($uint<8>) ($mux cnd_partition tmp1 0))
+		max_per_part := ($mux cnd_partition alpha chl_out_ceil)
+		
 		$parallelblock [topBlocks]
 		{
 			$branchblock [time_start_block]
@@ -66,10 +75,10 @@ $module [topModule] $in () $out() $is
 			}(start_time => start_time)
 			
 			$call loadKernel (chl_in chl_out rk ck 1) ()
-			$call access_T (rb rt ct chl_in chl_out_ceil rk 1) ()
-			$call convolveCore (rb cb chl_in8 chl_out8 rk ck) ()
-			$call accumulator (chl_in8 ck (op_size >> 4)) ()
-			$call sendModule (rb cb chl_out8 shift_val NO_ACT ) ()
+			$call access_T (rb rt ct chl_in chl_out_ceil rk 1 parts) ()
+			$call convolveCore (rb cb chl_in_ceil chl_out8 rk ck parts max_per_part) ()
+			$call accumulator (chl_in_ceil ck (op_size >> 4)) ()
+			$call sendModule (rb cb chl_out8 shift_val parts max_per_part NO_ACT ) ()
 		}(start_time => start_time)
 		
 		$call timer (2)  (end_time)
@@ -172,9 +181,43 @@ $is
 }
 
 
-
 $opaque $module [TopMult] $in (in1 : $uint<32> in2 : $uint<32>) $out (output : $uint<32>)
 $is
 {
 	output := (in1 * in2)
+}
+
+$opaque $module [Divider] $in (dividend : $uint<16> $divisor : $uint<16>) $out (quotient : $uint<16>) $is
+{
+	//quotient := dividend/divisor
+	$branchblock [DivBlock]
+	{
+		$volatile ext_div := ($bitcast ($uint<17>) dividend)
+		
+		$dopipeline $depth 7 $fullrate
+		$merge $entry $loopback
+		$phi div := ($bitcast ($uint<17>) divisor) $on $entry ndiv $on $loopback
+		$phi cnt := ($bitcast ($uint<5>) 0) $on $entry ncnt $on $loopback
+		$endmerge
+		$volatile cmp := (div >= ext_div)
+		$volatile ndiv := (div<<1)
+		$volatile ncnt := (cnt + 1)
+		$while (~cmp)
+		
+		$dopipeline $depth 7 $fullrate
+		$merge $entry $loopback
+		$phi div_2 := div $on $entry ndiv_2 $on $loopback
+		$phi ediv_2 := ext_div $on $entry nediv_2 $on $loopback
+		$phi quo := ($bitcast ($uint<16>) 0) $on $entry nq $on $loopback
+		$phi cnt2 := cnt $on $entry ncnt2 $on $loopback
+		$endmerge
+		$volatile cmp2 := (div_2 > ediv_2)
+		$volatile ndiv_2 := (div_2 >> 1)
+		$volatile nediv_2 := (ediv_2 - ($mux cmp2 0 div_2))
+		$volatile ncnt2 := (cnt2 - 1) 
+		nq := ((quo << 1) + ($mux cmp2 0 1))
+		$while (cnt2 > 0)
+		
+		quotient := nq
+	}	
 }

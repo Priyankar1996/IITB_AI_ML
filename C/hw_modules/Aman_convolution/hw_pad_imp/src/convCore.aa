@@ -23,24 +23,33 @@ $is
 		$merge $entry $loopback
 		$phi chl := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done 0 (chl + 1)) $on $loopback
 		$phi num := ($bitcast ($uint<2>) 0) $on $entry ($mux chl_done ($mux nd 0 (num+1)) num) $on $loopback
-		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry ($mux num_done ($mux chl_done_flag 1 (chl_out_var+1)) chl_out_var) $on $loopback
+		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry ($mux num_done ($mux chl_done_flag 1 (chl_out_var+8)) chl_out_var) $on $loopback
 		$phi col := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done_flag ($mux col_done 0 (col + 1)) col) $on $loopback
 		$phi row := ($bitcast ($uint<16>) 0) $on $entry ($mux col_done (row + N_ROWS_S) row) $on $loopback
 		$endmerge
 
 		$volatile nd := (num == ck_s)
-		$volatile chl_done := (chl == chl_in)
+		$volatile chl_done := (chl >= chl_in)
 		$volatile num_done := (nd & chl_done)
-		$volatile chl_done_flag := ((chl_out_var == chl_max_itr) & num_done)
+		$volatile chl_done_flag := (((chl_out_var+8) > chl_max_itr) & num_done)
 		$volatile last_col := (col == num_col)
 		$volatile col_done := (last_col & chl_done_flag)
 		$volatile out_done_flag := (row >= num_row)
 		$volatile all_done_flag := (out_done_flag & col_done)
+		
+		$volatile o_chl1_valid := (chl_out_var <= chl_max_itr)
+		$volatile o_chl2_valid := ((chl_out_var+1) <= chl_max_itr)
+		$volatile o_chl3_valid := ((chl_out_var+2) <= chl_max_itr)
+		$volatile o_chl4_valid := ((chl_out_var+3) <= chl_max_itr)
+		$volatile o_chl5_valid := ((chl_out_var+4) <= chl_max_itr)
+		$volatile o_chl6_valid := ((chl_out_var+5) <= chl_max_itr)
+		$volatile o_chl7_valid := ((chl_out_var+6) <= chl_max_itr)
+		$volatile o_chl8_valid := ((chl_out_var+7) <= chl_max_itr)
 
 		$volatile read_ip := (((col == 0) | nd) & (chl_out_var == 1))
 		$volatile not_read_ip := (~read_ip)
-		$volatile write_input := ((chl_out_var < chl_max_itr) | ((col < num_col) & (num > 0)))
-		$volatile read_k := ((col == 0) & (row == 0))
+		$volatile write_input := (((chl_out_var+8) < chl_max_itr) | ((col < num_col) & (num > 0)))
+				$volatile read_k := ((col == 0) & (row == 0))
 		$volatile not_read_k := (~read_k)
 		$volatile store_kernel := (out_done_flag ~& last_col)
 

@@ -1,5 +1,5 @@
 $parameter PIPE_WIDTH 64
-$parameter INTERMEDIATE_PIPE_DEPTH {16*1024}
+$parameter INTERMEDIATE_PIPE_DEPTH 256
 $parameter SMALL_PIPE_DEPTH 16
 $parameter IP_DEPTH 128
 $parameter K_DEPTH 256

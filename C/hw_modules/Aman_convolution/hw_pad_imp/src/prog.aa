@@ -79,7 +79,7 @@ $module [topModule] $in () $out() $is
 			$call access_T (rb rt ct chl_in chl_out_ceil rk 1 parts) ()
 			$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 			$call accumulator (chl_in_ceil ck (op_size >> 1)) ()
-			$call sendModule (rb cb chl_out_ceil shift_val parts max_per_part2 NO_ACT ) ()
+			$call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT ) ()
 		}(start_time => start_time)
 		
 		$call timer (2)  (end_time)

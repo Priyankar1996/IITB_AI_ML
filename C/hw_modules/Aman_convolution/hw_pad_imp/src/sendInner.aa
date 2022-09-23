@@ -76,11 +76,10 @@ $is
 		$volatile val_in_use := ($mux fn rd1 fv1)
 		// Shift to the head of cv
 		$volatile tmp := ((val_in_use << (($bitcast ($uint<64>) head) << 3)) >> (($bitcast ($uint<64>) sp) << 3))
-		
-		$volatile bytemask := (bm | ((($bitcast ($uint<64>) _hFFFFFFFFFFFFFFFF) >> (($bitcast ($uint<64>) sp) << 3)) & (($bitcast ($uint<64>) _hFFFFFFFFFFFFFFFF) << (($bitcast ($uint<64>)(8 - sns)) << 3))))
+		$volatile bm2 := ((($bitcast ($uint<64>) _hFFFFFFFFFFFFFFFF) >> (($bitcast ($uint<64>) sp) << 3)) & (($bitcast ($uint<64>) _hFFFFFFFFFFFFFFFF) << (($bitcast ($uint<64>)(8 - sns)) << 3)))
+		$volatile bytemask := (bm | bm2)
 		// Apply bitmask to get the desired value
-		$volatile send_data := ((cv1 | tmp) & bytemask)
-		//time_pipe := (($bitcast ($uint<32>) ##num ) && (($bitcast ($uint<32>) (head && sp ))
+		$volatile send_data := (cv1 | (tmp & bm2))
 		$volatile n_sent := ($mux done ($mux (sent == (cb-1)) 0 (sent+1)) sent)
 		// Update head and start pointers
 		$volatile n_head := ($mux n_fn 0 hns)
@@ -103,6 +102,8 @@ $is
 		//$guard (send_part) B[0][(addr1>>3)] := ((B[0][(addr1>>3)] & (~bytemask)) | send_data)
 		$guard (send_part) $call atomicMaskedWrite ((addr1>>3) (~bytemask)  send_data) ()
 
+		//time_pipe := (((($bitcast ($uint<32>) send)<<2) + ##num ) && ($bitcast ($uint<32>) addr1))
+		//$guard (send) time_pipe := B[0][(addr1>>3)]
 //--------------------------------------------------------------------------------------------------------------------------//
 
 		// Check this later - odd values of row will be incorrect

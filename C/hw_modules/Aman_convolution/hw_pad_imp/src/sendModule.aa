@@ -13,7 +13,7 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> num_parts 
 #define num 2
 #include sendInner.aa
 
-$module [atomicMaskedWrite] $in (addr : $uint<32>  bm val : $uint<64>) $out() $is
+$opaque $module [atomicMaskedWrite] $in (addr : $uint<32>  bm val : $uint<64>) $out() $is
 {
 	B[0][addr] := ((B[0][addr] & bm) | val)
 }

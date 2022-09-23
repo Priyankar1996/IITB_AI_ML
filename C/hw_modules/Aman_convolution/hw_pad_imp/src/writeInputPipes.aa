@@ -1,6 +1,0 @@
-$pipeline $depth 15 $buffering 2 $fullrate
-$opaque $module [writeToInputPipe##num ] $in (in_data1 : $uint<64>) $out (done : $uint<1>) $is
-{
-	core_ip##num := in_data1
-	done := (in_data1 [] 0)
-}

@@ -1,0 +1,11 @@
+The following versions of convolution are available:
+
+hw		: Implementation of generic convolution (very unoptimised , only 6 PE)
+hw_4chl_8core	: 384 PEs, requires chl_in, chl_out to be multiple of 8
+hw_pad		: hw extended to incorporate padded inputs
+hw_pad_4	: hw_4chl_8core extended to incorporate padded inputs
+convPool	: Performs 2x2 pool at end
+hw_one_fetch	: Use of partitioning to minimize input fetches based on kernel pipe depth
+
+
+hw_pad_imp	: Incorporates packing-unpacking, partitioning and padding (superset of all the above)

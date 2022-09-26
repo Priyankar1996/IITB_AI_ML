@@ -64,11 +64,11 @@ $pipe MAIN_MEM_RESPONSE : $uint<65> $depth 16
 
 $pipeline $depth 15 $fullrate
 $module [memoryModule]
-$in (r_wbar : $uint<1> addr : $uint<32> data_in : $uint<64>)
+$in (r_wbar : $uint<1> addr : $uint<32> data_in : $uint<64> bytemask : $uint<8>)
 $out (data_out : $uint<64>)
 $is
 {
-	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar ($bitcast ($uint<8>) 255) $zero<1> addr $zero<3> data_in)
+	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar bytemask $zero<1> addr $zero<3> data_in)
 	read_from_mem := MAIN_MEM_RESPONSE
 	$split (read_from_mem 1 64) (error data_out)
 

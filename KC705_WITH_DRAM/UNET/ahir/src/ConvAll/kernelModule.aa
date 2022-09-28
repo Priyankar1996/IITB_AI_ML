@@ -1,0 +1,31 @@
+// Load the kernel channel into the kernel pipes
+
+$module [loadKernel]
+$in (chl_in chl_out rk ck : $uint<16> index : $uint<8>)
+$out ()
+$is
+{
+	row_size := (chl_in*ck)
+	chl_size := (row_size * rk)
+	mode_3 := (rk == 3)
+	addr1 := 0
+	addr2 := ($bitcast ($uint<32>) row_size)
+	addr3 := ($bitcast ($uint<32>) (row_size<<1))
+	$parallelblock[k_block]
+	{
+		$call kernelDataFetcher1 (addr1 row_size chl_size chl_out index) ()
+		$call kernelDataFetcher2 (addr2 row_size chl_size chl_out index) ()
+		$guard (mode_3) $call kernelDataFetcher3 (addr3 row_size chl_size chl_out index) ()
+		$call loadKernel_in1 (addr1 chl_in chl_out rk ck) ()
+		$call loadKernel_in2 (addr2 chl_in chl_out rk ck) ()
+		$guard (mode_3) $call loadKernel_in3 (addr3 chl_in chl_out rk ck) ()
+	}
+	debug_output_pipe := 71
+}
+
+#define num 1
+#include kernelInner.aa
+#define num 2
+#include kernelInner.aa
+#define num 3
+#include kernelInner.aa

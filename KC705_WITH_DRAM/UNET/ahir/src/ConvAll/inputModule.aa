@@ -1,0 +1,40 @@
+// Access the input tensor and write to input pipe
+$module [access_T]
+$in(row_in rt ct chl_in chl_out rk pad : $uint<16> num_parts_1 index : $uint<8>)
+$out()
+$is
+{
+	m_factor := ($bitcast ($uint<32>) (ct*chl_in))
+	m2_factor := (m_factor << 1)
+	bit0 := (pad [] 0)
+	bit1 := (pad [] 1)
+	addr1 := ($mux bit0 m_factor 0)
+	addr2 := ($mux bit0 0 m_factor)
+	addr3 := (addr1 + ($mux (bit1 | bit0) 0 m2_factor))
+	addr4 := (addr2 + ($mux bit1 0 m2_factor))
+	mode_3 := (rk == 3)
+	cnt1 := ($mux (pad > 1) rt (rt - 2))
+	cnt2 := ($mux (pad > 0) rt (rt - 2))
+	
+	$parallelblock [access_block]
+	{	
+		$call loadInput_in1 (addr1 row_in ct chl_in pad num_parts_1) ()
+		$call inputDataFetcher1 ( addr1 m_factor m2_factor cnt1 num_parts_1 index) ()
+		$call loadInput_in2 (addr2 row_in ct chl_in pad num_parts_1) ()
+		$call inputDataFetcher2 ( addr2 m_factor m2_factor cnt2 num_parts_1 index) ()
+		$call loadInput_in3 (addr3 row_in ct chl_in pad num_parts_1) ()
+		$call inputDataFetcher3 ( addr3 m_factor m2_factor cnt2 num_parts_1 index) ()
+		$guard (mode_3) $call loadInput_in4 (addr4 row_in ct chl_in pad num_parts_1) ()
+		$guard (mode_3) $call inputDataFetcher4 ( addr4 m_factor m2_factor cnt1 num_parts_1 index) ()
+	}
+	debug_output_pipe := 72
+}
+
+#define num 1
+#include inputInner.aa
+#define num 2
+#include inputInner.aa
+#define num 3
+#include inputInner.aa
+#define num 4
+#include inputInner.aa	

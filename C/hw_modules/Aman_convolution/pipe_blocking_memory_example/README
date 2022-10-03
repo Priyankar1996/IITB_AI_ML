@@ -1,0 +1,41 @@
+A simple example demonstrating deadlock with no cyclic dependence amongst the modules, but due to resource contention
+
+
+Description:
+
+Modules (all running independently and parallel):
+
+fetcher1 : Fetches c_max data elements from memory and sends to producer1 via pipe pipe1_1
+fetcher2 : Fetches c_max data elements from memory and sends to producer2 via pipe pipe1_2
+producer1 : Sends c_max constant elements followed by c_max elements from fetcher1 to consumer through pipe2_1
+producer2 : Sends c_max elements from fetcher2 followed by c_max constant elements to consumer through pipe2_2
+consumer : Consumes data simultaneously from the two producers
+
+
+Observations:
+
+The above system stalls when c_max exceeds a threshold determined by the pipeline depth of the fetcher and the pipe_depths of the pipes
+
+Pipeline depth		Pipe1 depth	Pipe2 depth	Largest c_max successful
+	15		1		1		20
+	12		1		1		17
+	12		1		8		24
+
+
+Reason:
+
+Producer1 sends constant values and hence does not access memory fetched by fetcher1. However, fetcher1 tries to aggressively prefeth data for producer1. Furthermore, use of pipelining enables it to call the memory, but the response from the memory is blocked due to pipe1_1 being full. This prevents any further accesses to the memory, thereby blocking fetcher2, and hence, producer2. But, since the consumer needs data from both producers, it is blocked, thereby blocking producer1, which is already blocking fetcher1, and hence, the memory. Thus, the whole system is deadlocked.
+
+
+Practical usage of the system (why create such a hierarchy at all):
+
+Consider a system working on tensors. Assume that the input is padded by zeros, which is known to the hardware. For performance improvements, the input is partitioned into multiple parts and the system executes concurrently on each of the part. To improve memory behaviour, the padded data is not fetched from the memory, but is sent directly. Also, using same module for fetching and sending leads to a significant performance degradation (37% in the sample test). This calls for the need of the arrangement shown here.
+
+
+Use of non-blocking pipe:
+
+Note that the use of no-block pipes will not help resolve the deadlock, as explained below:
+
+-> pipe2_{1/2} are made non-blocking - The blocking is caused by the fact that the producers are not able to send any data to the consumer. Hence, using non-blocking pipe will allow the consumer to operate ,but it will poll indefinitely as it will never receive valid data from both the producers.
+
+-> pipe1_{1/2} are made non-blocking - Even in this case, the blocking behaviour will exist. This is because producer1 will not read the data until it has sent all the constant data, and hence, the pipe will be full, thereby blocking fetcher1 and hence, fetcher2.

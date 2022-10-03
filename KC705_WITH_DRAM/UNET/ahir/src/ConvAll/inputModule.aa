@@ -1,6 +1,6 @@
 // Access the input tensor and write to input pipe
 $module [access_T]
-$in(row_in rt ct chl_in chl_out rk pad : $uint<16> num_parts_1 index : $uint<8>)
+$in(row_in rt ct chl_in rk pad : $uint<16> num_parts_1 index : $uint<8>)
 $out()
 $is
 {
@@ -18,16 +18,12 @@ $is
 	
 	$parallelblock [access_block]
 	{	
-		$call loadInput_in1 (addr1 row_in ct chl_in pad num_parts_1) ()
-		$call inputDataFetcher1 ( addr1 m_factor m2_factor cnt1 num_parts_1 index) ()
-		$call loadInput_in2 (addr2 row_in ct chl_in pad num_parts_1) ()
-		$call inputDataFetcher2 ( addr2 m_factor m2_factor cnt2 num_parts_1 index) ()
-		$call loadInput_in3 (addr3 row_in ct chl_in pad num_parts_1) ()
-		$call inputDataFetcher3 ( addr3 m_factor m2_factor cnt2 num_parts_1 index) ()
-		$guard (mode_3) $call loadInput_in4 (addr4 row_in ct chl_in pad num_parts_1) ()
-		$guard (mode_3) $call inputDataFetcher4 ( addr4 m_factor m2_factor cnt1 num_parts_1 index) ()
+		$call loadInput_in1 (addr1 row_in ct chl_in pad num_parts_1 index) ()
+		$call loadInput_in2 (addr2 row_in ct chl_in pad num_parts_1 index) ()
+		$call loadInput_in3 (addr3 row_in ct chl_in pad num_parts_1 index) ()
+		$guard (mode_3) $call loadInput_in4 (addr4 row_in ct chl_in pad num_parts_1 index) ()
 	}
-	debug_output_pipe := 72
+	//debug_output_pipe := 72
 }
 
 #define num 1

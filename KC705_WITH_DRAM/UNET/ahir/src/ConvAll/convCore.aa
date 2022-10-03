@@ -117,7 +117,6 @@ $is
 		$volatile n_chl_left := (chl_left - n_cmi)
 
 		$if (p_cnt < num_parts) $then $place [loopback] $endif
-		debug_output_pipe := 73
 	}
 }
 
@@ -204,6 +203,5 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$guard (num_done) output_pipe8_2 := acc_val8_2
 
 		$while (nop_count < op_size)
-		debug_output_pipe := 74
 	}
 }

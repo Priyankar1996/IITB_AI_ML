@@ -32,20 +32,10 @@ $pipe core8_kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core8_kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core8_kp3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 
-$pipe kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe kp3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-
-$pipe ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-
 $pipe core_ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core_ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core_ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core_ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-
 
 $pipe output_pipe1_1 : $uint<ACC_WIDTH> $depth SMALL_PIPE_DEPTH
 $pipe output_pipe1_2 : $uint<ACC_WIDTH> $depth SMALL_PIPE_DEPTH

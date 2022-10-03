@@ -17,8 +17,8 @@ all: HW
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
-MODULES=src/readWriteModules.aa src/readWriteModules2.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/Convolution3/conv_compiled.aa src/convSmall/conv_compiled.aa
-INCLUDES=-Isrc/Convolution3 -Isrc/concat -Isrc/convTranspose -Isrc/convSmall
+MODULES=src/readWriteModules.aa src/readWriteModules2.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/ConvAll/conv_compiled.aa
+INCLUDES=-Isrc/concat -Isrc/convTranspose -Isrc/ConvAll
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
@@ -43,6 +43,7 @@ llvmbc2aa:  prog.opt.o
 # link and optimize
 aalink: src/timer.aa prog.aa $(MODULES)
 	AaPreprocess -I src/Convolution3 src/Convolution3/conv_macro.aa -o src/Convolution3/conv_compiled.aa
+	AaPreprocess -I src/ConvAll src/ConvAll/conv_macro.aa -o src/ConvAll/conv_compiled.aa
 	AaPreprocess -I src/convSmall src/convSmall/conv_macro.aa -o src/convSmall/conv_compiled.aa
 	AaLinkExtMem src/timer.aa src/decl.aa $(MODULES) prog.aa | vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
@@ -54,7 +55,7 @@ aa2vc: prog.linked.opt.aa
 
 # vC to VHDL
 vc2vhdl: prog.vc
-	vc2vhdl -S 4 -O -I 8 -v -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc 
+	vc2vhdl -S 4 -O -I 8 -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc 
 	vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
 	vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
 	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl

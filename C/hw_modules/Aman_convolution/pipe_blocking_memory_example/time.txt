@@ -1,0 +1,7 @@
+Timing for different options:
+
+PIPE_DEPTH = 200
+
+cmax = 128
+Using separate fetch & producer : 397 cc
+Using producer to fetch memory  : 653 cc

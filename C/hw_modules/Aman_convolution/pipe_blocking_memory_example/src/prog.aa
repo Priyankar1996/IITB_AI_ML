@@ -1,0 +1,126 @@
+// Author : Aman Dhammani
+// Dept Of EE, IITB
+
+$parameter PIPE_WIDTH 8
+$parameter INTERMEDIATE_PIPE_DEPTH 1
+
+$pipe pipe1_1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe pipe1_2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe pipe2_1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe pipe2_2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+
+$record [structx_x__SizedTensor_16K] < $array [256] $of $uint<8> > 
+$pipe maxpool_input_pipe : $uint<16> $depth 2
+$pipe maxpool_output_pipe : $uint<8> $depth 2
+$pipe time_pipe : $uint<64> $depth 2
+$storage T:structx_x__SizedTensor_16K
+
+$module [progx_xoptx_xo_storage_initializer_] $in () $out () $is 
+{
+  $null
+  $attribute initializer
+}
+
+$module [topModule] $in () $out () $is
+{
+	$branchblock [topBlock]
+	{
+	$call timer (10) (time_pipe)
+	c_max := maxpool_input_pipe
+	cm2 := ($zero<1> && c_max)
+	T[0][($bitcast ($uint<32>) c_max)] := 255
+	$parallelblock [pb0]
+	{
+		$call timer (15) (time_pipe)
+		$call fetcher1 (c_max) ()
+		$call fetcher2 (c_max) ()
+		$call producer1 (cm2) ()
+		$call producer2 (cm2) ()
+		$call consumer (cm2) ()
+	}
+	$call timer (20) (time_pipe)
+	}
+	maxpool_output_pipe := 20
+}
+
+$module [fetcher1] $in (c_max : $uint<16>) $out () $is 
+{
+	$branchblock [BB0]
+	{
+		$dopipeline $depth 12 $fullrate
+		$merge $entry $loopback
+		$phi cnt := 0 $on $entry n_cnt $on $loopback
+		$endmerge
+		$volatile n_cnt := (cnt + 1)
+		pipe1_1 := T[0][cnt]
+		$while (cnt < c_max)
+	}
+}
+
+
+$module [fetcher2] $in (c_max : $uint<16>) $out () $is 
+{
+	$branchblock [BB0]
+	{
+		$dopipeline $depth 12 $fullrate
+		$merge $entry $loopback
+		$phi cnt := 0 $on $entry n_cnt $on $loopback
+		$endmerge
+		$volatile n_cnt := (cnt + 1)
+		pipe1_2 := T[0][cnt]
+		$while (cnt < c_max)
+	}
+}
+
+$module [producer1] $in (c_max : $uint<17>) $out () $is
+{
+	$branchblock [BB0]
+	{
+		$dopipeline $depth 12 $fullrate
+		$merge $entry $loopback
+		$phi cnt := 0 $on $entry n_cnt $on $loopback
+		$endmerge
+		$volatile n_cnt := (cnt + 1)
+		$volatile read_cnd := (cnt < c_max)
+		$guard (read_cnd) fv := pipe1_1
+		//$guard (read_cnd) fv := T[0][cnt]
+		sv := ($mux read_cnd fv 30)
+		pipe2_1 := sv
+		$while (cnt < (c_max<<1))
+	}
+}
+
+
+$module [producer2] $in (c_max : $uint<17>) $out () $is
+{
+	$branchblock [BB0]
+	{
+		$dopipeline $depth 12 $fullrate
+		$merge $entry $loopback
+		$phi cnt := 0 $on $entry n_cnt $on $loopback
+		$endmerge
+		$volatile n_cnt := (cnt + 1)
+		$volatile read_cnd := (cnt >= c_max)
+		$guard (read_cnd) fv := pipe1_2
+		//$guard (read_cnd) fv := T[0][(cnt - c_max)]
+		sv := ($mux read_cnd fv 40)
+		pipe2_2 := sv
+		$while (cnt < (c_max<<1))
+	}
+}
+
+$module [consumer] $in (c_max : $uint<17>) $out () $is
+{
+	$branchblock [BB0]
+	{
+		$dopipeline $depth 12 $fullrate
+		$merge $entry $loopback
+		$phi cnt := 0 $on $entry n_cnt $on $loopback
+		$endmerge
+		$volatile n_cnt := (cnt + 1)
+		val1 := pipe2_1
+		val2 := pipe2_2
+		//time_pipe := (($bitcast ($uint<32>) 5) && ($bitcast ($uint<32>) (val1 && val2)))
+		$while (cnt < (c_max<<1))
+	}
+}

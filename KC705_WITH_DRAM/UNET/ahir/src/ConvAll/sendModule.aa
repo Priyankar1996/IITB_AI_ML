@@ -4,7 +4,6 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> num_parts 
 		$call sendInner1 (0 rb cb chl_out shift_val num_parts max_chl activation index) ()
 		$call sendInner2 (($bitcast ($uint<32>) (chl_out*cb)) rb cb chl_out shift_val num_parts max_chl activation index) ()
 	}
-	debug_output_pipe := 75
 }
 
 #define num 1

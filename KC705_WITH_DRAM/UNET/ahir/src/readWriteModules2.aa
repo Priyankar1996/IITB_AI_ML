@@ -11,36 +11,13 @@ $in (index : $uint<8> address : $uint<32> data : $uint<64>)
 $out ()
 $is
 {
-	cnd1 := (index == 0)
-	cnd2 := (index == 1)
-	$guard (cnd1) $call memoryModule (0 (K_base + address) data 255) (out1)
-	$guard (cnd2) $call memoryModule (0 (T0_base + address) data 255) (out2)
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [readModule_maxPool]
-$in (index : $uint<8> address : $uint<32>)
-$out (data : $uint<64>)
-$is
-{
-	cnd1 := (index == 2)
-	cnd2 := (index == 3)
-	cnd3 := (index == 4)
-	$guard (cnd1) $call memoryModule (1 (T2_base + address) 0 255) (val1)
-	$guard (cnd2) $call memoryModule (1 (T3_base + address) 0 255) (val2)
-	$guard (cnd1) $call memoryModule (1 (T4_base + address) 0 255) (val3)
-	
-	data := ( $excmux cnd1 val1 cnd2 val2 cnd3 val3 )
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [writeModule_maxPool]
-$in (index : $uint<8> address : $uint<32> data : $uint<64>)
-$out (done : $uint<1>)
-$is
-{
-	$call memoryModule (0 (T0_base + address) data 255) (out1)
-	done := (index [] 0)
+	$volatile cnd1 := (index == 0)
+	$volatile cnd2 := (index == 1)
+	addr := ($excmux 
+			cnd1 (K_base + address)
+			cnd2 (T0_base + address)
+			)
+	$call memoryModule (0 addr data 255) (out)
 }
 
 $pipeline $depth 7 $buffering 1 $fullrate
@@ -49,57 +26,72 @@ $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
 $is
 {
-	$volatile  cnd1 := (index == 0)
-	$volatile  cnd2 := (index == 1)
-	$guard (cnd1) $call memoryModule (1 (T0_base + address) 0 255) (val1)
-	$guard (cnd2) $call memoryModule (1 (T1_base + address) 0 255) (val2)
-	
-	data := ($mux cnd1 val1 val2)
+	$volatile cnd1 := (index == 0)
+	$volatile cnd2 := (index == 1)
+	$volatile cnd3 := (index == 2)
+	$volatile cnd4 := (index == 3)
+	$volatile cnd5 := (index == 4)
+	addr := ($excmux 
+			cnd1 (T0_base + address)
+			cnd2 (T1_base + address)
+			cnd3 (T2_base + address)
+			cnd4 (T3_base + address)
+			cnd5 (T4_base + address)
+			)
+	$call readModule_convolution2 (addr) (done)
+	data := READ_T_RESP_QUEUE
+
 }
 
-$pipeline $depth 8 $buffering 1 $fullrate
+$pipeline $depth 7 $buffering 1 $fullrate
+$opaque $module [readModule_convolution2]
+$in (addr : $uint<32>) $out (done : $uint<1>)
+$is
+{
+	$call memoryModule (1 addr 0 255) (data)
+	READ_T_RESP_QUEUE := data
+	done := (data [] 0)
+}
+
+$pipeline $depth 7 $buffering 1 $fullrate
 $opaque $module [readModule_convolutionk]
 $in (index : $uint<8> address : $uint<32>)
 $out (data : $uint<64>)
 $is
 {
-	$call memoryModule (1 (K_base + address) 0 255) (data)
+	addr := (K_base + address)
+	$call readModule_convolutionk2 (addr) (done)
+	data := READ_K_RESP_QUEUE
 }
 
-$pipeline $depth 8 $buffering 1 $fullrate
+$pipeline $depth 7 $buffering 1 $fullrate
+$opaque $module [readModule_convolutionk2]
+$in (addr : $uint<32>) $out (done : $uint<1>)
+$is
+{
+	$call memoryModule (1 addr 0 255) (data)
+	READ_K_RESP_QUEUE := data
+	done := (data [] 0)
+}
+
+$pipeline $depth 7 $buffering 1 $fullrate
 $opaque $module [writeModule_convolution]
 $in (index : $uint<8> address : $uint<32> data : $uint<64> bm : $uint<8>)
 $out (done : $uint<1>)
 $is
 {
-	cnd1 := (index == 0)
-	cnd2 := (index == 1)
-	cnd3 := (index == 2)
-	cnd4 := (index == 3)
-	cnd5 := (index == 4)
-	$guard (cnd1) $call memoryModule (0 (T0_base + address) data bm) (out1)
-	$guard (cnd2) $call memoryModule (0 (T1_base + address) data bm) (out2)
-	$guard (cnd3) $call memoryModule (0 (T2_base + address) data bm) (out3)
-	$guard (cnd4) $call memoryModule (0 (T3_base + address) data bm) (out4)
-	$guard (cnd5) $call memoryModule (0 (T4_base + address) data bm) (out5)
+	$volatile cnd1 := (index == 0)
+	$volatile cnd2 := (index == 1)
+	$volatile cnd3 := (index == 2)
+	$volatile cnd4 := (index == 3)
+	$volatile cnd5 := (index == 4)
+	addr := ($excmux 
+			cnd1 (T0_base + address)
+			cnd2 (T1_base + address)
+			cnd3 (T2_base + address)
+			cnd4 (T3_base + address)
+			cnd5 (T4_base + address)
+			)
+	$call memoryModule (0 addr data bm) (out)
 	done := (index [] 0)
-}
-
-$pipeline $depth 8 $buffering 1 $fullrate
-$opaque $module [readModule_convolution2]
-$in (index : $uint<8> address : $uint<32>)
-$out (data : $uint<64>)
-$is
-{
-	cnd1 := (index == 0)
-	cnd2 := (index == 1)
-	cnd3 := (index == 2)
-	cnd4 := (index == 3)
-	cnd5 := (index == 4)
-	$guard (cnd1) $call memoryModule (1 (T0_base + address) 0 255) (val1)
-	$guard (cnd2) $call memoryModule (1 (T1_base + address) 0 255) (val2)
-	$guard (cnd3) $call memoryModule (1 (T2_base + address) 0 255) (val3)
-	$guard (cnd4) $call memoryModule (1 (T3_base + address) 0 255) (val4)
-	$guard (cnd5) $call memoryModule (1 (T4_base + address) 0 255) (val5)
-	data := ($excmux cnd1 val1 cnd2 val2 cnd3 val3 cnd4 val4 cnd5 val5)
 }

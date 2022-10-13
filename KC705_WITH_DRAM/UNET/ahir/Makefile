@@ -17,8 +17,10 @@ all: HW
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
-MODULES=src/readWriteModules.aa src/readWriteModules2.aa src/concat/concat.aa src/convTranspose/ct_core.aa src/ConvAll/conv_compiled.aa
-INCLUDES=-Isrc/concat -Isrc/convTranspose -Isrc/ConvAll
+MODULES=src/readWriteModules2.aa src/ConvAll/conv_compiled.aa 
+# src/concat/concat.aa src/convTranspose/ct_core.aa
+INCLUDES=-Isrc/ConvAll 
+# -Isrc/concat -Isrc/convTranspose
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
@@ -42,9 +44,9 @@ llvmbc2aa:  prog.opt.o
 
 # link and optimize
 aalink: src/timer.aa prog.aa $(MODULES)
-	AaPreprocess -I src/Convolution3 src/Convolution3/conv_macro.aa -o src/Convolution3/conv_compiled.aa
+	#AaPreprocess -I src/Convolution3 src/Convolution3/conv_macro.aa -o src/Convolution3/conv_compiled.aa
 	AaPreprocess -I src/ConvAll src/ConvAll/conv_macro.aa -o src/ConvAll/conv_compiled.aa
-	AaPreprocess -I src/convSmall src/convSmall/conv_macro.aa -o src/convSmall/conv_compiled.aa
+	#AaPreprocess -I src/convSmall src/convSmall/conv_macro.aa -o src/convSmall/conv_compiled.aa
 	AaLinkExtMem src/timer.aa src/decl.aa $(MODULES) prog.aa | vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
@@ -72,4 +74,4 @@ aa2cbuild: aa2c/aa_c_model.c  aa2c/aa_c_model_internal.h aa2c/aa_c_model.h
 clean:
 	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.aa
 
-PHONY: all clean	
+PHONY: all clean

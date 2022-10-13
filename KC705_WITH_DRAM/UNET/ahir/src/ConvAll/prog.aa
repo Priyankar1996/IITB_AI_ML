@@ -2,7 +2,7 @@
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in index_k index_out : $uint<8> shift_val pad : $uint<16> activation : $uint<8>) $out() $is
+$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in1 index_in2 index_k index_out : $uint<8> shift_val pad : $uint<16> activation : $uint<8>) $out() $is
 {
 	in_8 := (($slice chl_in 2 0) == 0) 
 	out_8 := (($slice chl_out 2 0) == 0)
@@ -11,6 +11,11 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 	//chl_out8 := (chl_out >> 3)
 	chl_out_ceil := ((chl_out + 7)>>3)
 	chl_in_ceil := ((chl_in + 7)>>3)
+	
+	inCT := (rk == 2)
+	inConcat := (((index_in2 [] 7) == 1) & (~inCT))
+	in_nCT := (((~inCT) & (~inConcat)) & (~in_8))
+	in_nCT8 := (((~inCT) & (~inConcat)) & in_8)
 	
 	// Creating partitions
 	$call Divider (K_DEPTH (chl_in_ceil*ck)) (alpha)
@@ -26,11 +31,14 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 		// Note chl_in_ceil = chl_in8 for chl_in being a multiple of 8
 		// Note chl_out_ceil = chl_out8 for chl_out being a multiple of 8
 		
-		$guard (~inout_8) $call loadKernel (chl_in chl_out rk ck index_k) ()
-		$guard (inout_8) $call loadKernel8 (chl_in_ceil chl_out_ceil rk ck index_k) ()
+		$guard (~inout_8) $call kernelModule (chl_in chl_out rk ck index_k) ()
+		$guard (inout_8) $call kernelModule8 (chl_in_ceil chl_out_ceil rk ck index_k) ()
 		
-		$guard (~in_8) $call access_T (rb rt ct chl_in rk pad parts index_in) ()
-		$guard (in_8) $call access_T8 (rb ct chl_in_ceil rk pad parts index_in) ()
+		// Exactly one of them is called
+		$guard (in_nCT) $call inputModule (rb rt ct chl_in rk pad parts index_in1) ()
+		$guard (in_nCT8) $call inputModule8 (rb ct chl_in_ceil rk pad parts index_in1) ()
+		$guard (inCT) $call inputModuleCT (rb ct chl_in_ceil parts index_in1) ()
+		$guard (inConcat) $call inputModuleConcat (rb ct chl_in_ceil rk pad parts index_in1 (index_in2 & _b01111111)) ()
 		
 		$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 		$call accumulator (chl_in_ceil ck op_size) ()

@@ -57,6 +57,9 @@ $parameter K_base {T4_base+{128*KB2WORD}}
 $pipe MAIN_MEM_REQUEST : $uint<110> $depth 16
 $pipe MAIN_MEM_RESPONSE : $uint<65> $depth 16
 
+$pipe READ_T_RESP_QUEUE : $uint<64> $depth 16
+$pipe READ_K_RESP_QUEUE : $uint<64> $depth 16
+
 //$foreign $module [memoryModelC]
  //	$in (rwbar: $uint<8> a32: $uint<32> wdata: $uint<64>)
 //	$out (rdata: $uint<64>)

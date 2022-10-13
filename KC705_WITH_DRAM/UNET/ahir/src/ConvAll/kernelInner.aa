@@ -1,5 +1,5 @@
 
-$module [loadKernel_in##num ]
+$module [kernelModule_in##num ]
 $in (init_addr : $uint<32> chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is

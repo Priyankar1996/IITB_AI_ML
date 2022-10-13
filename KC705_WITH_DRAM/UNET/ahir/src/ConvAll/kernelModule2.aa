@@ -1,5 +1,5 @@
 // Load the kernel channel into the kernel pipes
-$module [loadKernel8]
+$module [kernelModule8]
 $in (chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is

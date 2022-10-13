@@ -1,5 +1,5 @@
 // Access the input tensor and write to input pipe
-$module [access_T]
+$module [inputModule]
 $in(row_in rt ct chl_in rk pad : $uint<16> num_parts_1 index : $uint<8>)
 $out()
 $is

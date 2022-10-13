@@ -32,20 +32,10 @@ $pipe core8_kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core8_kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core8_kp3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 
-$pipe kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe kp3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-
-$pipe ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-
 $pipe core_ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core_ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core_ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core_ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-
 
 $pipe output_pipe1_1 : $uint<ACC_WIDTH> $depth SMALL_PIPE_DEPTH
 $pipe output_pipe1_2 : $uint<ACC_WIDTH> $depth SMALL_PIPE_DEPTH
@@ -115,7 +105,7 @@ $pipe conv8_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in index_k index_out : $uint<8> shift_val pad : $uint<16> activation : $uint<8>) $out() $is
+$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in1 index_in2 index_k index_out : $uint<8> shift_val pad : $uint<16> activation : $uint<8>) $out() $is
 {
 	in_8 := (($slice chl_in 2 0) == 0) 
 	out_8 := (($slice chl_out 2 0) == 0)
@@ -124,6 +114,11 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 	//chl_out8 := (chl_out >> 3)
 	chl_out_ceil := ((chl_out + 7)>>3)
 	chl_in_ceil := ((chl_in + 7)>>3)
+	
+	inCT := (rk == 2)
+	inConcat := (((index_in2 [] 7) == 1) & (~inCT))
+	in_nCT := (((~inCT) & (~inConcat)) & (~in_8))
+	in_nCT8 := (((~inCT) & (~inConcat)) & in_8)
 	
 	// Creating partitions
 	$call Divider (K_DEPTH (chl_in_ceil*ck)) (alpha)
@@ -136,18 +131,22 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 
 	$parallelblock [topBlocks]
 	{
-		$guard (~inout_8) $call loadKernel (chl_in chl_out rk ck index_k) ()
-		$guard (inout_8) $call loadKernel8 (chl_in_ceil chl_out_ceil rk ck index_k) ()
+		// Note chl_in_ceil = chl_in8 for chl_in being a multiple of 8
+		// Note chl_out_ceil = chl_out8 for chl_out being a multiple of 8
 		
-		$guard (~in_8) $call access_T (rb rt ct chl_in rk pad parts index_in) ()
-		// Note chl_in_ceil = chl_in8 for multiple of 8
-		$guard (in_8) $call access_T8 (rb ct chl_in_ceil rk pad parts index_in) ()
+		$guard (~inout_8) $call kernelModule (chl_in chl_out rk ck index_k) ()
+		$guard (inout_8) $call kernelModule8 (chl_in_ceil chl_out_ceil rk ck index_k) ()
+		
+		// Exactly one of them is called
+		$guard (in_nCT) $call inputModule (rb rt ct chl_in rk pad parts index_in1) ()
+		$guard (in_nCT8) $call inputModule8 (rb ct chl_in_ceil rk pad parts index_in1) ()
+		$guard (inCT) $call inputModuleCT (rb ct chl_in_ceil parts index_in1) ()
+		$guard (inConcat) $call inputModuleConcat (rb ct chl_in_ceil rk pad parts index_in1 (index_in2 & _b01111111)) ()
 		
 		$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 		$call accumulator (chl_in_ceil ck op_size) ()
 		
 		$guard (~out_8) $call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT index_out) ()
-		// Note chl_out_ceil = chl_out8 for multiple of 8
 		$guard (out_8) $call sendModule8 (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
 	}
 	//debug_output_pipe := 70
@@ -197,7 +196,7 @@ $opaque $module [Divider] $in (dividend : $uint<16> $divisor : $uint<16>) $out (
 
 // Load the kernel channel into the kernel pipes
 
-$module [loadKernel]
+$module [kernelModule]
 $in (chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is
@@ -209,16 +208,16 @@ $is
 	addr3 := ($bitcast ($uint<32>) (row_size<<1))
 	$parallelblock[k_block]
 	{
-		$call loadKernel_in1 (addr1 chl_in chl_out rk ck index) ()
-		$call loadKernel_in2 (addr2 chl_in chl_out rk ck index) ()
-		$guard (mode_3) $call loadKernel_in3 (addr3 chl_in chl_out rk ck index) ()
+		$call kernelModule_in1 (addr1 chl_in chl_out rk ck index) ()
+		$call kernelModule_in2 (addr2 chl_in chl_out rk ck index) ()
+		$guard (mode_3) $call kernelModule_in3 (addr3 chl_in chl_out rk ck index) ()
 	}
 	//debug_output_pipe := 71
 }
 
 
 
-$module [loadKernel_in1 ]
+$module [kernelModule_in1 ]
 $in (init_addr : $uint<32> chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is
@@ -303,7 +302,7 @@ $is
 
 
 
-$module [loadKernel_in2 ]
+$module [kernelModule_in2 ]
 $in (init_addr : $uint<32> chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is
@@ -388,7 +387,7 @@ $is
 
 
 
-$module [loadKernel_in3 ]
+$module [kernelModule_in3 ]
 $in (init_addr : $uint<32> chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is
@@ -473,7 +472,7 @@ $is
 
 
 // Load the kernel channel into the kernel pipes
-$module [loadKernel8]
+$module [kernelModule8]
 $in (chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is
@@ -690,7 +689,7 @@ $opaque $module [writeToPipe8 ] $in (index : $uint<2> in_data1 : $uint<64>) $out
 
 
 // Access the input tensor and write to input pipe
-$module [access_T]
+$module [inputModule]
 $in(row_in rt ct chl_in rk pad : $uint<16> num_parts_1 index : $uint<8>)
 $out()
 $is
@@ -1067,7 +1066,7 @@ $is
 	
 
 // Access the input tensor and write to iput pipe
-$module [access_T8]
+$module [inputModule8]
 $in(row_in ct chl_in rk pad: $uint<16> num_parts index : $uint<8>)
 $out()
 $is
@@ -1091,20 +1090,20 @@ $is
 		$phi mycounter := ($bitcast ($uint<32>) row_size_total) $on $entry n_mycounter $on $loopback
 		$phi part_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on $loopback
 		$endmerge
-		
+
 		// $call timer (4) (time_pipe)
 		$volatile next_row :=  (mycounter == 1)
 		$volatile tmp_cnt := (mycounter - 1)
 		$volatile n_mycounter := ($mux next_row row_size_total tmp_cnt ) 
-		
+
 		$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
 		$volatile continue_flag1 := (update_row < row_in)
-			
+
 		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
 		$volatile n_row1 := ($mux continue_flag1 update_row 0)
 		$volatile n_address := ($mux continue_flag1 (address + ($mux next_row m_factor ($mux mc_lt_p 0 1))) addr_init)
 		$volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
-			
+
 		$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
 		$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
 		$volatile p3_zero := (mc_lt_p | (((row1+2) < pad) | (row1 >= ((row_in + 1)- pad))))
@@ -1112,7 +1111,7 @@ $is
 		$volatile addr2 := (address+ m_factor)
 		$volatile addr3 := (address+ m2_factor)
 		$volatile addr4 := (address+ m3_factor)
-			
+
 		$guard (~p1_zero) $call readModule_convolution (index address) (val1)
 		$guard (~p2_zero) $call readModule_convolution (index addr2) (val2)
 		$guard (~p3_zero) $call readModule_convolution (index addr3) (val3)
@@ -1124,8 +1123,124 @@ $is
 
 		$while (continue_flag1 | (part_cnt < num_parts))
 
-		// $call timer (101) (time_pipe)
-		////debug_output_pipe := 92
+	}
+}
+
+// Access the input tensor and write to iput pipe
+$module [inputModuleCT]
+$in(row_in ct chl_in: $uint<16> num_parts index : $uint<8>)
+$out()
+$is
+{
+	$branchblock [access_block]
+	{
+	ct_new := ((ct<<1) + 1)
+
+		// Pipeline for sending inputs
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address := ($bitcast ($uint<32>) 0) $on $entry n_address $on $loopback
+		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 1) $on $entry n_chl $on $loopback
+		$phi mycounter := ($bitcast ($uint<16>) 1) $on $entry n_mycounter $on $loopback
+		$phi part_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on $loopback
+		$endmerge
+
+		$volatile chl_done := (chl == chl_in)
+		$volatile n_chl := ($mux chl_done 1 (chl+1))
+		$volatile next_row :=  ((mycounter == ct_new) & chl_done)
+		$volatile tmp_cnt := (mycounter + 1)
+		$volatile n_mycounter := ($mux chl_done ($mux next_row 1 tmp_cnt ) mycounter)
+
+		$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
+		$volatile continue_flag1 := (update_row < row_in)
+		$volatile n_row1 := ($mux continue_flag1 update_row 0)
+
+		$volatile p2_zero := (mycounter [] 0)
+		$volatile n_address := ($mux continue_flag1 (address + ($mux p2_zero 0 1)) 0)
+		$volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
+
+
+		$guard (~p2_zero) $call readModule_convolution (index address) (val2)
+		core_ip1 := 0
+		core_ip2 := ($mux p2_zero 0 val2)
+		core_ip3 := 0
+		
+
+		$while (continue_flag1 | (part_cnt < num_parts))
+
+	}
+}
+
+
+// Access the input tensor and write to iput pipe
+$module [inputModuleConcat]
+$in(row_in ct chl_in rk pad: $uint<16> num_parts index1 index2 : $uint<8>)
+$out()
+$is
+{
+	$branchblock [access_block]
+	{
+	$volatile ct_new := (ct + (pad<<1))
+	row_size_total := ($bitcast ($uint<32>) (ct_new * chl_in))
+	$volatile ct1 := (ct >> 1)
+	rs1 := (row_size_total >> 1)
+	p_chl_in := ($bitcast ($uint<32>) (pad*chl_in))
+	m_factor := ($bitcast ($uint<32>) (ct1*chl_in))
+	m2_factor := (m_factor << 1)
+	m3_factor := (m2_factor+m_factor)
+	mode_3 := (rk == 3)
+	addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
+
+		// Pipeline for sending inputs
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address1 := addr_init $on $entry n_address1 $on $loopback
+		$phi address2 := addr_init $on $entry n_address2 $on $loopback
+		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+		$phi mycounter := ($bitcast ($uint<32>) row_size_total) $on $entry n_mycounter $on $loopback
+		$phi part_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on $loopback
+		$endmerge
+
+		// $call timer (4) (time_pipe)
+		$volatile next_row :=  (mycounter == 1)
+		$volatile tmp_cnt := (mycounter - 1)
+
+		$volatile inp1 := (mycounter > rs1)
+
+		$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
+		$volatile continue_flag1 := (update_row < row_in)
+
+		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
+		$volatile update_val := ($mux next_row m_factor ($mux mc_lt_p 0 1))
+		$volatile address := ($mux inp1 address1 address2)
+
+		$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
+		$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
+		$volatile p3_zero := (mc_lt_p | (((row1+2) < pad) | (row1 >= ((row_in + 1)- pad))))
+		$volatile p4_zero := (mc_lt_p | (((row1+3) < pad) | (row1 >= (row_in - pad))))
+		$volatile addr2 := (address+ m_factor)
+		$volatile addr3 := (address+ m2_factor)
+		$volatile addr4 := (address+ m3_factor)
+		$volatile index := ($mux inp1 index1 index2)
+
+		$guard (~p1_zero) $call readModule_convolution (index address) (val1)
+		$guard (~p2_zero) $call readModule_convolution (index addr2) (val2)
+		$guard (~p3_zero) $call readModule_convolution (index addr3) (val3)
+		$guard (~p4_zero) $call readModule_convolution (index addr4) (val4)
+		core_ip1 := ($mux p1_zero 0 val1)
+		core_ip2 := ($mux p2_zero 0 val2)
+		core_ip3 := ($mux p3_zero 0 val3)
+		$guard (mode_3) core_ip4 := ($mux p4_zero 0 val4)
+
+		$volatile n_mycounter := ($mux next_row row_size_total tmp_cnt ) 
+		$volatile n_row1 := ($mux continue_flag1 update_row 0)
+		$volatile n_address1 := ($mux inp1 ($mux continue_flag1 (address1 + update_val) addr_init) address1)
+		$volatile n_address2 := ($mux inp1 address2 ($mux continue_flag1 (address2 + update_val) addr_init))
+		$volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
+
+		$while (continue_flag1 | (part_cnt < num_parts))
+
 	}
 }
 

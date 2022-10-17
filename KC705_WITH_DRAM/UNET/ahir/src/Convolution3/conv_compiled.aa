@@ -115,8 +115,8 @@ $module [convolution3D_3] $in (rb cb chl_out_in chl_in_in rk ck: $uint<16> index
 	max_per_part := ($mux cnd_partition alpha chl_out)
     $parallelblock [topBlocks]
     {
-	    $call loadKernel (chl_in chl_out rk ck index_k) ()
-	    $call access_T (rb ct chl_in chl_out rk pad parts index_in) ()
+	    $call kernelModule (chl_in chl_out rk ck index_k) ()
+	    $call inputModule (rb ct chl_in chl_out rk pad parts index_in) ()
 	    $call convolveCore (rb cb chl_in chl_out rk ck parts max_per_part) ()
 	    $call accumulator (chl_in ck op_size) ()
 	    $guard (pool_var) $call sendModule (rb cb chl_out shift_val parts max_per_part activation index_out) ()
@@ -162,7 +162,7 @@ $opaque $module [Divider] $in (dividend : $uint<16> $divisor : $uint<16>) $out (
 
 
 // Load the kernel channel into the kernel pipes
-$module [loadKernel]
+$module [kernelModule]
 $in (chl_in chl_out rk ck : $uint<16> index : $uint<8>)
 $out ()
 $is
@@ -378,7 +378,7 @@ $opaque $module [writeToPipe8 ] $in (index : $uint<2> in_data1 : $uint<64>) $out
 
 
 // Access the input tensor and write to iput pipe
-$module [access_T]
+$module [inputModule]
 $in(row_in ct chl_in chl_out rk pad: $uint<16> num_parts index : $uint<8>)
 $out()
 $is

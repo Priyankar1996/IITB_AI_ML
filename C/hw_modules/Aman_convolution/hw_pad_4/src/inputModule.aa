@@ -4,8 +4,8 @@ $in(row_in ct chl_in chl_out rk pad: $uint<16>)
 $out()
 $is
 {
-    $branchblock [access_block]
-    {
+	$branchblock [access_block]
+	{
 	ct_new := (ct + (pad<<1))
 	row_size_total := ($bitcast ($uint<32>) (ct_new * chl_in))
 	p_chl_in := ($bitcast ($uint<32>) (pad*chl_in))
@@ -16,20 +16,20 @@ $is
 	mode_3 := (rk == 3)
 	addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
 
-        // Pipeline for sending inputs
-        $dopipeline $depth 15 $buffering 2 $fullrate
-        $merge $entry $loopback
-        $phi address := addr_init $on $entry n_address $on $loopback
-        $phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
-        $phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
-        $phi mycounter := ($bitcast ($uint<32>) row_size_total) $on $entry n_mycounter $on $loopback
-        $endmerge
-        
-        // $call timer (4) (time_pipe)
-        $volatile next_row :=  (mycounter == 1)
-        $volatile tmp_cnt := (mycounter - 1)
-        $volatile n_mycounter := ($mux next_row row_size_total tmp_cnt ) 
-        
+		// Pipeline for sending inputs
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address := addr_init $on $entry n_address $on $loopback
+		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+		$phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
+		$phi mycounter := ($bitcast ($uint<32>) row_size_total) $on $entry n_mycounter $on $loopback
+		$endmerge
+		
+		// $call timer (4) (time_pipe)
+		$volatile next_row :=  (mycounter == 1)
+		$volatile tmp_cnt := (mycounter - 1)
+		$volatile n_mycounter := ($mux next_row row_size_total tmp_cnt ) 
+		
 	$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
 	$volatile continue_flag1 := (update_row < row_in)
 	$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
@@ -53,11 +53,11 @@ $is
 	core_ip3 := ($mux p3_zero 0 val3)
 	$guard (mode_3) core_ip4 := ($mux p4_zero 0 val4)
 
-        $volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
-        $volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
+		$volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
+		$volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
 
-        $while not_end_flag
+		$while not_end_flag
 
-        // $call timer (101) (time_pipe)
-    }
+		// $call timer (101) (time_pipe)
+	}
 }

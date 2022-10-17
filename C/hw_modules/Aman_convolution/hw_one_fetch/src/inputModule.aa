@@ -12,7 +12,6 @@ $is
 	m_factor := ($bitcast ($uint<32>) (ct*chl_in))
 	m2_factor := (m_factor << 1)
 	m3_factor := (m2_factor+m_factor)
-	m4_factor := (m2_factor << 2)
 	mode_3 := (rk == 3)
 	addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
 
@@ -32,6 +31,7 @@ $is
 		
 		$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
 		$volatile continue_flag1 := (update_row < row_in)
+		
 		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
 		$volatile n_row1 := ($mux continue_flag1 update_row 0)
 		$volatile n_address := ($mux continue_flag1 (address + ($mux next_row m_factor ($mux mc_lt_p 0 1))) addr_init)
@@ -44,6 +44,7 @@ $is
 		$volatile addr2 := (address+ m_factor)
 		$volatile addr3 := (address+ m2_factor)
 		$volatile addr4 := (address+ m3_factor)
+		
 		$guard (~p1_zero) val1 := T[0][address]
 		$guard (~p2_zero) val2 := T[0][addr2]
 		$guard (~p3_zero) val3 := T[0][addr3]

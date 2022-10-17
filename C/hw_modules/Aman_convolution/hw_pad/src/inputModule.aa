@@ -33,7 +33,7 @@ $is
 		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
 		
 		$volatile n_row1 := ($mux continue_flag1 update_row 0)
-		$volatile n_address := ($mux continue_flag1 (address + ($mux next_row m_factor ($mux mc_lt_p 0 1))) addr_init)
+		$volatile n_address := ($mux continue_flag1 (address + (($mux next_row m_factor 0) + ($mux (next_row ^ mc_lt_p) 1 0))) addr_init)
 		
 	 	$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
 	 	$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))

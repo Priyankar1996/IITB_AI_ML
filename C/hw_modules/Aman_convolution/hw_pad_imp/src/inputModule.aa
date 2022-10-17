@@ -19,13 +19,13 @@ $is
 	$parallelblock [access_block]
 	{	
 		$call loadInput_in1 (addr1 row_in ct chl_in pad num_parts_1) ()
-		$call inputDataFetcher1 ( addr1 m_factor m2_factor cnt1 num_parts_1) ()
+		//$call inputDataFetcher1 ( addr1 m_factor m2_factor cnt1 num_parts_1) ()
 		$call loadInput_in2 (addr2 row_in ct chl_in pad num_parts_1) ()
-		$call inputDataFetcher2 ( addr2 m_factor m2_factor cnt2 num_parts_1) ()
+		//$call inputDataFetcher2 ( addr2 m_factor m2_factor cnt2 num_parts_1) ()
 		$call loadInput_in3 (addr3 row_in ct chl_in pad num_parts_1) ()
-		$call inputDataFetcher3 ( addr3 m_factor m2_factor cnt2 num_parts_1) ()
+		//$call inputDataFetcher3 ( addr3 m_factor m2_factor cnt2 num_parts_1) ()
 		$guard (mode_3) $call loadInput_in4 (addr4 row_in ct chl_in pad num_parts_1) ()
-		$guard (mode_3) $call inputDataFetcher4 ( addr4 m_factor m2_factor cnt1 num_parts_1) ()
+		//$guard (mode_3) $call inputDataFetcher4 ( addr4 m_factor m2_factor cnt1 num_parts_1) ()
 	}
 }
 

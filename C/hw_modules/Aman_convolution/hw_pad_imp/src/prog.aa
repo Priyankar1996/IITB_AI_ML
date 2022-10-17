@@ -53,7 +53,7 @@ $module [topModule] $in () $out() $is
 {
 	$seriesblock [seriesBlock]
 	{
-		$call configureConvolution() (rt ct chl_in rb cb chl_out rk ck shift_val op_size )
+		$call configureConvolution() (rt ct chl_in rb cb chl_out rk ck shift_val pad op_size )
 		chl_in8 := (chl_in >> 3)
 		chl_out8 := (chl_out >> 3)
 		chl_out_ceil := ((chl_out + 7)>>3)
@@ -65,8 +65,7 @@ $module [topModule] $in () $out() $is
 		$guard (cnd_partition) $call Divider ((chl_out_ceil-1) alpha) (tmp1)
 		parts := ($bitcast ($uint<8>) ($mux cnd_partition tmp1 0))
 		max_per_part := ($mux cnd_partition (alpha<<3) chl_out)
-		max_per_part2 := ($mux cnd_partition alpha chl_out_ceil)
-		
+	
 		$parallelblock [topBlocks]
 		{
 			$branchblock [time_start_block]
@@ -76,7 +75,7 @@ $module [topModule] $in () $out() $is
 			}(start_time => start_time)
 			
 			$call loadKernel (chl_in chl_out rk ck 1) ()
-			$call access_T (rb rt ct chl_in chl_out_ceil rk 1 parts) ()
+			$call access_T (rb rt ct chl_in chl_out_ceil rk pad parts) ()
 			$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 			$call accumulator (chl_in_ceil ck (op_size >> 1)) ()
 			$call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT ) ()
@@ -96,7 +95,7 @@ $module [topModule] $in () $out() $is
 
 $module [configureConvolution]
 $in ()
-$out (add add13 add23 add33 add43 add53 add63 add73 shft : $uint<16> mul233 : $uint<32> )
+$out (add add13 add23 add33 add43 add53 add63 add73 shft pad: $uint<16> mul233 : $uint<32> )
 $is
 {
 	$branchblock [body] 
@@ -112,6 +111,7 @@ $is
 		add63 := (maxpool_input_pipe && maxpool_input_pipe)
 		add73 := (maxpool_input_pipe && maxpool_input_pipe)
 		shft := (maxpool_input_pipe && maxpool_input_pipe)
+		pad := (maxpool_input_pipe && maxpool_input_pipe)
 		shr80235 := (add53 >> 3)
 		shr234 := (add23 >> 3)
 		$place [entry_bbx_xnph244]

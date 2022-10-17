@@ -3,6 +3,9 @@
 $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation : $uint<1>) $out () $is
 {
 	$branchblock [sendBlock]{
+		row_size := ($bitcast ($uint<32>) (chl_out*cb))
+		rs_1 := (row_size + 1)
+
 		chl_out_1 := (chl_out - 1)
 		apply_relu := (activation == 1)
 		cb1 := (cb >> 1)
@@ -15,20 +18,15 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation
 		$phi row := ($bitcast ($uint<16>) 1) $on $entry n_row $on $loopback
 		$endmerge
 
-		$volatile row_change := (col == cb1)
-		
-		//// $call timer (6) (time_pipe)
+		$volatile chl_change := (chl == chl_out_1)
+		$volatile row_change := ((col == cb1) & chl_change)
 
 		// Check this later - odd values of row will be incorrect
-		$volatile chl_change := (row_change & (row >= (rb - 1)))
-		$volatile n_col := ($mux row_change 1 (col + 1))
-		$volatile n_row := ($mux chl_change 1 ($mux row_change (row + N_ROWS_S) row))
-		$volatile n_chl := ($mux chl_change (chl+1) chl)
+		$volatile n_chl := ($mux chl_change 0 (chl+1))
+		$volatile n_col := ($mux row_change 1 ($mux chl_change (col + 1) col))
+		$volatile n_row := ($mux row_change (row + N_ROWS_S) row)
 		
-		
-		$volatile tmp1 := (address1 + ($bitcast ($uint<32>) chl_out))
-
-		$volatile n_address1 := ($mux chl_change ($bitcast ($uint<32>) n_chl) tmp1)
+		$volatile n_address1 := (address1 + 1)
 		
 		read_val1_1 := output_pipe1_1
 		read_val2_1 := output_pipe2_1
@@ -124,7 +122,7 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> activation
 				
 		B[($bitcast ($uint<32>) 0)][address1] := rd1
 
-		continue_flag := ((chl < chl_out_1) | (~chl_change))
+		continue_flag := ((row >= (rb -1)) ~& row_change)
 		$while continue_flag
 		// $call timer (104) (time_pipe)
 	}

@@ -3,11 +3,12 @@
 
 $parameter PIPE_WIDTH 8
 $parameter INTERMEDIATE_PIPE_DEPTH 1
+$parameter INTERMEDIATE_PIPE_DEPTH2 8
 
 $pipe pipe1_1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe pipe1_2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe pipe2_1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe pipe2_2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe pipe2_1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
+$pipe pipe2_2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
 
 $record [structx_x__SizedTensor_16K] < $array [256] $of $uint<8> > 
 $pipe maxpool_input_pipe : $uint<16> $depth 2

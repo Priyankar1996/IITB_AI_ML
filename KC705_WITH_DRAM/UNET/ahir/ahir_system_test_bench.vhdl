@@ -34,6 +34,12 @@ architecture VhpiLink of ahir_system_Test_Bench is --
       MAIN_MEM_RESPONSE_pipe_write_data: in std_logic_vector(64 downto 0);
       MAIN_MEM_RESPONSE_pipe_write_req : in std_logic_vector(0 downto 0);
       MAIN_MEM_RESPONSE_pipe_write_ack : out std_logic_vector(0 downto 0);
+      debug_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
+      debug_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
+      debug_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
+      debug_output_pipe_pipe_read_data: out std_logic_vector(7 downto 0);
+      debug_output_pipe_pipe_read_req : in std_logic_vector(0 downto 0);
+      debug_output_pipe_pipe_read_ack : out std_logic_vector(0 downto 0);
       system_input_pipe_pipe_write_data: in std_logic_vector(7 downto 0);
       system_input_pipe_pipe_write_req : in std_logic_vector(0 downto 0);
       system_input_pipe_pipe_write_ack : out std_logic_vector(0 downto 0);
@@ -64,6 +70,14 @@ architecture VhpiLink of ahir_system_Test_Bench is --
   signal MAIN_MEM_RESPONSE_pipe_write_data: std_logic_vector(64 downto 0);
   signal MAIN_MEM_RESPONSE_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
   signal MAIN_MEM_RESPONSE_pipe_write_ack : std_logic_vector(0 downto 0);
+  -- write to pipe debug_input_pipe
+  signal debug_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
+  signal debug_input_pipe_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
+  signal debug_input_pipe_pipe_write_ack : std_logic_vector(0 downto 0);
+  -- read from pipe debug_output_pipe
+  signal debug_output_pipe_pipe_read_data: std_logic_vector(7 downto 0);
+  signal debug_output_pipe_pipe_read_req : std_logic_vector(0 downto 0) := (others => '0');
+  signal debug_output_pipe_pipe_read_ack : std_logic_vector(0 downto 0);
   -- write to pipe system_input_pipe
   signal system_input_pipe_pipe_write_data: std_logic_vector(7 downto 0);
   signal system_input_pipe_pipe_write_req : std_logic_vector(0 downto 0) := (others => '0');
@@ -159,6 +173,58 @@ begin --
     while true loop -- 
       wait until clk = '0';
       wait for 1 ns; 
+      obj_ref := Pack_String_To_Vhpi_String("debug_input_pipe req");
+      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
+      debug_input_pipe_pipe_write_req <= Unpack_String(req_val_string,1);
+      obj_ref := Pack_String_To_Vhpi_String("debug_input_pipe 0");
+      Vhpi_Get_Port_Value(obj_ref,port_val_string,8);
+      debug_input_pipe_pipe_write_data <= Unpack_String(port_val_string,8);
+      wait until clk = '1';
+      obj_ref := Pack_String_To_Vhpi_String("debug_input_pipe ack");
+      ack_val_string := Pack_SLV_To_Vhpi_String(debug_input_pipe_pipe_write_ack);
+      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
+      -- 
+    end loop;
+    --
+  end process;
+  process
+  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
+  begin --
+    wait until reset = '0';
+    -- let the DUT come out of reset.... give it 4 cycles.
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    while true loop -- 
+      wait until clk = '0';
+      wait for 1 ns; 
+      obj_ref := Pack_String_To_Vhpi_String("debug_output_pipe req");
+      Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
+      debug_output_pipe_pipe_read_req <= Unpack_String(req_val_string,1);
+      wait until clk = '1';
+      obj_ref := Pack_String_To_Vhpi_String("debug_output_pipe ack");
+      ack_val_string := Pack_SLV_To_Vhpi_String(debug_output_pipe_pipe_read_ack);
+      Vhpi_Set_Port_Value(obj_ref,ack_val_string,1);
+      obj_ref := Pack_String_To_Vhpi_String("debug_output_pipe 0");
+      port_val_string := Pack_SLV_To_Vhpi_String(debug_output_pipe_pipe_read_data);
+      Vhpi_Set_Port_Value(obj_ref,port_val_string,8);
+      -- 
+    end loop;
+    --
+  end process;
+  process
+  variable port_val_string, req_val_string, ack_val_string,  obj_ref: VhpiString;
+  begin --
+    wait until reset = '0';
+    -- let the DUT come out of reset.... give it 4 cycles.
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    wait until clk = '1';
+    while true loop -- 
+      wait until clk = '0';
+      wait for 1 ns; 
       obj_ref := Pack_String_To_Vhpi_String("system_input_pipe req");
       Vhpi_Get_Port_Value(obj_ref,req_val_string,1);
       system_input_pipe_pipe_write_req <= Unpack_String(req_val_string,1);
@@ -209,6 +275,12 @@ begin --
       MAIN_MEM_RESPONSE_pipe_write_data  => MAIN_MEM_RESPONSE_pipe_write_data, 
       MAIN_MEM_RESPONSE_pipe_write_req  => MAIN_MEM_RESPONSE_pipe_write_req, 
       MAIN_MEM_RESPONSE_pipe_write_ack  => MAIN_MEM_RESPONSE_pipe_write_ack,
+      debug_input_pipe_pipe_write_data  => debug_input_pipe_pipe_write_data, 
+      debug_input_pipe_pipe_write_req  => debug_input_pipe_pipe_write_req, 
+      debug_input_pipe_pipe_write_ack  => debug_input_pipe_pipe_write_ack,
+      debug_output_pipe_pipe_read_data  => debug_output_pipe_pipe_read_data, 
+      debug_output_pipe_pipe_read_req  => debug_output_pipe_pipe_read_req, 
+      debug_output_pipe_pipe_read_ack  => debug_output_pipe_pipe_read_ack ,
       system_input_pipe_pipe_write_data  => system_input_pipe_pipe_write_data, 
       system_input_pipe_pipe_write_req  => system_input_pipe_pipe_write_req, 
       system_input_pipe_pipe_write_ack  => system_input_pipe_pipe_write_ack,

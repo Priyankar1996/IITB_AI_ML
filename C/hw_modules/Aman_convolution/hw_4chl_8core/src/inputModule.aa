@@ -4,46 +4,46 @@ $in(row_in ct chl_in chl_out rk: $uint<16>)
 $out()
 $is
 {
-    $branchblock [access_block]
-    {
-        m_factor := ($bitcast ($uint<32>) (ct * chl_in))
-        m2_factor := (m_factor << 1)
-        m3_factor := (m2_factor+m_factor)
-        m4_factor := (m_factor << 2)
-        mode_3 := (rk == 3)
+	$branchblock [access_block]
+	{
+		m_factor := ($bitcast ($uint<32>) (ct * chl_in))
+		m2_factor := (m_factor << 1)
+		m3_factor := (m2_factor+m_factor)
+		m4_factor := (m_factor << 2)
+		mode_3 := (rk == 3)
 
-        // Pipeline for sending inputs
-        $dopipeline $depth 15 $buffering 2 $fullrate
-        $merge $entry $loopback
-        $phi address := 0 $on $entry n_address $on $loopback
-        $phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
-        $phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
-        $phi mycounter := ($bitcast ($uint<32>) m_factor) $on $entry n_mycounter $on $loopback
-        $endmerge
-        
-        // $call timer (4) (time_pipe)
-        $volatile next_row :=  (mycounter == 1)
-        $volatile tmp_cnt := (mycounter - 1)
-        $volatile n_mycounter := ($mux next_row m_factor tmp_cnt ) 
-        
-        $volatile n_row1 := ($mux next_row (row1 + N_ROWS_S) row1 )
-        $volatile n_address := ((address + 1) + ($mux next_row m_factor  0))
-        ptr1 := @(T[0][address])
-        ptr2 := @(T[0][(address+($bitcast ($uint<32>) m_factor) )])
-        ptr3 := @(T[0][(address+($bitcast ($uint<32>) m2_factor) )])
-        ptr4 := @(T[0][(address+($bitcast ($uint<32>) m3_factor) )])
-        
-        core_ip1 := ->(ptr1)
-        core_ip2 := ->(ptr2)
-        core_ip3 := ->(ptr3)
-        $guard (mode_3) core_ip4 := ->(ptr4)
+		// Pipeline for sending inputs
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address := 0 $on $entry n_address $on $loopback
+		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+		$phi chl_num := ($bitcast ($uint<16>) 0) $on $entry n_chl_num $on $loopback
+		$phi mycounter := ($bitcast ($uint<32>) m_factor) $on $entry n_mycounter $on $loopback
+		$endmerge
+		
+		// $call timer (4) (time_pipe)
+		$volatile next_row :=  (mycounter == 1)
+		$volatile tmp_cnt := (mycounter - 1)
+		$volatile n_mycounter := ($mux next_row m_factor tmp_cnt ) 
+		
+		$volatile n_row1 := ($mux next_row (row1 + N_ROWS_S) row1 )
+		$volatile n_address := ((address + 1) + ($mux next_row m_factor  0))
+		ptr1 := @(T[0][address])
+		ptr2 := @(T[0][(address+($bitcast ($uint<32>) m_factor) )])
+		ptr3 := @(T[0][(address+($bitcast ($uint<32>) m2_factor) )])
+		ptr4 := @(T[0][(address+($bitcast ($uint<32>) m3_factor) )])
+		
+		core_ip1 := ->(ptr1)
+		core_ip2 := ->(ptr2)
+		core_ip3 := ->(ptr3)
+		$guard (mode_3) core_ip4 := ->(ptr4)
 
-        $volatile continue_flag1 := (n_row1 < row_in)
-        $volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
-        $volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
+		$volatile continue_flag1 := (n_row1 < row_in)
+		$volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
+		$volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
 
-        $while not_end_flag
+		$while not_end_flag
 
-        // $call timer (101) (time_pipe)
-    }
+		// $call timer (101) (time_pipe)
+	}
 }

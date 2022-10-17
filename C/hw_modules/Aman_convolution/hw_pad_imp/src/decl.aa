@@ -1,7 +1,8 @@
 $parameter PIPE_WIDTH 64
-$parameter INTERMEDIATE_PIPE_DEPTH 256
+$parameter INTERMEDIATE_PIPE_DEPTH 64
+$parameter INTERMEDIATE_PIPE_DEPTH2 2
 $parameter SMALL_PIPE_DEPTH 16
-$parameter IP_DEPTH 128
+$parameter IP_DEPTH 256
 $parameter K_DEPTH 256
 $parameter N_ROWS_S 2
 $parameter ACC_WIDTH 16
@@ -32,19 +33,19 @@ $pipe core8_kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core8_kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core8_kp3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 
-$pipe kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe kp3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe fetch_kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe fetch_kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe fetch_kp3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 
-$pipe ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe fetch_ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
+$pipe fetch_ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
+$pipe fetch_ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
+$pipe fetch_ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
 
-$pipe core_ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe core_ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe core_ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
-$pipe core_ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
+$pipe core_ip1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
+$pipe core_ip2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
+$pipe core_ip3 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
+$pipe core_ip4 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH2
 
 
 $pipe output_pipe1_1 : $uint<ACC_WIDTH> $depth SMALL_PIPE_DEPTH

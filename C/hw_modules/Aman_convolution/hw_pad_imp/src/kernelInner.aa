@@ -37,7 +37,7 @@ $is
 		// Update number left
 		$volatile n_left := ($mux done chl_in (left - ns))
 		
-		$guard (fn) read_val := kp##num
+		$guard (fn) read_val := K[0][(addr1>>3)]
 		$volatile val_in_use := ($mux fn read_val fv1)
 		// Shift to the head of cv
 		$volatile tmp1 := ((val_in_use << (($bitcast ($uint<64>) sp) << 3)) >> (($bitcast ($uint<64>) head) << 3))
@@ -79,37 +79,39 @@ $is
 
 		$volatile exit_cond := (nxt_chl & (chl_num == chl_out))
 		$while (~exit_cond)
+		time_pipe := (110 + ##num )
 	}
 }
 
 
-$module [kernelDataFetcher##num ]
-$in (init_addr : $uint<32> rs cs num_chl : $uint<16>)
-$out ()
-$is
-{
-	$branchblock [loadBlock]
-	{
-		count_update := ($bitcast ($uint<32>) (cs - rs))
-		
-		$dopipeline $depth 15 $buffering 2 $fullrate
-		$merge $entry $loopback
-		$phi chl_num := ($bitcast ($uint<16>) 1) $on $entry n_chl_num $on $loopback
-		$phi ea := (init_addr + ($bitcast ($uint<32>) rs)) $on $entry n_ea $on $loopback
-		$phi addr := init_addr $on $entry n_addr $on $loopback
-		$endmerge
-
-		// Compute next channel address etc variables
-		$volatile x1 := ($slice addr 31 3)
-		$volatile x2 := (( x1 && ($bitcast ($uint<3>) 0)) + 8)
-		$volatile done := (x2 >= ea)
-		$volatile n_addr := ($mux done (ea + count_update) x2)
-		$volatile n_ea := ($mux done (ea + ($bitcast ($uint<32>) cs)) ea) 
-		$volatile n_chl_num := ($mux done (chl_num + 1) chl_num)
-		kp##num := K[0][(addr>>3)]
-
-		$volatile exit_cond := (done & (chl_num == num_chl))
-		$while (~exit_cond)
-	}
-}
+//$module [kernelDataFetcher##num ]
+//$in (init_addr : $uint<32> rs cs num_chl : $uint<16>)
+//$out ()
+//$is
+//{
+//	$branchblock [loadBlock]
+//	{
+//		count_update := ($bitcast ($uint<32>) (cs - rs))
+//
+//		$dopipeline $depth 15 $buffering 2 $fullrate
+//		$merge $entry $loopback
+//		$phi chl_num := ($bitcast ($uint<16>) 1) $on $entry n_chl_num $on $loopback
+//		$phi ea := (init_addr + ($bitcast ($uint<32>) rs)) $on $entry n_ea $on $loopback
+//		$phi addr := init_addr $on $entry n_addr $on $loopback
+//		$endmerge
+//
+//		// Compute next channel address etc variables
+//		$volatile x1 := ($slice addr 31 3)
+//		$volatile x2 := (( x1 && ($bitcast ($uint<3>) 0)) + 8)
+//		$volatile done := (x2 >= ea)
+//		$volatile n_addr := ($mux done (ea + count_update) x2)
+//		$volatile n_ea := ($mux done (ea + ($bitcast ($uint<32>) cs)) ea) 
+//		$volatile n_chl_num := ($mux done (chl_num + 1) chl_num)
+//		fetch_kp##num := K[0][(addr>>3)]
+//
+//		$volatile exit_cond := (done & (chl_num == num_chl))
+//		$while (~exit_cond)
+//		time_pipe := (100 + ##num )
+//	}
+//}
 

@@ -1,41 +1,41 @@
 // Start of convInner
 
-        #define k_num 1
-        #include macro_file4.aa
+		#define k_num 1
+		#include macro_file4.aa
 
-        #define mul_num 1
-        #define in_num 1
-        #include macro_file3.aa
-        #define mul_num 4
-        #define in_num 2
-        #include macro_file3.aa
+		#define mul_num 1
+		#define in_num 1
+		#include macro_file3.aa
+		#define mul_num 4
+		#define in_num 2
+		#include macro_file3.aa
 
-        #define k_num 2
-        #include macro_file4.aa
+		#define k_num 2
+		#include macro_file4.aa
 
-        #define mul_num 2
-        #define in_num 2
-        #include macro_file3.aa
-        #define mul_num 5
-        #define in_num 3
-        #include macro_file3.aa
+		#define mul_num 2
+		#define in_num 2
+		#include macro_file3.aa
+		#define mul_num 5
+		#define in_num 3
+		#include macro_file3.aa
 
-        #define k_num 3
-        #include macro_file5.aa
+		#define k_num 3
+		#include macro_file5.aa
 
-        #define mul_num 3
-        #define in_num 3
-        #include macro_file3.aa
-        #define mul_num 6
-        #define in_num 4
-        #include macro_file3.aa
+		#define mul_num 3
+		#define in_num 3
+		#include macro_file3.aa
+		#define mul_num 6
+		#define in_num 4
+		#include macro_file3.aa
 
-        acc_val##core_num\_1 :=  ((t_acc_val_##core_num\_1 + t_acc_val_##core_num\_2) + t_acc_val_##core_num\_3)
-        acc_val##core_num\_2 :=  ((t_acc_val_##core_num\_4 + t_acc_val_##core_num\_5) + t_acc_val_##core_num\_6)
+		acc_val##core_num\_1 :=  ((t_acc_val_##core_num\_1 + t_acc_val_##core_num\_2) + t_acc_val_##core_num\_3)
+		acc_val##core_num\_2 :=  ((t_acc_val_##core_num\_4 + t_acc_val_##core_num\_5) + t_acc_val_##core_num\_6)
 
 
-        $guard (store_kernel) conv##core_num\_kp1 := kread_##core_num\_1
-        $guard (store_kernel) conv##core_num\_kp2 := kread_##core_num\_2
-        $guard (store_3) conv##core_num\_kp3 := kread_##core_num\_3
-        
+		$guard (store_kernel) conv##core_num\_kp1 := kread_##core_num\_1
+		$guard (store_kernel) conv##core_num\_kp2 := kread_##core_num\_2
+		$guard (store_3) conv##core_num\_kp3 := kread_##core_num\_3
+		
 // End of convInner

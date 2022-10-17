@@ -37,6 +37,7 @@ $is
 		$volatile out_done_flag := (row >= num_row)
 		$volatile all_done_flag := (out_done_flag & col_done)
 		
+		
 		$volatile o_chl1_valid := (chl_out_var <= chl_max_itr)
 		$volatile o_chl2_valid := ((chl_out_var+1) <= chl_max_itr)
 		$volatile o_chl3_valid := ((chl_out_var+2) <= chl_max_itr)
@@ -49,7 +50,7 @@ $is
 		$volatile read_ip := (((col == 0) | nd) & (chl_out_var == 1))
 		$volatile not_read_ip := (~read_ip)
 		$volatile write_input := (((chl_out_var+8) < chl_max_itr) | ((col < num_col) & (num > 0)))
-				$volatile read_k := ((col == 0) & (row == 0))
+		$volatile read_k := ((col == 0) & (row == 0))
 		$volatile not_read_k := (~read_k)
 		$volatile store_kernel := (out_done_flag ~& last_col)
 
@@ -112,11 +113,12 @@ $is
 		//time_pipe := (((($bitcast ($uint<8>) t_acc_val_2_1) && ($bitcast ($uint<8>) t_acc_val_2_2)) && (($bitcast ($uint<8>) t_acc_val_2_3) && ($bitcast ($uint<8>) acc_val2_1))) && ((($bitcast ($uint<8>) t_acc_val_2_4) && ($bitcast ($uint<8>) t_acc_val_2_5)) && (($bitcast ($uint<8>) t_acc_val_2_6) && ($bitcast ($uint<8>) acc_val2_2) )))
 		$while (~all_done_flag)
 
+		time_pipe := 121
 		$volatile np_cnt := (p_cnt + 1)
 		$volatile n_cmi := ($mux (chl_left > max_chl) max_chl chl_left)
 		$volatile n_chl_left := (chl_left - n_cmi)
-
 		$if (p_cnt < num_parts) $then $place [loopback] $endif
+		time_pipe := 122
 	}
 }
 
@@ -125,7 +127,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 	$branchblock [acc_blk]
 	{
 		acc_count := ((chl_in * ck) - 1)
-		$dopipeline $depth 15 $buffering 2 $fullrate
+		$dopipeline $depth 155 $buffering 2 $fullrate
 		$merge $entry $loopback
 		$phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
 		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
@@ -201,7 +203,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$guard (num_done) output_pipe7_2 := acc_val7_2
 		$guard (num_done) output_pipe8_1 := acc_val8_1
 		$guard (num_done) output_pipe8_2 := acc_val8_2
-
 		$while (nop_count < op_size)
+		time_pipe := 123
 	}
 }

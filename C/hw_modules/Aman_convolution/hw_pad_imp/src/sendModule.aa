@@ -17,3 +17,5 @@ $opaque $module [atomicMaskedWrite] $in (addr : $uint<32>  bm val : $uint<64>) $
 {
 	B[0][addr] := ((B[0][addr] & bm) | val)
 }
+
+

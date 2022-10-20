@@ -113,12 +113,10 @@ $is
 		//time_pipe := (((($bitcast ($uint<8>) t_acc_val_2_1) && ($bitcast ($uint<8>) t_acc_val_2_2)) && (($bitcast ($uint<8>) t_acc_val_2_3) && ($bitcast ($uint<8>) acc_val2_1))) && ((($bitcast ($uint<8>) t_acc_val_2_4) && ($bitcast ($uint<8>) t_acc_val_2_5)) && (($bitcast ($uint<8>) t_acc_val_2_6) && ($bitcast ($uint<8>) acc_val2_2) )))
 		$while (~all_done_flag)
 
-		time_pipe := 121
 		$volatile np_cnt := (p_cnt + 1)
 		$volatile n_cmi := ($mux (chl_left > max_chl) max_chl chl_left)
 		$volatile n_chl_left := (chl_left - n_cmi)
 		$if (p_cnt < num_parts) $then $place [loopback] $endif
-		time_pipe := 122
 	}
 }
 
@@ -204,6 +202,5 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$guard (num_done) output_pipe8_1 := acc_val8_1
 		$guard (num_done) output_pipe8_2 := acc_val8_2
 		$while (nop_count < op_size)
-		time_pipe := 123
 	}
 }

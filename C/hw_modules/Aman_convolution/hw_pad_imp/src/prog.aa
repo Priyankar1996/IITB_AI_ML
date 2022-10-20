@@ -65,6 +65,7 @@ $module [topModule] $in () $out() $is
 		$guard (cnd_partition) $call Divider ((chl_out_ceil-1) alpha) (tmp1)
 		parts := ($bitcast ($uint<8>) ($mux cnd_partition tmp1 0))
 		max_per_part := ($mux cnd_partition (alpha<<3) chl_out)
+		max_per_part2 := ($mux cnd_partition alpha chl_out_ceil)
 	
 		$parallelblock [topBlocks]
 		{
@@ -78,7 +79,8 @@ $module [topModule] $in () $out() $is
 			$call access_T (rb rt ct chl_in chl_out_ceil rk pad parts) ()
 			$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 			$call accumulator (chl_in_ceil ck (op_size >> 1)) ()
-			$call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT ) ()
+			//$call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT ) ()
+			$call sendPool (rb cb chl_out_ceil shift_val parts max_per_part2 NO_ACT ) ()
 		}(start_time => start_time)
 		
 		$call timer (2)  (end_time)

@@ -110,3 +110,5 @@ $pipe conv7_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+
+$pipe pool_buffer : $uint<PIPE_WIDTH> $depth 64

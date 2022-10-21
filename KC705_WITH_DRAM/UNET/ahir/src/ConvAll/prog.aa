@@ -2,7 +2,7 @@
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in1 index_in2 index_k index_out : $uint<8> shift_val pad : $uint<16> activation : $uint<8>) $out() $is
+$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in1 index_in2 index_k index_out : $uint<8> shift_val pad : $uint<16> pool : $uint<8> activation : $uint<8>) $out() $is
 {
 	in_8 := (($slice chl_in 2 0) == 0) 
 	out_8 := (($slice chl_out 2 0) == 0)
@@ -16,6 +16,10 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 	inConcat := (((index_in2 [] 7) == 1) & (~inCT))
 	in_nCT := (((~inCT) & (~inConcat)) & (~in_8))
 	in_nCT8 := (((~inCT) & (~inConcat)) & in_8)
+	
+	out_pool := (pool [] 0)
+	out_np8 := (out_8 & (~out_pool))
+	out_np := (out_8 ~| out_pool)
 	
 	// Creating partitions
 	$call Divider (K_DEPTH (chl_in_ceil*ck)) (alpha)
@@ -43,8 +47,9 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 		$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 		$call accumulator (chl_in_ceil ck op_size) ()
 		
-		$guard (~out_8) $call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT index_out) ()
-		$guard (out_8) $call sendModule8 (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
+		$guard (out_np) $call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT index_out) ()
+		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
+		$guard (out_pool) $call sendPool (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
 	}
 	//debug_output_pipe := 70
 }

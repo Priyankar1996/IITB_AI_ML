@@ -105,7 +105,7 @@ $pipe conv8_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in1 index_in2 index_k index_out : $uint<8> shift_val pad : $uint<16> activation : $uint<8>) $out() $is
+$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in1 index_in2 index_k index_out : $uint<8> shift_val pad : $uint<16> pool : $uint<8> activation : $uint<8>) $out() $is
 {
 	in_8 := (($slice chl_in 2 0) == 0) 
 	out_8 := (($slice chl_out 2 0) == 0)
@@ -119,6 +119,10 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 	inConcat := (((index_in2 [] 7) == 1) & (~inCT))
 	in_nCT := (((~inCT) & (~inConcat)) & (~in_8))
 	in_nCT8 := (((~inCT) & (~inConcat)) & in_8)
+	
+	out_pool := (pool [] 0)
+	out_np8 := (out_8 & (~out_pool))
+	out_np := (out_8 ~| out_pool)
 	
 	// Creating partitions
 	$call Divider (K_DEPTH (chl_in_ceil*ck)) (alpha)
@@ -146,8 +150,9 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 		$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 		$call accumulator (chl_in_ceil ck op_size) ()
 		
-		$guard (~out_8) $call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT index_out) ()
-		$guard (out_8) $call sendModule8 (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
+		$guard (out_np) $call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT index_out) ()
+		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
+		$guard (out_pool) $call sendPool (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
 	}
 	//debug_output_pipe := 70
 }
@@ -3711,6 +3716,118 @@ $opaque $module [sendModule8] $in (rb cb chl_out shift_val : $uint<16> num_parts
 		$if (p_cnt < num_parts) $then $place [loopback] $endif
 
     }
+}
+
+//
+// $pipe pool_buffer : $uint<64> $depth 64
+
+
+$opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> index : $uint<8>) $out () $is
+{
+	$branchblock [sendBlock]{
+		row_size := ($bitcast ($uint<32>) (chl_out*cb))
+		apply_relu := (activation == 1)
+
+		$merge $entry loopback
+		$phi p_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on loopback
+		$phi chl_max_itr := max_chl $on $entry n_cmi $on loopback
+		$phi chl_left := (chl_out - max_chl) $on $entry n_chl_left $on loopback
+		$phi addr := ($bitcast ($uint<32>) 0) $on $entry n_addr $on loopback
+		$endmerge
+
+		chl_change_inc := ($bitcast ($uint<32>) (chl_out - chl_max_itr))
+		rs_1 := chl_change_inc
+
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address1 := ($bitcast ($uint<32>) addr) $on $entry n_address1 $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 1) $on $entry n_chl $on $loopback
+		$phi col := ($bitcast ($uint<16>) 1) $on $entry n_col $on $loopback
+		$phi row := ($bitcast ($uint<16>) 1) $on $entry n_row $on $loopback
+		$endmerge
+
+		// Check this later - odd values of row will be incorrect
+		$volatile chl_change := (chl == chl_max_itr)
+		$volatile row_change := ((col == cb) & chl_change)
+		$volatile n_chl := ($mux chl_change 1 (chl+1))
+		$volatile n_col := ($mux row_change 1 ($mux chl_change (col + 1) col))
+		$volatile n_row := ($mux row_change (row + N_ROWS_S) row)
+
+		read_val1_1 := output_pipe1_1
+		read_val2_1 := output_pipe2_1
+		read_val3_1 := output_pipe3_1
+		read_val4_1 := output_pipe4_1
+		read_val5_1 := output_pipe5_1
+		read_val6_1 := output_pipe6_1
+		read_val7_1 := output_pipe7_1
+		read_val8_1 := output_pipe8_1
+		read_val1_2 := output_pipe1_2
+		read_val2_2 := output_pipe2_2
+		read_val3_2 := output_pipe3_2
+		read_val4_2 := output_pipe4_2
+		read_val5_2 := output_pipe5_2
+		read_val6_2 := output_pipe6_2
+		read_val7_2 := output_pipe7_2
+		read_val8_2 := output_pipe8_2
+		tmp1_1 := ($mux (apply_relu & ((read_val1_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_1 >> shift_val)))
+		tmp2_1 := ($mux (apply_relu & ((read_val2_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_1 >> shift_val)))
+		tmp3_1 := ($mux (apply_relu & ((read_val3_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_1 >> shift_val)))
+		tmp4_1 := ($mux (apply_relu & ((read_val4_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_1 >> shift_val)))
+		tmp5_1 := ($mux (apply_relu & ((read_val5_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_1 >> shift_val)))
+		tmp6_1 := ($mux (apply_relu & ((read_val6_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_1 >> shift_val)))
+		tmp7_1 := ($mux (apply_relu & ((read_val7_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_1 >> shift_val)))
+		tmp8_1 := ($mux (apply_relu & ((read_val8_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_1 >> shift_val)))
+		tmp1_2 := ($mux (apply_relu & ((read_val1_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_2 >> shift_val)))
+		tmp2_2 := ($mux (apply_relu & ((read_val2_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_2 >> shift_val)))
+		tmp3_2 := ($mux (apply_relu & ((read_val3_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_2 >> shift_val)))
+		tmp4_2 := ($mux (apply_relu & ((read_val4_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_2 >> shift_val)))
+		tmp5_2 := ($mux (apply_relu & ((read_val5_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_2 >> shift_val)))
+		tmp6_2 := ($mux (apply_relu & ((read_val6_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_2 >> shift_val)))
+		tmp7_2 := ($mux (apply_relu & ((read_val7_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_2 >> shift_val)))
+		tmp8_2 := ($mux (apply_relu & ((read_val8_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_2 >> shift_val)))
+
+		mx1 := ($mux (($bitcast ($int<8>) tmp1_1) > ($bitcast ($int<8>) tmp1_2)) tmp1_1 tmp1_2)
+		mx2 := ($mux (($bitcast ($int<8>) tmp2_1) > ($bitcast ($int<8>) tmp2_2)) tmp2_1 tmp2_2)
+		mx3 := ($mux (($bitcast ($int<8>) tmp3_1) > ($bitcast ($int<8>) tmp3_2)) tmp3_1 tmp3_2)
+		mx4 := ($mux (($bitcast ($int<8>) tmp4_1) > ($bitcast ($int<8>) tmp4_2)) tmp4_1 tmp4_2)
+		mx5 := ($mux (($bitcast ($int<8>) tmp5_1) > ($bitcast ($int<8>) tmp5_2)) tmp5_1 tmp5_2)
+		mx6 := ($mux (($bitcast ($int<8>) tmp6_1) > ($bitcast ($int<8>) tmp6_2)) tmp6_1 tmp6_2)
+		mx7 := ($mux (($bitcast ($int<8>) tmp7_1) > ($bitcast ($int<8>) tmp7_2)) tmp7_1 tmp7_2)
+		mx8 := ($mux (($bitcast ($int<8>) tmp8_1) > ($bitcast ($int<8>) tmp8_2)) tmp8_1 tmp8_2)
+		$volatile rd1 := ($concat mx1 mx2 mx3 mx4 mx5 mx6 mx7 mx8)
+
+		$volatile pool_stage := (col [] 0)
+
+		$volatile tmp_sum := (1 + ($mux row_change rs_1 ($mux chl_change chl_change_inc 0)))
+		$volatile n_address1 := ($mux pool_stage address1 (address1 + tmp_sum))
+
+		$guard (pool_stage) pool_buffer := rd1
+		$guard (~pool_stage) val := pool_buffer
+		$split (val 8 8 8 8 8 8 8 8) (v1 v2 v3 v4 v5 v6 v7 v8)
+		mv1 := ($mux (($bitcast ($int<8>) mx1) > ($bitcast ($int<8>) v1)) mx1 v1)
+		mv2 := ($mux (($bitcast ($int<8>) mx2) > ($bitcast ($int<8>) v2)) mx2 v2)
+		mv3 := ($mux (($bitcast ($int<8>) mx3) > ($bitcast ($int<8>) v3)) mx3 v3)
+		mv4 := ($mux (($bitcast ($int<8>) mx4) > ($bitcast ($int<8>) v4)) mx4 v4)
+		mv5 := ($mux (($bitcast ($int<8>) mx5) > ($bitcast ($int<8>) v5)) mx5 v5)
+		mv6 := ($mux (($bitcast ($int<8>) mx6) > ($bitcast ($int<8>) v6)) mx6 v6)
+		mv7 := ($mux (($bitcast ($int<8>) mx7) > ($bitcast ($int<8>) v7)) mx7 v7)
+		mv8 := ($mux (($bitcast ($int<8>) mx8) > ($bitcast ($int<8>) v8)) mx8 v8)
+		max_val := ($concat mv1 mv2 mv3 mv4 mv5 mv6 mv7 mv8)
+		data_to_send := max_val
+		$guard (~pool_stage) $call writeModule_convolution (index address1 data_to_send 255) (a1)
+
+		continue_flag := ((row >= (rb -1)) ~& row_change)
+		$while continue_flag
+		// $call timer (104) (time_pipe)
+
+		$volatile np_cnt := (p_cnt + 1)
+		$volatile n_cmi := ($mux (chl_left > max_chl) max_chl chl_left)
+		$volatile n_chl_left := (chl_left - n_cmi)
+		$volatile n_addr := (addr + ($bitcast ($uint<32>) chl_max_itr))
+
+		$if (p_cnt < num_parts) $then $place [loopback] $endif
+
+	}
 }
 
 

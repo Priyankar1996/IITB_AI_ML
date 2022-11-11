@@ -1,0 +1,71 @@
+pkg load image;
+
+dims = zeros(1,3);
+dims_k = zeros(1,4);
+pad = input("");
+pool = input("");
+for i = 1:3
+  dims(4-i) = input("");
+  dims_k(4 - mod(i,3)) = input("");
+end
+dims_k(1) = dims(1);
+T = zeros(dims);
+K = zeros(dims_k);
+
+input_size = prod(dims);
+for i = 1:input_size
+  T(i) = int8(input(""));
+end
+input_size = prod(dims_k);
+for i = 1:input_size
+  K(i) = int8(input(""));
+end
+T = reshape(T,dims);
+T = padarray(T,[0,pad,pad]);
+K = reshape(K,dims_k);
+out_dims = [dims_k(4),dims(2)+2*pad-dims_k(2)+1,dims(3)+2*pad-dims_k(3)+1];
+
+printf("Size of output is ");
+if (pool == 0)
+for i = 1:3
+  printf("%d ",out_dims(4-i));
+end
+printf("\n");
+endif;
+count = 1;
+for row = 1:out_dims(3)
+  for col = 1:out_dims(2)
+    for chl = 1:out_dims(1)
+      cols = col:col+dims_k(2)-1;
+      rows = row:row+dims_k(3)-1;
+%      val = (T(:,cols,rows).*K(:,:,:,chl))(:)'
+%      val = bitshift(int16(T(:,cols,rows).*K(:,:,:,chl))(:),-8)'
+      val = mod(sum(bitshift(int16((T(:,cols,rows).*K(:,:,:,chl))(:)),-8)),256);
+      if (val > 127) val = val - 256; endif;
+      if (pool == 0) printf("%d %d\n",count,val);endif
+      count = count + 1;
+	B(chl,col,row) = val;
+    end
+  end
+end
+
+if (pool == 1)
+out_dims(3) /= 2;
+out_dims(2) /= 2;
+
+for i = 1:3
+  printf("%d ",out_dims(4-i));
+end
+printf("\n");
+
+count = 1;
+for row = 1:(out_dims(3))
+  for col = 1:(out_dims(2))
+	for chl = 1:out_dims(1)
+	  val = max(max(B(chl,2*col-1:2*col,2*row-1:2*row)));
+	  printf("%d %d\n",count,val);
+	  count = count + 1;
+	end
+  end
+end
+endif;

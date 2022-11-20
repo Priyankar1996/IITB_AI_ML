@@ -27,11 +27,11 @@ $is
 
 		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
-		$phi chl := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done 0 (chl + 1)) $on $loopback
-		$phi num := ($bitcast ($uint<2>) 0) $on $entry ($mux chl_done ($mux nd 0 (num+1)) num) $on $loopback
-		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry ($mux num_done ($mux chl_done_flag 1 (chl_out_var+8)) chl_out_var) $on $loopback
-		$phi col := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done_flag ($mux col_done 0 (col + 1)) col) $on $loopback
-		$phi row := ($bitcast ($uint<16>) 0) $on $entry ($mux col_done (row + N_ROWS_S) row) $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 0) $on $entry nchl $on $loopback
+		$phi num := ($bitcast ($uint<2>) 0) $on $entry nnum $on $loopback
+		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry nchl_out_var $on $loopback
+		$phi col := ($bitcast ($uint<16>) 0) $on $entry ncol $on $loopback
+		$phi row := ($bitcast ($uint<16>) 0) $on $entry nrow $on $loopback
 		$endmerge
 
 		$volatile nd := (num == ck_s)
@@ -43,7 +43,12 @@ $is
 		$volatile out_done_flag := (row >= num_row)
 		$volatile all_done_flag := (out_done_flag & col_done)
 		
-		
+		nchl := ($mux chl_done 0 (chl + 1))
+		nnum :=($mux chl_done ($mux nd 0 (num+1)) num)
+		nchl_out_var := ($mux num_done ($mux chl_done_flag 1 (chl_out_var+8)) chl_out_var)
+		ncol := ($mux chl_done_flag ($mux col_done 0 (col + 1)) col)
+		 nrow := ($mux col_done (row + N_ROWS_S) row)
+
 		$volatile o_chl1_valid := (chl_out_var <= chl_max_itr)
 		$volatile o_chl2_valid := ((chl_out_var+1) <= chl_max_itr)
 		$volatile o_chl3_valid := ((chl_out_var+2) <= chl_max_itr)

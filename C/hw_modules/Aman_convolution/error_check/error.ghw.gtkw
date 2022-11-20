@@ -1,6 +1,6 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Sun Nov 20 06:09:52 2022
+[*] Sun Nov 20 06:19:17 2022
 [*]
 [dumpfile] "/home/aiml/Desktop/IITB_AI_ML/C/hw_modules/Aman_convolution/error_check/tmp.ghw"
 [dumpfile_mtime] "Sun Nov 20 05:16:21 2022"
@@ -8,15 +8,14 @@
 [savefile] "/home/aiml/Desktop/IITB_AI_ML/C/hw_modules/Aman_convolution/error_check/error.ghw.gtkw"
 [timestart] 5326000000
 [size] 1848 1136
-[pos] -51 -51
+[pos] -1 -1
 *-25.983194 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.ahir_system_test_bench.
 [treeopen] top.ahir_system_test_bench.ahir_system_instance.
 [treeopen] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.
-[treeopen] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.
 [treeopen] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.phi_stmt_2545.
-[sst_width] 233
+[sst_width] 536
 [signals_width] 371
 [sst_expanded] 1
 [sst_vpaned_height] 331
@@ -75,5 +74,15 @@ top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_write_req[0]
 top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_ack[0]
 @22
 #{top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[15:0]} top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[15] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[14] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[13] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[12] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[11] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[10] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[9] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[8] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[7] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[6] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[5] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[4] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[3] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[2] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[1] top.ahir_system_test_bench.ahir_system_instance.acc_pipe2_1_pipe_read_data[0]
+@28
+top.ahir_system_test_bench.clk
+@22
+#{top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[15:0]} top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[15] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[14] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[13] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[12] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[11] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[10] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[9] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[8] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[7] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[6] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[5] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[4] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[3] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[2] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[1] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.acc_val1_2_3857[0]
+#{top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[15:0]} top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[15] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[14] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[13] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[12] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[11] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[10] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[9] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[8] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[7] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[6] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[5] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[4] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[3] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[2] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[1] top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.data_path.type_cast_8980_wire[0]
+@420
+top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.type_cast_8980_inst_ack_0
+top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.type_cast_8980_inst_req_0
+top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.type_cast_8980_inst_ack_1
+top.ahir_system_test_bench.ahir_system_instance.convolvecore_instance.type_cast_8980_inst_req_1
 [pattern_trace] 1
 [pattern_trace] 0

@@ -1,6 +1,7 @@
 #include decl.aa
 
 #include prog.aa
+#include multiplier.aa
 
 #include kernelModule.aa
 #include kernelModule2.aa

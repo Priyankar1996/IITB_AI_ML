@@ -77,7 +77,7 @@ void fill_input()
 {
 	// kernels followed by input tensor
 	uint8_t i;
-	for (i = 0; i < 2; i++) readFromSystemPipe(i);
+	for (i = 0; i < 19; i++) readFromSystemPipe(i);
 }
 
 void sendOutput()

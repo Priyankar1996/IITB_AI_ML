@@ -52,7 +52,24 @@ $parameter T1_base {FLASH_END+{512*KB2WORD}}
 $parameter T2_base {T1_base + MB2WORD}
 $parameter T3_base {T2_base+{512*KB2WORD}}
 $parameter T4_base {T3_base+{256*KB2WORD}}
-$parameter K_base {T4_base+{128*KB2WORD}}
+$parameter K0_base {T4_base+{128*KB2WORD}}
+$parameter K1_base {K0_base+KB2WORD}
+$parameter K2_base {K1_base+{5*KB2WORD}}
+$parameter K3_base {K2_base+{10*KB2WORD}}
+$parameter K4_base {K3_base+{20*KB2WORD}}
+$parameter K5_base {K4_base+{40*KB2WORD}}
+$parameter K6_base {K5_base+{80*KB2WORD}}
+$parameter K7_base {K6_base+{150*KB2WORD}}
+$parameter K8_base {K7_base+{300*KB2WORD}}
+$parameter K9_base {K8_base+{80*KB2WORD}}
+$parameter K10_base {K9_base+{150*KB2WORD}}
+$parameter K11_base {K10_base+{80*KB2WORD}}
+$parameter K12_base {K11_base+{40*KB2WORD}}
+$parameter K13_base {K12_base+{40*KB2WORD}}
+$parameter K14_base {K13_base+{20*KB2WORD}}
+$parameter K15_base {K14_base+{20*KB2WORD}}
+$parameter K16_base {K15_base+{10*KB2WORD}}
+$parameter K17_base {K16_base+{5*KB2WORD}}
 
 $pipe MAIN_MEM_REQUEST : $uint<110> $depth 16
 $pipe MAIN_MEM_RESPONSE : $uint<65> $depth 16

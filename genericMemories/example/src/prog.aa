@@ -1,0 +1,32 @@
+$operator $module [memoryXsingleX24X64] 
+	$in (enable: $uint<1> write_bar: $uint<1>
+		write_data: $uint<64> address: $uint<24>)
+	$out (read_data: $uint<64>) $is
+{
+	// put some junk here.
+	read_data := write_data
+}
+
+		
+// mem-test
+$module [mem_test_daemon] $in () $out () $is
+{
+	$branchblock[Loop] {
+		$dopipeline $depth 7 $fullrate
+		$merge $entry $loopback 
+			$phi I := ($bitcast ($uint<32>) 0) $on $entry NI $on $loopback
+		$endmerge
+
+		$volatile NI := (I+1)
+		$volatile addr := ($slice I 23 0)
+		$volatile wdata := ($concat I (I+1))
+
+		$volatile wr_flag := (I [] 0)
+		$call memoryXsingleX24X64 ($one<1> (~wr_flag) wdata addr) (rdata)
+
+
+		$while 1
+
+	} 
+}
+

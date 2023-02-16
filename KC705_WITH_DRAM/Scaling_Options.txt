@@ -1,0 +1,33 @@
+Stage 1 - system synthesized with 384 processing elements, achieving a performance of 61.44 GOPS at 80 MHz
+
+
+
+Scaling opportunities:
+
+	1. Frequency scaling - aim to shorten critical paths to improve clock frequency and hence, performance
+
+	2. Cascading - cascade multiple instances of convolution to get fewer memory operations and higher parallelism
+
+	3. Batch processing - create copies of the system and share weight kernels, with different inputs streaming in for each copy
+
+
+	2. and 3. can be done simultaneously to get a rectangular array - which can then be made flexible to perform individual functions
+
+
+
+
+Details:
+
+	Buffering two input rows
+       --------------------------
+		
+		-> Will improve memory usage on input side by a factor of 2x, at a requirement of 2*256*256 B = 128 KB per core
+		-> This amount of BRAM is completely feasible, as currently usage is ~1MB
+
+	Cascading
+       ------------
+
+		-> Feeding output of one module as the input of second
+		-> Need to handle the cases where the output has to be stored as well - concatenation, and kernel partitioning
+
+			Some protocol needed by which the modules communicate who is storing, in case storage is required

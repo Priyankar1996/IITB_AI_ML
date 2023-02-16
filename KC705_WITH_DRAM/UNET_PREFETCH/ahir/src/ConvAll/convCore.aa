@@ -1,9 +1,3 @@
-//$pipeline $depth 15 $fullrate
-$operator $module [multiplier] $in (in1 in2 : $int<16>) $out (output : $int<16>) $is
-{
-	output := ($cast ($int<16>) ($slice (in1 * in2) 15 8))
-}
-
 // Perform convolution operation
 $module [convolveCore ]
 $in (rb cb chl_in_read chl_out rk ck: $uint<16> num_parts : $uint<8> max_chl : $uint<16>)
@@ -27,11 +21,11 @@ $is
 
 		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
-		$phi chl := ($bitcast ($uint<16>) 0) $on $entry nchl $on $loopback
-		$phi num := ($bitcast ($uint<2>) 0) $on $entry nnum $on $loopback
-		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry nchl_out_var $on $loopback
-		$phi col := ($bitcast ($uint<16>) 0) $on $entry ncol $on $loopback
-		$phi row := ($bitcast ($uint<16>) 0) $on $entry nrow $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done 0 (chl + 1)) $on $loopback
+		$phi num := ($bitcast ($uint<2>) 0) $on $entry ($mux chl_done ($mux nd 0 (num+1)) num) $on $loopback
+		$phi chl_out_var := ($bitcast ($uint<16>) 1) $on $entry ($mux num_done ($mux chl_done_flag 1 (chl_out_var+8)) chl_out_var) $on $loopback
+		$phi col := ($bitcast ($uint<16>) 0) $on $entry ($mux chl_done_flag ($mux col_done 0 (col + 1)) col) $on $loopback
+		$phi row := ($bitcast ($uint<16>) 0) $on $entry ($mux col_done (row + N_ROWS_S) row) $on $loopback
 		$endmerge
 
 		$volatile nd := (num == ck_s)
@@ -43,12 +37,6 @@ $is
 		$volatile out_done_flag := (row >= num_row)
 		$volatile all_done_flag := (out_done_flag & col_done)
 		
-		nchl := ($mux chl_done 0 (chl + 1))
-		nnum :=($mux chl_done ($mux nd 0 (num+1)) num)
-		nchl_out_var := ($mux num_done ($mux chl_done_flag 1 (chl_out_var+8)) chl_out_var)
-		ncol := ($mux chl_done_flag ($mux col_done 0 (col + 1)) col)
-		 nrow := ($mux col_done (row + N_ROWS_S) row)
-
 		$volatile o_chl1_valid := (chl_out_var <= chl_max_itr)
 		$volatile o_chl2_valid := ((chl_out_var+1) <= chl_max_itr)
 		$volatile o_chl3_valid := ((chl_out_var+2) <= chl_max_itr)
@@ -61,7 +49,7 @@ $is
 		$volatile read_ip := (((col == 0) | nd) & (chl_out_var == 1))
 		$volatile not_read_ip := (~read_ip)
 		$volatile write_input := (((chl_out_var+8) < chl_max_itr) | ((col < num_col) & (num > 0)))
-		$volatile read_k := ((col == 0) & (row == 0))
+				$volatile read_k := ((col == 0) & (row == 0))
 		$volatile not_read_k := (~read_k)
 		$volatile store_kernel := (out_done_flag ~& last_col)
 
@@ -104,84 +92,30 @@ $is
 		#include convInner.aa
 		#define core_num 8
 		#include convInner.aa
-		
 
-		my_pipe1_1 := ($bitcast ($uint<16>) t_acc_val_1_1)
-		my_pipe1_2 := ($bitcast ($uint<16>) t_acc_val_1_2)
-		my_pipe1_3 := ($bitcast ($uint<16>) t_acc_val_1_3)
-		my_pipe1_4 := ($bitcast ($uint<16>) t_acc_val_1_4)
-		my_pipe1_5 := ($bitcast ($uint<16>) t_acc_val_1_5)
-		my_pipe1_6 := ($bitcast ($uint<16>) t_acc_val_1_6)
-		acc_pipe1_1 := ($bitcast ($uint<DATA_WIDTH>) acc_val1_1)
-		acc_pipe1_2 := ($bitcast ($uint<DATA_WIDTH>) acc_val2_1)
-		acc_pipe1_3 := ($bitcast ($uint<DATA_WIDTH>) acc_val3_1)
-		acc_pipe1_4 := ($bitcast ($uint<DATA_WIDTH>) acc_val4_1)
-		acc_pipe1_5 := ($bitcast ($uint<DATA_WIDTH>) acc_val5_1)
-		acc_pipe1_6 := ($bitcast ($uint<DATA_WIDTH>) acc_val6_1)
-		acc_pipe1_7 := ($bitcast ($uint<DATA_WIDTH>) acc_val7_1)
-		acc_pipe1_8 := ($bitcast ($uint<DATA_WIDTH>) acc_val8_1)
-		acc_pipe2_1 := ($bitcast ($uint<DATA_WIDTH>) acc_val1_2)
-		acc_pipe2_2 := ($bitcast ($uint<DATA_WIDTH>) acc_val2_2)
-		acc_pipe2_3 := ($bitcast ($uint<DATA_WIDTH>) acc_val3_2)
-		acc_pipe2_4 := ($bitcast ($uint<DATA_WIDTH>) acc_val4_2)
-		acc_pipe2_5 := ($bitcast ($uint<DATA_WIDTH>) acc_val5_2)
-		acc_pipe2_6 := ($bitcast ($uint<DATA_WIDTH>) acc_val6_2)
-		acc_pipe2_7 := ($bitcast ($uint<DATA_WIDTH>) acc_val7_2)
-		acc_pipe2_8 := ($bitcast ($uint<DATA_WIDTH>) acc_val8_2)
-		////time_pipe := (((($bitcast ($uint<8>) t_acc_val_2_1) && ($bitcast ($uint<8>) t_acc_val_2_2)) && (($bitcast ($uint<8>) t_acc_val_2_3) && ($bitcast ($uint<8>) acc_val2_1))) && ((($bitcast ($uint<8>) t_acc_val_2_4) && ($bitcast ($uint<8>) t_acc_val_2_5)) && (($bitcast ($uint<8>) t_acc_val_2_6) && ($bitcast ($uint<8>) acc_val2_2) )))
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_6)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_6)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_6)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_6)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_1)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_2)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_3)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_4)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_5)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_6)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_6)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_6)
-		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_6)
+		acc_pipe1_1 := ($bitcast ($uint<ACC_WIDTH>) acc_val1_1)
+		acc_pipe1_2 := ($bitcast ($uint<ACC_WIDTH>) acc_val2_1)
+		acc_pipe1_3 := ($bitcast ($uint<ACC_WIDTH>) acc_val3_1)
+		acc_pipe1_4 := ($bitcast ($uint<ACC_WIDTH>) acc_val4_1)
+		acc_pipe1_5 := ($bitcast ($uint<ACC_WIDTH>) acc_val5_1)
+		acc_pipe1_6 := ($bitcast ($uint<ACC_WIDTH>) acc_val6_1)
+		acc_pipe1_7 := ($bitcast ($uint<ACC_WIDTH>) acc_val7_1)
+		acc_pipe1_8 := ($bitcast ($uint<ACC_WIDTH>) acc_val8_1)
+		acc_pipe2_1 := ($bitcast ($uint<ACC_WIDTH>) acc_val1_2)
+		acc_pipe2_2 := ($bitcast ($uint<ACC_WIDTH>) acc_val2_2)
+		acc_pipe2_3 := ($bitcast ($uint<ACC_WIDTH>) acc_val3_2)
+		acc_pipe2_4 := ($bitcast ($uint<ACC_WIDTH>) acc_val4_2)
+		acc_pipe2_5 := ($bitcast ($uint<ACC_WIDTH>) acc_val5_2)
+		acc_pipe2_6 := ($bitcast ($uint<ACC_WIDTH>) acc_val6_2)
+		acc_pipe2_7 := ($bitcast ($uint<ACC_WIDTH>) acc_val7_2)
+		acc_pipe2_8 := ($bitcast ($uint<ACC_WIDTH>) acc_val8_2)
+		//time_pipe := (((($bitcast ($uint<8>) t_acc_val_2_1) && ($bitcast ($uint<8>) t_acc_val_2_2)) && (($bitcast ($uint<8>) t_acc_val_2_3) && ($bitcast ($uint<8>) acc_val2_1))) && ((($bitcast ($uint<8>) t_acc_val_2_4) && ($bitcast ($uint<8>) t_acc_val_2_5)) && (($bitcast ($uint<8>) t_acc_val_2_6) && ($bitcast ($uint<8>) acc_val2_2) )))
 		$while (~all_done_flag)
 
 		$volatile np_cnt := (p_cnt + 1)
 		$volatile n_cmi := ($mux (chl_left > max_chl) max_chl chl_left)
 		$volatile n_chl_left := (chl_left - n_cmi)
+
 		$if (p_cnt < num_parts) $then $place [loopback] $endif
 	}
 }
@@ -191,7 +125,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 	$branchblock [acc_blk]
 	{
 		acc_count := ((chl_in * ck) - 1)
-		$dopipeline $depth 155 $buffering 2 $fullrate
+		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
 		$phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
 		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
@@ -267,6 +201,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$guard (num_done) output_pipe7_2 := acc_val7_2
 		$guard (num_done) output_pipe8_1 := acc_val8_1
 		$guard (num_done) output_pipe8_2 := acc_val8_2
+
 		$while (nop_count < op_size)
 	}
 }

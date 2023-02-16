@@ -15,11 +15,8 @@ void __aa_barrier__();
 uint64_t readModule1 (uint32_t);
 void writeModule1 (uint8_t, uint32_t, uint64_t);
 
-void concat(uint16_t input1_dim0, uint16_t input1_dim1,uint16_t input1_dim2,uint16_t input2_dim0, uint16_t input2_dim1,uint16_t input2_dim2,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index0,uint8_t index1,uint8_t index2);
-
-void convTranspose(uint16_t inp_dim0,uint16_t inp_dim1,uint16_t inp_dim2,uint16_t ker_dim1,uint16_t ker_dim2,uint16_t stride0,uint16_t padding,uint16_t out_dim0,uint16_t out_dim1,uint16_t out_dim2,uint8_t index1, uint8_t index2);
-
 void convolutionAll (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint8_t index_in1, uint8_t index_in2, uint8_t index_k, uint8_t index_out, uint16_t shift_val,uint16_t pad, uint8_t pool, uint8_t activation);
+void kernelFetch (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint8_t index_in1, uint8_t index_in2, uint8_t index_k, uint8_t index_out, uint16_t shift_val,uint16_t pad, uint8_t pool, uint8_t activation);
 
 #define __get8xi8__(element) ({\
 	element = read_uint8("system_input_pipe");\
@@ -89,6 +86,47 @@ void sendOutput()
 	}
 }
 
+void kernelPrefetcher()
+{
+	read_uint8("prefetch_pipe");
+	__aa_barrier__();
+	kernelFetch(224,224,224,224,64,3,3,3,0,0,0,1,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(224,224,224,224,64,64,3,3,1,0,1,2,0,1,1,relu);
+	__aa_barrier__();
+	kernelFetch(112,112,112,112,128,64,3,3,2,0,2,1,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(112,112,112,112,128,128,3,3,1,0,3,3,0,1,1,relu);
+	__aa_barrier__();
+	kernelFetch(56,56,56,56,256,128,3,3,0,0,4,1,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(56,56,56,56,256,256,3,3,1,0,5,4,0,1,1,relu);
+	__aa_barrier__();
+	kernelFetch(28,28,28,28,512,256,3,3,4,0,6,1,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(28,28,28,28,512,512,3,3,1,0,7,0,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(56,56,28,28,256,512,2,2,0,0,8,1,0,0,0,relu);
+	__aa_barrier__();
+	kernelFetch(56,56,56,56,256,512,3,3,4,129,9,0,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(56,56,56,56,256,256,3,3,0,0,10,1,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(112,112,56,56,128,256,2,2,1,0,11,0,0,0,0,relu);
+	__aa_barrier__();
+	kernelFetch(112,112,112,112,128,256,3,3,3,128,12,1,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(112,112,112,112,128,128,3,3,1,0,13,0,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(224,224,112,112,64,128,2,2,0,0,14,1,0,0,0,relu);
+	__aa_barrier__();
+	kernelFetch(224,224,224,224,64,128,3,3,2,129,15,0,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(224,224,224,224,64,64,3,3,0,0,16,1,0,1,0,relu);
+	__aa_barrier__();
+	kernelFetch(224,224,224,224,3,64,3,3,1,0,17,0,0,1,0,sigmoid);
+}
+
 void systemTOP()
 {
 	// 0
@@ -98,8 +136,8 @@ void systemTOP()
 	write_uint8("debug_output_pipe",10);
 	__aa_barrier__();
 	uint64_t start_time = timer();
-	write_uint8("debug_output_pipe",11);
 	// 0 -> 1
+	write_uint8("prefetch_pipe",1);
 	convolutionAll(224,224,224,224,64,3,3,3,0,0,0,1,0,1,0,relu);
 	write_uint8("debug_output_pipe",11);
 	__aa_barrier__();

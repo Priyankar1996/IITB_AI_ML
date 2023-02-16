@@ -1,0 +1,5 @@
+$pipeline $depth 15 $fullrate
+$operator $module [multiplier] $in (in1 in2 : $int<16>) $out (output : $int<16>) $is
+{
+	output := ($cast ($int<16>) ($slice (in1 * in2) 15 8))
+}

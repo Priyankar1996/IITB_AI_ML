@@ -16,9 +16,9 @@ TOPMODULES=-T mem_test_daemon
 
 
 # five steps from C to vhdl simulator.
-HW: aalink aa2vc  vc2vhdl  vhdlsim
+HW: aalink aa2vc  vc2vhdl  
 
-AA2VHDL: aa2vc vc2vhdl vhdlsim
+AA2VHDL: aa2vc vc2vhdl 
 
 # Aa to vC
 aalink: $(SRC)/prog.aa 

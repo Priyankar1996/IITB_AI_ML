@@ -111,13 +111,11 @@ $is
 		continue_flag := (n_row < rb)
 		$while continue_flag
 		// $call timer (104) (time_pipe)
-		time_pipe := 124	
 		$volatile np_cnt := (p_cnt + 1)
 		$volatile n_cmi := ($mux (chl_left > max_chl) max_chl chl_left)
 		$volatile n_chl_left := (chl_left - n_cmi)
 		$volatile n_addr := (addr + ($bitcast ($uint<32>) chl_max_itr))
 				
 		$if (p_cnt < num_parts) $then $place [loopback] $endif
-		time_pipe := 125
 	}
 }

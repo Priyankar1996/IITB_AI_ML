@@ -7,7 +7,7 @@ $is
 	{
 		ct_new := (ct + (pad<<1))
 		m_factor := ($bitcast ($uint<32>) (ct*chl_in))
-		row_last := (row_in + {##num - 1})
+		row_last := (row_in + {##num + 1})
 		np := (num_parts_1+1)
 		
 		// Pipeline for sending inputs
@@ -54,7 +54,7 @@ $is
 		$volatile bytemask := (($bitcast ($uint<64>) _hFFFFFFFFFFFFFFFF) << (($bitcast ($uint<64>) (8 - hns)) << 3))
 		$volatile send_data := ($mux p1_zero 0 ((cv1 | tmp1) & bytemask))
 		
-		$guard (send) core_ip##num := send_data
+		$guard (send) prev_core_ip##num := send_data
 		$volatile ncv1 := ($mux send 0 send_data)
 		// Update number left
 		$volatile next_row := ((sent == (ct_new-1)) & done)
@@ -76,10 +76,12 @@ $is
 		//$volatile n_chl_num := ($mux continue_flag1 chl_num (chl_num + 1))
 		//$volatile not_end_flag := ((n_chl_num != chl_out) | continue_flag1)
 		$while (continue_flag1 | (np_cnt != np))
+		time_pipe := {10000 + ##num }
 		//$while not_end_flag
 
 	}
 }
+
 
 //$module [inputDataFetcher##num ]
 //$in (init_addr rs cs: $uint<32> num_row: $uint<16> num_parts_1 : $uint<8>)

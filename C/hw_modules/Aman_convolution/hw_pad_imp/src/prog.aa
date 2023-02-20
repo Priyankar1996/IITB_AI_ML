@@ -54,8 +54,6 @@ $module [topModule] $in () $out() $is
 	$seriesblock [seriesBlock]
 	{
 		$call configureConvolution() (rt ct chl_in rb cb chl_out rk ck shift_val pad op_size )
-		chl_in8 := (chl_in >> 3)
-		chl_out8 := (chl_out >> 3)
 		chl_out_ceil := ((chl_out + 7)>>3)
 		chl_in_ceil := ((chl_in + 7)>>3)
 		
@@ -76,11 +74,12 @@ $module [topModule] $in () $out() $is
 			}(start_time => start_time)
 			
 			$call loadKernel (chl_in chl_out rk ck 1) ()
-			$call access_T (rb rt ct chl_in chl_out_ceil rk pad parts) ()
+			//$call access_T (rb rt ct chl_in rk pad parts) ()
+			$call inputModule8 (rb ct chl_in rk pad parts) ()
 			$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 			$call accumulator (chl_in_ceil ck (op_size >> 1)) ()
-			//$call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT ) ()
-			$call sendPool (rb cb chl_out_ceil shift_val parts max_per_part2 NO_ACT ) ()
+			$call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT ) ()
+			//$call sendPool (rb cb chl_out_ceil shift_val parts max_per_part2 NO_ACT ) ()
 		}(start_time => start_time)
 		
 		$call timer (2)  (end_time)

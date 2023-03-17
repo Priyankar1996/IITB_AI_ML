@@ -67,12 +67,7 @@ $module [topModule] $in () $out() $is
 	
 		$parallelblock [topBlocks]
 		{
-			$branchblock [time_start_block]
-			{
-			$call timer (1)  (start_time)
-			time_pipe := start_time
-			}(start_time => start_time)
-			
+			time_pipe := time_val
 			$call loadKernel (chl_in chl_out rk ck 1) ()
 			//$call access_T (rb rt ct chl_in rk pad parts) ()
 			$call inputModule8 (rb ct chl_in rk pad parts) ()
@@ -80,12 +75,11 @@ $module [topModule] $in () $out() $is
 			$call accumulator (chl_in_ceil ck (op_size >> 1)) ()
 			$call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT ) ()
 			//$call sendPool (rb cb chl_out_ceil shift_val parts max_per_part2 NO_ACT ) ()
-		}(start_time => start_time)
+		}//(start_time => start_time)
 		
-		$call timer (2)  (end_time)
-		time_pipe := end_time
+		time_pipe := time_val
 		$call sendB(op_size) ()
-		net_time := (end_time - start_time)
+		net_time := $zero<64>//(end_time - start_time)
 		$split (net_time 32 8 8 8 8) (not_needed t4 t3 t2 t1)
 		maxpool_output_pipe := t4
 		maxpool_output_pipe := t3

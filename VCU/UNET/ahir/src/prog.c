@@ -88,7 +88,7 @@ uint64_t global_time_val[20];
 
 void writeTime(uint8_t ind)
 {
-	global_time_val[ind] = timer();
+	global_time_val[ind] = read_uint64("time_val");
 }
 
 writeTimeBack()

@@ -3,6 +3,7 @@ $pipe debug_input_pipe : $uint<8> $depth 1
 $pipe debug_output_pipe : $uint<8> $depth 1
 $pipe system_input_pipe : $uint<8> $depth 1
 $pipe system_output_pipe : $uint<8> $depth 1
+$pipe time_val : $uint<64> $depth 1
 $storage global_time_val:$array [20] $of $uint<64>
 $module [progx_xoptx_xo_storage_initializer_] $in () $out () $is 
 {
@@ -165,11 +166,10 @@ $is
   $branchblock [body] 
   {
     //begin: basic-block entry
-    $call timer ()  (call)
-    conv :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) call) )
+    call := time_val
     idxprom := ($cast ($uint<32>) ind)
     arrayidx := @(global_time_val[idxprom])
-    ->(arrayidx) := conv
+    ->(arrayidx) := call
     $place [return__]
     $merge return__ $endmerge
   }
@@ -237,135 +237,116 @@ $is
     call := debug_input_pipe
     call1 := system_input_pipe
     $barrier 
-    $call timer ()  (callx_xi)
-    convx_xi :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi) )
-    iNsTr_3 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ])
-    ->(iNsTr_3) := convx_xi
+    callx_xi := time_val
+    iNsTr_4 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ])
+    ->(iNsTr_4) := callx_xi
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi3)
-    convx_xi4 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi3) )
-    iNsTr_7 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) ])
-    ->(iNsTr_7) := convx_xi4
+    callx_xi3 := time_val
+    iNsTr_9 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) ])
+    ->(iNsTr_9) := callx_xi3
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000010 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi5)
-    convx_xi6 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi5) )
-    iNsTr_12 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) ])
-    ->(iNsTr_12) := convx_xi6
+    callx_xi4 := time_val
+    iNsTr_15 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) ])
+    ->(iNsTr_15) := callx_xi4
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000010 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000010 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi7)
-    convx_xi8 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi7) )
-    iNsTr_17 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ])
-    ->(iNsTr_17) := convx_xi8
+    callx_xi5 := time_val
+    iNsTr_21 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ])
+    ->(iNsTr_21) := callx_xi5
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000011 )  ( $bitcast ($uint<8> ) _b00000011 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi9)
-    convx_xi10 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi9) )
-    iNsTr_22 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000100 ) ])
-    ->(iNsTr_22) := convx_xi10
+    callx_xi6 := time_val
+    iNsTr_27 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000100 ) ])
+    ->(iNsTr_27) := callx_xi6
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000100 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi11)
-    convx_xi12 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi11) )
-    iNsTr_27 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000101 ) ])
-    ->(iNsTr_27) := convx_xi12
+    callx_xi7 := time_val
+    iNsTr_33 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000101 ) ])
+    ->(iNsTr_33) := callx_xi7
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000101 )  ( $bitcast ($uint<8> ) _b00000100 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi13)
-    convx_xi14 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi13) )
-    iNsTr_32 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000110 ) ])
-    ->(iNsTr_32) := convx_xi14
+    callx_xi8 := time_val
+    iNsTr_39 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000110 ) ])
+    ->(iNsTr_39) := callx_xi8
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000100 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000110 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi15)
-    convx_xi16 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi15) )
-    iNsTr_37 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000111 ) ])
-    ->(iNsTr_37) := convx_xi16
+    callx_xi9 := time_val
+    iNsTr_45 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000111 ) ])
+    ->(iNsTr_45) := callx_xi9
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000111 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi17)
-    convx_xi18 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi17) )
-    iNsTr_42 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001000 ) ])
-    ->(iNsTr_42) := convx_xi18
+    callx_xi10 := time_val
+    iNsTr_51 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001000 ) ])
+    ->(iNsTr_51) := callx_xi10
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00001000 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi19)
-    convx_xi20 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi19) )
-    iNsTr_47 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001001 ) ])
-    ->(iNsTr_47) := convx_xi20
+    callx_xi11 := time_val
+    iNsTr_57 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001001 ) ])
+    ->(iNsTr_57) := callx_xi11
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000100 )  ( $bitcast ($uint<8> ) _b10000001 )  ( $bitcast ($uint<8> ) _b00001001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi21)
-    convx_xi22 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi21) )
-    iNsTr_52 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001010 ) ])
-    ->(iNsTr_52) := convx_xi22
+    callx_xi12 := time_val
+    iNsTr_63 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001010 ) ])
+    ->(iNsTr_63) := callx_xi12
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00001010 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi23)
-    convx_xi24 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi23) )
-    iNsTr_57 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001011 ) ])
-    ->(iNsTr_57) := convx_xi24
+    callx_xi13 := time_val
+    iNsTr_69 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001011 ) ])
+    ->(iNsTr_69) := callx_xi13
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00001011 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi25)
-    convx_xi26 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi25) )
-    iNsTr_62 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001100 ) ])
-    ->(iNsTr_62) := convx_xi26
+    callx_xi14 := time_val
+    iNsTr_75 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001100 ) ])
+    ->(iNsTr_75) := callx_xi14
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000011 )  ( $bitcast ($uint<8> ) _b10000000 )  ( $bitcast ($uint<8> ) _b00001100 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi27)
-    convx_xi28 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi27) )
-    iNsTr_67 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001101 ) ])
-    ->(iNsTr_67) := convx_xi28
+    callx_xi15 := time_val
+    iNsTr_81 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001101 ) ])
+    ->(iNsTr_81) := callx_xi15
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00001101 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi29)
-    convx_xi30 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi29) )
-    iNsTr_72 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001110 ) ])
-    ->(iNsTr_72) := convx_xi30
+    callx_xi16 := time_val
+    iNsTr_87 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001110 ) ])
+    ->(iNsTr_87) := callx_xi16
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00001110 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi31)
-    convx_xi32 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi31) )
-    iNsTr_77 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001111 ) ])
-    ->(iNsTr_77) := convx_xi32
+    callx_xi17 := time_val
+    iNsTr_93 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001111 ) ])
+    ->(iNsTr_93) := callx_xi17
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000010 )  ( $bitcast ($uint<8> ) _b10000001 )  ( $bitcast ($uint<8> ) _b00001111 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi33)
-    convx_xi34 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi33) )
-    iNsTr_82 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) ])
-    ->(iNsTr_82) := convx_xi34
+    callx_xi18 := time_val
+    iNsTr_99 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) ])
+    ->(iNsTr_99) := callx_xi18
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00010000 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi35)
-    convx_xi36 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi35) )
-    iNsTr_87 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010001 ) ])
-    ->(iNsTr_87) := convx_xi36
+    callx_xi19 := time_val
+    iNsTr_105 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010001 ) ])
+    ->(iNsTr_105) := callx_xi19
     $barrier 
     $call convolutionAll (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00010001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000010 )  )  ()
     $barrier 
-    $call timer ()  (callx_xi37)
-    convx_xi38 :=  ($bitcast ($uint<64>) ( $cast ($int< 64 > ) callx_xi37) )
-    iNsTr_92 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010010 ) ])
-    ->(iNsTr_92) := convx_xi38
+    callx_xi20 := time_val
+    iNsTr_111 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010010 ) ])
+    ->(iNsTr_111) := callx_xi20
     $barrier 
     $call writeTimeBack ()  (call2)
     $call sendOutput ()  ()

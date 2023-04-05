@@ -291,7 +291,7 @@ begin
 
 
     debug_uart: uartTopGenericEasilyConfigurable
-                    generic map(baud_rate => 115200, clock_frequency => 120000000)
+                    generic map(baud_rate => 115200, clock_frequency => 150000000)
                         port map (
                                 reset     => reset_sync,
                                 clk       => clock,
@@ -308,7 +308,7 @@ begin
                         );
 
     serial_uart: uartTopGenericEasilyConfigurable
-                        generic map(baud_rate => 115200, clock_frequency => 120000000)
+                        generic map(baud_rate => 115200, clock_frequency => 150000000)
                         port map (
                                  reset     => reset_sync,
                                 clk       => clock,

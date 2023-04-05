@@ -4,9 +4,10 @@ target triple = "i386-unknown-linux-gnu"
 
 @.str = private constant [18 x i8] c"system_input_pipe\00"
 @.str1 = private constant [19 x i8] c"system_output_pipe\00"
+@.str2 = private constant [9 x i8] c"time_val\00"
 @global_time_val = common global [20 x i64] zeroinitializer, align 8
-@.str2 = private constant [18 x i8] c"debug_output_pipe\00"
-@.str3 = private constant [17 x i8] c"debug_input_pipe\00"
+@.str3 = private constant [18 x i8] c"debug_output_pipe\00"
+@.str4 = private constant [17 x i8] c"debug_input_pipe\00"
 
 define void @readFromSystemPipe(i8 zeroext %index) nounwind {
 entry:
@@ -133,15 +134,14 @@ declare void @write_uint8(i8*, i8 zeroext)
 
 define void @writeTime(i8 zeroext %ind) nounwind {
 entry:
-  %call = tail call i32 (...)* @timer() nounwind
-  %conv = sext i32 %call to i64
+  %call = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
   %idxprom = zext i8 %ind to i32
   %arrayidx = getelementptr inbounds [20 x i64]* @global_time_val, i32 0, i32 %idxprom
-  store i64 %conv, i64* %arrayidx, align 4
+  store i64 %call, i64* %arrayidx, align 4
   ret void
 }
 
-declare i32 @timer(...)
+declare i64 @read_uint64(i8*)
 
 define i32 @writeTimeBack() nounwind {
 bb.nph:
@@ -167,14 +167,14 @@ for.body:                                         ; preds = %for.body, %bb.nph
   %shr43 = lshr i64 %tmp3, 56
   %conv46 = trunc i64 %shr43 to i8
   tail call void (...)* @__aa_barrier__() nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv46) nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv40) nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv34) nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv28) nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv22) nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv16) nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv10) nounwind
-  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str2, i32 0, i32 0), i8 zeroext %conv) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv46) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv40) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv34) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv28) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv22) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv16) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv10) nounwind
+  tail call void @write_uint8(i8* getelementptr inbounds ([18 x i8]* @.str3, i32 0, i32 0), i8 zeroext %conv) nounwind
   %inc = add nsw i32 %i.066, 1
   %exitcond1 = icmp eq i32 %inc, 19
   br i1 %exitcond1, label %for.end, label %for.body
@@ -187,119 +187,100 @@ declare void @__aa_barrier__(...)
 
 define void @systemTOP() nounwind {
 entry:
-  %call = tail call zeroext i8 @read_uint8(i8* getelementptr inbounds ([17 x i8]* @.str3, i32 0, i32 0)) nounwind
+  %call = tail call zeroext i8 @read_uint8(i8* getelementptr inbounds ([17 x i8]* @.str4, i32 0, i32 0)) nounwind
   %call1 = tail call zeroext i8 @read_uint8(i8* getelementptr inbounds ([18 x i8]* @.str, i32 0, i32 0)) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i = tail call i32 (...)* @timer() nounwind
-  %conv.i = sext i32 %call.i to i64
-  store i64 %conv.i, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 0), align 8
+  %call.i = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 0), align 8
   tail call void @convolutionAll(i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 64, i16 zeroext 3, i16 zeroext 3, i16 zeroext 3, i8 zeroext 0, i8 zeroext 0, i8 zeroext 0, i8 zeroext 1, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i3 = tail call i32 (...)* @timer() nounwind
-  %conv.i4 = sext i32 %call.i3 to i64
-  store i64 %conv.i4, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 1), align 8
+  %call.i3 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i3, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 1), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 64, i16 zeroext 64, i16 zeroext 3, i16 zeroext 3, i8 zeroext 1, i8 zeroext 0, i8 zeroext 1, i8 zeroext 2, i16 zeroext 0, i16 zeroext 1, i8 zeroext 1, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i5 = tail call i32 (...)* @timer() nounwind
-  %conv.i6 = sext i32 %call.i5 to i64
-  store i64 %conv.i6, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 2), align 8
+  %call.i4 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i4, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 2), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 128, i16 zeroext 64, i16 zeroext 3, i16 zeroext 3, i8 zeroext 2, i8 zeroext 0, i8 zeroext 2, i8 zeroext 1, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i7 = tail call i32 (...)* @timer() nounwind
-  %conv.i8 = sext i32 %call.i7 to i64
-  store i64 %conv.i8, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 3), align 8
+  %call.i5 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i5, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 3), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 128, i16 zeroext 128, i16 zeroext 3, i16 zeroext 3, i8 zeroext 1, i8 zeroext 0, i8 zeroext 3, i8 zeroext 3, i16 zeroext 0, i16 zeroext 1, i8 zeroext 1, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i9 = tail call i32 (...)* @timer() nounwind
-  %conv.i10 = sext i32 %call.i9 to i64
-  store i64 %conv.i10, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 4), align 8
+  %call.i6 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i6, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 4), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 256, i16 zeroext 128, i16 zeroext 3, i16 zeroext 3, i8 zeroext 0, i8 zeroext 0, i8 zeroext 4, i8 zeroext 1, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i11 = tail call i32 (...)* @timer() nounwind
-  %conv.i12 = sext i32 %call.i11 to i64
-  store i64 %conv.i12, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 5), align 8
+  %call.i7 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i7, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 5), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 256, i16 zeroext 256, i16 zeroext 3, i16 zeroext 3, i8 zeroext 1, i8 zeroext 0, i8 zeroext 5, i8 zeroext 4, i16 zeroext 0, i16 zeroext 1, i8 zeroext 1, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i13 = tail call i32 (...)* @timer() nounwind
-  %conv.i14 = sext i32 %call.i13 to i64
-  store i64 %conv.i14, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 6), align 8
+  %call.i8 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i8, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 6), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 28, i16 zeroext 28, i16 zeroext 28, i16 zeroext 28, i16 zeroext 512, i16 zeroext 256, i16 zeroext 3, i16 zeroext 3, i8 zeroext 4, i8 zeroext 0, i8 zeroext 6, i8 zeroext 1, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i15 = tail call i32 (...)* @timer() nounwind
-  %conv.i16 = sext i32 %call.i15 to i64
-  store i64 %conv.i16, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 7), align 8
+  %call.i9 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i9, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 7), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 28, i16 zeroext 28, i16 zeroext 28, i16 zeroext 28, i16 zeroext 512, i16 zeroext 512, i16 zeroext 3, i16 zeroext 3, i8 zeroext 1, i8 zeroext 0, i8 zeroext 7, i8 zeroext 0, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i17 = tail call i32 (...)* @timer() nounwind
-  %conv.i18 = sext i32 %call.i17 to i64
-  store i64 %conv.i18, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 8), align 8
+  %call.i10 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i10, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 8), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 56, i16 zeroext 56, i16 zeroext 28, i16 zeroext 28, i16 zeroext 256, i16 zeroext 512, i16 zeroext 2, i16 zeroext 2, i8 zeroext 0, i8 zeroext 0, i8 zeroext 8, i8 zeroext 1, i16 zeroext 0, i16 zeroext 0, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i19 = tail call i32 (...)* @timer() nounwind
-  %conv.i20 = sext i32 %call.i19 to i64
-  store i64 %conv.i20, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 9), align 8
+  %call.i11 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i11, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 9), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 256, i16 zeroext 512, i16 zeroext 3, i16 zeroext 3, i8 zeroext 4, i8 zeroext -127, i8 zeroext 9, i8 zeroext 0, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i21 = tail call i32 (...)* @timer() nounwind
-  %conv.i22 = sext i32 %call.i21 to i64
-  store i64 %conv.i22, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 10), align 8
+  %call.i12 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i12, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 10), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 56, i16 zeroext 256, i16 zeroext 256, i16 zeroext 3, i16 zeroext 3, i8 zeroext 0, i8 zeroext 0, i8 zeroext 10, i8 zeroext 1, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i23 = tail call i32 (...)* @timer() nounwind
-  %conv.i24 = sext i32 %call.i23 to i64
-  store i64 %conv.i24, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 11), align 8
+  %call.i13 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i13, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 11), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 112, i16 zeroext 112, i16 zeroext 56, i16 zeroext 56, i16 zeroext 128, i16 zeroext 256, i16 zeroext 2, i16 zeroext 2, i8 zeroext 1, i8 zeroext 0, i8 zeroext 11, i8 zeroext 0, i16 zeroext 0, i16 zeroext 0, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i25 = tail call i32 (...)* @timer() nounwind
-  %conv.i26 = sext i32 %call.i25 to i64
-  store i64 %conv.i26, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 12), align 8
+  %call.i14 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i14, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 12), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 128, i16 zeroext 256, i16 zeroext 3, i16 zeroext 3, i8 zeroext 3, i8 zeroext -128, i8 zeroext 12, i8 zeroext 1, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i27 = tail call i32 (...)* @timer() nounwind
-  %conv.i28 = sext i32 %call.i27 to i64
-  store i64 %conv.i28, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 13), align 8
+  %call.i15 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i15, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 13), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 112, i16 zeroext 128, i16 zeroext 128, i16 zeroext 3, i16 zeroext 3, i8 zeroext 1, i8 zeroext 0, i8 zeroext 13, i8 zeroext 0, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i29 = tail call i32 (...)* @timer() nounwind
-  %conv.i30 = sext i32 %call.i29 to i64
-  store i64 %conv.i30, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 14), align 8
+  %call.i16 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i16, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 14), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 224, i16 zeroext 224, i16 zeroext 112, i16 zeroext 112, i16 zeroext 64, i16 zeroext 128, i16 zeroext 2, i16 zeroext 2, i8 zeroext 0, i8 zeroext 0, i8 zeroext 14, i8 zeroext 1, i16 zeroext 0, i16 zeroext 0, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i31 = tail call i32 (...)* @timer() nounwind
-  %conv.i32 = sext i32 %call.i31 to i64
-  store i64 %conv.i32, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 15), align 8
+  %call.i17 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i17, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 15), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 64, i16 zeroext 128, i16 zeroext 3, i16 zeroext 3, i8 zeroext 2, i8 zeroext -127, i8 zeroext 15, i8 zeroext 0, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i33 = tail call i32 (...)* @timer() nounwind
-  %conv.i34 = sext i32 %call.i33 to i64
-  store i64 %conv.i34, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 16), align 8
+  %call.i18 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i18, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 16), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 64, i16 zeroext 64, i16 zeroext 3, i16 zeroext 3, i8 zeroext 0, i8 zeroext 0, i8 zeroext 16, i8 zeroext 1, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 1) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i35 = tail call i32 (...)* @timer() nounwind
-  %conv.i36 = sext i32 %call.i35 to i64
-  store i64 %conv.i36, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 17), align 8
+  %call.i19 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i19, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 17), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   tail call void @convolutionAll(i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 224, i16 zeroext 3, i16 zeroext 64, i16 zeroext 3, i16 zeroext 3, i8 zeroext 1, i8 zeroext 0, i8 zeroext 17, i8 zeroext 0, i16 zeroext 0, i16 zeroext 1, i8 zeroext 0, i8 zeroext 2) nounwind
   tail call void (...)* @__aa_barrier__() nounwind
-  %call.i37 = tail call i32 (...)* @timer() nounwind
-  %conv.i38 = sext i32 %call.i37 to i64
-  store i64 %conv.i38, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 18), align 8
+  %call.i20 = tail call i64 @read_uint64(i8* getelementptr inbounds ([9 x i8]* @.str2, i32 0, i32 0)) nounwind
+  store i64 %call.i20, i64* getelementptr inbounds ([20 x i64]* @global_time_val, i32 0, i32 18), align 8
   tail call void (...)* @__aa_barrier__() nounwind
   %call2 = tail call i32 @writeTimeBack()
   tail call void @sendOutput()

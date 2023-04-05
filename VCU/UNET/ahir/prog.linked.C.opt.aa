@@ -201,9 +201,7 @@ $pipe  system_input_pipe : $uint<8>  $depth 1
 // can point into 
 $pipe  system_output_pipe : $uint<8>  $depth 1 
 // can point into 
-$noblock $pipe  timer_req : $uint<1>  $depth 1 
-// can point into 
-$pipe  timer_resp : $uint<64>  $depth 1 
+$pipe  time_val : $uint<64>  $depth 1 
 // can point into 
 $opaque $module [Divider]
 $in ( dividend : $uint<16>   divisor : $uint<16>  )
@@ -817,7 +815,7 @@ $is
     // type of target is $uint<16>
     $phi row := 			  ($bitcast ($uint<16>) 0  ) $on   $entry 			  n_row $on   $loopback 
     // type of target is $uint<16>
-    $phi parts := 			  0  $on   $entry 			  n_parts $on   $loopback 
+    $phi parts := 			  n_parts $on   $loopback 			  0  $on   $entry 
     // type of target is $uint<8>
     $endmerge
     val_read1 := prev_core_ip1 $buffering 1// bits of buffering = 64. 
@@ -1135,7 +1133,7 @@ $is
       // type of target is $uint<16>
       $phi mycounter := 				  ($bitcast ($uint<32>) row_size_total ) $on   $entry 				  n_mycounter $on   $loopback 
       // type of target is $uint<32>
-      $phi part_cnt := 				  ($bitcast ($uint<8>) 0  ) $on   $entry 				  np_cnt $on   $loopback 
+      $phi part_cnt := 				  np_cnt $on   $loopback 				  ($bitcast ($uint<8>) 0  ) $on   $entry 
       // type of target is $uint<8>
       $endmerge
       $volatile next_row := (mycounter == 1 ) $buffering 1
@@ -1179,9 +1177,9 @@ $is
     $merge $entry loopback 
     $phi p_cnt := 			  np_cnt $on   loopback 			  ($bitcast ($uint<8>) 0  ) $on   $entry 
     // type of target is $uint<8>
-    $phi chl_max_itr := 			  n_cmi $on   loopback 			  max_chl $on   $entry 
+    $phi chl_max_itr := 			  max_chl $on   $entry 			  n_cmi $on   loopback 
     // type of target is $uint<16>
-    $phi chl_left := 			  (chl_out - max_chl) $on   $entry 			  n_chl_left $on   loopback 
+    $phi chl_left := 			  n_chl_left $on   loopback 			  (chl_out - max_chl) $on   $entry 
     // type of target is $uint<16>
     $endmerge
     $dopipeline $depth 15 $buffering 2
@@ -2548,11 +2546,11 @@ $is
     $merge $entry $loopback 
     $phi address1 := 			  n_address1 $on   $loopback 			  ($bitcast ($uint<32>) addr ) $on   $entry 
     // type of target is $uint<32>
-    $phi address2 := 			  n_address2 $on   $loopback 			  ($bitcast ($uint<32>) (row_size + addr) ) $on   $entry 
+    $phi address2 := 			  ($bitcast ($uint<32>) (row_size + addr) ) $on   $entry 			  n_address2 $on   $loopback 
     // type of target is $uint<32>
-    $phi chl := 			  n_chl $on   $loopback 			  ($bitcast ($uint<16>) 1  ) $on   $entry 
+    $phi chl := 			  ($bitcast ($uint<16>) 1  ) $on   $entry 			  n_chl $on   $loopback 
     // type of target is $uint<16>
-    $phi col := 			  n_col $on   $loopback 			  ($bitcast ($uint<16>) 1  ) $on   $entry 
+    $phi col := 			  ($bitcast ($uint<16>) 1  ) $on   $entry 			  n_col $on   $loopback 
     // type of target is $uint<16>
     $phi row := 			  ($bitcast ($uint<16>) 1  ) $on   $entry 			  n_row $on   $loopback 
     // type of target is $uint<16>
@@ -2801,7 +2799,7 @@ $is
     $endmerge
     $place[forx_xbodyx_xpreheader_forx_xbody]
     $merge forx_xbody_forx_xbody forx_xbodyx_xpreheader_forx_xbody 
-    $phi iNsTr_6 := 			  ($cast ($uint<32>) inc ) $on   forx_xbody_forx_xbody 			  ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   forx_xbodyx_xpreheader_forx_xbody 
+    $phi iNsTr_6 := 			  ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   forx_xbodyx_xpreheader_forx_xbody 			  ($cast ($uint<32>) inc ) $on   forx_xbody_forx_xbody 
     // type of target is $uint<32>
     $endmerge
     call12 := system_input_pipe $buffering 1// bits of buffering = 8. 
@@ -2954,14 +2952,6 @@ $is
     $endmerge
   }
 }
-$module [timer]
-$in ()
-$out ( T : $uint<64>  )
-$is
-{
-  timer_req := ($bitcast ($uint<1>) _b1  ) $buffering 1// bits of buffering = 1. 
-  T := timer_resp $buffering 1// bits of buffering = 64. 
-}
 $module [writeTimeBack]
 $in ()
 $out ( ret_val__ : $uint<32>  )
@@ -2971,7 +2961,7 @@ $is
   {
     $place[bbx_xnph_forx_xbody]
     $merge bbx_xnph_forx_xbody forx_xbody_forx_xbody 
-    $phi ix_x066 := 			  ($cast ($uint<32>) inc ) $on   forx_xbody_forx_xbody 			  ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   bbx_xnph_forx_xbody 
+    $phi ix_x066 := 			  ($cast ($uint<32>) ($bitcast ($uint<32>) _b00000000000000000000000000000000  ) ) $on   bbx_xnph_forx_xbody 			  ($cast ($uint<32>) inc ) $on   forx_xbody_forx_xbody 
     // type of target is $uint<32>
     $endmerge
     arrayidx := @(global_time_val[ix_x066]) $buffering 1// bits of buffering = 32. 
@@ -3025,135 +3015,116 @@ $is
     call := debug_input_pipe $buffering 1// bits of buffering = 8. 
     call1 := system_input_pipe $buffering 1// bits of buffering = 8. 
     $barrier
-    $call timer () (callx_xi ) 
-    convx_xi := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_3 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_3) := convx_xi $buffering 1// bits of buffering = 64. 
+    callx_xi := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_4 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000000  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_4) := callx_xi $buffering 1// bits of buffering = 64. 
     $call convolutionAll (($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi3 ) 
-    convx_xi4 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi3 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_7 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_7) := convx_xi4 $buffering 1// bits of buffering = 64. 
+    callx_xi3 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_9 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000001  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_9) := callx_xi3 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000010  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi5 ) 
-    convx_xi6 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi5 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_12 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_12) := convx_xi6 $buffering 1// bits of buffering = 64. 
+    callx_xi4 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_15 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000010  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_15) := callx_xi4 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000010  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000010  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi7 ) 
-    convx_xi8 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi7 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_17 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000011  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_17) := convx_xi8 $buffering 1// bits of buffering = 64. 
+    callx_xi5 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_21 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000011  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_21) := callx_xi5 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000011  ) ($bitcast ($uint<8>) _b00000011  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi9 ) 
-    convx_xi10 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi9 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_22 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000100  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_22) := convx_xi10 $buffering 1// bits of buffering = 64. 
+    callx_xi6 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_27 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000100  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_27) := callx_xi6 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000100  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi11 ) 
-    convx_xi12 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi11 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_27 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000101  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_27) := convx_xi12 $buffering 1// bits of buffering = 64. 
+    callx_xi7 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_33 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000101  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_33) := callx_xi7 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000101  ) ($bitcast ($uint<8>) _b00000100  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi13 ) 
-    convx_xi14 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi13 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_32 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000110  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_32) := convx_xi14 $buffering 1// bits of buffering = 64. 
+    callx_xi8 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_39 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000110  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_39) := callx_xi8 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000001000000000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000100  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000110  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi15 ) 
-    convx_xi16 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi15 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_37 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000111  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_37) := convx_xi16 $buffering 1// bits of buffering = 64. 
+    callx_xi9 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_45 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000000111  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_45) := callx_xi9 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000001000000000  ) ($bitcast ($uint<16>) _b0000001000000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000111  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi17 ) 
-    convx_xi18 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi17 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_42 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001000  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_42) := convx_xi18 $buffering 1// bits of buffering = 64. 
+    callx_xi10 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_51 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001000  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_51) := callx_xi10 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000000011100  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000001000000000  ) ($bitcast ($uint<16>) _b0000000000000010  ) ($bitcast ($uint<16>) _b0000000000000010  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00001000  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi19 ) 
-    convx_xi20 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi19 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_47 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001001  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_47) := convx_xi20 $buffering 1// bits of buffering = 64. 
+    callx_xi11 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_57 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001001  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_57) := callx_xi11 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000001000000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000100  ) ($bitcast ($uint<8>) _b10000001  ) ($bitcast ($uint<8>) _b00001001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi21 ) 
-    convx_xi22 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi21 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_52 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001010  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_52) := convx_xi22 $buffering 1// bits of buffering = 64. 
+    callx_xi12 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_63 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001010  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_63) := callx_xi12 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00001010  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi23 ) 
-    convx_xi24 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi23 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_57 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001011  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_57) := convx_xi24 $buffering 1// bits of buffering = 64. 
+    callx_xi13 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_69 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001011  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_69) := callx_xi13 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000000111000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000000000010  ) ($bitcast ($uint<16>) _b0000000000000010  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00001011  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi25 ) 
-    convx_xi26 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi25 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_62 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001100  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_62) := convx_xi26 $buffering 1// bits of buffering = 64. 
+    callx_xi14 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_75 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001100  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_75) := callx_xi14 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000100000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000011  ) ($bitcast ($uint<8>) _b10000000  ) ($bitcast ($uint<8>) _b00001100  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi27 ) 
-    convx_xi28 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi27 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_67 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001101  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_67) := convx_xi28 $buffering 1// bits of buffering = 64. 
+    callx_xi15 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_81 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001101  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_81) := callx_xi15 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00001101  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi29 ) 
-    convx_xi30 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi29 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_72 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001110  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_72) := convx_xi30 $buffering 1// bits of buffering = 64. 
+    callx_xi16 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_87 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001110  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_87) := callx_xi16 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001110000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000000000010  ) ($bitcast ($uint<16>) _b0000000000000010  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00001110  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi31 ) 
-    convx_xi32 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi31 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_77 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001111  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_77) := convx_xi32 $buffering 1// bits of buffering = 64. 
+    callx_xi17 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_93 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000001111  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_93) := callx_xi17 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000010000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000010  ) ($bitcast ($uint<8>) _b10000001  ) ($bitcast ($uint<8>) _b00001111  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi33 ) 
-    convx_xi34 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi33 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_82 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000010000  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_82) := convx_xi34 $buffering 1// bits of buffering = 64. 
+    callx_xi18 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_99 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000010000  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_99) := callx_xi18 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00010000  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000001  ) ) () 
     $barrier
-    $call timer () (callx_xi35 ) 
-    convx_xi36 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi35 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_87 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000010001  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_87) := convx_xi36 $buffering 1// bits of buffering = 64. 
+    callx_xi19 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_105 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000010001  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_105) := callx_xi19 $buffering 1// bits of buffering = 64. 
     $barrier
     $call convolutionAll (($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000011100000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000001000000  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<16>) _b0000000000000011  ) ($bitcast ($uint<8>) _b00000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00010001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<16>) _b0000000000000000  ) ($bitcast ($uint<16>) _b0000000000000001  ) ($bitcast ($uint<8>) _b00000000  ) ($bitcast ($uint<8>) _b00000010  ) ) () 
     $barrier
-    $call timer () (callx_xi37 ) 
-    convx_xi38 := ($bitcast ($uint<64>) ($cast ($int<64>) callx_xi37 ) ) $buffering 1// bits of buffering = 64. 
-    iNsTr_92 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000010010  )]) $buffering 1// bits of buffering = 32. 
-    ->(iNsTr_92) := convx_xi38 $buffering 1// bits of buffering = 64. 
+    callx_xi20 := time_val $buffering 1// bits of buffering = 64. 
+    iNsTr_111 := @(global_time_val[($bitcast ($uint<32>) _b00000000000000000000000000010010  )]) $buffering 1// bits of buffering = 32. 
+    ->(iNsTr_111) := callx_xi20 $buffering 1// bits of buffering = 64. 
     $barrier
     $call writeTimeBack () (call2 ) 
     $call sendOutput () () 
@@ -3174,11 +3145,9 @@ $is
     $merge $entry $loopback 
     $phi COUNTER := 			  ($bitcast ($uint<64>) _b0  ) $on   $entry 			  nCOUNTER $on   $loopback 
     // type of target is $uint<64>
-    $phi req := 			  timer_req $on   $entry ,   $loopback 
-    // type of target is $uint<1>
     $endmerge
     $volatile nCOUNTER := (COUNTER + 1 ) $buffering 1
-    $guard (req) timer_resp := COUNTER $buffering 1// bits of buffering = 64. 
+    time_val := COUNTER $buffering 1// bits of buffering = 64. 
     $while 1 
   }
 }
@@ -3189,11 +3158,10 @@ $is
 {
   $branchblock [body]
   {
-    $call timer () (call ) 
-    conv := ($bitcast ($uint<64>) ($cast ($int<64>) call ) ) $buffering 1// bits of buffering = 64. 
+    call := time_val $buffering 1// bits of buffering = 64. 
     idxprom := ($cast ($uint<32>) ind ) $buffering 1// bits of buffering = 32. 
     arrayidx := @(global_time_val[idxprom]) $buffering 1// bits of buffering = 32. 
-    ->(arrayidx) := conv $buffering 1// bits of buffering = 64. 
+    ->(arrayidx) := call $buffering 1// bits of buffering = 64. 
     $place[return__]
     $merge return__ 
     $endmerge

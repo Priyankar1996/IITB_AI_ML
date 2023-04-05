@@ -30,7 +30,6 @@ uint64_t readModule_convolutionk(uint8_t index,uint32_t address);
 void sendModule8(uint16_t rb,uint16_t cb,uint16_t chl_out,uint16_t shift_val,uint8_t num_parts,uint16_t max_chl,uint8_t activation,uint8_t index);
 void sendOutput();
 void systemTOP();
-uint64_t timer();
 void timerDaemon();
 void writeModule1(uint8_t index,uint32_t address,uint64_t data);
 void writeTime(uint8_t ind);

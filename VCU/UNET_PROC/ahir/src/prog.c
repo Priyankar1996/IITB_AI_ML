@@ -21,7 +21,6 @@ void writeTime(uint8_t ind)
 {
 	write_uint8 ("system_output_pipe",201);
 	global_time_val[ind] = read_uint64("time_val");
-	write_uint8 ("system_output_pipe",202);
 }
 
 writeTimeBack()
@@ -78,9 +77,8 @@ uint32_t accessAcceleratorRegisters (uint8_t write_bar,
 void execute_layer()
 {
 
-	write_uint8 ("system_output_pipe",100);
+	write_uint8 ("system_output_pipe",read_uint64("time_val"));
 	accessAcceleratorRegisters (0,0, 0x7);
-	write_uint8 ("system_output_pipe",101);
 	// wait until interrupt is 0.
 	while(1)
 	{
@@ -88,7 +86,7 @@ void execute_layer()
 			break;
 	}
 
-	write_uint8 ("system_output_pipe",102);
+	write_uint8 ("system_output_pipe",read_uint64("time_val"));
 	// wait until interrupt is 1
 	while(1)
 	{
@@ -96,9 +94,8 @@ void execute_layer()
 			break;
 	}
 	// disable everything..
-	write_uint8 ("system_output_pipe",103);
 	accessAcceleratorRegisters (0,0, 0x0);
-	write_uint8 ("system_output_pipe",104);
+	write_uint8 ("system_output_pipe",read_uint64("time_val"));
 }
 
 void set_convolution_layer (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint32_t addr_in1, uint32_t addr_in2, uint32_t addr_k, uint8_t addr_out, uint16_t shift_val,uint16_t pad, uint8_t pool, uint8_t activation)
@@ -173,58 +170,94 @@ void systemTOP()
 	uint8_t end = read_uint8("system_input_pipe");
 	__aa_barrier__();
 	set_convolution_layer(224,224,224,224,64,3,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(1);
 	set_convolution_layer(224,224,224,224,64,64,3,3,0,0,0,0,0,1,1,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(2);
 	set_convolution_layer(112,112,112,112,128,64,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(3);
 	set_convolution_layer(112,112,112,112,128,128,3,3,0,0,0,0,0,1,1,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(4);
 	set_convolution_layer(56,56,56,56,256,128,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(5);
 	set_convolution_layer(56,56,56,56,256,256,3,3,0,0,0,0,0,1,1,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(6);
 	set_convolution_layer(28,28,28,28,512,256,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(7);
 	set_convolution_layer(28,28,28,28,512,512,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(8);
 	set_convolution_layer(56,56,28,28,256,512,2,2,0,0,0,0,0,0,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(9);
 	set_convolution_layer(56,56,56,56,256,512,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(10);
 	set_convolution_layer(56,56,56,56,256,256,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(11);
 	set_convolution_layer(112,112,56,56,128,256,2,2,0,0,0,0,0,0,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(12);
 	set_convolution_layer(112,112,112,112,128,256,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(13);
 	set_convolution_layer(112,112,112,112,128,128,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(14);
 	set_convolution_layer(224,224,112,112,64,128,2,2,0,0,0,0,0,0,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(15);
 	set_convolution_layer(224,224,224,224,64,128,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(16);
 	set_convolution_layer(224,224,224,224,64,64,3,3,0,0,0,0,0,1,0,relu);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(17);
 	set_convolution_layer(224,224,224,224,3,64,3,3,0,0,0,0,0,1,0,sigmoid);
+	__aa_barrier__();
 	execute_layer();
+	__aa_barrier__();
 	writeTime(18);
 	__aa_barrier__();
 	writeTimeBack();

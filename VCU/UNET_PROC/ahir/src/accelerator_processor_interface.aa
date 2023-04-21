@@ -84,7 +84,10 @@ $module [accelerator_worker_daemon] $in () $out () $is
 			) ()
 		
 		$barrier
-
+		system_output_pipe := ($bitcast ($uint<8>) ro)
+		system_output_pipe := ($bitcast ($uint<8>) ri)
+		system_output_pipe := ($bitcast ($uint<8>) rk)
+		system_output_pipe := ($bitcast ($uint<8>) cho)
 		// set interrupt flag in r0.
 		$volatile set_intr := ((r0 [] 0) & (r0 [] 1))
 		accelerator_reg[0] := ($concat ($slice r0 31 5) set_intr $one<1> ($slice r0 2 0))

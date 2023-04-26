@@ -15,19 +15,22 @@ uint64_t readModule1 (uint32_t);
 void writeModule1 (uint32_t, uint32_t, uint64_t);
 void convolutionAll (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint32_t index_in1, uint32_t index_in2, uint32_t index_k, uint32_t index_out, uint16_t shift_val,uint16_t pad, uint8_t pool, uint8_t activation);
 
-uint64_t global_time_val[20];
+uint64_t global_time_val_pipe[20];
 
 void writeTime(uint8_t ind)
 {
 	write_uint8 ("system_output_pipe",201);
-	global_time_val[ind] = read_uint64("time_val");
+	global_time_val_pipe[ind] = read_uint64("time_val");
 }
 
 writeTimeBack()
 {
 	for (int i = 0; i < 19; i++)
 	{
-	uint64_t elapsed_time = global_time_val[i];
+	// for (int j = 0; j < 2; j++)
+	// {	
+	uint64_t elapsed_time = global_time_val_pipe[i];
+
 	uint8_t out_data[8];\
 	out_data[7] = elapsed_time & 0xFF;\
 	elapsed_time>>=8;\
@@ -53,6 +56,7 @@ writeTimeBack()
 	write_uint8 ("debug_output_pipe",out_data[5]);\
 	write_uint8 ("debug_output_pipe",out_data[6]);\
 	write_uint8 ("debug_output_pipe",out_data[7]);\
+	// }
 	}
 	
 }

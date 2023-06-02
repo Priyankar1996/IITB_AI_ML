@@ -1,0 +1,370 @@
+// Aa code produced by llvm2aa (version 1.0)
+$pipe ACCELERATOR_INTERRUPT_8 : $uint<8> $depth 1
+$pipe debug_input_pipe : $uint<8> $depth 1
+$pipe debug_output_pipe : $uint<8> $depth 1
+$pipe system_input_pipe : $uint<8> $depth 1
+$pipe system_output_pipe : $uint<8> $depth 1
+$pipe tester_control_command : $uint<64> $depth 1
+$pipe tester_control_response : $uint<32> $depth 1
+$pipe time_val : $uint<64> $depth 1
+$storage global_time_val:$array [20] $of $uint<64>
+$module [progx_xoptx_xo_storage_initializer_] $in () $out () $is 
+{
+  $null
+  $attribute initializer
+}
+$module [writeTime] 
+$in (ind : $uint<8> )
+$out ()
+$is 
+{
+  $branchblock [body] 
+  {
+    //begin: basic-block entry
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    call := time_val
+    idxprom := ($cast ($uint<32>) ind)
+    arrayidx := @(global_time_val[idxprom])
+    ->(arrayidx) := call
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $place [return__]
+    $merge return__ $endmerge
+  }
+}
+$module [writeTimeBack] 
+$in ()
+$out (ret_val__ : $uint<32>)
+$is 
+{
+  $branchblock [body] 
+  {
+    //begin: basic-block bbx_xnph
+    $place [bbx_xnph_forx_xbody]
+    //begin: basic-block forx_xbody
+    $merge bbx_xnph_forx_xbody forx_xbody_forx_xbody
+    $phi ix_x066 :=  ( $cast ($uint<32>) ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 ) ) $on bbx_xnph_forx_xbody ( $cast ($uint<32>) inc) $on forx_xbody_forx_xbody 
+    $endmerge
+    arrayidx := @(global_time_val[ix_x066])
+    // load 
+    tmp3 := ->(arrayidx) 
+    conv := ($cast ($uint<8>) tmp3)
+    shr := (tmp3 >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000001000 ) )
+    conv10 := ($cast ($uint<8>) shr)
+    shr13 := (tmp3 >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000010000 ) )
+    conv16 := ($cast ($uint<8>) shr13)
+    shr19 := (tmp3 >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000011000 ) )
+    conv22 := ($cast ($uint<8>) shr19)
+    shr25 := (tmp3 >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000100000 ) )
+    conv28 := ($cast ($uint<8>) shr25)
+    shr31 := (tmp3 >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000101000 ) )
+    conv34 := ($cast ($uint<8>) shr31)
+    shr37 := (tmp3 >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000110000 ) )
+    conv40 := ($cast ($uint<8>) shr37)
+    shr43 := (tmp3 >> ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000111000 ) )
+    conv46 := ($cast ($uint<8>) shr43)
+    $barrier 
+    debug_output_pipe := conv46
+    debug_output_pipe := conv40
+    debug_output_pipe := conv34
+    debug_output_pipe := conv28
+    debug_output_pipe := conv22
+    debug_output_pipe := conv16
+    debug_output_pipe := conv10
+    debug_output_pipe := conv
+    inc := (ix_x066 + ( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) )
+    // compare instruction
+    exitcond1 := (inc == ( $bitcast ($uint<32> ) _b00000000000000000000000000010011 )  )
+    $if exitcond1 $then  $place [forx_xbody_forx_xend] $else $place [forx_xbody_forx_xbody] $endif 
+    //begin: basic-block forx_xend
+    $merge forx_xbody_forx_xend
+    $endmerge
+    ret_val__ := ( $bitcast ($uint<32> ) _b0 ) 
+    $place [return__]
+    $merge return__ $endmerge
+  }
+}
+$module [accessAcceleratorRegisters] 
+$in (write_bar : $uint<8> reg_index : $uint<32> reg_value : $uint<32> )
+$out (ret_val__ : $uint<32>)
+$is 
+{
+  $branchblock [body] 
+  {
+    //begin: basic-block entry
+    conv := ($cast ($uint<64>) write_bar)
+    shl := (conv << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000011111 ) )
+    conv3 := ($cast ($uint<64>) reg_index)
+    or := (shl | conv3)
+    shl5 := (or << ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000100000 ) )
+    conv7 := ($cast ($uint<64>) reg_value)
+    or8 := (shl5 | conv7)
+    tester_control_command := or8
+    ret_val__ := tester_control_response
+    $place [return__]
+    $merge return__ $endmerge
+  }
+}
+$module [execute_layer] 
+$in ()
+$out ()
+$is 
+{
+  $branchblock [body] 
+  {
+    //begin: basic-block entry
+    system_output_pipe := ( $bitcast ($uint<8> ) _b01100100 ) 
+    tester_control_command := ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000111 ) 
+    callx_xi := tester_control_response
+    system_output_pipe := ( $bitcast ($uint<8> ) _b01100101 ) 
+    $place [entry_whilex_xbody]
+    //begin: basic-block whilex_xbody
+    $merge entry_whilex_xbody whilex_xbody_whilex_xbody
+    $endmerge
+    call1 := ACCELERATOR_INTERRUPT_8
+    // compare instruction
+    tobool := (call1 == ( $bitcast ($uint<8> ) _b00000000 )  )
+    $if tobool $then  $place [whilex_xbody_whilex_xend] $else $place [whilex_xbody_whilex_xbody] $endif 
+    //begin: basic-block whilex_xend
+    $merge whilex_xbody_whilex_xend
+    $endmerge
+    system_output_pipe := ( $bitcast ($uint<8> ) _b01100110 ) 
+    $place [whilex_xend_whilex_xbody2]
+    //begin: basic-block whilex_xbody2
+    $merge whilex_xbody2_whilex_xbody2 whilex_xend_whilex_xbody2
+    $endmerge
+    call3 := ACCELERATOR_INTERRUPT_8
+    // compare instruction
+    tobool4 := (call3 == ( $bitcast ($uint<8> ) _b00000000 )  )
+    $if tobool4 $then  $place [whilex_xbody2_whilex_xbody2] $else $place [whilex_xbody2_whilex_xend7] $endif 
+    //begin: basic-block whilex_xend7
+    $merge whilex_xbody2_whilex_xend7
+    $endmerge
+    system_output_pipe := ( $bitcast ($uint<8> ) _b01100111 ) 
+    tester_control_command := ( $bitcast ($uint<64> ) _b0000000000000000000000000000000000000000000000000000000000000000 ) 
+    callx_xi9 := tester_control_response
+    system_output_pipe := ( $bitcast ($uint<8> ) _b01101000 ) 
+    $place [return__]
+    $merge return__ $endmerge
+  }
+}
+$module [set_convolution_layer] 
+$in (rb : $uint<16> cb : $uint<16> rt : $uint<16> ct : $uint<16> chl_out : $uint<16> chl_in : $uint<16> rk : $uint<16> ck : $uint<16> addr_in1 : $uint<32> addr_in2 : $uint<32> addr_k : $uint<32> addr_out : $uint<8> shift_val : $uint<16> pad : $uint<16> pool : $uint<8> activation : $uint<8> )
+$out ()
+$is 
+{
+  $branchblock [body] 
+  {
+    //begin: basic-block entry
+    system_output_pipe := ( $bitcast ($uint<8> ) _b00000001 ) 
+    conv := ($cast ($uint<32>) rb)
+    shl := (conv << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    conv2 := ($cast ($uint<32>) cb)
+    add := (shl | conv2)
+    conv7x_xi := ($cast ($uint<64>) add)
+    or8x_xi := (conv7x_xi | ( $bitcast ($uint<64> ) _b0000000000000000000000000000000100000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi
+    callx_xi := tester_control_response
+    conv5 := ($cast ($uint<32>) rt)
+    shl6 := (conv5 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    conv8 := ($cast ($uint<32>) ct)
+    add9 := (shl6 | conv8)
+    conv7x_xi58 := ($cast ($uint<64>) add9)
+    or8x_xi59 := (conv7x_xi58 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000001000000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi59
+    callx_xi60 := tester_control_response
+    conv13 := ($cast ($uint<32>) chl_out)
+    shl14 := (conv13 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    conv16 := ($cast ($uint<32>) chl_in)
+    add17 := (shl14 | conv16)
+    conv7x_xi61 := ($cast ($uint<64>) add17)
+    or8x_xi62 := (conv7x_xi61 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000001100000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi62
+    callx_xi63 := tester_control_response
+    conv21 := ($cast ($uint<32>) rk)
+    shl22 := (conv21 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    conv24 := ($cast ($uint<32>) ck)
+    add25 := (shl22 | conv24)
+    conv7x_xi64 := ($cast ($uint<64>) add25)
+    or8x_xi65 := (conv7x_xi64 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000010000000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi65
+    callx_xi66 := tester_control_response
+    conv29 := ($cast ($uint<32>) shift_val)
+    shl30 := (conv29 << ( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) )
+    conv32 := ($cast ($uint<32>) pad)
+    add33 := (shl30 | conv32)
+    conv7x_xi67 := ($cast ($uint<64>) add33)
+    or8x_xi68 := (conv7x_xi67 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000010100000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi68
+    callx_xi69 := tester_control_response
+    conv38 := ($cast ($uint<32>) pool)
+    shl39 := (conv38 << ( $bitcast ($uint<32> ) _b00000000000000000000000000001000 ) )
+    conv41 := ($cast ($uint<32>) activation)
+    add42 := (shl39 | conv41)
+    conv7x_xi70 := ($cast ($uint<64>) add42)
+    or8x_xi71 := (conv7x_xi70 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000011000000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi71
+    callx_xi72 := tester_control_response
+    conv7x_xi73 := ($cast ($uint<64>) addr_in1)
+    or8x_xi74 := (conv7x_xi73 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000011100000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi74
+    callx_xi75 := tester_control_response
+    conv7x_xi76 := ($cast ($uint<64>) addr_in2)
+    or8x_xi77 := (conv7x_xi76 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000100000000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi77
+    callx_xi78 := tester_control_response
+    conv7x_xi79 := ($cast ($uint<64>) addr_out)
+    or8x_xi80 := (conv7x_xi79 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000100100000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi80
+    callx_xi81 := tester_control_response
+    conv7x_xi82 := ($cast ($uint<64>) addr_k)
+    or8x_xi83 := (conv7x_xi82 | ( $bitcast ($uint<64> ) _b0000000000000000000000000000101000000000000000000000000000000000 ) )
+    tester_control_command := or8x_xi83
+    callx_xi84 := tester_control_response
+    system_output_pipe := ( $bitcast ($uint<8> ) _b00000010 ) 
+    $place [return__]
+    $merge return__ $endmerge
+  }
+}
+$module [systemTOP] 
+$in ()
+$out ()
+$is 
+{
+  $branchblock [body] 
+  {
+    //begin: basic-block entry
+    call := debug_input_pipe
+    call1 := system_input_pipe
+    $barrier 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi := time_val
+    iNsTr_8 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000001 ) ])
+    ->(iNsTr_8) := callx_xi
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi3 := time_val
+    iNsTr_17 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000010 ) ])
+    ->(iNsTr_17) := callx_xi3
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi4 := time_val
+    iNsTr_26 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000011 ) ])
+    ->(iNsTr_26) := callx_xi4
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi5 := time_val
+    iNsTr_35 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000100 ) ])
+    ->(iNsTr_35) := callx_xi5
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi6 := time_val
+    iNsTr_44 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000101 ) ])
+    ->(iNsTr_44) := callx_xi6
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000001 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi7 := time_val
+    iNsTr_53 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000110 ) ])
+    ->(iNsTr_53) := callx_xi7
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi8 := time_val
+    iNsTr_62 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000000111 ) ])
+    ->(iNsTr_62) := callx_xi8
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi9 := time_val
+    iNsTr_71 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001000 ) ])
+    ->(iNsTr_71) := callx_xi9
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000000011100 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi10 := time_val
+    iNsTr_80 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001001 ) ])
+    ->(iNsTr_80) := callx_xi10
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000001000000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi11 := time_val
+    iNsTr_89 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001010 ) ])
+    ->(iNsTr_89) := callx_xi11
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi12 := time_val
+    iNsTr_98 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001011 ) ])
+    ->(iNsTr_98) := callx_xi12
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000000111000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi13 := time_val
+    iNsTr_107 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001100 ) ])
+    ->(iNsTr_107) := callx_xi13
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000100000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi14 := time_val
+    iNsTr_116 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001101 ) ])
+    ->(iNsTr_116) := callx_xi14
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi15 := time_val
+    iNsTr_125 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001110 ) ])
+    ->(iNsTr_125) := callx_xi15
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001110000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<16> ) _b0000000000000010 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi16 := time_val
+    iNsTr_134 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000001111 ) ])
+    ->(iNsTr_134) := callx_xi16
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000010000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi17 := time_val
+    iNsTr_143 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010000 ) ])
+    ->(iNsTr_143) := callx_xi17
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000001 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi18 := time_val
+    iNsTr_152 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010001 ) ])
+    ->(iNsTr_152) := callx_xi18
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $call set_convolution_layer (( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000011100000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000001000000 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<16> ) _b0000000000000011 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<32> ) _b00000000000000000000000000000000 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<16> ) _b0000000000000000 )  ( $bitcast ($uint<16> ) _b0000000000000001 )  ( $bitcast ($uint<8> ) _b00000000 )  ( $bitcast ($uint<8> ) _b00000010 )  )  ()
+    $call execute_layer ()  ()
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001001 ) 
+    callx_xi19 := time_val
+    iNsTr_161 := @(global_time_val[( $bitcast ($uint<32> ) _b00000000000000000000000000010010 ) ])
+    ->(iNsTr_161) := callx_xi19
+    system_output_pipe := ( $bitcast ($uint<8> ) _b11001010 ) 
+    $barrier 
+    $call writeTimeBack ()  (call2)
+    $place [return__]
+    $merge return__ $endmerge
+  }
+}

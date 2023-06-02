@@ -87,7 +87,6 @@ $is
 		
 		send_1 := ($mux p1_zero 0 val1)
 		prev_core_ip1 := send_1
-		time_pipe := send_1
 		prev_core_ip2 := ($mux p2_zero 0 val2)
 		//core_ip3 := ($mux p3_zero 0 val3)
 		//$guard (mode_3) core_ip4 := ($mux p4_zero 0 val4)

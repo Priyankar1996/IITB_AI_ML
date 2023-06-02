@@ -1,0 +1,60 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Fri Feb 17 18:57:44 2023
+# Process ID: 1425586
+# Current directory: /home/aiml/IITB_AI_ML/VCU/UNET/vivado_synth
+# Command line: vivado -mode batch -source fpga_synth.tcl
+# Log file: /home/aiml/IITB_AI_ML/VCU/UNET/vivado_synth/vivado.log
+# Journal file: /home/aiml/IITB_AI_ML/VCU/UNET/vivado_synth/vivado.jou
+#-----------------------------------------------------------
+source fpga_synth.tcl
+# set AHIR_RELEASE $::env(AHIR_RELEASE)
+# read_vhdl -library aHiR_ieee_proposed $AHIR_RELEASE/vhdl/aHiR_ieee_proposed.vhdl
+# read_vhdl -library ahir $AHIR_RELEASE/vhdl/ahir.vhdl
+# read_vhdl -library GenericGlueStuff ../vhdl_libs/GenericGlueStuff.vhdl
+# read_vhdl -library GlueModules ../vhdl_libs/GlueModules.vhdl
+# read_vhdl -library GenericCoreAddOnLib ../vhdl_libs/GenericCoreAddOnLib.vhdl
+# read_vhdl -library myUartLib ../vhdl_libs/myUartLib.vhdl
+# read_vhdl -library simpleUartLib ../vhdl_libs/simpleUartLib.vhdl
+# read_vhdl -library AjitCustom ../vhdl_libs/AjitCustom.vhdl
+# read_vhdl -library AxiBridgeLib ../vhdl_libs/AxiBridgeLib.vhdl
+# read_verilog ../verilog_libs/ACB_to_UI_EA.v
+# read_vhdl -library work ../ahir/ahir_system_global_package.vhdl
+# read_vhdl -library work ../ahir/ahir_system.vhdl
+# read_vhdl -library AiMlAddons ../ahir/src/lib/AiMlAddons.vhdl
+# read_vhdl -library work ../top_level/fpga_ahir.vhdl
+# read_xdc ./clocking.xdc 
+# read_xdc ../constraints/vcu128_constraints.xdc
+# set_property part xcvu37p-fsvh2892-2L-e [current_project]
+# set_property board_part xilinx.com:vcu128:part0:1.2 [current_project]
+# read_ip ../ip/virtual_reset/virtual_reset.srcs/sources_1/ip/vio_0/vio_0.xci
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/tools_shared/Vivado/2019.1/data/ip'.
+# read_ip ../ip/clocking_wizard_120MHz/clocking_wizard_120MHz.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0.xci 
+# synth_design -fsm_extraction off -top top_level -part xcvu37p-fsvh2892-2L-e
+Command: synth_design -fsm_extraction off -top top_level -part xcvu37p-fsvh2892-2L-e
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcvu37p'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcvu37p'
+INFO: [Common 17-1686] The version limit for your license is '2023.02' and will not allow you to run Xilinx software released after that date (year & month). A version limit expiration means that while you will be able to continue to use the current version of tools or IP with this license, you will not be able to use any updates or new releases.
+INFO: [Device 21-403] Loading part xcvu37p-fsvh2892-2L-e
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 1425593 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2642.355 ; gain = 48.719 ; free physical = 13628 ; free virtual = 80232
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-1730] cannot call side-effect procedure read_memmap_file from within pure function construct_init_byte_array [/home/aiml/IITB_AI_ML/VCU/UNET/vhdl_libs/AjitCustom.vhdl:288]
+ERROR: [Synth 8-4169] error in use clause: package 'aimladdonscomponents' not found in library 'aimladdons' [/home/aiml/IITB_AI_ML/VCU/UNET/ahir/ahir_system.vhdl:21]
+INFO: [Synth 8-2810] unit divider ignored due to previous errors [/home/aiml/IITB_AI_ML/VCU/UNET/ahir/ahir_system.vhdl:24]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2776.074 ; gain = 182.438 ; free physical = 13644 ; free virtual = 80247
+---------------------------------------------------------------------------------
+RTL Elaboration failed
+INFO: [Common 17-83] Releasing license: Synthesis
+5 Infos, 1 Warnings, 0 Critical Warnings and 2 Errors encountered.
+synth_design failed
+ERROR: [Common 17-69] Command failed: Synthesis failed - please see the console or run log file for details
+INFO: [Common 17-206] Exiting Vivado at Fri Feb 17 18:58:04 2023...

@@ -1,7 +1,10 @@
 $pipeline $depth 15 $fullrate
-$operator $module [multiplier] $in (in1 in2 : $int<16>) $out (output : $int<16>) $is
+$operator $module [multiplier] $in (in1 in2 : $int<16>) $out (output : $int<16> deb_out : $uint<64>) $is
 {
-	output := ($cast ($int<16>) ($slice (in1 * in2) 15 8))
+	
+	tmp := ($cast ($int<16>) ($slice (in1 * in2) 15 8))
+	output := tmp
+	deb_out := ($concat ($bitcast ($uint<16>) in1) ($bitcast ($uint<16>) in2) ($bitcast ($uint<32>) tmp))
 }
 
 // Perform convolution operation
@@ -186,7 +189,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 	$branchblock [acc_blk]
 	{
 		acc_count := ((chl_in * ck) - 1)
-		$dopipeline $depth 155 $buffering 2 $fullrate
+		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
 		$phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
 		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
@@ -245,6 +248,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$volatile acc_val6_2 := (acc6_2 + r6)
 		$volatile acc_val7_2 := (acc7_2 + r7)
 		$volatile acc_val8_2 := (acc8_2 + r8)
+
 
 		$guard (num_done) output_pipe1_1 := acc_val1_1
 		$guard (num_done) output_pipe1_2 := acc_val1_2

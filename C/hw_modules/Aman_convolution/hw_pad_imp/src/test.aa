@@ -1,0 +1,12 @@
+
+
+	$phi g := 
+
+	$volatile ng := (~g)
+
+
+	$guard (g) read_val := ....
+
+
+        q := (read_val + ....)
+

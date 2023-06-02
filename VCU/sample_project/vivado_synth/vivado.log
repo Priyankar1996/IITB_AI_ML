@@ -1,0 +1,39 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Feb  1 10:21:52 2023
+# Process ID: 3963060
+# Current directory: /home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth
+# Command line: vivado -mode batch -source ./scripts/program_and_reset.tcl
+# Log file: /home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth/vivado.log
+# Journal file: /home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth/vivado.jou
+#-----------------------------------------------------------
+source ./scripts/program_and_reset.tcl
+# open_hw
+# connect_hw_server
+INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121
+INFO: [Labtools 27-2222] Launching hw_server...
+INFO: [Labtools 27-2221] Launch Output:
+
+****** Xilinx hw_server v2019.1
+  **** Build date : May 24 2019 at 15:06:40
+    ** Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+
+
+# open_hw_target
+INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Xilinx/721946111949A
+# set_property PROBES.FILE {/home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth/probes.ltx} [get_hw_devices xcvu37p_0]              
+# set_property FULL_PROBES.FILE {/home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth/probes.ltx} [get_hw_devices xcvu37p_0]         
+# set_property PROGRAM.FILE {/home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth/ai_ml_accelerator.bit} [get_hw_devices xcvu37p_0]    
+# program_hw_devices [get_hw_devices xcvu37p_0]
+INFO: [Labtools 27-3164] End of startup status: HIGH
+program_hw_devices: Time (s): cpu = 00:00:48 ; elapsed = 00:00:48 . Memory (MB): peak = 1418.176 ; gain = 0.000 ; free physical = 15538 ; free virtual = 82283
+# refresh_hw_device [lindex [get_hw_devices xcvu37p_0] 0]
+INFO: [Labtools 27-2302] Device xcvu37p (JTAG device index = 0) is programmed with a design that has 1 VIO core(s).
+INFO: [Labtools 27-1889] Uploading output probe values for VIO core [hw_vio_1]
+# set_property OUTPUT_VALUE 1 [get_hw_probes reset_sync -of_objects [get_hw_vios -of_objects [get_hw_devices xcvu37p_0] -filter {CELL_NAME=~"virtual_reset"}]]
+# commit_hw_vio [get_hw_probes {reset_sync} -of_objects [get_hw_vios -of_objects [get_hw_devices xcvu37p_0] -filter {CELL_NAME=~"virtual_reset"}]]            
+# set_property OUTPUT_VALUE 0 [get_hw_probes reset_sync -of_objects [get_hw_vios -of_objects [get_hw_devices xcvu37p_0] -filter {CELL_NAME=~"virtual_reset"}]]
+# commit_hw_vio [get_hw_probes {reset_sync} -of_objects [get_hw_vios -of_objects [get_hw_devices xcvu37p_0] -filter {CELL_NAME=~"virtual_reset"}]]            
+INFO: [Common 17-206] Exiting Vivado at Wed Feb  1 10:22:45 2023...

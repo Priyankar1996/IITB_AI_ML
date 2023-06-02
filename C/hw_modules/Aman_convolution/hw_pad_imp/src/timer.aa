@@ -23,3 +23,4 @@ $module [timer] $in (index : $uint<8>) $out (T: $uint<64>) $is
 	timer_req := $one<1>
 	T := ($concat ($bitcast ($uint<32>) index) ($bitcast ($uint<32>) timer_resp))
 }
+

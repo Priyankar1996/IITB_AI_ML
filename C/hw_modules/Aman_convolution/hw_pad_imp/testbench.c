@@ -123,7 +123,7 @@ int main(int argc, char**argv){
 	
 	fscanf(file,"%hu",&shft_val);
 	fscanf(file,"%u",&scale_val);
-	fscanf(file,"%u",&sCT);
+	fscanf(file,"%u",&CT);
 
 	fprintf(octaveInFile,"%d\n",shft_val);
 	fprintf(octaveInFile,"%d\n",scale_val);

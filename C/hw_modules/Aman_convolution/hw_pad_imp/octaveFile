@@ -1,9 +1,10 @@
 pkg load image;
-
 dims = zeros(1,3);
 dims_k = zeros(1,4);
 pad = input("");
 pool = input("");
+shift_val = input("");
+scale_val = input("");
 for i = 1:3
   dims(4-i) = input("");
   dims_k(4 - mod(i,3)) = input("");
@@ -33,11 +34,21 @@ end
 printf("\n");
 endif;
 count = 1;
+relu = 1;
 for row = 1:out_dims(3)
   for col = 1:out_dims(2)
     for chl = 1:out_dims(1)
-      val = mod(sum((T(:,col:col+dims_k(2)-1,row:row+dims_k(3)-1).*K(:,:,:,chl))(:)),2**8);
-      if (val > 2**7 - 1) val = val - 2**8; endif
+      val = mod(sum(floor((T(:,col:col+dims_k(2)-1,row:row+dims_k(3)-1).*K(:,:,:,chl))/256)(:)),2**16);
+      if (val > 2**15 - 1)
+	if (relu == 1)
+	val = 0;
+	endif
+      endif
+      val = floor(val*scale_val/(2**shift_val));
+      val = mod(val,2**8);
+      if (val > 2**7 - 1)
+	val = val - 2**8; 
+      endif
       if (pool == 0) printf("%d %d\n",count,val);endif
       count = count + 1;
 	B(chl,col,row) = val;

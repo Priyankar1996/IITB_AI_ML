@@ -25,7 +25,8 @@ void hear_timer()
     uint32_t t;
     uint64_t time_taken = read_uint64("time_pipe");
     t = time_taken>>32;
-    fprintf(stderr,"Time taken at call %u is %u \n",t,time_taken);
+//    if (((t>>16) != 0) && (t&65535!=0))
+	fprintf(stderr,"Time taken at call %u is %u \n",t,time_taken);
     }
 }
 
@@ -112,12 +113,19 @@ int main(int argc, char**argv){
 
 	fprintf(stderr,"Entering data to tensor\n");
 	uint16_t length,stride,pad,pool;
+	uint16_t shft_val = 0;
+	uint32_t scale_val = 1;
 	fscanf(file,"%hu",&pad);
 	fscanf(file,"%hu",&pool);
 	stride = 1;
 	fprintf(octaveInFile,"%hu\n",pad);
 	fprintf(octaveInFile,"%hu\n",pool);
 	
+	fscanf(file,"%hu",&shft_val);
+	fscanf(file,"%u",&scale_val);
+
+	fprintf(octaveInFile,"%d\n",shft_val);
+	fprintf(octaveInFile,"%d\n",scale_val);
 
 	desc_T.number_of_dimensions = 3;
 	desc_B.number_of_dimensions = 3;
@@ -146,13 +154,14 @@ int main(int argc, char**argv){
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]&0xFF);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]>>8);
 	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]&0xFF);
-	uint16_t shft_val = 0;
-	//fscanf(file,"%hu",&shft_val);
 	write_uint8("maxpool_input_pipe",shft_val>>8);
 	write_uint8("maxpool_input_pipe",shft_val&0xFF);
-	//fprintf(octaveInFile,"%d\n",shft_val);
 	write_uint8("maxpool_input_pipe",pad>>8);
 	write_uint8("maxpool_input_pipe",pad&0xFF);
+	write_uint8("maxpool_input_pipe",scale_val>>24);
+	write_uint8("maxpool_input_pipe",scale_val>>16);
+	write_uint8("maxpool_input_pipe",scale_val>>8);
+	write_uint8("maxpool_input_pipe",scale_val);
 	
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);

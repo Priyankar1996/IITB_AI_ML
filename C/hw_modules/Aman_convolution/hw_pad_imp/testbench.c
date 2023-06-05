@@ -112,7 +112,7 @@ int main(int argc, char**argv){
 	#endif
 
 	fprintf(stderr,"Entering data to tensor\n");
-	uint16_t length,stride,pad,pool;
+	uint16_t length,stride,pad,pool,CT;
 	uint16_t shft_val = 0;
 	uint32_t scale_val = 1;
 	fscanf(file,"%hu",&pad);
@@ -123,9 +123,11 @@ int main(int argc, char**argv){
 	
 	fscanf(file,"%hu",&shft_val);
 	fscanf(file,"%u",&scale_val);
+	fscanf(file,"%u",&sCT);
 
 	fprintf(octaveInFile,"%d\n",shft_val);
 	fprintf(octaveInFile,"%d\n",scale_val);
+	fprintf(octaveInFile,"%d\n",CT);
 
 	desc_T.number_of_dimensions = 3;
 	desc_B.number_of_dimensions = 3;

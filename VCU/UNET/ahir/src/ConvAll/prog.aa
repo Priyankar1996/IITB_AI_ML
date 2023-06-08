@@ -2,7 +2,7 @@
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_in1 index_in2 index_k index_out : $uint<8> shift_val pad : $uint<16> pool : $uint<8> activation : $uint<8>) $out() $is
+$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_address_in1 base_address_in2 base_address_k base_address_out : $uint<ADDRESS_WIDTH> scale_val : $uint<32> shift_val pad : $uint<16> pool : $uint<8> activation : $uint<8>) $out() $is
 {
 	in_8 := (($slice chl_in 2 0) == 0) 
 	out_8 := (($slice chl_out 2 0) == 0)
@@ -13,13 +13,16 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 	chl_in_ceil := ((chl_in + 7)>>3)
 	
 	inCT := (rk == 2)
-	inConcat := (((index_in2 [] 7) == 1) & (~inCT))
+	inConcat := (((base_address_in2 [] 7) == 1) & (~inCT))
 	in_nCT := (((~inCT) & (~inConcat)) & (~in_8))
 	in_nCT8 := (((~inCT) & (~inConcat)) & in_8)
 	
 	out_pool := (pool [] 0)
-	out_np8 := (out_8 & (~out_pool))
-	out_np := (out_8 ~| out_pool)
+	sBP_pool := (pool [] 1)
+	callPool := (out_pool | sBP_pool)
+	saveFull := ((out_8 & (~out_pool)) | sBP_pool)
+	out_np8 := out_8
+	out_np := (~out_8)
 	
 	// Creating partitions
 	$call Divider (K_DEPTH (chl_in_ceil*ck)) (alpha)
@@ -35,21 +38,21 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> index_
 		// Note chl_in_ceil = chl_in8 for chl_in being a multiple of 8
 		// Note chl_out_ceil = chl_out8 for chl_out being a multiple of 8
 		
-		$guard (~inout_8) $call kernelModule (chl_in chl_out rk ck index_k) ()
-		$guard (inout_8) $call kernelModule8 (chl_in_ceil chl_out_ceil rk ck index_k) ()
+		$guard (~inout_8) $call kernelModule (chl_in chl_out rk ck base_address_k) ()
+		$guard (inout_8) $call kernelModule8 (chl_in_ceil chl_out_ceil rk ck base_address_k) ()
 		
 		// Exactly one of them is called
-		$guard (in_nCT) $call inputModule (rb rt ct chl_in rk pad parts index_in1) ()
-		$guard (in_nCT8) $call inputModule8 (rb ct chl_in_ceil rk pad parts index_in1) ()
-		$guard (inCT) $call inputModuleCT (rb ct chl_in_ceil parts index_in1) ()
-		$guard (inConcat) $call inputModuleConcat (rb ct chl_in_ceil rk pad parts index_in1 (index_in2 & _b01111111)) ()
+		$guard (in_nCT) $call inputModule (rb rt ct chl_in rk pad parts base_address_in1) ()
+		$guard (in_nCT8) $call inputModule8 (rb ct chl_in_ceil rk pad parts base_address_in1) ()
+		$guard (inCT) $call inputModuleCT (rb ct chl_in_ceil parts base_address_in1) ()
+		$guard (inConcat) $call inputModuleConcat (rb ct chl_in_ceil rk pad parts base_address_in1 (base_address_in2 & _b01111111)) ()
 		
 		$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 		$call accumulator (chl_in_ceil ck op_size) ()
 		
-		$guard (out_np) $call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT index_out) ()
-		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
-		$guard (out_pool) $call sendPool (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT index_out) ()
+		$guard (out_np) $call sendModule (rb cb chl_out shift_val scale_val parts max_per_part activation base_address_out) ()
+		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val scale_val parts mpp2 activation base_address_out callPool saveFull) ()
+		$guard (callPool) $call sendPool (rb cb chl_out_ceil parts mpp2 base_address_out) ()
 	}
 	//debug_output_pipe := 70
 }

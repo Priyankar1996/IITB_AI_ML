@@ -1,6 +1,6 @@
 // Access the input tensor and write to iput pipe
 $module [inputModule8]
-$in(row_in ct chl_in rk pad: $uint<16> num_parts index : $uint<8>)
+$in(row_in ct chl_in rk pad: $uint<16> num_parts : $uint<8> base_address : $uint<ADDRESS_WIDTH>)
 $out()
 $is
 {
@@ -48,10 +48,10 @@ $is
 		//$volatile addr3 := (address+ m2_factor)
 		//$volatile addr4 := (address+ m3_factor)
 
-		$guard (~p1_zero) $call readModule_convolution (index address) (val1)
-		$guard (~p2_zero) $call readModule_convolution (index addr2) (val2)
-		//$guard (~p3_zero) $call readModule_convolution (index addr3) (val3)
-		//$guard (~p4_zero) $call readModule_convolution (index addr4) (val4)
+		$guard (~p1_zero) $call readModule_convolution (base_address address) (val1)
+		$guard (~p2_zero) $call readModule_convolution (base_address addr2) (val2)
+		//$guard (~p3_zero) $call readModule_convolution (base_address addr3) (val3)
+		//$guard (~p4_zero) $call readModule_convolution (base_address addr4) (val4)
 		prev_core_ip1 := ($mux p1_zero 0 val1)
 		prev_core_ip2 := ($mux p2_zero 0 val2)
 		//core_ip3 := ($mux p3_zero 0 val3)
@@ -65,7 +65,7 @@ $is
 
 // Access the input tensor and write to iput pipe
 $module [inputModuleCT]
-$in(row_in ct chl_in: $uint<16> num_parts index : $uint<8>)
+$in(row_in ct chl_in: $uint<16> num_parts : $uint<8> base_address : $uint<ADDRESS_WIDTH>)
 $out()
 $is
 {
@@ -98,7 +98,7 @@ $is
 		$volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
 
 
-		$guard (~p2_zero) $call readModule_convolution (index address) (val2)
+		$guard (~p2_zero) $call readModule_convolution (base_address address) (val2)
 		core_ip1 := 0
 		core_ip2 := ($mux p2_zero 0 val2)
 		core_ip3 := 0
@@ -112,7 +112,7 @@ $is
 
 // Access the input tensor and write to iput pipe
 $module [inputModuleConcat]
-$in(row_in ct chl_in rk pad: $uint<16> num_parts index1 index2 : $uint<8>)
+$in(row_in ct chl_in rk pad: $uint<16> num_parts : $uint<8> base_address1 base_address2 : $uint<ADDRESS_WIDTH>)
 $out()
 $is
 {
@@ -163,12 +163,12 @@ $is
 		$volatile addr2 := (address+ m_factor)
 		//$volatile addr3 := (address+ m2_factor)
 		//$volatile addr4 := (address+ m3_factor)
-		$volatile index := ($mux inp1 index1 index2)
+		$volatile base_address := ($mux inp1 base_address1 base_address2)
 
-		$guard (~p1_zero) $call readModule_convolution (index address) (val1)
-		$guard (~p2_zero) $call readModule_convolution (index addr2) (val2)
-		//$guard (~p3_zero) $call readModule_convolution (index addr3) (val3)
-		//$guard (~p4_zero) $call readModule_convolution (index addr4) (val4)
+		$guard (~p1_zero) $call readModule_convolution (base_address address) (val1)
+		$guard (~p2_zero) $call readModule_convolution (base_address addr2) (val2)
+		//$guard (~p3_zero) $call readModule_convolution (base_address addr3) (val3)
+		//$guard (~p4_zero) $call readModule_convolution (base_address addr4) (val4)
 		prev_core_ip1 := ($mux p1_zero 0 val1)
 		prev_core_ip2 := ($mux p2_zero 0 val2)
 		//core_ip3 := ($mux p3_zero 0 val3)

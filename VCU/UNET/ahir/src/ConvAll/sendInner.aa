@@ -1,5 +1,5 @@
 $module [sendInner##num ]
-$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> index : $uint<8>)
+$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> scale_val : $uint<32>  num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH>)
 $out ()
 $is
 {
@@ -66,14 +66,40 @@ $is
 		$guard (fn) read_val6  := output_pipe6_##num
 		$guard (fn) read_val7  := output_pipe7_##num
 		$guard (fn) read_val8  := output_pipe8_##num
-		tmp1 := ($mux (apply_relu & ((read_val1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1 >> shift_val)))
-		tmp2 := ($mux (apply_relu & ((read_val2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2 >> shift_val)))
-		tmp3 := ($mux (apply_relu & ((read_val3[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3 >> shift_val)))
-		tmp4 := ($mux (apply_relu & ((read_val4[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4 >> shift_val)))
-		tmp5 := ($mux (apply_relu & ((read_val5[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5 >> shift_val)))
-		tmp6 := ($mux (apply_relu & ((read_val6[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6 >> shift_val)))
-		tmp7 := ($mux (apply_relu & ((read_val7[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7 >> shift_val)))
-		tmp8 := ($mux (apply_relu & ((read_val8[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8 >> shift_val)))
+		//tmp1 := ($mux (apply_relu & ((read_val1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1 >> shift_val)))
+		//tmp2 := ($mux (apply_relu & ((read_val2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2 >> shift_val)))
+		//tmp3 := ($mux (apply_relu & ((read_val3[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3 >> shift_val)))
+		//tmp4 := ($mux (apply_relu & ((read_val4[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4 >> shift_val)))
+		//tmp5 := ($mux (apply_relu & ((read_val5[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5 >> shift_val)))
+		//tmp6 := ($mux (apply_relu & ((read_val6[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6 >> shift_val)))
+		//tmp7 := ($mux (apply_relu & ((read_val7[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7 >> shift_val)))
+		//tmp8 := ($mux (apply_relu & ((read_val8[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8 >> shift_val)))
+		
+		grd_cnd1 :=  (apply_relu & ((read_val1[]{ACC_WIDTH-1}) == 1))
+                grd_cnd2 :=  (apply_relu & ((read_val2[]{ACC_WIDTH-1}) == 1))
+                grd_cnd3 :=  (apply_relu & ((read_val3[]{ACC_WIDTH-1}) == 1))
+                grd_cnd4 :=  (apply_relu & ((read_val4[]{ACC_WIDTH-1}) == 1))
+                grd_cnd5 :=  (apply_relu & ((read_val5[]{ACC_WIDTH-1}) == 1))
+                grd_cnd6 :=  (apply_relu & ((read_val6[]{ACC_WIDTH-1}) == 1))
+                grd_cnd7 :=  (apply_relu & ((read_val7[]{ACC_WIDTH-1}) == 1))
+                grd_cnd8 :=  (apply_relu & ((read_val8[]{ACC_WIDTH-1}) == 1))
+                $guard (~grd_cnd1) $call scaler (read_val1 scale_val shift_val) (scaled1)
+                $guard (~grd_cnd2) $call scaler (read_val2 scale_val shift_val) (scaled2)
+                $guard (~grd_cnd3) $call scaler (read_val3 scale_val shift_val) (scaled3)
+                $guard (~grd_cnd4) $call scaler (read_val4 scale_val shift_val) (scaled4)
+                $guard (~grd_cnd5) $call scaler (read_val5 scale_val shift_val) (scaled5)
+                $guard (~grd_cnd6) $call scaler (read_val6 scale_val shift_val) (scaled6)
+                $guard (~grd_cnd7) $call scaler (read_val7 scale_val shift_val) (scaled7)
+                $guard (~grd_cnd8) $call scaler (read_val8 scale_val shift_val) (scaled8)
+                tmp1 := ($mux grd_cnd1 0 scaled1)
+                tmp2 := ($mux grd_cnd2 0 scaled2)
+                tmp3 := ($mux grd_cnd3 0 scaled3)
+                tmp4 := ($mux grd_cnd4 0 scaled4)
+                tmp5 := ($mux grd_cnd5 0 scaled5)
+                tmp6 := ($mux grd_cnd6 0 scaled6)
+                tmp7 := ($mux grd_cnd7 0 scaled7)
+                tmp8 := ($mux grd_cnd8 0 scaled8)
+
 		$volatile rd1 := ($concat tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 tmp7 tmp8)
 		$volatile val_in_use := ($mux fn rd1 fv1)
 		// Shift to the head of cv
@@ -102,7 +128,7 @@ $is
 		$volatile ncv1 := ($mux send 0 send_data)
 		$volatile nbm := ($mux send 0 bytemask)
 
-		$guard (send) $call writeModule_convolution (index (addr1>>3) send_data bytemask) (a2)
+		$guard (send) $call writeModule_convolution (base_address (addr1>>3) send_data bytemask) (a2)
 		//$volatile bytefull := (bytemask == _hFFFFFFFFFFFFFFFF)
 		//$volatile send_all := (send & bytefull)
 		//$volatile send_part := (send & (~bytefull))

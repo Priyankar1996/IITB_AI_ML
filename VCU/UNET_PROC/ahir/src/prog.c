@@ -19,7 +19,7 @@ uint64_t global_time_val_pipe[20];
 
 void writeTime(uint8_t ind)
 {
-	write_uint8 ("system_output_pipe",201);
+	//write_uint8 ("system_output_pipe",201);
 	global_time_val_pipe[ind] = read_uint64("time_val");
 }
 
@@ -48,14 +48,14 @@ writeTimeBack()
 	elapsed_time>>=8;\
 	out_data[0] = elapsed_time & 0xFF;\
 	__aa_barrier__();
-	write_uint8 ("debug_output_pipe",out_data[0]);\
-	write_uint8 ("debug_output_pipe",out_data[1]);\
-	write_uint8 ("debug_output_pipe",out_data[2]);\
-	write_uint8 ("debug_output_pipe",out_data[3]);\
-	write_uint8 ("debug_output_pipe",out_data[4]);\
-	write_uint8 ("debug_output_pipe",out_data[5]);\
-	write_uint8 ("debug_output_pipe",out_data[6]);\
-	write_uint8 ("debug_output_pipe",out_data[7]);\
+	//write_uint8 ("debug_output_pipe",out_data[0]);\
+	//write_uint8 ("debug_output_pipe",out_data[1]);\
+	//write_uint8 ("debug_output_pipe",out_data[2]);\
+	//write_uint8 ("debug_output_pipe",out_data[3]);\
+	//write_uint8 ("debug_output_pipe",out_data[4]);\
+	//write_uint8 ("debug_output_pipe",out_data[5]);\
+	//write_uint8 ("debug_output_pipe",out_data[6]);\
+	//write_uint8 ("debug_output_pipe",out_data[7]);\
 	// }
 	}
 	
@@ -81,7 +81,7 @@ uint32_t accessAcceleratorRegisters (uint8_t write_bar,
 void execute_layer()
 {
 
-	write_uint8 ("system_output_pipe",read_uint64("time_val"));
+	//write_uint8 ("system_output_pipe",read_uint64("time_val"));
 	accessAcceleratorRegisters (0,0, 0x7);
 	// wait until interrupt is 0.
 	while(1)
@@ -90,7 +90,7 @@ void execute_layer()
 			break;
 	}
 
-	write_uint8 ("system_output_pipe",read_uint64("time_val"));
+	//write_uint8 ("system_output_pipe",read_uint64("time_val"));
 	// wait until interrupt is 1
 	while(1)
 	{
@@ -99,12 +99,12 @@ void execute_layer()
 	}
 	// disable everything..
 	accessAcceleratorRegisters (0,0, 0x0);
-	write_uint8 ("system_output_pipe",read_uint64("time_val"));
+	//write_uint8 ("system_output_pipe",read_uint64("time_val"));
 }
 
 void set_convolution_layer (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint32_t addr_in1, uint32_t addr_in2, uint32_t addr_k, uint8_t addr_out, uint16_t shift_val,uint16_t pad, uint8_t pool, uint8_t activation)
 {
-	write_uint8 ("system_output_pipe",001);
+	//write_uint8 ("system_output_pipe",001);
 	uint32_t word_to_send;
 	word_to_send = (((uint32_t) rb) << 16) + cb;
 	accessAcceleratorRegisters(0,1,word_to_send);
@@ -126,52 +126,15 @@ void set_convolution_layer (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, 
 	accessAcceleratorRegisters(0,9,word_to_send);
 	word_to_send = addr_k;
 	accessAcceleratorRegisters(0,10,word_to_send);
-	write_uint8 ("system_output_pipe",002);
+	//write_uint8 ("system_output_pipe",002);
 }
 
-/*
-int main(int argc, char **argv)
-{
-	int row_outs[NUM_LAYERS] = {224,224,112,112,56,56,28,28,56,56,56,112,112,112,224,224,224,224};
-	int col_outs[NUM_LAYERS] = {224,224,112,112,56,56,28,28,56,56,56,112,112,112,224,224,224,224};
-	int row_ins[NUM_LAYERS] = {224,224,112,112,56,56,28,28,28,56,56,56,112,112,112,224,224,224};
-	int col_ins[NUM_LAYERS] = {224,224,112,112,56,56,28,28,28,56,56,56,112,112,112,224,224,224};
-	int chl_outs[NUM_LAYERS] = {64,64,128,128,256,256,512,512,256,256,256,128,128,128,64,64,64,3};
-	int chl_ins[NUM_LAYERS] = {3,64,64,128,128,256,256,512,512,512,256,256,256,128,128,128,64,3};
-	int row_ks[NUM_LAYERS] = {3,3,3,3,3,3,3,3,2,3,3,2,3,3,2,3,3,3};
-	int col_ks[NUM_LAYERS] = {3,3,3,3,3,3,3,3,2,3,3,2,3,3,2,3,3,3};
-	int addr_in1s[NUM_LAYERS] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	int addr_in2s[NUM_LAYERS] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	int addr_outs[NUM_LAYERS] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	int addr_ks[NUM_LAYERS]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	int shift_vals[NUM_LAYERS] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-       	int pads[NUM_LAYERS] = {1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1};
-	int pools[NUM_LAYERS] = {0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0};
-	int activations[NUM_LAYERS] = {relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,relu,sigmoid};
-
-	register_signal("ACCELERATOR_INTERRUPT_8",8);
-
-		for (int i = 0; i < NUM_LAYERS; i++)
-	{
-		set_convolution_layer(
-			row_outs[i], col_outs[i], row_ins[i], col_ins[i],
-			chl_outs[i], chl_ins[i], row_ks[i], col_ks[i],
-			addr_in1s[i], addr_in2s[i], addr_ks[i], add_outs[i],
-			shift_vals[i], pads[i], pools[i], activations[i]
-			);
-		execute_layer();
-		writeTime(i);
-	}
-
-		return(0);
-}
-*/
 
 void systemTOP()
 {
 	// 0
-	uint8_t start = read_uint8("debug_input_pipe");
-	uint8_t end = read_uint8("system_input_pipe");
+	//uint8_t start = read_uint8("debug_input_pipe");
+	//uint8_t end = read_uint8("system_input_pipe");
 	__aa_barrier__();
 	set_convolution_layer(224,224,224,224,64,3,3,3,0,0,0,0,0,1,0,relu);
 	__aa_barrier__();

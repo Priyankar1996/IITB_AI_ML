@@ -2,7 +2,7 @@
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_address_in1 base_address_in2 base_address_k base_address_out : $uint<ADDRESS_WIDTH> shift_val pad : $uint<16> pool : $uint<8> activation : $uint<8>) $out() $is
+$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_address_in1 base_address_in2 base_address_k base_address_out : $uint<ADDRESS_WIDTH> scale_val : $uint<32> shift_val pad : $uint<16> pool : $uint<8> activation : $uint<8>) $out() $is
 {
 	in_8 := (($slice chl_in 2 0) == 0) 
 	out_8 := (($slice chl_out 2 0) == 0)
@@ -13,7 +13,7 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_a
 	chl_in_ceil := ((chl_in + 7)>>3)
 	
 	inCT := (rk == 2)
-	inConcat := (((base_address_in2 [] 7) == 1) & (~inCT))
+	inConcat := (((base_address_in2 [] {ADDRESS_WIDTH - 1}) == 1) & (~inCT))
 	in_nCT := (((~inCT) & (~inConcat)) & (~in_8))
 	in_nCT8 := (((~inCT) & (~inConcat)) & in_8)
 	
@@ -29,7 +29,7 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_a
 	max_per_part := ($mux cnd_partition (alpha<<3) chl_out)
 	mpp2 := ($mux cnd_partition alpha chl_out_ceil)
 	$call TopMult (($bitcast ($uint<32>) rb) (($bitcast ($uint<32>)  (cb * chl_out_ceil)) >> 1)) (op_size)
-
+	accelerator_reg[14] := 31
 	$parallelblock [topBlocks]
 	{
 		// Note chl_in_ceil = chl_in8 for chl_in being a multiple of 8
@@ -47,11 +47,12 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_a
 		$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 		$call accumulator (chl_in_ceil ck op_size) ()
 		
-		$guard (out_np) $call sendModule (rb cb chl_out shift_val parts max_per_part NO_ACT base_address_out) ()
-		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT base_address_out) ()
-		$guard (out_pool) $call sendPool (rb cb chl_out_ceil shift_val parts mpp2 NO_ACT base_address_out) ()
+		$guard (out_np) $call sendModule (rb cb chl_out shift_val scale_val parts max_per_part NO_ACT base_address_out) ()
+		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val scale_val parts mpp2 NO_ACT base_address_out) ()
+		$guard (out_pool) $call sendPool (rb cb chl_out_ceil shift_val scale_val parts mpp2 NO_ACT base_address_out) ()
 	}
-	//debug_output_pipe := 70
+
+	accelerator_reg[13] := 21
 }
 
 $opaque $module [TopMult] $in (in1 : $uint<32> in2 : $uint<32>) $out (output : $uint<32>)

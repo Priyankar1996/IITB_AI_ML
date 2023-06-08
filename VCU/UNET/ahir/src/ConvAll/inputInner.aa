@@ -1,5 +1,5 @@
 $module [loadInput_in##num ]
-$in(addr_init : $uint<32> row_in ct chl_in pad : $uint<16> num_parts_1 index: $uint<8>)
+$in(addr_init : $uint<32> row_in ct chl_in pad : $uint<16> num_parts_1 : $uint<8> base_address: $uint<ADDRESS_WIDTH>)
 $out()
 $is
 {
@@ -46,7 +46,7 @@ $is
 
 		// Read next value if needed
 		read_from_pipe := (fn & (~p1_zero))
-		$guard (read_from_pipe) $call readModule_convolution (index (addr1>>3)) (read_val)
+		$guard (read_from_pipe) $call readModule_convolution (base_address (addr1>>3)) (read_val)
 
 		$volatile val_in_use := ($mux read_from_pipe read_val fv1)
 		// Shift to the head of cv

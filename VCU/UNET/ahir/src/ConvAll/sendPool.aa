@@ -2,11 +2,10 @@
 // $pipe pool_buffer : $uint<64> $depth 64
 
 
-$opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> index : $uint<8>) $out () $is
+$opaque $module [sendPool] $in (rb cb chl_out : $uint<16> num_parts : $uint<8> max_chl : $uint<16> base_address : $uint<ADDRESS_WIDTH>) $out () $is
 {
 	$branchblock [sendBlock]{
 		row_size := ($bitcast ($uint<32>) (chl_out*cb))
-		apply_relu := (activation == 1)
 
 		$merge $entry loopback
 		$phi p_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on loopback
@@ -33,38 +32,10 @@ $opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> num_parts : 
 		$volatile n_col := ($mux row_change 1 ($mux chl_change (col + 1) col))
 		$volatile n_row := ($mux row_change (row + N_ROWS_S) row)
 
-		read_val1_1 := output_pipe1_1
-		read_val2_1 := output_pipe2_1
-		read_val3_1 := output_pipe3_1
-		read_val4_1 := output_pipe4_1
-		read_val5_1 := output_pipe5_1
-		read_val6_1 := output_pipe6_1
-		read_val7_1 := output_pipe7_1
-		read_val8_1 := output_pipe8_1
-		read_val1_2 := output_pipe1_2
-		read_val2_2 := output_pipe2_2
-		read_val3_2 := output_pipe3_2
-		read_val4_2 := output_pipe4_2
-		read_val5_2 := output_pipe5_2
-		read_val6_2 := output_pipe6_2
-		read_val7_2 := output_pipe7_2
-		read_val8_2 := output_pipe8_2
-		tmp1_1 := ($mux (apply_relu & ((read_val1_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_1 >> shift_val)))
-		tmp2_1 := ($mux (apply_relu & ((read_val2_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_1 >> shift_val)))
-		tmp3_1 := ($mux (apply_relu & ((read_val3_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_1 >> shift_val)))
-		tmp4_1 := ($mux (apply_relu & ((read_val4_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_1 >> shift_val)))
-		tmp5_1 := ($mux (apply_relu & ((read_val5_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_1 >> shift_val)))
-		tmp6_1 := ($mux (apply_relu & ((read_val6_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_1 >> shift_val)))
-		tmp7_1 := ($mux (apply_relu & ((read_val7_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_1 >> shift_val)))
-		tmp8_1 := ($mux (apply_relu & ((read_val8_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_1 >> shift_val)))
-		tmp1_2 := ($mux (apply_relu & ((read_val1_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_2 >> shift_val)))
-		tmp2_2 := ($mux (apply_relu & ((read_val2_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_2 >> shift_val)))
-		tmp3_2 := ($mux (apply_relu & ((read_val3_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_2 >> shift_val)))
-		tmp4_2 := ($mux (apply_relu & ((read_val4_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_2 >> shift_val)))
-		tmp5_2 := ($mux (apply_relu & ((read_val5_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_2 >> shift_val)))
-		tmp6_2 := ($mux (apply_relu & ((read_val6_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_2 >> shift_val)))
-		tmp7_2 := ($mux (apply_relu & ((read_val7_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_2 >> shift_val)))
-		tmp8_2 := ($mux (apply_relu & ((read_val8_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_2 >> shift_val)))
+		r1 := send_to_pool_pipe1
+		r2 := send_to_pool_pipe2
+		$split (r1 8 8 8 8 8 8 8 8) (tmp1_1 tmp2_1 tmp3_1 tmp4_1 tmp5_1 tmp6_1 tmp7_1 tmp8_1)
+		$split (r2 8 8 8 8 8 8 8 8) (tmp1_2 tmp2_2 tmp3_2 tmp4_2 tmp5_2 tmp6_2 tmp7_2 tmp8_2)
 
 		mx1 := ($mux (($bitcast ($int<8>) tmp1_1) > ($bitcast ($int<8>) tmp1_2)) tmp1_1 tmp1_2)
 		mx2 := ($mux (($bitcast ($int<8>) tmp2_1) > ($bitcast ($int<8>) tmp2_2)) tmp2_1 tmp2_2)
@@ -94,7 +65,7 @@ $opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> num_parts : 
 		mv8 := ($mux (($bitcast ($int<8>) mx8) > ($bitcast ($int<8>) v8)) mx8 v8)
 		max_val := ($concat mv1 mv2 mv3 mv4 mv5 mv6 mv7 mv8)
 		data_to_send := max_val
-		$guard (~pool_stage) $call writeModule_convolution (index address1 data_to_send 255) (a1)
+		$guard (~pool_stage) $call writeModule_convolution (base_address address1 data_to_send 255) (a1)
 
 		continue_flag := ((row >= (rb -1)) ~& row_change)
 		$while continue_flag
@@ -109,3 +80,4 @@ $opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> num_parts : 
 
 	}
 }
+

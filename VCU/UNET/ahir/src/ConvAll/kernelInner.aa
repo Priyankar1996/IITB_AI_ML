@@ -1,6 +1,6 @@
 
 $module [kernelModule_in##num ]
-$in (init_addr : $uint<32> chl_in chl_out rk ck : $uint<16> index : $uint<8>)
+$in (init_addr : $uint<32> chl_in chl_out rk ck : $uint<16> base_address : $uint<ADDRESS_WIDTH>)
 $out ()
 $is
 {
@@ -37,7 +37,7 @@ $is
 		// Update number left
 		$volatile n_left := ($mux done chl_in (left - ns))
 		
-		$guard (fn) $call readModule_convolutionk (index (addr1>>3)) (read_val)
+		$guard (fn) $call readModule_convolutionk (base_address (addr1>>3)) (read_val)
 		$volatile val_in_use := ($mux fn read_val fv1)
 		// Shift to the head of cv
 		$volatile tmp1 := ((val_in_use << (($bitcast ($uint<64>) sp) << 3)) >> (($bitcast ($uint<64>) head) << 3))

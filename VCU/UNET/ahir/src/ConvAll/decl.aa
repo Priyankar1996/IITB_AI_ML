@@ -6,7 +6,7 @@ $parameter K_DEPTH 4096
 $parameter N_ROWS_S 2
 $parameter ACC_WIDTH 16
 $parameter DATA_WIDTH 16
-
+$parameter ADDRESS_WIDTH 32
 
 $pipe core1_kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
 $pipe core1_kp2 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
@@ -103,3 +103,6 @@ $pipe conv7_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
+
+$pipe send_to_pool_pipe1 : $uint<PIPE_WIDTH> $depth SMALL_PIPE_DEPTH
+$pipe send_to_pool_pipe2 : $uint<PIPE_WIDTH> $depth SMALL_PIPE_DEPTH

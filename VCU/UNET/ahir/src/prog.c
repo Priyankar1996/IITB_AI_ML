@@ -11,10 +11,10 @@
 void __aa_barrier__();
 
 uint64_t readModule1 (uint32_t);
-void writeModule1 (uint8_t, uint32_t, uint64_t);
+void writeModule1 (uint32_t, uint32_t, uint64_t);
+uint64_t timer();
 
-
-void convolutionAll (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint8_t index_in1, uint8_t index_in2, uint8_t index_k, uint8_t index_out, uint16_t shift_val,uint16_t pad, uint8_t pool, uint8_t activation);
+void convolutionAll (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_t chl_out, uint16_t chl_in, uint16_t rk, uint16_t ck, uint32_t index_in1, uint32_t index_in2, uint32_t index_k, uint32_t index_out, uint32_t scale_val,  uint16_t shift_val,uint16_t pad, uint8_t pool, uint8_t activation);
 
 #define __get8xi8__(element) ({\
 	element = read_uint8("system_input_pipe");\
@@ -55,7 +55,7 @@ void convolutionAll (uint16_t rb, uint16_t cb, uint16_t rt, uint16_t ct, uint16_
 	write_uint8 ("system_output_pipe",out_data[7]);\
 })
 
-void readFromSystemPipe(uint8_t index)
+void readFromSystemPipe(uint32_t index)
 {
 	uint32_t word_count = read_uint8("system_input_pipe"), i;
 	word_count = (word_count << 8) + read_uint8("system_input_pipe");
@@ -84,18 +84,24 @@ void sendOutput()
 	}
 }
 
-uint64_t global_time_val[20];
+uint64_t global_time_val_pipe[20];
+uint64_t global_time_val_storage[20];
 
 void writeTime(uint8_t ind)
 {
-	global_time_val[ind] = read_uint64("time_val");
+	global_time_val_pipe[ind] = read_uint64("time_val");
+	// global_time_val_storage[ind] = timer();
 }
 
 writeTimeBack()
 {
 	for (int i = 0; i < 19; i++)
 	{
-	uint64_t elapsed_time = global_time_val[i];
+	// for (int j = 0; j < 2; j++)
+	// {	
+	uint64_t elapsed_time = global_time_val_pipe[i];
+	// uint64_t elapsed_time = global_time_val_storage[i];
+	//uint64_t elapsed_time = (j == 0) ? val_pipe : val_stor;
 	uint8_t out_data[8];\
 	out_data[7] = elapsed_time & 0xFF;\
 	elapsed_time>>=8;\
@@ -121,8 +127,8 @@ writeTimeBack()
 	write_uint8 ("debug_output_pipe",out_data[5]);\
 	write_uint8 ("debug_output_pipe",out_data[6]);\
 	write_uint8 ("debug_output_pipe",out_data[7]);\
+	// }
 	}
-	
 }
 
 void systemTOP()
@@ -137,105 +143,105 @@ void systemTOP()
 	writeTime(0);
 	//write_uint8("debug_output_pipe",11);
 	// 0 -> 1
-	convolutionAll(224,224,224,224,64,3,3,3,0,0,0,1,0,1,0,relu);
+	convolutionAll(224,224,224,224,64,3,3,3,0,0,0,1,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",11);
 	__aa_barrier__();
 	writeTime(1);
 	__aa_barrier__();
 	// 1 -> 2
-	convolutionAll(224,224,224,224,64,64,3,3,1,0,1,2,0,1,1,relu);
+	convolutionAll(224,224,224,224,64,64,3,3,1,0,1,2,1,0,1,1,relu);
 	//write_uint8("debug_output_pipe",12);
 	__aa_barrier__();
 	writeTime(2);
 	__aa_barrier__();
 	// 2 -> 1
-	convolutionAll(112,112,112,112,128,64,3,3,2,0,2,1,0,1,0,relu);
+	convolutionAll(112,112,112,112,128,64,3,3,2,0,2,1,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",13);
 	__aa_barrier__();
 	writeTime(3);
 	__aa_barrier__();
 	// 1 -> 3
-	convolutionAll(112,112,112,112,128,128,3,3,1,0,3,3,0,1,1,relu);
+	convolutionAll(112,112,112,112,128,128,3,3,1,0,3,3,1,0,1,1,relu);
 	//write_uint8("debug_output_pipe",14);
 	__aa_barrier__();
 	writeTime(4);
 	__aa_barrier__();
 	// 3 -> 1
-	convolutionAll(56,56,56,56,256,128,3,3,0,0,4,1,0,1,0,relu);
+	convolutionAll(56,56,56,56,256,128,3,3,0,0,4,1,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",15);
 	__aa_barrier__();
 	writeTime(5);
 	__aa_barrier__();
 	// 1 -> 4
-	convolutionAll(56,56,56,56,256,256,3,3,1,0,5,4,0,1,1,relu);
+	convolutionAll(56,56,56,56,256,256,3,3,1,0,5,4,1,0,1,1,relu);
 	//write_uint8("debug_output_pipe",16);
 	__aa_barrier__();
 	writeTime(6);
 	__aa_barrier__();
 	
 	// 4 -> 1
-	convolutionAll(28,28,28,28,512,256,3,3,4,0,6,1,0,1,0,relu);
+	convolutionAll(28,28,28,28,512,256,3,3,4,0,6,1,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",17);
 	__aa_barrier__();
 	writeTime(7);
 	__aa_barrier__();
 	// 1 -> 0
-	convolutionAll(28,28,28,28,512,512,3,3,1,0,7,0,0,1,0,relu);
+	convolutionAll(28,28,28,28,512,512,3,3,1,0,7,0,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",18);
 	__aa_barrier__();
 
 	writeTime(8);
 	__aa_barrier__();
 	// 0 -> 1
-	convolutionAll(56,56,28,28,256,512,2,2,0,0,8,1,0,0,0,relu);
+	convolutionAll(56,56,28,28,256,512,2,2,0,0,8,1,1,0,0,0,relu);
 	//write_uint8("debug_output_pipe",20);
 	__aa_barrier__();
 	writeTime(9);
 	__aa_barrier__();
 	// 4,1 -> 0
-	convolutionAll(56,56,56,56,256,512,3,3,4,129,9,0,0,1,0,relu);
+	convolutionAll(56,56,56,56,256,512,3,3,4,129,9,0,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",22);
 	__aa_barrier__();
 	writeTime(10);
 	__aa_barrier__();
 	// 0 -> 1
-	convolutionAll(56,56,56,56,256,256,3,3,0,0,10,1,0,1,0,relu);
+	convolutionAll(56,56,56,56,256,256,3,3,0,0,10,1,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",23);
 	__aa_barrier__();
 	writeTime(11);
 	__aa_barrier__();
 	// 1 -> 0
-	convolutionAll(112,112,56,56,128,256,2,2,1,0,11,0,0,0,0,relu);
+	convolutionAll(112,112,56,56,128,256,2,2,1,0,11,0,1,0,0,0,relu);
 	//write_uint8("debug_output_pipe",25);
 	__aa_barrier__();
 	writeTime(12);
 	__aa_barrier__();
 	// 3,0 -> 1
-	convolutionAll(112,112,112,112,128,256,3,3,3,128,12,1,0,1,0,relu);
+	convolutionAll(112,112,112,112,128,256,3,3,3,128,12,1,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",27);
 	__aa_barrier__();
 	writeTime(13);
 	__aa_barrier__();
 	// 1 -> 0
-	convolutionAll(112,112,112,112,128,128,3,3,1,0,13,0,0,1,0,relu);
+	convolutionAll(112,112,112,112,128,128,3,3,1,0,13,0,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",28);
 	__aa_barrier__();
 	writeTime(14);
 	__aa_barrier__();
 	// 0 -> 1
-	convolutionAll(224,224,112,112,64,128,2,2,0,0,14,1,0,0,0,relu);
+	convolutionAll(224,224,112,112,64,128,2,2,0,0,14,1,1,0,0,0,relu);
 	//write_uint8("debug_output_pipe",30);
 	__aa_barrier__();
 	writeTime(15);
 	__aa_barrier__();
 	// 2,1 -> 0
-	convolutionAll(224,224,224,224,64,128,3,3,2,129,15,0,0,1,0,relu);
+	convolutionAll(224,224,224,224,64,128,3,3,2,129,15,0,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",32);
 	__aa_barrier__();
 	writeTime(16);
 	__aa_barrier__();
 	// 0 -> 1
-	convolutionAll(224,224,224,224,64,64,3,3,0,0,16,1,0,1,0,relu);
+	convolutionAll(224,224,224,224,64,64,3,3,0,0,16,1,1,0,1,0,relu);
 	//write_uint8("debug_output_pipe",33);
 	__aa_barrier__();
 	writeTime(17);
@@ -243,7 +249,7 @@ void systemTOP()
 
 	// 1 -> 0
 	//Final stage is a sigmoid activation	  
-	convolutionAll(224,224,224,224,3,64,3,3,1,0,17,0,0,1,0,sigmoid);
+	convolutionAll(224,224,224,224,3,64,3,3,1,0,17,0,1,0,1,0,sigmoid);
 	//write_uint8("debug_output_pipe",34);
 	__aa_barrier__();
 	writeTime(18);

@@ -149,7 +149,7 @@ void systemTOP()
 	writeTime(1);
 	__aa_barrier__();
 	// 1 -> 2
-	convolutionAll(224,224,224,224,64,64,3,3,1,0,1,2,1,0,1,1,relu);
+	convolutionAll(224,224,224,224,64,64,3,3,1,0,1,2,1,0,1,3,relu);
 	//write_uint8("debug_output_pipe",12);
 	__aa_barrier__();
 	writeTime(2);
@@ -161,7 +161,7 @@ void systemTOP()
 	writeTime(3);
 	__aa_barrier__();
 	// 1 -> 3
-	convolutionAll(112,112,112,112,128,128,3,3,1,0,3,3,1,0,1,1,relu);
+	convolutionAll(112,112,112,112,128,128,3,3,1,0,3,3,1,0,1,3,relu);
 	//write_uint8("debug_output_pipe",14);
 	__aa_barrier__();
 	writeTime(4);
@@ -173,7 +173,7 @@ void systemTOP()
 	writeTime(5);
 	__aa_barrier__();
 	// 1 -> 4
-	convolutionAll(56,56,56,56,256,256,3,3,1,0,5,4,1,0,1,1,relu);
+	convolutionAll(56,56,56,56,256,256,3,3,1,0,5,4,1,0,1,3,relu);
 	//write_uint8("debug_output_pipe",16);
 	__aa_barrier__();
 	writeTime(6);

@@ -1,0 +1,97 @@
+$opaque $module [readModule1]
+$in (address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+	$call memoryModule (1 (T1_base + address) 0 255) (data)
+}
+
+$opaque $module [writeModule1]
+$in (index : $uint<8> address : $uint<32> data : $uint<64>)
+$out ()
+$is
+{
+	cnd1 := (index == 0)
+	cnd2 := (index == 1)
+	addr := ($excmux 
+			cnd1 (K_base + address)
+			cnd2 (T0_base + address)
+			)
+	$call memoryModule (0 addr data 255) (out)
+}
+
+$pipeline $depth 7 $buffering 1 $fullrate
+$opaque $module [readModule_convolution]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+	cnd1 := (index == 0)
+	cnd2 := (index == 1)
+	cnd3 := (index == 2)
+	cnd4 := (index == 3)
+	cnd5 := (index == 4)
+	addr := ($excmux 
+			cnd1 (T0_base + address)
+			cnd2 (T1_base + address)
+			cnd3 (T2_base + address)
+			cnd4 (T3_base + address)
+			cnd5 (T4_base + address)
+			)
+	$call readModule_convolution2 (addr) (done)
+	data := READ_T_RESP_QUEUE
+
+}
+
+$pipeline $depth 7 $buffering 1 $fullrate
+$opaque $module [readModule_convolution2]
+$in (addr : $uint<32>) $out (done : $uint<1>)
+$is
+{
+	$call memoryModule (1 addr 0 255) (data)
+	READ_T_RESP_QUEUE := data
+	done := (data [] 0)
+}
+
+$pipeline $depth 7 $buffering 1 $fullrate
+$opaque $module [readModule_convolutionk]
+$in (index : $uint<8> address : $uint<32>)
+$out (data : $uint<64>)
+$is
+{
+	addr := (K_base + address)
+	$call readModule_convolutionk2 (addr) (done)
+	data := READ_K_RESP_QUEUE
+}
+
+$pipeline $depth 7 $buffering 1 $fullrate
+$opaque $module [readModule_convolutionk2]
+$in (addr : $uint<32>) $out (done : $uint<1>)
+$is
+{
+	$call memoryModule (1 addr 0 255) (data)
+	READ_K_RESP_QUEUE := data
+	done := (data [] 0)
+}
+
+$pipeline $depth 7 $buffering 1 $fullrate
+$opaque $module [writeModule_convolution]
+$in (index : $uint<8> address : $uint<32> data : $uint<64> bm : $uint<8>)
+$out (done : $uint<1>)
+$is
+{
+	cnd1 := (index == 0)
+	cnd2 := (index == 1)
+	cnd3 := (index == 2)
+	cnd4 := (index == 3)
+	cnd5 := (index == 4)
+	addr := ($excmux 
+			cnd1 (T0_base + address)
+			cnd2 (T1_base + address)
+			cnd3 (T2_base + address)
+			cnd4 (T3_base + address)
+			cnd5 (T4_base + address)
+			)
+	$call memoryModule (0 addr data bm) (out)
+	done := (index [] 0)
+}

@@ -1,0 +1,94 @@
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date         : Wed Feb  1 10:12:55 2023
+| Host         : ajit2-System-Product-Name running 64-bit Ubuntu 20.04.5 LTS
+| Command      : report_utilization -hierarchical -file utilization_post_synth.hierarchical.rpt
+| Design       : top_level
+| Device       : xcvu37pfsvh2892-2L
+| Design State : Synthesized
+------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++----------------------------------------------------------------------------+--------------------------------------------+------------+------------+---------+------+-----+--------+--------+------+--------------+
+|                                  Instance                                  |                   Module                   | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | URAM | DSP48 Blocks |
++----------------------------------------------------------------------------+--------------------------------------------+------------+------------+---------+------+-----+--------+--------+------+--------------+
+| top_level                                                                  |                                      (top) |       1360 |       1360 |       0 |    0 | 629 |   1024 |      0 |    0 |            0 |
+|   (top_level)                                                              |                                      (top) |          2 |          2 |       0 |    0 |   0 |      0 |      0 |    0 |            0 |
+|   bram                                                                     |                              acb_sram_stub |       1079 |       1079 |       0 |    0 | 138 |   1024 |      0 |    0 |            0 |
+|     (bram)                                                                 |                              acb_sram_stub |         37 |         37 |       0 |    0 |  67 |      0 |      0 |    0 |            0 |
+|     bbGen[0].bb                                                            |                                  base_bank |        113 |        113 |       0 |    0 |   8 |    128 |      0 |    0 |            0 |
+|     bbGen[1].bb                                                            |                  base_bank__parameterized1 |        113 |        113 |       0 |    0 |   8 |    128 |      0 |    0 |            0 |
+|     bbGen[2].bb                                                            |                  base_bank__parameterized3 |        113 |        113 |       0 |    0 |   8 |    128 |      0 |    0 |            0 |
+|     bbGen[3].bb                                                            |                  base_bank__parameterized5 |        113 |        113 |       0 |    0 |   8 |    128 |      0 |    0 |            0 |
+|     bbGen[4].bb                                                            |                  base_bank__parameterized7 |        113 |        113 |       0 |    0 |   8 |    128 |      0 |    0 |            0 |
+|     bbGen[5].bb                                                            |                  base_bank__parameterized9 |        116 |        116 |       0 |    0 |   8 |    128 |      0 |    0 |            0 |
+|     bbGen[6].bb                                                            |                 base_bank__parameterized11 |        113 |        113 |       0 |    0 |   8 |    128 |      0 |    0 |            0 |
+|     bbGen[7].bb                                                            |                 base_bank__parameterized13 |        248 |        248 |       0 |    0 |  15 |    128 |      0 |    0 |            0 |
+|   clocking                                                                 |                                  clk_wiz_0 |          0 |          0 |       0 |    0 |   0 |      0 |      0 |    0 |            0 |
+|     inst                                                                   |                clk_wiz_0_clk_wiz_0_clk_wiz |          0 |          0 |       0 |    0 |   0 |      0 |      0 |    0 |            0 |
+|   dbg_hub                                                                  |                                 dbg_hub_CV |          0 |          0 |       0 |    0 |   0 |      0 |      0 |    0 |            0 |
+|   debug_uart                                                               |        uartTopGenericEasilyConfigurable__1 |         62 |         62 |       0 |    0 |  82 |      0 |      0 |    0 |            0 |
+|     baseInst                                                               |                  uartTopPortConfigurable_0 |         62 |         62 |       0 |    0 |  82 |      0 |      0 |    0 |            0 |
+|       baseInst                                                             |                              uartTopBase_1 |         59 |         59 |       0 |    0 |  64 |      0 |      0 |    0 |            0 |
+|         bg                                                                 |                                  baudGen_3 |         31 |         31 |       0 |    0 |  17 |      0 |      0 |    0 |            0 |
+|         ur                                                                 |                                   uartRx_4 |         11 |         11 |       0 |    0 |  28 |      0 |      0 |    0 |            0 |
+|         ut                                                                 |                                   uartTx_5 |         17 |         17 |       0 |    0 |  19 |      0 |      0 |    0 |            0 |
+|       bridgeInst                                                           |                               uartBridge_2 |          3 |          3 |       0 |    0 |  18 |      0 |      0 |    0 |            0 |
+|   serial_uart                                                              |           uartTopGenericEasilyConfigurable |         62 |         62 |       0 |    0 |  82 |      0 |      0 |    0 |            0 |
+|     baseInst                                                               |                    uartTopPortConfigurable |         62 |         62 |       0 |    0 |  82 |      0 |      0 |    0 |            0 |
+|       baseInst                                                             |                                uartTopBase |         59 |         59 |       0 |    0 |  64 |      0 |      0 |    0 |            0 |
+|         bg                                                                 |                                    baudGen |         31 |         31 |       0 |    0 |  17 |      0 |      0 |    0 |            0 |
+|         ur                                                                 |                                     uartRx |         11 |         11 |       0 |    0 |  28 |      0 |      0 |    0 |            0 |
+|         ut                                                                 |                                     uartTx |         17 |         17 |       0 |    0 |  19 |      0 |      0 |    0 |            0 |
+|       bridgeInst                                                           |                                 uartBridge |          3 |          3 |       0 |    0 |  18 |      0 |      0 |    0 |            0 |
+|   test_inst                                                                |                                ahir_system |         32 |         32 |       0 |    0 |  57 |      0 |      0 |    0 |            0 |
+|     data_in_Pipe                                                           |                   PipeBase__parameterized3 |         13 |         13 |       0 |    0 |  20 |      0 |      0 |    0 |            0 |
+|       Shallow.notSaveSlot.queue                                            |                  QueueBase__parameterized3 |         13 |         13 |       0 |    0 |  20 |      0 |      0 |    0 |            0 |
+|         (Shallow.notSaveSlot.queue)                                        |                  QueueBase__parameterized3 |          0 |          0 |       0 |    0 |  16 |      0 |      0 |    0 |            0 |
+|         qDGt1.NTB.fe_logic                                                 |                      QueueEmptyFullLogic_6 |          5 |          5 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         qDGt1.NTB.rdpReg                                                   |                 SynchResetRegisterUnsigned |          8 |          8 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|         qDGt1.NTB.wrpReg                                                   | SynchResetRegisterUnsigned__parameterized1 |          0 |          0 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|     data_out_Pipe                                                          |                   PipeBase__parameterized5 |         10 |         10 |       0 |    0 |  20 |      0 |      0 |    0 |            0 |
+|       Shallow.notSaveSlot.queue                                            |                  QueueBase__parameterized5 |         10 |         10 |       0 |    0 |  20 |      0 |      0 |    0 |            0 |
+|         (Shallow.notSaveSlot.queue)                                        |                  QueueBase__parameterized5 |          0 |          0 |       0 |    0 |  16 |      0 |      0 |    0 |            0 |
+|         qDGt1.NTB.fe_logic                                                 |                        QueueEmptyFullLogic |          5 |          5 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         qDGt1.NTB.rdpReg                                                   | SynchResetRegisterUnsigned__parameterized3 |          4 |          4 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|         qDGt1.NTB.wrpReg                                                   | SynchResetRegisterUnsigned__parameterized5 |          1 |          1 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|     ping_daemon_auto_run                                                   |                                   auto_run |          0 |          0 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|     ping_daemon_instance                                                   |                                ping_daemon |          9 |          9 |       0 |    0 |  16 |      0 |      0 |    0 |            0 |
+|       data_path.InportGroup_0.data_in_read_0                               |                           InputPortRevised |          7 |          7 |       0 |    0 |  10 |      0 |      0 |    0 |            0 |
+|         ProTx[0].ulreg                                                     |             UnloadRegister__parameterized3 |          7 |          7 |       0 |    0 |  10 |      0 |      0 |    0 |            0 |
+|       data_path.OutportGroup_0.data_out_write_0                            |                          OutputPortRevised |          0 |          0 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         (data_path.OutportGroup_0.data_out_write_0)                        |                          OutputPortRevised |          0 |          0 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|         BufGen[0].rxB                                                      |              ReceiveBuffer__parameterized1 |          0 |          0 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|       in_buffer                                                            |                               UnloadBuffer |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         NotRevisedCase.ShallowCase.ulReg                                   |                             UnloadRegister |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|       in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join |                               generic_join |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         placegen[1].placeBlock.pI                                          |                          place_with_bypass |          0 |          0 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|         placegen[2].placeBlock.pI                                          |          place_with_bypass__parameterized1 |          1 |          1 |       0 |    0 |   1 |      0 |      0 |    0 |            0 |
+|   virtual_reset                                                            |                                      vio_0 |        123 |        123 |       0 |    0 | 270 |      0 |      0 |    0 |            0 |
+|     (virtual_reset)                                                        |                                      vio_0 |          0 |          0 |       0 |    0 |   0 |      0 |      0 |    0 |            0 |
+|     inst                                                                   |                      vio_0_vio_v3_0_20_vio |        123 |        123 |       0 |    0 | 270 |      0 |      0 |    0 |            0 |
+|       (inst)                                                               |                      vio_0_vio_v3_0_20_vio |          0 |          0 |       0 |    0 |  16 |      0 |      0 |    0 |            0 |
+|       DECODER_INST                                                         |                  vio_0_vio_v3_0_20_decoder |         21 |         21 |       0 |    0 |  46 |      0 |      0 |    0 |            0 |
+|       PROBE_IN_INST                                                        |             vio_0_vio_v3_0_20_probe_in_one |          9 |          9 |       0 |    0 |  26 |      0 |      0 |    0 |            0 |
+|       PROBE_OUT_ALL_INST                                                   |            vio_0_vio_v3_0_20_probe_out_all |         16 |         16 |       0 |    0 |  21 |      0 |      0 |    0 |            0 |
+|         (PROBE_OUT_ALL_INST)                                               |            vio_0_vio_v3_0_20_probe_out_all |         11 |         11 |       0 |    0 |  11 |      0 |      0 |    0 |            0 |
+|         G_PROBE_OUT[0].PROBE_OUT0_INST                                     |            vio_0_vio_v3_0_20_probe_out_one |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         G_PROBE_OUT[1].PROBE_OUT0_INST                                     |          vio_0_vio_v3_0_20_probe_out_one_0 |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         G_PROBE_OUT[2].PROBE_OUT0_INST                                     |          vio_0_vio_v3_0_20_probe_out_one_1 |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         G_PROBE_OUT[3].PROBE_OUT0_INST                                     |          vio_0_vio_v3_0_20_probe_out_one_2 |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|         G_PROBE_OUT[4].PROBE_OUT0_INST                                     |          vio_0_vio_v3_0_20_probe_out_one_3 |          1 |          1 |       0 |    0 |   2 |      0 |      0 |    0 |            0 |
+|       U_XSDB_SLAVE                                                         |                   vio_0_xsdbs_v1_0_2_xsdbs |         77 |         77 |       0 |    0 | 161 |      0 |      0 |    0 |            0 |
++----------------------------------------------------------------------------+--------------------------------------------+------------+------------+---------+------+-----+--------+--------+------+--------------+
+
+

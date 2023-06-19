@@ -1,3 +1,12 @@
+$pipeline $depth 15 $fullrate
+$operator $module [multiplier] $in (in1 in2 : $int<16>) $out (output : $int<16> deb_out : $uint<64>) $is
+{
+	
+	tmp := ($cast ($int<16>) ($slice (in1 * in2) 15 8))
+	output := tmp
+	deb_out := ($concat ($bitcast ($uint<16>) in1) ($bitcast ($uint<16>) in2) ($bitcast ($uint<32>) tmp))
+}
+
 // Perform convolution operation
 $module [convolveCore ]
 $in (rb cb chl_in_read chl_out rk ck: $uint<16> num_parts : $uint<8> max_chl : $uint<16>)
@@ -93,24 +102,79 @@ $is
 		#include convInner.aa
 		#define core_num 8
 		#include convInner.aa
+		
 
-		acc_pipe1_1 := ($bitcast ($uint<ACC_WIDTH>) acc_val1_1)
-		acc_pipe1_2 := ($bitcast ($uint<ACC_WIDTH>) acc_val2_1)
-		acc_pipe1_3 := ($bitcast ($uint<ACC_WIDTH>) acc_val3_1)
-		acc_pipe1_4 := ($bitcast ($uint<ACC_WIDTH>) acc_val4_1)
-		acc_pipe1_5 := ($bitcast ($uint<ACC_WIDTH>) acc_val5_1)
-		acc_pipe1_6 := ($bitcast ($uint<ACC_WIDTH>) acc_val6_1)
-		acc_pipe1_7 := ($bitcast ($uint<ACC_WIDTH>) acc_val7_1)
-		acc_pipe1_8 := ($bitcast ($uint<ACC_WIDTH>) acc_val8_1)
-		acc_pipe2_1 := ($bitcast ($uint<ACC_WIDTH>) acc_val1_2)
-		acc_pipe2_2 := ($bitcast ($uint<ACC_WIDTH>) acc_val2_2)
-		acc_pipe2_3 := ($bitcast ($uint<ACC_WIDTH>) acc_val3_2)
-		acc_pipe2_4 := ($bitcast ($uint<ACC_WIDTH>) acc_val4_2)
-		acc_pipe2_5 := ($bitcast ($uint<ACC_WIDTH>) acc_val5_2)
-		acc_pipe2_6 := ($bitcast ($uint<ACC_WIDTH>) acc_val6_2)
-		acc_pipe2_7 := ($bitcast ($uint<ACC_WIDTH>) acc_val7_2)
-		acc_pipe2_8 := ($bitcast ($uint<ACC_WIDTH>) acc_val8_2)
-		//time_pipe := (((($bitcast ($uint<8>) t_acc_val_2_1) && ($bitcast ($uint<8>) t_acc_val_2_2)) && (($bitcast ($uint<8>) t_acc_val_2_3) && ($bitcast ($uint<8>) acc_val2_1))) && ((($bitcast ($uint<8>) t_acc_val_2_4) && ($bitcast ($uint<8>) t_acc_val_2_5)) && (($bitcast ($uint<8>) t_acc_val_2_6) && ($bitcast ($uint<8>) acc_val2_2) )))
+		//my_pipe1_1 := ($bitcast ($uint<16>) t_acc_val_1_1)
+		//my_pipe1_2 := ($bitcast ($uint<16>) t_acc_val_1_2)
+		//my_pipe1_3 := ($bitcast ($uint<16>) t_acc_val_1_3)
+		//my_pipe1_4 := ($bitcast ($uint<16>) t_acc_val_1_4)
+		//my_pipe1_5 := ($bitcast ($uint<16>) t_acc_val_1_5)
+		//my_pipe1_6 := ($bitcast ($uint<16>) t_acc_val_1_6)
+		acc_pipe1_1 := ($bitcast ($uint<DATA_WIDTH>) acc_val1_1)
+		acc_pipe1_2 := ($bitcast ($uint<DATA_WIDTH>) acc_val2_1)
+		acc_pipe1_3 := ($bitcast ($uint<DATA_WIDTH>) acc_val3_1)
+		acc_pipe1_4 := ($bitcast ($uint<DATA_WIDTH>) acc_val4_1)
+		acc_pipe1_5 := ($bitcast ($uint<DATA_WIDTH>) acc_val5_1)
+		acc_pipe1_6 := ($bitcast ($uint<DATA_WIDTH>) acc_val6_1)
+		acc_pipe1_7 := ($bitcast ($uint<DATA_WIDTH>) acc_val7_1)
+		acc_pipe1_8 := ($bitcast ($uint<DATA_WIDTH>) acc_val8_1)
+		acc_pipe2_1 := ($bitcast ($uint<DATA_WIDTH>) acc_val1_2)
+		acc_pipe2_2 := ($bitcast ($uint<DATA_WIDTH>) acc_val2_2)
+		acc_pipe2_3 := ($bitcast ($uint<DATA_WIDTH>) acc_val3_2)
+		acc_pipe2_4 := ($bitcast ($uint<DATA_WIDTH>) acc_val4_2)
+		acc_pipe2_5 := ($bitcast ($uint<DATA_WIDTH>) acc_val5_2)
+		acc_pipe2_6 := ($bitcast ($uint<DATA_WIDTH>) acc_val6_2)
+		acc_pipe2_7 := ($bitcast ($uint<DATA_WIDTH>) acc_val7_2)
+		acc_pipe2_8 := ($bitcast ($uint<DATA_WIDTH>) acc_val8_2)
+		////time_pipe := (((($bitcast ($uint<8>) t_acc_val_2_1) && ($bitcast ($uint<8>) t_acc_val_2_2)) && (($bitcast ($uint<8>) t_acc_val_2_3) && ($bitcast ($uint<8>) acc_val2_1))) && ((($bitcast ($uint<8>) t_acc_val_2_4) && ($bitcast ($uint<8>) t_acc_val_2_5)) && (($bitcast ($uint<8>) t_acc_val_2_6) && ($bitcast ($uint<8>) acc_val2_2) )))
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_1_6)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_2_6)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_3_6)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_1_4_6)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_1)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_2)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_3)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_4)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_5)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_1_6)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_2_6)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_3_6)
+		//time_pipe := ($bitcast ($uint<64>) mul_val_2_4_6)
 		$while (~all_done_flag)
 
 		$volatile np_cnt := (p_cnt + 1)
@@ -125,7 +189,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 	$branchblock [acc_blk]
 	{
 		acc_count := ((chl_in * ck) - 1)
-		$dopipeline $depth 155 $buffering 2 $fullrate
+		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
 		$phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
 		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
@@ -184,6 +248,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		$volatile acc_val6_2 := (acc6_2 + r6)
 		$volatile acc_val7_2 := (acc7_2 + r7)
 		$volatile acc_val8_2 := (acc8_2 + r8)
+
 
 		$guard (num_done) output_pipe1_1 := acc_val1_1
 		$guard (num_done) output_pipe1_2 := acc_val1_2

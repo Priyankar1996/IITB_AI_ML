@@ -1,0 +1,113 @@
+//SizedTensor_64K input, output;
+//SizedTensor_64K KE3_1, KT2, KD2_1;
+//SizedTensor_64K M2, CM1, CM2, ZM1, ZM2;
+//
+//SizedTensor_512 KE1_1, KL;
+//SizedTensor_8K KE1_2, KD1_2;
+//SizedTensor_16K KT1, KE2_1, KD1_1;
+//SizedTensor_32K KE2_2, KD2_2;
+//SizedTensor_32K M3;
+//SizedTensor_128K KE3_2, KD3_2;
+//SizedTensor_128K M1, CE3_1, CE3_2, T3, CD3_1, CD3_2,ZE3_1, ZE3_2, ZD3_1, ZD3_2;
+//SizedTensor_256K KM1, KT3, KD3_1;
+//SizedTensor_256K ZE2_1, ZE2_2, CE2_1, CE2_2, CO3, T2, ZD2_1, ZD2_2, CD2_1, CD2_2;
+//SizedTensor_512K KM2;
+//SizedTensor_512K ZE1_1, ZE1_2, CE1_1, CE1_2, CO2, T1, CD1_1, CD1_2, ZD1_1, ZD1_2,ZL;
+//SizedTensor_1M CO1;
+
+$record [structx_x__SizedTensor_512] < $array [512] $of $uint<64> > 
+$record [structx_x__SizedTensor_8K] < $array [{8*1024}] $of $uint<64> >
+$record [structx_x__SizedTensor_16K] < $array [{16*1024}] $of $uint<64> > 
+$record [structx_x__SizedTensor_32K] < $array [{32*1024}] $of $uint<64> >
+$record [structx_x__SizedTensor_64K] < $array [{64*1024}] $of $uint<64> >
+$record [structx_x__SizedTensor_128K] < $array [{128*1024}] $of $uint<64> > 
+$record [structx_x__SizedTensor_256K] < $array [{256*1024}] $of $uint<64> > 
+$record [structx_x__SizedTensor_512K] < $array [{512*1024}] $of $uint<64> > 
+$record [structx_x__SizedTensor_1M] < $array [{1024*1024}] $of $uint<64> > 
+
+//$storage KE1_1 KL : structx_x__SizedTensor_512
+//$storage KE1_2 KD1_2 : structx_x__SizedTensor_8K
+//$storage KT1 KE2_1 KD1_1 : structx_x__SizedTensor_16K
+//$storage KE2_2 KD2_2 M3 : structx_x__SizedTensor_32K
+//$storage input output KE3_1 KT2 KD2_1 M2 CM1 CM2 ZM1 ZM2 : structx_x__SizedTensor_64K
+//$storage KE3_2 KD3_2 M1 CE3_1 CE3_2 T3 CD3_1 CD3_2 ZE3_1 ZE3_2 ZD3_1 ZD3_2 : structx_x__SizedTensor_128K
+//$storage KM1 KT3 KD3_1 ZE2_1 ZE2_2 CE2_1 CE2_2 CO3 T2 ZD2_1 ZD2_2 CD2_1 CD2_2 : structx_x__SizedTensor_256K
+//$storage KM2 ZE1_1 ZE1_2 CE1_1 CE1_2 CO2 T1 CD1_1 CD1_2 ZD1_1 ZD1_2 ZL : structx_x__SizedTensor_512K
+//$storage CO1 : structx_x__SizedTensor_1M
+
+
+//$storage Kernel : structx_x__SizedTensor_512K
+
+//$storage Tensor0 : structx_x__SizedTensor_512K
+//$storage Tensor1 : structx_x__SizedTensor_1M
+//$storage Tensor2 : structx_x__SizedTensor_512K
+//$storage Tensor3 : structx_x__SizedTensor_256K
+//$storage Tensor4 : structx_x__SizedTensor_128K
+
+$parameter FLASH_END {8*{4096*4096}}
+$parameter KB2WORD 128
+$parameter MB2WORD {128*1024}
+$parameter T0_base FLASH_END
+$parameter T1_base {FLASH_END+{512*KB2WORD}}
+$parameter T2_base {T1_base + MB2WORD}
+$parameter T3_base {T2_base+{512*KB2WORD}}
+$parameter T4_base {T3_base+{256*KB2WORD}}
+$parameter K0_base {T4_base+{128*KB2WORD}}
+$parameter K_base K0_base
+$parameter K1_base {K0_base+KB2WORD}
+$parameter K2_base {K1_base+{5*KB2WORD}}
+$parameter K3_base {K2_base+{10*KB2WORD}}
+$parameter K4_base {K3_base+{20*KB2WORD}}
+$parameter K5_base {K4_base+{40*KB2WORD}}
+$parameter K6_base {K5_base+{80*KB2WORD}}
+$parameter K7_base {K6_base+{150*KB2WORD}}
+$parameter K8_base {K7_base+{300*KB2WORD}}
+$parameter K9_base {K8_base+{80*KB2WORD}}
+$parameter K10_base {K9_base+{150*KB2WORD}}
+$parameter K11_base {K10_base+{80*KB2WORD}}
+$parameter K12_base {K11_base+{40*KB2WORD}}
+$parameter K13_base {K12_base+{40*KB2WORD}}
+$parameter K14_base {K13_base+{20*KB2WORD}}
+$parameter K15_base {K14_base+{20*KB2WORD}}
+$parameter K16_base {K15_base+{10*KB2WORD}}
+$parameter K17_base {K16_base+{5*KB2WORD}}
+
+$pipe MAIN_MEM_REQUEST : $uint<110> $depth 16
+$pipe MAIN_MEM_RESPONSE : $uint<65> $depth 16
+
+$pipe READ_T_RESP_QUEUE : $uint<64> $depth 16
+$pipe READ_K_RESP_QUEUE : $uint<64> $depth 16
+
+//$foreign $module [memoryModelC]
+ //	$in (rwbar: $uint<8> a32: $uint<32> wdata: $uint<64>)
+//	$out (rdata: $uint<64>)
+
+
+$pipeline $depth 15 $fullrate
+$module [memoryModule]
+$in (r_wbar : $uint<1> addr : $uint<32> data_in : $uint<64> bytemask : $uint<8>)
+$out (data_out : $uint<64>)
+$is
+{
+	MAIN_MEM_REQUEST := ($concat $zero<1> r_wbar bytemask $zero<1> addr $zero<3> data_in)
+	read_from_mem := MAIN_MEM_RESPONSE
+	$split (read_from_mem 1 64) (error data_out)
+
+}
+
+//$module [memoryModelDaemon]
+//$in () $out ()
+//$is
+//{
+//	$branchblock[loop] {
+//		$merge $entry loopback $endmerge
+//		req  := MAIN_MEM_REQUEST
+//		$split (req 1 1 8 36 64) (lock rwbar bmask a36 wdata64)
+//		$call memoryModelC (($bitcast ($uint<8>) rwbar ($slice a36 31 0) wdata64) (rdata64)
+//
+//		$volatile resp := ($concat $zero<1> rdata64)
+//		MAIN_MEM_RESPONSE := resp
+//		$place[loopback]
+//	}
+//}
+

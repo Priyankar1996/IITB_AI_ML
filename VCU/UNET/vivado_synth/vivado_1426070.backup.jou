@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Fri Feb 17 19:07:04 2023
+# Process ID: 1426070
+# Current directory: /home/aiml/IITB_AI_ML/VCU/UNET/vivado_synth
+# Command line: vivado -mode batch -source fpga_synth.tcl
+# Log file: /home/aiml/IITB_AI_ML/VCU/UNET/vivado_synth/vivado.log
+# Journal file: /home/aiml/IITB_AI_ML/VCU/UNET/vivado_synth/vivado.jou
+#-----------------------------------------------------------
+source fpga_synth.tcl

@@ -1,0 +1,14 @@
+$storage sigmoid_table : $array [256] $of $uint<8>
+
+$module [fill_sigmoid_table] $in () $out () $is
+{
+	$branchblock [fill_sig]
+	{
+		$merge $entry loopback
+		$phi cnt := ($bitcast ($uint<9>) 0) $on $entry n_cnt $on loopback
+		$endmerge
+		sigmoid_table[cnt] := read_sigmoid_pipe
+		$if (cnt < 256) $then $place [loopback] $endif
+	}
+}
+

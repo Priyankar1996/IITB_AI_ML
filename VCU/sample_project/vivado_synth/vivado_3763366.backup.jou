@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Wed Feb  1 01:52:53 2023
+# Process ID: 3763366
+# Current directory: /home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth
+# Command line: vivado -mode batch -source ./scripts/program_and_reset.tcl
+# Log file: /home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth/vivado.log
+# Journal file: /home/aiml/IITB_AI_ML/VCU/sample_project/vivado_synth/vivado.jou
+#-----------------------------------------------------------
+source ./scripts/program_and_reset.tcl

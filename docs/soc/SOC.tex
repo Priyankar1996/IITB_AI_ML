@@ -78,7 +78,8 @@ processor driver:
 \item Download image.
 \item Cycle through UNET steps.
 \begin{itemize}
-\item Upload data after each UNET step, and confirm correctness.
+\item Full performance mode: end-to-end processing of an image.
+\item Debug mode: upload data after each UNET step, and confirm correctness.
 \end{itemize}
 \item Upload segmentation, confirm correctness.
 \end{itemize}
@@ -87,12 +88,27 @@ processor driver:
 \frame[containsverbatim]{\frametitle{Performance parameters}
 
 \begin{itemize}
+\item Clock frequency: 100MHz for processor, 125MHz  accelerator + nic, 50 MHz for Xilinx URAM.
 \item Hardware LUT/FF cost.
-\item Time required to download processor program.
-\item Time required to download UNET parameters.
-\item Time requred to download UNET image.
-\item Total time required to complete UNET steps.
-\item Round trip time.
+\begin{itemize}
+\item Processor core.
+\item NIC.
+\item Accelerator. 
+\item Total.
+\end{itemize}
+\item Time required to download processor program (measured on host laptop).
+\item Time required to download UNET parameters (measured on host laptop).
+\item Time requred to download UNET image (measured on host laptop).
+\item Total time required to complete UNET steps (measured inside the SOC).
+\item Round trip time for an image (measured on host laptop).
+\end{itemize}
+}
+
+\frame[containsverbatim]{\frametitle{Planned}
+\begin{itemize}
+\item Use DRAM and run  entire system at 125MHz.
+\item Incorporate multiple engines to increase throughput.
+\item Increase memory bus width to reduce latencies.
 \end{itemize}
 }
 \end{document}

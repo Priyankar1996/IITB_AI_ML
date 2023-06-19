@@ -17,18 +17,21 @@ all: HW
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
-MODULES=src/acc_proc_test/pipes.aa src/acc_proc_test/tester.aa src/accelerator_processor_interface.aa src/readWriteModules.aa src/ConvAll/conv_compiled.aa 
+MODULES=src/acc_proc_test/pipes.aa src/accelerator_processor_interface.aa src/readWriteModules.aa src/ConvAll/conv_compiled.aa src/NIC/* 
 # src/concat/concat.aa src/convTranspose/ct_core.aa
 INCLUDES=-Isrc/ConvAll 
 # -Isrc/concat -Isrc/convTranspose
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
-TOPMODULES=-T systemTOP -T timerDaemon -T accelerator_control_daemon -T accelerator_worker_daemon  -T interrupt_daemon -T accelerator_interrupt_daemon -T tester_control_daemon
+# -T timerDaemon
+TOPMODULES_ACC= -T accelerator_control_daemon -T accelerator_worker_daemon -T accelerator_interrupt_daemon  
+TOPMODULES_NIC= -T ReceiveEngineDaemon -T nicRxFromMacDaemon -T transmitEngineDaemon -T SoftwareRegisterAccessDaemon -T NicRegisterAccessDaemon
+TOPMODULES_P= -T ethernet_programmer
+#TOPMODULES=  -T ReceiveEngineDaemon -T nicRxFromMacDaemon -T transmitEngineDaemon -T SoftwareRegisterAccessDaemon -T NicRegisterAccessDaemon -T ethernet_programmer
 
 # five steps from C to vhdl simulator.
 HW: c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
-C2VHDL : c2llvmbc llvmbc2aa  aalink aa2vc  vc2vhdl
 AA2VHDL: aalink aa2vc vc2vhdl
 AA2C : c2llvmbc llvmbc2aa aalink aa2c aa2cbuild
 
@@ -45,7 +48,7 @@ llvmbc2aa:  prog.opt.o
 # link and optimize
 aalink: src/timer.aa prog.aa $(MODULES)
 	AaPreprocess -I src/ConvAll src/ConvAll/conv_macro.aa -o src/ConvAll/conv_compiled.aa
-	AaLinkExtMem src/timer.aa src/decl.aa $(MODULES) prog.aa | vcFormat > prog.linked.aa
+	AaLinkExtMem prog.aa src/timer.aa src/decl.aa $(MODULES) | vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 
@@ -55,19 +58,16 @@ aa2vc: prog.linked.opt.aa
 
 # vC to VHDL
 vc2vhdl: prog.vc
-	vc2vhdl -S 4 -O -I 8 -a -C -e ahir_system -w -s ghdl $(TOPMODULES) -f prog.vc -L src/lib/AiMlAddons.list
-	vhdlFormat < ahir_system_global_package.unformatted_vhdl > ahir_system_global_package.vhdl
-	vhdlFormat < ahir_system.unformatted_vhdl > ahir_system.vhdl
-	vhdlFormat < ahir_system_test_bench.unformatted_vhdl > ahir_system_test_bench.vhdl
+	vc2vhdl -S 4 -O -I 8 -a -C -e ai_ml_engine -w -s ghdl $(TOPMODULES_ACC) -f prog.vc # -L src/lib/AiMlAddons.list
+	vhdlFormat < ai_ml_engine_global_package.unformatted_vhdl > ai_ml_engine_global_package.vhdl
+	vhdlFormat < ai_ml_engine.unformatted_vhdl > ai_ml_engine.vhdl
+	vc2vhdl -S 4 -O -I 8 -a -C -e nic_system -w -s ghdl $(TOPMODULES_NIC) -f prog.vc # -L src/lib/AiMlAddons.list
+	vhdlFormat < nic_system.unformatted_vhdl > nic_system.vhdl
+	vhdlFormat < nic_system_global_package.unformatted_vhdl > nic_system_global_package.vhdl
+	vc2vhdl -S 4 -O -I 8 -a -C -e ethernet_boot -w -s ghdl $(TOPMODULES_P) -f prog.vc # -L src/lib/AiMlAddons.list
+	vhdlFormat < ethernet_boot.unformatted_vhdl > ethernet_boot.vhdl
+	vhdlFormat < ethernet_boot_global_package.unformatted_vhdl > ethernet_boot_global_package.vhdl
 	rm -f *unformatted_vhdl
-
-aa2c: prog.linked.opt.aa
-	Aa2C $(TOPMODULES) -o aa2c prog.linked.opt.aa
-
-aa2cbuild: aa2c/aa_c_model.c  aa2c/aa_c_model_internal.h aa2c/aa_c_model.h
-	gcc -g -c -DSW -I$(PIPEHANDLER_INCLUDE) -Iaa2c/ aa2c/aa_c_model.c -o aa2c/aa_c_model.o
-	gcc -g -c -DSW -I$(PIPEHANDLER_INCLUDE) -I$(PTHREADUTILS_INCLUDE) -Iaa2c/ -I$(SRC) $(SRC)/testbench.c -o aa2c/testbench.o
-	gcc -g -o testbench_sw aa2c/aa_c_model.o aa2c/testbench.o -L$(PIPEHANDLER_LIB) -lPipeHandler -lpthread -lBitVectors -lSockPipes
 
 clean:
 	rm -rf *.o* *.cf *.*vhdl vhdlCStubs.* *.vcd in_data* out_data* testbench_sw testbench_hw ahir_system_test_bench vhpi.log *.vc *.lso xst *.dot *.aa

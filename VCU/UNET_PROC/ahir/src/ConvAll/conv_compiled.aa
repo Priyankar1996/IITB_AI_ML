@@ -4,8 +4,8 @@ $parameter SMALL_PIPE_DEPTH 16
 $parameter IP_DEPTH 256
 $parameter K_DEPTH 4096
 $parameter N_ROWS_S 2
-$parameter ACC_WIDTH 16
-$parameter DATA_WIDTH 16
+$parameter ACC_WIDTH 32
+$parameter DATA_WIDTH 32
 $parameter ADDRESS_WIDTH 32
 
 $pipe core1_kp1 : $uint<PIPE_WIDTH> $depth INTERMEDIATE_PIPE_DEPTH
@@ -104,12 +104,16 @@ $pipe conv8_kp1 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp2 : $uint<PIPE_WIDTH> $depth K_DEPTH
 $pipe conv8_kp3 : $uint<PIPE_WIDTH> $depth K_DEPTH
 
+$pipe pool_buffer : $uint<PIPE_WIDTH> $depth IP_DEPTH
+$pipe send_to_pool_pipe1 : $uint<PIPE_WIDTH> $depth SMALL_PIPE_DEPTH
+$pipe send_to_pool_pipe2 : $uint<PIPE_WIDTH> $depth SMALL_PIPE_DEPTH
+
 
 // Aa code produced by llvm2aa (version 1.0)
 $parameter NO_ACT 0
 $parameter RELU 1
 
-$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_address_in1 base_address_in2 base_address_k base_address_out : $uint<ADDRESS_WIDTH> scale_val : $uint<32> shift_val pad : $uint<16> pool : $uint<8> activation : $uint<8>) $out() $is
+$module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_address_in1 base_address_in2 base_address_k base_address_out1 base_address_out2 : $uint<ADDRESS_WIDTH> scale_val : $uint<32> shift_val pad : $uint<16> pool : $uint<8> concat : $uint<8> activation : $uint<8>) $out() $is
 {
 	in_8 := (($slice chl_in 2 0) == 0) 
 	out_8 := (($slice chl_out 2 0) == 0)
@@ -120,13 +124,16 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_a
 	chl_in_ceil := ((chl_in + 7)>>3)
 	
 	inCT := (rk == 2)
-	inConcat := (((base_address_in2 [] {ADDRESS_WIDTH - 1}) == 1) & (~inCT))
+	inConcat := ((concat != 0) & (~inCT))
 	in_nCT := (((~inCT) & (~inConcat)) & (~in_8))
 	in_nCT8 := (((~inCT) & (~inConcat)) & in_8)
 	
 	out_pool := (pool [] 0)
-	out_np8 := (out_8 & (~out_pool))
-	out_np := (out_8 ~| out_pool)
+	sBP_pool := (pool [] 1)
+	callPool := (out_pool | sBP_pool)
+	saveFull := ((out_8 & (~out_pool)) | sBP_pool)
+	out_np8 := out_8
+	out_np := (~out_8)
 	
 	// Creating partitions
 	$call Divider (K_DEPTH (chl_in_ceil*ck)) (alpha)
@@ -136,7 +143,7 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_a
 	max_per_part := ($mux cnd_partition (alpha<<3) chl_out)
 	mpp2 := ($mux cnd_partition alpha chl_out_ceil)
 	$call TopMult (($bitcast ($uint<32>) rb) (($bitcast ($uint<32>)  (cb * chl_out_ceil)) >> 1)) (op_size)
-	accelerator_reg[14] := 31
+
 	$parallelblock [topBlocks]
 	{
 		// Note chl_in_ceil = chl_in8 for chl_in being a multiple of 8
@@ -149,17 +156,16 @@ $module [convolutionAll] $in (rb cb rt ct chl_out chl_in rk ck: $uint<16> base_a
 		$guard (in_nCT) $call inputModule (rb rt ct chl_in rk pad parts base_address_in1) ()
 		$guard (in_nCT8) $call inputModule8 (rb ct chl_in_ceil rk pad parts base_address_in1) ()
 		$guard (inCT) $call inputModuleCT (rb ct chl_in_ceil parts base_address_in1) ()
-		$guard (inConcat) $call inputModuleConcat (rb ct chl_in_ceil rk pad parts base_address_in1 (base_address_in2 & _b01111111)) ()
+		$guard (inConcat) $call inputModuleConcat (rb ct chl_in_ceil rk pad parts base_address_in1 base_address_in2) ()
 		
 		$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 		$call accumulator (chl_in_ceil ck op_size) ()
 		
-		$guard (out_np) $call sendModule (rb cb chl_out shift_val scale_val parts max_per_part NO_ACT base_address_out) ()
-		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val scale_val parts mpp2 NO_ACT base_address_out) ()
-		$guard (out_pool) $call sendPool (rb cb chl_out_ceil shift_val scale_val parts mpp2 NO_ACT base_address_out) ()
+		$guard (out_np) $call sendModule (rb cb chl_out shift_val scale_val parts max_per_part activation base_address_out1) ()
+		$guard (out_np8) $call sendModule8 (rb cb chl_out_ceil shift_val scale_val parts mpp2 activation base_address_out1 callPool saveFull) ()
+		$guard (callPool) $call sendPool (rb cb chl_out_ceil parts mpp2 base_address_out2) ()
 	}
-
-	accelerator_reg[13] := 21
+	//debug_output_pipe := 70
 }
 
 $opaque $module [TopMult] $in (in1 : $uint<32> in2 : $uint<32>) $out (output : $uint<32>)
@@ -937,7 +943,7 @@ $is
 
 
 // Access the input tensor and write to iput pipe
-$module [inputModule8]
+	$module [inputModule8]
 $in(row_in ct chl_in rk pad: $uint<16> num_parts : $uint<8> base_address : $uint<ADDRESS_WIDTH>)
 $out()
 $is
@@ -975,11 +981,14 @@ $is
 
 		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
 		$volatile n_row1 := ($mux continue_flag1 update_row 0)
-		$volatile n_address := ($mux continue_flag1 (address + ($mux next_row m_factor ($mux mc_lt_p 0 1))) addr_init)
+		$volatile n_address := ($mux continue_flag1 (address + (($mux next_row m_factor 0) + ($mux mc_lt_p 0 1))) addr_init)
 		$volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
 
-		$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
-		$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
+		$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 > ((row_in + 1) - pad))))
+		$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 > (row_in- pad))))
+
+		//$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
+		//$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
 		//$volatile p3_zero := (mc_lt_p | (((row1+2) < pad) | (row1 >= ((row_in + 1)- pad))))
 		//$volatile p4_zero := (mc_lt_p | (((row1+3) < pad) | (row1 >= (row_in - pad))))
 		$volatile addr2 := (address+ m_factor)
@@ -1065,8 +1074,8 @@ $is
 	row_size_total := ($bitcast ($uint<32>) (ct_new * chl_in))
 	$volatile ct1 := (ct >> 1)
 	rs1 := (row_size_total >> 1)
-	p_chl_in := ($bitcast ($uint<32>) (pad*chl_in))
-	m_factor := ($bitcast ($uint<32>) (ct1*chl_in))
+	cs1 := (chl_in >> 1)
+	m_factor := ($bitcast ($uint<32>) (ct*cs1))
 	m2_factor := (m_factor << 1)
 	m3_factor := (m2_factor+m_factor)
 	addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
@@ -1077,45 +1086,41 @@ $is
 		$phi address1 := addr_init $on $entry n_address1 $on $loopback
 		$phi address2 := addr_init $on $entry n_address2 $on $loopback
 		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
-		$phi mycounter := ($bitcast ($uint<32>) row_size_total) $on $entry n_mycounter $on $loopback
+		$phi col := ($bitcast ($uint<16>) 0) $on $entry n_col $on $loopback
+		$phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
 		$phi part_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on $loopback
 		$endmerge
 
-		// $call timer (4) (time_pipe)
-		$volatile next_row :=  (mycounter == 1)
-		$volatile tmp_cnt := (mycounter - 1)
-
-		$volatile inp1 := (mycounter > rs1)
+		$volatile chl_done := (chl == (chl_in - 1))
+		$volatile col_done := (col == (ct_new - 1))
+		$volatile next_row := (col_done & chl_done)
+		$volatile n_chl := ($mux chl_done  0 (chl+1)) 
+		$volatile n_col := ($mux next_row 0 (col + ($mux chl_done 1 0)))
+		$volatile inp1 := (chl < cs1)
+		$volatile inp1_done := (chl == (cs1-1))
 
 		$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
 		$volatile continue_flag1 := (update_row < (row_in+2))
 
-		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
-		$volatile update_val := ($mux next_row m_factor ($mux mc_lt_p 0 1))
+		$volatile mc_lt_p := ((col < pad) | (col >= (ct_new - pad))) 
+		$volatile tmp_sum := ($mux mc_lt_p 0 1)
+		$volatile update_val1 := (($mux (col_done & inp1_done) m_factor 0) + tmp_sum)
+		$volatile update_val2 := (($mux (col_done & chl_done) m_factor 0) + tmp_sum)
 		$volatile address := ($mux inp1 address1 address2)
 
-		$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
-		$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
-		//$volatile p3_zero := (mc_lt_p | (((row1+2) < pad) | (row1 >= ((row_in + 1)- pad))))
-		//$volatile p4_zero := (mc_lt_p | (((row1+3) < pad) | (row1 >= (row_in - pad))))
+		$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 > ((row_in + 1) - pad))))
+		$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 > (row_in- pad))))
 		$volatile addr2 := (address+ m_factor)
-		//$volatile addr3 := (address+ m2_factor)
-		//$volatile addr4 := (address+ m3_factor)
 		$volatile base_address := ($mux inp1 base_address1 base_address2)
 
 		$guard (~p1_zero) $call readModule_convolution (base_address address) (val1)
 		$guard (~p2_zero) $call readModule_convolution (base_address addr2) (val2)
-		//$guard (~p3_zero) $call readModule_convolution (base_address addr3) (val3)
-		//$guard (~p4_zero) $call readModule_convolution (base_address addr4) (val4)
 		prev_core_ip1 := ($mux p1_zero 0 val1)
 		prev_core_ip2 := ($mux p2_zero 0 val2)
-		//core_ip3 := ($mux p3_zero 0 val3)
-		//$guard (mode_3) core_ip4 := ($mux p4_zero 0 val4)
 
-		$volatile n_mycounter := ($mux next_row row_size_total tmp_cnt ) 
 		$volatile n_row1 := ($mux continue_flag1 update_row 0)
-		$volatile n_address1 := ($mux inp1 ($mux continue_flag1 (address1 + update_val) addr_init) address1)
-		$volatile n_address2 := ($mux inp1 address2 ($mux continue_flag1 (address2 + update_val) addr_init))
+		$volatile n_address1 := ($mux continue_flag1 ($mux inp1 (address1 + update_val1) address1)  addr_init)
+		$volatile n_address2 := ($mux continue_flag1 ($mux inp1 address2 (address2 + update_val2))  addr_init)
 		$volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
 
 		$while (continue_flag1 | (part_cnt < num_parts))
@@ -1124,6 +1129,14 @@ $is
 	}
 }
 
+
+$pipeline $depth 15 $fullrate
+$operator $module [multiplier] $in (in1 in2 : $int<16>) $out (output : $int<ACC_WIDTH>) $is
+{
+
+        tmp := ($cast ($int<ACC_WIDTH>) (in1 * in2))
+        output := tmp
+}
 
 // Perform convolution operation
 $module [convolveCore ]
@@ -1315,22 +1328,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_1_1_1 := ($cast ($int<16>) (kval_1_1_1 * ival1_1 ))
-		mul_val_1_2_1 := ($cast ($int<16>) (kval_1_2_1 * ival2_1 ))
-		mul_val_1_3_1 := ($cast ($int<16>) (kval_1_3_1 * ival3_1 ))
-		mul_val_1_4_1 := ($cast ($int<16>) (kval_1_4_1 * ival4_1 ))
-		mul_val_1_5_1 := ($cast ($int<16>) (kval_1_5_1 * ival5_1 ))
-		mul_val_1_6_1 := ($cast ($int<16>) (kval_1_6_1 * ival6_1 ))
-		mul_val_1_7_1 := ($cast ($int<16>) (kval_1_7_1 * ival7_1 ))
-		mul_val_1_8_1 := ($cast ($int<16>) (kval_1_8_1 * ival8_1 ))
-//		$call multiplier1 (ival1_1 kval_1_1_1 ) ( mul_val_1_1_1 )
-//		$call multiplier1 (ival2_1 kval_1_2_1 ) ( mul_val_1_2_1 )
-//		$call multiplier1 (ival3_1 kval_1_3_1 ) ( mul_val_1_3_1 )
-//		$call multiplier1 (ival4_1 kval_1_4_1 ) ( mul_val_1_4_1 )
-//		$call multiplier1 (ival5_1 kval_1_5_1 ) ( mul_val_1_5_1 )
-//		$call multiplier1 (ival6_1 kval_1_6_1 ) ( mul_val_1_6_1 )
-//		$call multiplier1 (ival7_1 kval_1_7_1 ) ( mul_val_1_7_1 )
-//		$call multiplier1 (ival8_1 kval_1_8_1 ) ( mul_val_1_8_1 )
+//		mul_val_1_1_1 := ($cast ($int<16>) (kval_1_1_1 * ival1_1 ))
+//		mul_val_1_2_1 := ($cast ($int<16>) (kval_1_2_1 * ival2_1 ))
+//		mul_val_1_3_1 := ($cast ($int<16>) (kval_1_3_1 * ival3_1 ))
+//		mul_val_1_4_1 := ($cast ($int<16>) (kval_1_4_1 * ival4_1 ))
+//		mul_val_1_5_1 := ($cast ($int<16>) (kval_1_5_1 * ival5_1 ))
+//		mul_val_1_6_1 := ($cast ($int<16>) (kval_1_6_1 * ival6_1 ))
+//		mul_val_1_7_1 := ($cast ($int<16>) (kval_1_7_1 * ival7_1 ))
+//		mul_val_1_8_1 := ($cast ($int<16>) (kval_1_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_1_1_1 )) ( mul_val_1_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_1_2_1 )) ( mul_val_1_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_1_3_1 )) ( mul_val_1_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_1_4_1 )) ( mul_val_1_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_1_5_1 )) ( mul_val_1_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_1_6_1 )) ( mul_val_1_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_1_7_1 )) ( mul_val_1_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_1_8_1 )) ( mul_val_1_8_1 )
 
 		t_acc_val_1_1 := (((mul_val_1_1_1 + mul_val_1_2_1 ) + (mul_val_1_3_1 + mul_val_1_4_1 )) + ((mul_val_1_5_1 + mul_val_1_6_1 ) + (mul_val_1_7_1 + mul_val_1_8_1 )))
 		
@@ -1340,22 +1353,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_1_1_4 := ($cast ($int<16>) (kval_1_1_1 * ival1_2 ))
-		mul_val_1_2_4 := ($cast ($int<16>) (kval_1_2_1 * ival2_2 ))
-		mul_val_1_3_4 := ($cast ($int<16>) (kval_1_3_1 * ival3_2 ))
-		mul_val_1_4_4 := ($cast ($int<16>) (kval_1_4_1 * ival4_2 ))
-		mul_val_1_5_4 := ($cast ($int<16>) (kval_1_5_1 * ival5_2 ))
-		mul_val_1_6_4 := ($cast ($int<16>) (kval_1_6_1 * ival6_2 ))
-		mul_val_1_7_4 := ($cast ($int<16>) (kval_1_7_1 * ival7_2 ))
-		mul_val_1_8_4 := ($cast ($int<16>) (kval_1_8_1 * ival8_2 ))
-//		$call multiplier1 (ival1_2 kval_1_1_1 ) ( mul_val_1_1_4 )
-//		$call multiplier1 (ival2_2 kval_1_2_1 ) ( mul_val_1_2_4 )
-//		$call multiplier1 (ival3_2 kval_1_3_1 ) ( mul_val_1_3_4 )
-//		$call multiplier1 (ival4_2 kval_1_4_1 ) ( mul_val_1_4_4 )
-//		$call multiplier1 (ival5_2 kval_1_5_1 ) ( mul_val_1_5_4 )
-//		$call multiplier1 (ival6_2 kval_1_6_1 ) ( mul_val_1_6_4 )
-//		$call multiplier1 (ival7_2 kval_1_7_1 ) ( mul_val_1_7_4 )
-//		$call multiplier1 (ival8_2 kval_1_8_1 ) ( mul_val_1_8_4 )
+//		mul_val_1_1_4 := ($cast ($int<16>) (kval_1_1_1 * ival1_2 ))
+//		mul_val_1_2_4 := ($cast ($int<16>) (kval_1_2_1 * ival2_2 ))
+//		mul_val_1_3_4 := ($cast ($int<16>) (kval_1_3_1 * ival3_2 ))
+//		mul_val_1_4_4 := ($cast ($int<16>) (kval_1_4_1 * ival4_2 ))
+//		mul_val_1_5_4 := ($cast ($int<16>) (kval_1_5_1 * ival5_2 ))
+//		mul_val_1_6_4 := ($cast ($int<16>) (kval_1_6_1 * ival6_2 ))
+//		mul_val_1_7_4 := ($cast ($int<16>) (kval_1_7_1 * ival7_2 ))
+//		mul_val_1_8_4 := ($cast ($int<16>) (kval_1_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_1_1_1 )) ( mul_val_1_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_1_2_1 )) ( mul_val_1_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_1_3_1 )) ( mul_val_1_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_1_4_1 )) ( mul_val_1_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_1_5_1 )) ( mul_val_1_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_1_6_1 )) ( mul_val_1_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_1_7_1 )) ( mul_val_1_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_1_8_1 )) ( mul_val_1_8_4 )
 
 		t_acc_val_1_4 := (((mul_val_1_1_4 + mul_val_1_2_4 ) + (mul_val_1_3_4 + mul_val_1_4_4 )) + ((mul_val_1_5_4 + mul_val_1_6_4 ) + (mul_val_1_7_4 + mul_val_1_8_4 )))
 		
@@ -1384,22 +1397,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_1_1_2 := ($cast ($int<16>) (kval_1_1_2 * ival1_2 ))
-		mul_val_1_2_2 := ($cast ($int<16>) (kval_1_2_2 * ival2_2 ))
-		mul_val_1_3_2 := ($cast ($int<16>) (kval_1_3_2 * ival3_2 ))
-		mul_val_1_4_2 := ($cast ($int<16>) (kval_1_4_2 * ival4_2 ))
-		mul_val_1_5_2 := ($cast ($int<16>) (kval_1_5_2 * ival5_2 ))
-		mul_val_1_6_2 := ($cast ($int<16>) (kval_1_6_2 * ival6_2 ))
-		mul_val_1_7_2 := ($cast ($int<16>) (kval_1_7_2 * ival7_2 ))
-		mul_val_1_8_2 := ($cast ($int<16>) (kval_1_8_2 * ival8_2 ))
-//		$call multiplier1 (ival1_2 kval_1_1_2 ) ( mul_val_1_1_2 )
-//		$call multiplier1 (ival2_2 kval_1_2_2 ) ( mul_val_1_2_2 )
-//		$call multiplier1 (ival3_2 kval_1_3_2 ) ( mul_val_1_3_2 )
-//		$call multiplier1 (ival4_2 kval_1_4_2 ) ( mul_val_1_4_2 )
-//		$call multiplier1 (ival5_2 kval_1_5_2 ) ( mul_val_1_5_2 )
-//		$call multiplier1 (ival6_2 kval_1_6_2 ) ( mul_val_1_6_2 )
-//		$call multiplier1 (ival7_2 kval_1_7_2 ) ( mul_val_1_7_2 )
-//		$call multiplier1 (ival8_2 kval_1_8_2 ) ( mul_val_1_8_2 )
+//		mul_val_1_1_2 := ($cast ($int<16>) (kval_1_1_2 * ival1_2 ))
+//		mul_val_1_2_2 := ($cast ($int<16>) (kval_1_2_2 * ival2_2 ))
+//		mul_val_1_3_2 := ($cast ($int<16>) (kval_1_3_2 * ival3_2 ))
+//		mul_val_1_4_2 := ($cast ($int<16>) (kval_1_4_2 * ival4_2 ))
+//		mul_val_1_5_2 := ($cast ($int<16>) (kval_1_5_2 * ival5_2 ))
+//		mul_val_1_6_2 := ($cast ($int<16>) (kval_1_6_2 * ival6_2 ))
+//		mul_val_1_7_2 := ($cast ($int<16>) (kval_1_7_2 * ival7_2 ))
+//		mul_val_1_8_2 := ($cast ($int<16>) (kval_1_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_1_1_2 )) ( mul_val_1_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_1_2_2 )) ( mul_val_1_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_1_3_2 )) ( mul_val_1_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_1_4_2 )) ( mul_val_1_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_1_5_2 )) ( mul_val_1_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_1_6_2 )) ( mul_val_1_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_1_7_2 )) ( mul_val_1_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_1_8_2 )) ( mul_val_1_8_2 )
 
 		t_acc_val_1_2 := (((mul_val_1_1_2 + mul_val_1_2_2 ) + (mul_val_1_3_2 + mul_val_1_4_2 )) + ((mul_val_1_5_2 + mul_val_1_6_2 ) + (mul_val_1_7_2 + mul_val_1_8_2 )))
 		
@@ -1409,22 +1422,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_1_1_5 := ($cast ($int<16>) (kval_1_1_2 * ival1_3 ))
-		mul_val_1_2_5 := ($cast ($int<16>) (kval_1_2_2 * ival2_3 ))
-		mul_val_1_3_5 := ($cast ($int<16>) (kval_1_3_2 * ival3_3 ))
-		mul_val_1_4_5 := ($cast ($int<16>) (kval_1_4_2 * ival4_3 ))
-		mul_val_1_5_5 := ($cast ($int<16>) (kval_1_5_2 * ival5_3 ))
-		mul_val_1_6_5 := ($cast ($int<16>) (kval_1_6_2 * ival6_3 ))
-		mul_val_1_7_5 := ($cast ($int<16>) (kval_1_7_2 * ival7_3 ))
-		mul_val_1_8_5 := ($cast ($int<16>) (kval_1_8_2 * ival8_3 ))
-//		$call multiplier1 (ival1_3 kval_1_1_2 ) ( mul_val_1_1_5 )
-//		$call multiplier1 (ival2_3 kval_1_2_2 ) ( mul_val_1_2_5 )
-//		$call multiplier1 (ival3_3 kval_1_3_2 ) ( mul_val_1_3_5 )
-//		$call multiplier1 (ival4_3 kval_1_4_2 ) ( mul_val_1_4_5 )
-//		$call multiplier1 (ival5_3 kval_1_5_2 ) ( mul_val_1_5_5 )
-//		$call multiplier1 (ival6_3 kval_1_6_2 ) ( mul_val_1_6_5 )
-//		$call multiplier1 (ival7_3 kval_1_7_2 ) ( mul_val_1_7_5 )
-//		$call multiplier1 (ival8_3 kval_1_8_2 ) ( mul_val_1_8_5 )
+//		mul_val_1_1_5 := ($cast ($int<16>) (kval_1_1_2 * ival1_3 ))
+//		mul_val_1_2_5 := ($cast ($int<16>) (kval_1_2_2 * ival2_3 ))
+//		mul_val_1_3_5 := ($cast ($int<16>) (kval_1_3_2 * ival3_3 ))
+//		mul_val_1_4_5 := ($cast ($int<16>) (kval_1_4_2 * ival4_3 ))
+//		mul_val_1_5_5 := ($cast ($int<16>) (kval_1_5_2 * ival5_3 ))
+//		mul_val_1_6_5 := ($cast ($int<16>) (kval_1_6_2 * ival6_3 ))
+//		mul_val_1_7_5 := ($cast ($int<16>) (kval_1_7_2 * ival7_3 ))
+//		mul_val_1_8_5 := ($cast ($int<16>) (kval_1_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_1_1_2 )) ( mul_val_1_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_1_2_2 )) ( mul_val_1_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_1_3_2 )) ( mul_val_1_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_1_4_2 )) ( mul_val_1_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_1_5_2 )) ( mul_val_1_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_1_6_2 )) ( mul_val_1_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_1_7_2 )) ( mul_val_1_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_1_8_2 )) ( mul_val_1_8_5 )
 
 		t_acc_val_1_5 := (((mul_val_1_1_5 + mul_val_1_2_5 ) + (mul_val_1_3_5 + mul_val_1_4_5 )) + ((mul_val_1_5_5 + mul_val_1_6_5 ) + (mul_val_1_7_5 + mul_val_1_8_5 )))
 		
@@ -1457,22 +1470,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_1_1_3 := ($cast ($int<16>) (kval_1_1_3 * ival1_3 ))
-		mul_val_1_2_3 := ($cast ($int<16>) (kval_1_2_3 * ival2_3 ))
-		mul_val_1_3_3 := ($cast ($int<16>) (kval_1_3_3 * ival3_3 ))
-		mul_val_1_4_3 := ($cast ($int<16>) (kval_1_4_3 * ival4_3 ))
-		mul_val_1_5_3 := ($cast ($int<16>) (kval_1_5_3 * ival5_3 ))
-		mul_val_1_6_3 := ($cast ($int<16>) (kval_1_6_3 * ival6_3 ))
-		mul_val_1_7_3 := ($cast ($int<16>) (kval_1_7_3 * ival7_3 ))
-		mul_val_1_8_3 := ($cast ($int<16>) (kval_1_8_3 * ival8_3 ))
-//		$call multiplier1 (ival1_3 kval_1_1_3 ) ( mul_val_1_1_3 )
-//		$call multiplier1 (ival2_3 kval_1_2_3 ) ( mul_val_1_2_3 )
-//		$call multiplier1 (ival3_3 kval_1_3_3 ) ( mul_val_1_3_3 )
-//		$call multiplier1 (ival4_3 kval_1_4_3 ) ( mul_val_1_4_3 )
-//		$call multiplier1 (ival5_3 kval_1_5_3 ) ( mul_val_1_5_3 )
-//		$call multiplier1 (ival6_3 kval_1_6_3 ) ( mul_val_1_6_3 )
-//		$call multiplier1 (ival7_3 kval_1_7_3 ) ( mul_val_1_7_3 )
-//		$call multiplier1 (ival8_3 kval_1_8_3 ) ( mul_val_1_8_3 )
+//		mul_val_1_1_3 := ($cast ($int<16>) (kval_1_1_3 * ival1_3 ))
+//		mul_val_1_2_3 := ($cast ($int<16>) (kval_1_2_3 * ival2_3 ))
+//		mul_val_1_3_3 := ($cast ($int<16>) (kval_1_3_3 * ival3_3 ))
+//		mul_val_1_4_3 := ($cast ($int<16>) (kval_1_4_3 * ival4_3 ))
+//		mul_val_1_5_3 := ($cast ($int<16>) (kval_1_5_3 * ival5_3 ))
+//		mul_val_1_6_3 := ($cast ($int<16>) (kval_1_6_3 * ival6_3 ))
+//		mul_val_1_7_3 := ($cast ($int<16>) (kval_1_7_3 * ival7_3 ))
+//		mul_val_1_8_3 := ($cast ($int<16>) (kval_1_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_1_1_3 )) ( mul_val_1_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_1_2_3 )) ( mul_val_1_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_1_3_3 )) ( mul_val_1_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_1_4_3 )) ( mul_val_1_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_1_5_3 )) ( mul_val_1_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_1_6_3 )) ( mul_val_1_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_1_7_3 )) ( mul_val_1_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_1_8_3 )) ( mul_val_1_8_3 )
 
 		t_acc_val_1_3 := (((mul_val_1_1_3 + mul_val_1_2_3 ) + (mul_val_1_3_3 + mul_val_1_4_3 )) + ((mul_val_1_5_3 + mul_val_1_6_3 ) + (mul_val_1_7_3 + mul_val_1_8_3 )))
 		
@@ -1482,22 +1495,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_1_1_6 := ($cast ($int<16>) (kval_1_1_3 * ival1_4 ))
-		mul_val_1_2_6 := ($cast ($int<16>) (kval_1_2_3 * ival2_4 ))
-		mul_val_1_3_6 := ($cast ($int<16>) (kval_1_3_3 * ival3_4 ))
-		mul_val_1_4_6 := ($cast ($int<16>) (kval_1_4_3 * ival4_4 ))
-		mul_val_1_5_6 := ($cast ($int<16>) (kval_1_5_3 * ival5_4 ))
-		mul_val_1_6_6 := ($cast ($int<16>) (kval_1_6_3 * ival6_4 ))
-		mul_val_1_7_6 := ($cast ($int<16>) (kval_1_7_3 * ival7_4 ))
-		mul_val_1_8_6 := ($cast ($int<16>) (kval_1_8_3 * ival8_4 ))
-//		$call multiplier1 (ival1_4 kval_1_1_3 ) ( mul_val_1_1_6 )
-//		$call multiplier1 (ival2_4 kval_1_2_3 ) ( mul_val_1_2_6 )
-//		$call multiplier1 (ival3_4 kval_1_3_3 ) ( mul_val_1_3_6 )
-//		$call multiplier1 (ival4_4 kval_1_4_3 ) ( mul_val_1_4_6 )
-//		$call multiplier1 (ival5_4 kval_1_5_3 ) ( mul_val_1_5_6 )
-//		$call multiplier1 (ival6_4 kval_1_6_3 ) ( mul_val_1_6_6 )
-//		$call multiplier1 (ival7_4 kval_1_7_3 ) ( mul_val_1_7_6 )
-//		$call multiplier1 (ival8_4 kval_1_8_3 ) ( mul_val_1_8_6 )
+//		mul_val_1_1_6 := ($cast ($int<16>) (kval_1_1_3 * ival1_4 ))
+//		mul_val_1_2_6 := ($cast ($int<16>) (kval_1_2_3 * ival2_4 ))
+//		mul_val_1_3_6 := ($cast ($int<16>) (kval_1_3_3 * ival3_4 ))
+//		mul_val_1_4_6 := ($cast ($int<16>) (kval_1_4_3 * ival4_4 ))
+//		mul_val_1_5_6 := ($cast ($int<16>) (kval_1_5_3 * ival5_4 ))
+//		mul_val_1_6_6 := ($cast ($int<16>) (kval_1_6_3 * ival6_4 ))
+//		mul_val_1_7_6 := ($cast ($int<16>) (kval_1_7_3 * ival7_4 ))
+//		mul_val_1_8_6 := ($cast ($int<16>) (kval_1_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_1_1_3 )) ( mul_val_1_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_1_2_3 )) ( mul_val_1_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_1_3_3 )) ( mul_val_1_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_1_4_3 )) ( mul_val_1_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_1_5_3 )) ( mul_val_1_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_1_6_3 )) ( mul_val_1_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_1_7_3 )) ( mul_val_1_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_1_8_3 )) ( mul_val_1_8_6 )
 
 		t_acc_val_1_6 := (((mul_val_1_1_6 + mul_val_1_2_6 ) + (mul_val_1_3_6 + mul_val_1_4_6 )) + ((mul_val_1_5_6 + mul_val_1_6_6 ) + (mul_val_1_7_6 + mul_val_1_8_6 )))
 		
@@ -1544,22 +1557,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_2_1_1 := ($cast ($int<16>) (kval_2_1_1 * ival1_1 ))
-		mul_val_2_2_1 := ($cast ($int<16>) (kval_2_2_1 * ival2_1 ))
-		mul_val_2_3_1 := ($cast ($int<16>) (kval_2_3_1 * ival3_1 ))
-		mul_val_2_4_1 := ($cast ($int<16>) (kval_2_4_1 * ival4_1 ))
-		mul_val_2_5_1 := ($cast ($int<16>) (kval_2_5_1 * ival5_1 ))
-		mul_val_2_6_1 := ($cast ($int<16>) (kval_2_6_1 * ival6_1 ))
-		mul_val_2_7_1 := ($cast ($int<16>) (kval_2_7_1 * ival7_1 ))
-		mul_val_2_8_1 := ($cast ($int<16>) (kval_2_8_1 * ival8_1 ))
-//		$call multiplier2 (ival1_1 kval_2_1_1 ) ( mul_val_2_1_1 )
-//		$call multiplier2 (ival2_1 kval_2_2_1 ) ( mul_val_2_2_1 )
-//		$call multiplier2 (ival3_1 kval_2_3_1 ) ( mul_val_2_3_1 )
-//		$call multiplier2 (ival4_1 kval_2_4_1 ) ( mul_val_2_4_1 )
-//		$call multiplier2 (ival5_1 kval_2_5_1 ) ( mul_val_2_5_1 )
-//		$call multiplier2 (ival6_1 kval_2_6_1 ) ( mul_val_2_6_1 )
-//		$call multiplier2 (ival7_1 kval_2_7_1 ) ( mul_val_2_7_1 )
-//		$call multiplier2 (ival8_1 kval_2_8_1 ) ( mul_val_2_8_1 )
+//		mul_val_2_1_1 := ($cast ($int<16>) (kval_2_1_1 * ival1_1 ))
+//		mul_val_2_2_1 := ($cast ($int<16>) (kval_2_2_1 * ival2_1 ))
+//		mul_val_2_3_1 := ($cast ($int<16>) (kval_2_3_1 * ival3_1 ))
+//		mul_val_2_4_1 := ($cast ($int<16>) (kval_2_4_1 * ival4_1 ))
+//		mul_val_2_5_1 := ($cast ($int<16>) (kval_2_5_1 * ival5_1 ))
+//		mul_val_2_6_1 := ($cast ($int<16>) (kval_2_6_1 * ival6_1 ))
+//		mul_val_2_7_1 := ($cast ($int<16>) (kval_2_7_1 * ival7_1 ))
+//		mul_val_2_8_1 := ($cast ($int<16>) (kval_2_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_2_1_1 )) ( mul_val_2_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_2_2_1 )) ( mul_val_2_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_2_3_1 )) ( mul_val_2_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_2_4_1 )) ( mul_val_2_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_2_5_1 )) ( mul_val_2_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_2_6_1 )) ( mul_val_2_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_2_7_1 )) ( mul_val_2_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_2_8_1 )) ( mul_val_2_8_1 )
 
 		t_acc_val_2_1 := (((mul_val_2_1_1 + mul_val_2_2_1 ) + (mul_val_2_3_1 + mul_val_2_4_1 )) + ((mul_val_2_5_1 + mul_val_2_6_1 ) + (mul_val_2_7_1 + mul_val_2_8_1 )))
 		
@@ -1569,22 +1582,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_2_1_4 := ($cast ($int<16>) (kval_2_1_1 * ival1_2 ))
-		mul_val_2_2_4 := ($cast ($int<16>) (kval_2_2_1 * ival2_2 ))
-		mul_val_2_3_4 := ($cast ($int<16>) (kval_2_3_1 * ival3_2 ))
-		mul_val_2_4_4 := ($cast ($int<16>) (kval_2_4_1 * ival4_2 ))
-		mul_val_2_5_4 := ($cast ($int<16>) (kval_2_5_1 * ival5_2 ))
-		mul_val_2_6_4 := ($cast ($int<16>) (kval_2_6_1 * ival6_2 ))
-		mul_val_2_7_4 := ($cast ($int<16>) (kval_2_7_1 * ival7_2 ))
-		mul_val_2_8_4 := ($cast ($int<16>) (kval_2_8_1 * ival8_2 ))
-//		$call multiplier2 (ival1_2 kval_2_1_1 ) ( mul_val_2_1_4 )
-//		$call multiplier2 (ival2_2 kval_2_2_1 ) ( mul_val_2_2_4 )
-//		$call multiplier2 (ival3_2 kval_2_3_1 ) ( mul_val_2_3_4 )
-//		$call multiplier2 (ival4_2 kval_2_4_1 ) ( mul_val_2_4_4 )
-//		$call multiplier2 (ival5_2 kval_2_5_1 ) ( mul_val_2_5_4 )
-//		$call multiplier2 (ival6_2 kval_2_6_1 ) ( mul_val_2_6_4 )
-//		$call multiplier2 (ival7_2 kval_2_7_1 ) ( mul_val_2_7_4 )
-//		$call multiplier2 (ival8_2 kval_2_8_1 ) ( mul_val_2_8_4 )
+//		mul_val_2_1_4 := ($cast ($int<16>) (kval_2_1_1 * ival1_2 ))
+//		mul_val_2_2_4 := ($cast ($int<16>) (kval_2_2_1 * ival2_2 ))
+//		mul_val_2_3_4 := ($cast ($int<16>) (kval_2_3_1 * ival3_2 ))
+//		mul_val_2_4_4 := ($cast ($int<16>) (kval_2_4_1 * ival4_2 ))
+//		mul_val_2_5_4 := ($cast ($int<16>) (kval_2_5_1 * ival5_2 ))
+//		mul_val_2_6_4 := ($cast ($int<16>) (kval_2_6_1 * ival6_2 ))
+//		mul_val_2_7_4 := ($cast ($int<16>) (kval_2_7_1 * ival7_2 ))
+//		mul_val_2_8_4 := ($cast ($int<16>) (kval_2_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_2_1_1 )) ( mul_val_2_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_2_2_1 )) ( mul_val_2_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_2_3_1 )) ( mul_val_2_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_2_4_1 )) ( mul_val_2_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_2_5_1 )) ( mul_val_2_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_2_6_1 )) ( mul_val_2_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_2_7_1 )) ( mul_val_2_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_2_8_1 )) ( mul_val_2_8_4 )
 
 		t_acc_val_2_4 := (((mul_val_2_1_4 + mul_val_2_2_4 ) + (mul_val_2_3_4 + mul_val_2_4_4 )) + ((mul_val_2_5_4 + mul_val_2_6_4 ) + (mul_val_2_7_4 + mul_val_2_8_4 )))
 		
@@ -1613,22 +1626,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_2_1_2 := ($cast ($int<16>) (kval_2_1_2 * ival1_2 ))
-		mul_val_2_2_2 := ($cast ($int<16>) (kval_2_2_2 * ival2_2 ))
-		mul_val_2_3_2 := ($cast ($int<16>) (kval_2_3_2 * ival3_2 ))
-		mul_val_2_4_2 := ($cast ($int<16>) (kval_2_4_2 * ival4_2 ))
-		mul_val_2_5_2 := ($cast ($int<16>) (kval_2_5_2 * ival5_2 ))
-		mul_val_2_6_2 := ($cast ($int<16>) (kval_2_6_2 * ival6_2 ))
-		mul_val_2_7_2 := ($cast ($int<16>) (kval_2_7_2 * ival7_2 ))
-		mul_val_2_8_2 := ($cast ($int<16>) (kval_2_8_2 * ival8_2 ))
-//		$call multiplier2 (ival1_2 kval_2_1_2 ) ( mul_val_2_1_2 )
-//		$call multiplier2 (ival2_2 kval_2_2_2 ) ( mul_val_2_2_2 )
-//		$call multiplier2 (ival3_2 kval_2_3_2 ) ( mul_val_2_3_2 )
-//		$call multiplier2 (ival4_2 kval_2_4_2 ) ( mul_val_2_4_2 )
-//		$call multiplier2 (ival5_2 kval_2_5_2 ) ( mul_val_2_5_2 )
-//		$call multiplier2 (ival6_2 kval_2_6_2 ) ( mul_val_2_6_2 )
-//		$call multiplier2 (ival7_2 kval_2_7_2 ) ( mul_val_2_7_2 )
-//		$call multiplier2 (ival8_2 kval_2_8_2 ) ( mul_val_2_8_2 )
+//		mul_val_2_1_2 := ($cast ($int<16>) (kval_2_1_2 * ival1_2 ))
+//		mul_val_2_2_2 := ($cast ($int<16>) (kval_2_2_2 * ival2_2 ))
+//		mul_val_2_3_2 := ($cast ($int<16>) (kval_2_3_2 * ival3_2 ))
+//		mul_val_2_4_2 := ($cast ($int<16>) (kval_2_4_2 * ival4_2 ))
+//		mul_val_2_5_2 := ($cast ($int<16>) (kval_2_5_2 * ival5_2 ))
+//		mul_val_2_6_2 := ($cast ($int<16>) (kval_2_6_2 * ival6_2 ))
+//		mul_val_2_7_2 := ($cast ($int<16>) (kval_2_7_2 * ival7_2 ))
+//		mul_val_2_8_2 := ($cast ($int<16>) (kval_2_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_2_1_2 )) ( mul_val_2_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_2_2_2 )) ( mul_val_2_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_2_3_2 )) ( mul_val_2_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_2_4_2 )) ( mul_val_2_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_2_5_2 )) ( mul_val_2_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_2_6_2 )) ( mul_val_2_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_2_7_2 )) ( mul_val_2_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_2_8_2 )) ( mul_val_2_8_2 )
 
 		t_acc_val_2_2 := (((mul_val_2_1_2 + mul_val_2_2_2 ) + (mul_val_2_3_2 + mul_val_2_4_2 )) + ((mul_val_2_5_2 + mul_val_2_6_2 ) + (mul_val_2_7_2 + mul_val_2_8_2 )))
 		
@@ -1638,22 +1651,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_2_1_5 := ($cast ($int<16>) (kval_2_1_2 * ival1_3 ))
-		mul_val_2_2_5 := ($cast ($int<16>) (kval_2_2_2 * ival2_3 ))
-		mul_val_2_3_5 := ($cast ($int<16>) (kval_2_3_2 * ival3_3 ))
-		mul_val_2_4_5 := ($cast ($int<16>) (kval_2_4_2 * ival4_3 ))
-		mul_val_2_5_5 := ($cast ($int<16>) (kval_2_5_2 * ival5_3 ))
-		mul_val_2_6_5 := ($cast ($int<16>) (kval_2_6_2 * ival6_3 ))
-		mul_val_2_7_5 := ($cast ($int<16>) (kval_2_7_2 * ival7_3 ))
-		mul_val_2_8_5 := ($cast ($int<16>) (kval_2_8_2 * ival8_3 ))
-//		$call multiplier2 (ival1_3 kval_2_1_2 ) ( mul_val_2_1_5 )
-//		$call multiplier2 (ival2_3 kval_2_2_2 ) ( mul_val_2_2_5 )
-//		$call multiplier2 (ival3_3 kval_2_3_2 ) ( mul_val_2_3_5 )
-//		$call multiplier2 (ival4_3 kval_2_4_2 ) ( mul_val_2_4_5 )
-//		$call multiplier2 (ival5_3 kval_2_5_2 ) ( mul_val_2_5_5 )
-//		$call multiplier2 (ival6_3 kval_2_6_2 ) ( mul_val_2_6_5 )
-//		$call multiplier2 (ival7_3 kval_2_7_2 ) ( mul_val_2_7_5 )
-//		$call multiplier2 (ival8_3 kval_2_8_2 ) ( mul_val_2_8_5 )
+//		mul_val_2_1_5 := ($cast ($int<16>) (kval_2_1_2 * ival1_3 ))
+//		mul_val_2_2_5 := ($cast ($int<16>) (kval_2_2_2 * ival2_3 ))
+//		mul_val_2_3_5 := ($cast ($int<16>) (kval_2_3_2 * ival3_3 ))
+//		mul_val_2_4_5 := ($cast ($int<16>) (kval_2_4_2 * ival4_3 ))
+//		mul_val_2_5_5 := ($cast ($int<16>) (kval_2_5_2 * ival5_3 ))
+//		mul_val_2_6_5 := ($cast ($int<16>) (kval_2_6_2 * ival6_3 ))
+//		mul_val_2_7_5 := ($cast ($int<16>) (kval_2_7_2 * ival7_3 ))
+//		mul_val_2_8_5 := ($cast ($int<16>) (kval_2_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_2_1_2 )) ( mul_val_2_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_2_2_2 )) ( mul_val_2_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_2_3_2 )) ( mul_val_2_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_2_4_2 )) ( mul_val_2_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_2_5_2 )) ( mul_val_2_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_2_6_2 )) ( mul_val_2_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_2_7_2 )) ( mul_val_2_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_2_8_2 )) ( mul_val_2_8_5 )
 
 		t_acc_val_2_5 := (((mul_val_2_1_5 + mul_val_2_2_5 ) + (mul_val_2_3_5 + mul_val_2_4_5 )) + ((mul_val_2_5_5 + mul_val_2_6_5 ) + (mul_val_2_7_5 + mul_val_2_8_5 )))
 		
@@ -1686,22 +1699,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_2_1_3 := ($cast ($int<16>) (kval_2_1_3 * ival1_3 ))
-		mul_val_2_2_3 := ($cast ($int<16>) (kval_2_2_3 * ival2_3 ))
-		mul_val_2_3_3 := ($cast ($int<16>) (kval_2_3_3 * ival3_3 ))
-		mul_val_2_4_3 := ($cast ($int<16>) (kval_2_4_3 * ival4_3 ))
-		mul_val_2_5_3 := ($cast ($int<16>) (kval_2_5_3 * ival5_3 ))
-		mul_val_2_6_3 := ($cast ($int<16>) (kval_2_6_3 * ival6_3 ))
-		mul_val_2_7_3 := ($cast ($int<16>) (kval_2_7_3 * ival7_3 ))
-		mul_val_2_8_3 := ($cast ($int<16>) (kval_2_8_3 * ival8_3 ))
-//		$call multiplier2 (ival1_3 kval_2_1_3 ) ( mul_val_2_1_3 )
-//		$call multiplier2 (ival2_3 kval_2_2_3 ) ( mul_val_2_2_3 )
-//		$call multiplier2 (ival3_3 kval_2_3_3 ) ( mul_val_2_3_3 )
-//		$call multiplier2 (ival4_3 kval_2_4_3 ) ( mul_val_2_4_3 )
-//		$call multiplier2 (ival5_3 kval_2_5_3 ) ( mul_val_2_5_3 )
-//		$call multiplier2 (ival6_3 kval_2_6_3 ) ( mul_val_2_6_3 )
-//		$call multiplier2 (ival7_3 kval_2_7_3 ) ( mul_val_2_7_3 )
-//		$call multiplier2 (ival8_3 kval_2_8_3 ) ( mul_val_2_8_3 )
+//		mul_val_2_1_3 := ($cast ($int<16>) (kval_2_1_3 * ival1_3 ))
+//		mul_val_2_2_3 := ($cast ($int<16>) (kval_2_2_3 * ival2_3 ))
+//		mul_val_2_3_3 := ($cast ($int<16>) (kval_2_3_3 * ival3_3 ))
+//		mul_val_2_4_3 := ($cast ($int<16>) (kval_2_4_3 * ival4_3 ))
+//		mul_val_2_5_3 := ($cast ($int<16>) (kval_2_5_3 * ival5_3 ))
+//		mul_val_2_6_3 := ($cast ($int<16>) (kval_2_6_3 * ival6_3 ))
+//		mul_val_2_7_3 := ($cast ($int<16>) (kval_2_7_3 * ival7_3 ))
+//		mul_val_2_8_3 := ($cast ($int<16>) (kval_2_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_2_1_3 )) ( mul_val_2_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_2_2_3 )) ( mul_val_2_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_2_3_3 )) ( mul_val_2_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_2_4_3 )) ( mul_val_2_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_2_5_3 )) ( mul_val_2_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_2_6_3 )) ( mul_val_2_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_2_7_3 )) ( mul_val_2_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_2_8_3 )) ( mul_val_2_8_3 )
 
 		t_acc_val_2_3 := (((mul_val_2_1_3 + mul_val_2_2_3 ) + (mul_val_2_3_3 + mul_val_2_4_3 )) + ((mul_val_2_5_3 + mul_val_2_6_3 ) + (mul_val_2_7_3 + mul_val_2_8_3 )))
 		
@@ -1711,22 +1724,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_2_1_6 := ($cast ($int<16>) (kval_2_1_3 * ival1_4 ))
-		mul_val_2_2_6 := ($cast ($int<16>) (kval_2_2_3 * ival2_4 ))
-		mul_val_2_3_6 := ($cast ($int<16>) (kval_2_3_3 * ival3_4 ))
-		mul_val_2_4_6 := ($cast ($int<16>) (kval_2_4_3 * ival4_4 ))
-		mul_val_2_5_6 := ($cast ($int<16>) (kval_2_5_3 * ival5_4 ))
-		mul_val_2_6_6 := ($cast ($int<16>) (kval_2_6_3 * ival6_4 ))
-		mul_val_2_7_6 := ($cast ($int<16>) (kval_2_7_3 * ival7_4 ))
-		mul_val_2_8_6 := ($cast ($int<16>) (kval_2_8_3 * ival8_4 ))
-//		$call multiplier2 (ival1_4 kval_2_1_3 ) ( mul_val_2_1_6 )
-//		$call multiplier2 (ival2_4 kval_2_2_3 ) ( mul_val_2_2_6 )
-//		$call multiplier2 (ival3_4 kval_2_3_3 ) ( mul_val_2_3_6 )
-//		$call multiplier2 (ival4_4 kval_2_4_3 ) ( mul_val_2_4_6 )
-//		$call multiplier2 (ival5_4 kval_2_5_3 ) ( mul_val_2_5_6 )
-//		$call multiplier2 (ival6_4 kval_2_6_3 ) ( mul_val_2_6_6 )
-//		$call multiplier2 (ival7_4 kval_2_7_3 ) ( mul_val_2_7_6 )
-//		$call multiplier2 (ival8_4 kval_2_8_3 ) ( mul_val_2_8_6 )
+//		mul_val_2_1_6 := ($cast ($int<16>) (kval_2_1_3 * ival1_4 ))
+//		mul_val_2_2_6 := ($cast ($int<16>) (kval_2_2_3 * ival2_4 ))
+//		mul_val_2_3_6 := ($cast ($int<16>) (kval_2_3_3 * ival3_4 ))
+//		mul_val_2_4_6 := ($cast ($int<16>) (kval_2_4_3 * ival4_4 ))
+//		mul_val_2_5_6 := ($cast ($int<16>) (kval_2_5_3 * ival5_4 ))
+//		mul_val_2_6_6 := ($cast ($int<16>) (kval_2_6_3 * ival6_4 ))
+//		mul_val_2_7_6 := ($cast ($int<16>) (kval_2_7_3 * ival7_4 ))
+//		mul_val_2_8_6 := ($cast ($int<16>) (kval_2_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_2_1_3 )) ( mul_val_2_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_2_2_3 )) ( mul_val_2_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_2_3_3 )) ( mul_val_2_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_2_4_3 )) ( mul_val_2_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_2_5_3 )) ( mul_val_2_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_2_6_3 )) ( mul_val_2_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_2_7_3 )) ( mul_val_2_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_2_8_3 )) ( mul_val_2_8_6 )
 
 		t_acc_val_2_6 := (((mul_val_2_1_6 + mul_val_2_2_6 ) + (mul_val_2_3_6 + mul_val_2_4_6 )) + ((mul_val_2_5_6 + mul_val_2_6_6 ) + (mul_val_2_7_6 + mul_val_2_8_6 )))
 		
@@ -1773,22 +1786,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_3_1_1 := ($cast ($int<16>) (kval_3_1_1 * ival1_1 ))
-		mul_val_3_2_1 := ($cast ($int<16>) (kval_3_2_1 * ival2_1 ))
-		mul_val_3_3_1 := ($cast ($int<16>) (kval_3_3_1 * ival3_1 ))
-		mul_val_3_4_1 := ($cast ($int<16>) (kval_3_4_1 * ival4_1 ))
-		mul_val_3_5_1 := ($cast ($int<16>) (kval_3_5_1 * ival5_1 ))
-		mul_val_3_6_1 := ($cast ($int<16>) (kval_3_6_1 * ival6_1 ))
-		mul_val_3_7_1 := ($cast ($int<16>) (kval_3_7_1 * ival7_1 ))
-		mul_val_3_8_1 := ($cast ($int<16>) (kval_3_8_1 * ival8_1 ))
-//		$call multiplier3 (ival1_1 kval_3_1_1 ) ( mul_val_3_1_1 )
-//		$call multiplier3 (ival2_1 kval_3_2_1 ) ( mul_val_3_2_1 )
-//		$call multiplier3 (ival3_1 kval_3_3_1 ) ( mul_val_3_3_1 )
-//		$call multiplier3 (ival4_1 kval_3_4_1 ) ( mul_val_3_4_1 )
-//		$call multiplier3 (ival5_1 kval_3_5_1 ) ( mul_val_3_5_1 )
-//		$call multiplier3 (ival6_1 kval_3_6_1 ) ( mul_val_3_6_1 )
-//		$call multiplier3 (ival7_1 kval_3_7_1 ) ( mul_val_3_7_1 )
-//		$call multiplier3 (ival8_1 kval_3_8_1 ) ( mul_val_3_8_1 )
+//		mul_val_3_1_1 := ($cast ($int<16>) (kval_3_1_1 * ival1_1 ))
+//		mul_val_3_2_1 := ($cast ($int<16>) (kval_3_2_1 * ival2_1 ))
+//		mul_val_3_3_1 := ($cast ($int<16>) (kval_3_3_1 * ival3_1 ))
+//		mul_val_3_4_1 := ($cast ($int<16>) (kval_3_4_1 * ival4_1 ))
+//		mul_val_3_5_1 := ($cast ($int<16>) (kval_3_5_1 * ival5_1 ))
+//		mul_val_3_6_1 := ($cast ($int<16>) (kval_3_6_1 * ival6_1 ))
+//		mul_val_3_7_1 := ($cast ($int<16>) (kval_3_7_1 * ival7_1 ))
+//		mul_val_3_8_1 := ($cast ($int<16>) (kval_3_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_3_1_1 )) ( mul_val_3_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_3_2_1 )) ( mul_val_3_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_3_3_1 )) ( mul_val_3_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_3_4_1 )) ( mul_val_3_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_3_5_1 )) ( mul_val_3_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_3_6_1 )) ( mul_val_3_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_3_7_1 )) ( mul_val_3_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_3_8_1 )) ( mul_val_3_8_1 )
 
 		t_acc_val_3_1 := (((mul_val_3_1_1 + mul_val_3_2_1 ) + (mul_val_3_3_1 + mul_val_3_4_1 )) + ((mul_val_3_5_1 + mul_val_3_6_1 ) + (mul_val_3_7_1 + mul_val_3_8_1 )))
 		
@@ -1798,22 +1811,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_3_1_4 := ($cast ($int<16>) (kval_3_1_1 * ival1_2 ))
-		mul_val_3_2_4 := ($cast ($int<16>) (kval_3_2_1 * ival2_2 ))
-		mul_val_3_3_4 := ($cast ($int<16>) (kval_3_3_1 * ival3_2 ))
-		mul_val_3_4_4 := ($cast ($int<16>) (kval_3_4_1 * ival4_2 ))
-		mul_val_3_5_4 := ($cast ($int<16>) (kval_3_5_1 * ival5_2 ))
-		mul_val_3_6_4 := ($cast ($int<16>) (kval_3_6_1 * ival6_2 ))
-		mul_val_3_7_4 := ($cast ($int<16>) (kval_3_7_1 * ival7_2 ))
-		mul_val_3_8_4 := ($cast ($int<16>) (kval_3_8_1 * ival8_2 ))
-//		$call multiplier3 (ival1_2 kval_3_1_1 ) ( mul_val_3_1_4 )
-//		$call multiplier3 (ival2_2 kval_3_2_1 ) ( mul_val_3_2_4 )
-//		$call multiplier3 (ival3_2 kval_3_3_1 ) ( mul_val_3_3_4 )
-//		$call multiplier3 (ival4_2 kval_3_4_1 ) ( mul_val_3_4_4 )
-//		$call multiplier3 (ival5_2 kval_3_5_1 ) ( mul_val_3_5_4 )
-//		$call multiplier3 (ival6_2 kval_3_6_1 ) ( mul_val_3_6_4 )
-//		$call multiplier3 (ival7_2 kval_3_7_1 ) ( mul_val_3_7_4 )
-//		$call multiplier3 (ival8_2 kval_3_8_1 ) ( mul_val_3_8_4 )
+//		mul_val_3_1_4 := ($cast ($int<16>) (kval_3_1_1 * ival1_2 ))
+//		mul_val_3_2_4 := ($cast ($int<16>) (kval_3_2_1 * ival2_2 ))
+//		mul_val_3_3_4 := ($cast ($int<16>) (kval_3_3_1 * ival3_2 ))
+//		mul_val_3_4_4 := ($cast ($int<16>) (kval_3_4_1 * ival4_2 ))
+//		mul_val_3_5_4 := ($cast ($int<16>) (kval_3_5_1 * ival5_2 ))
+//		mul_val_3_6_4 := ($cast ($int<16>) (kval_3_6_1 * ival6_2 ))
+//		mul_val_3_7_4 := ($cast ($int<16>) (kval_3_7_1 * ival7_2 ))
+//		mul_val_3_8_4 := ($cast ($int<16>) (kval_3_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_3_1_1 )) ( mul_val_3_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_3_2_1 )) ( mul_val_3_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_3_3_1 )) ( mul_val_3_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_3_4_1 )) ( mul_val_3_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_3_5_1 )) ( mul_val_3_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_3_6_1 )) ( mul_val_3_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_3_7_1 )) ( mul_val_3_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_3_8_1 )) ( mul_val_3_8_4 )
 
 		t_acc_val_3_4 := (((mul_val_3_1_4 + mul_val_3_2_4 ) + (mul_val_3_3_4 + mul_val_3_4_4 )) + ((mul_val_3_5_4 + mul_val_3_6_4 ) + (mul_val_3_7_4 + mul_val_3_8_4 )))
 		
@@ -1842,22 +1855,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_3_1_2 := ($cast ($int<16>) (kval_3_1_2 * ival1_2 ))
-		mul_val_3_2_2 := ($cast ($int<16>) (kval_3_2_2 * ival2_2 ))
-		mul_val_3_3_2 := ($cast ($int<16>) (kval_3_3_2 * ival3_2 ))
-		mul_val_3_4_2 := ($cast ($int<16>) (kval_3_4_2 * ival4_2 ))
-		mul_val_3_5_2 := ($cast ($int<16>) (kval_3_5_2 * ival5_2 ))
-		mul_val_3_6_2 := ($cast ($int<16>) (kval_3_6_2 * ival6_2 ))
-		mul_val_3_7_2 := ($cast ($int<16>) (kval_3_7_2 * ival7_2 ))
-		mul_val_3_8_2 := ($cast ($int<16>) (kval_3_8_2 * ival8_2 ))
-//		$call multiplier3 (ival1_2 kval_3_1_2 ) ( mul_val_3_1_2 )
-//		$call multiplier3 (ival2_2 kval_3_2_2 ) ( mul_val_3_2_2 )
-//		$call multiplier3 (ival3_2 kval_3_3_2 ) ( mul_val_3_3_2 )
-//		$call multiplier3 (ival4_2 kval_3_4_2 ) ( mul_val_3_4_2 )
-//		$call multiplier3 (ival5_2 kval_3_5_2 ) ( mul_val_3_5_2 )
-//		$call multiplier3 (ival6_2 kval_3_6_2 ) ( mul_val_3_6_2 )
-//		$call multiplier3 (ival7_2 kval_3_7_2 ) ( mul_val_3_7_2 )
-//		$call multiplier3 (ival8_2 kval_3_8_2 ) ( mul_val_3_8_2 )
+//		mul_val_3_1_2 := ($cast ($int<16>) (kval_3_1_2 * ival1_2 ))
+//		mul_val_3_2_2 := ($cast ($int<16>) (kval_3_2_2 * ival2_2 ))
+//		mul_val_3_3_2 := ($cast ($int<16>) (kval_3_3_2 * ival3_2 ))
+//		mul_val_3_4_2 := ($cast ($int<16>) (kval_3_4_2 * ival4_2 ))
+//		mul_val_3_5_2 := ($cast ($int<16>) (kval_3_5_2 * ival5_2 ))
+//		mul_val_3_6_2 := ($cast ($int<16>) (kval_3_6_2 * ival6_2 ))
+//		mul_val_3_7_2 := ($cast ($int<16>) (kval_3_7_2 * ival7_2 ))
+//		mul_val_3_8_2 := ($cast ($int<16>) (kval_3_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_3_1_2 )) ( mul_val_3_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_3_2_2 )) ( mul_val_3_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_3_3_2 )) ( mul_val_3_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_3_4_2 )) ( mul_val_3_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_3_5_2 )) ( mul_val_3_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_3_6_2 )) ( mul_val_3_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_3_7_2 )) ( mul_val_3_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_3_8_2 )) ( mul_val_3_8_2 )
 
 		t_acc_val_3_2 := (((mul_val_3_1_2 + mul_val_3_2_2 ) + (mul_val_3_3_2 + mul_val_3_4_2 )) + ((mul_val_3_5_2 + mul_val_3_6_2 ) + (mul_val_3_7_2 + mul_val_3_8_2 )))
 		
@@ -1867,22 +1880,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_3_1_5 := ($cast ($int<16>) (kval_3_1_2 * ival1_3 ))
-		mul_val_3_2_5 := ($cast ($int<16>) (kval_3_2_2 * ival2_3 ))
-		mul_val_3_3_5 := ($cast ($int<16>) (kval_3_3_2 * ival3_3 ))
-		mul_val_3_4_5 := ($cast ($int<16>) (kval_3_4_2 * ival4_3 ))
-		mul_val_3_5_5 := ($cast ($int<16>) (kval_3_5_2 * ival5_3 ))
-		mul_val_3_6_5 := ($cast ($int<16>) (kval_3_6_2 * ival6_3 ))
-		mul_val_3_7_5 := ($cast ($int<16>) (kval_3_7_2 * ival7_3 ))
-		mul_val_3_8_5 := ($cast ($int<16>) (kval_3_8_2 * ival8_3 ))
-//		$call multiplier3 (ival1_3 kval_3_1_2 ) ( mul_val_3_1_5 )
-//		$call multiplier3 (ival2_3 kval_3_2_2 ) ( mul_val_3_2_5 )
-//		$call multiplier3 (ival3_3 kval_3_3_2 ) ( mul_val_3_3_5 )
-//		$call multiplier3 (ival4_3 kval_3_4_2 ) ( mul_val_3_4_5 )
-//		$call multiplier3 (ival5_3 kval_3_5_2 ) ( mul_val_3_5_5 )
-//		$call multiplier3 (ival6_3 kval_3_6_2 ) ( mul_val_3_6_5 )
-//		$call multiplier3 (ival7_3 kval_3_7_2 ) ( mul_val_3_7_5 )
-//		$call multiplier3 (ival8_3 kval_3_8_2 ) ( mul_val_3_8_5 )
+//		mul_val_3_1_5 := ($cast ($int<16>) (kval_3_1_2 * ival1_3 ))
+//		mul_val_3_2_5 := ($cast ($int<16>) (kval_3_2_2 * ival2_3 ))
+//		mul_val_3_3_5 := ($cast ($int<16>) (kval_3_3_2 * ival3_3 ))
+//		mul_val_3_4_5 := ($cast ($int<16>) (kval_3_4_2 * ival4_3 ))
+//		mul_val_3_5_5 := ($cast ($int<16>) (kval_3_5_2 * ival5_3 ))
+//		mul_val_3_6_5 := ($cast ($int<16>) (kval_3_6_2 * ival6_3 ))
+//		mul_val_3_7_5 := ($cast ($int<16>) (kval_3_7_2 * ival7_3 ))
+//		mul_val_3_8_5 := ($cast ($int<16>) (kval_3_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_3_1_2 )) ( mul_val_3_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_3_2_2 )) ( mul_val_3_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_3_3_2 )) ( mul_val_3_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_3_4_2 )) ( mul_val_3_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_3_5_2 )) ( mul_val_3_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_3_6_2 )) ( mul_val_3_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_3_7_2 )) ( mul_val_3_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_3_8_2 )) ( mul_val_3_8_5 )
 
 		t_acc_val_3_5 := (((mul_val_3_1_5 + mul_val_3_2_5 ) + (mul_val_3_3_5 + mul_val_3_4_5 )) + ((mul_val_3_5_5 + mul_val_3_6_5 ) + (mul_val_3_7_5 + mul_val_3_8_5 )))
 		
@@ -1915,22 +1928,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_3_1_3 := ($cast ($int<16>) (kval_3_1_3 * ival1_3 ))
-		mul_val_3_2_3 := ($cast ($int<16>) (kval_3_2_3 * ival2_3 ))
-		mul_val_3_3_3 := ($cast ($int<16>) (kval_3_3_3 * ival3_3 ))
-		mul_val_3_4_3 := ($cast ($int<16>) (kval_3_4_3 * ival4_3 ))
-		mul_val_3_5_3 := ($cast ($int<16>) (kval_3_5_3 * ival5_3 ))
-		mul_val_3_6_3 := ($cast ($int<16>) (kval_3_6_3 * ival6_3 ))
-		mul_val_3_7_3 := ($cast ($int<16>) (kval_3_7_3 * ival7_3 ))
-		mul_val_3_8_3 := ($cast ($int<16>) (kval_3_8_3 * ival8_3 ))
-//		$call multiplier3 (ival1_3 kval_3_1_3 ) ( mul_val_3_1_3 )
-//		$call multiplier3 (ival2_3 kval_3_2_3 ) ( mul_val_3_2_3 )
-//		$call multiplier3 (ival3_3 kval_3_3_3 ) ( mul_val_3_3_3 )
-//		$call multiplier3 (ival4_3 kval_3_4_3 ) ( mul_val_3_4_3 )
-//		$call multiplier3 (ival5_3 kval_3_5_3 ) ( mul_val_3_5_3 )
-//		$call multiplier3 (ival6_3 kval_3_6_3 ) ( mul_val_3_6_3 )
-//		$call multiplier3 (ival7_3 kval_3_7_3 ) ( mul_val_3_7_3 )
-//		$call multiplier3 (ival8_3 kval_3_8_3 ) ( mul_val_3_8_3 )
+//		mul_val_3_1_3 := ($cast ($int<16>) (kval_3_1_3 * ival1_3 ))
+//		mul_val_3_2_3 := ($cast ($int<16>) (kval_3_2_3 * ival2_3 ))
+//		mul_val_3_3_3 := ($cast ($int<16>) (kval_3_3_3 * ival3_3 ))
+//		mul_val_3_4_3 := ($cast ($int<16>) (kval_3_4_3 * ival4_3 ))
+//		mul_val_3_5_3 := ($cast ($int<16>) (kval_3_5_3 * ival5_3 ))
+//		mul_val_3_6_3 := ($cast ($int<16>) (kval_3_6_3 * ival6_3 ))
+//		mul_val_3_7_3 := ($cast ($int<16>) (kval_3_7_3 * ival7_3 ))
+//		mul_val_3_8_3 := ($cast ($int<16>) (kval_3_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_3_1_3 )) ( mul_val_3_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_3_2_3 )) ( mul_val_3_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_3_3_3 )) ( mul_val_3_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_3_4_3 )) ( mul_val_3_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_3_5_3 )) ( mul_val_3_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_3_6_3 )) ( mul_val_3_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_3_7_3 )) ( mul_val_3_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_3_8_3 )) ( mul_val_3_8_3 )
 
 		t_acc_val_3_3 := (((mul_val_3_1_3 + mul_val_3_2_3 ) + (mul_val_3_3_3 + mul_val_3_4_3 )) + ((mul_val_3_5_3 + mul_val_3_6_3 ) + (mul_val_3_7_3 + mul_val_3_8_3 )))
 		
@@ -1940,22 +1953,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_3_1_6 := ($cast ($int<16>) (kval_3_1_3 * ival1_4 ))
-		mul_val_3_2_6 := ($cast ($int<16>) (kval_3_2_3 * ival2_4 ))
-		mul_val_3_3_6 := ($cast ($int<16>) (kval_3_3_3 * ival3_4 ))
-		mul_val_3_4_6 := ($cast ($int<16>) (kval_3_4_3 * ival4_4 ))
-		mul_val_3_5_6 := ($cast ($int<16>) (kval_3_5_3 * ival5_4 ))
-		mul_val_3_6_6 := ($cast ($int<16>) (kval_3_6_3 * ival6_4 ))
-		mul_val_3_7_6 := ($cast ($int<16>) (kval_3_7_3 * ival7_4 ))
-		mul_val_3_8_6 := ($cast ($int<16>) (kval_3_8_3 * ival8_4 ))
-//		$call multiplier3 (ival1_4 kval_3_1_3 ) ( mul_val_3_1_6 )
-//		$call multiplier3 (ival2_4 kval_3_2_3 ) ( mul_val_3_2_6 )
-//		$call multiplier3 (ival3_4 kval_3_3_3 ) ( mul_val_3_3_6 )
-//		$call multiplier3 (ival4_4 kval_3_4_3 ) ( mul_val_3_4_6 )
-//		$call multiplier3 (ival5_4 kval_3_5_3 ) ( mul_val_3_5_6 )
-//		$call multiplier3 (ival6_4 kval_3_6_3 ) ( mul_val_3_6_6 )
-//		$call multiplier3 (ival7_4 kval_3_7_3 ) ( mul_val_3_7_6 )
-//		$call multiplier3 (ival8_4 kval_3_8_3 ) ( mul_val_3_8_6 )
+//		mul_val_3_1_6 := ($cast ($int<16>) (kval_3_1_3 * ival1_4 ))
+//		mul_val_3_2_6 := ($cast ($int<16>) (kval_3_2_3 * ival2_4 ))
+//		mul_val_3_3_6 := ($cast ($int<16>) (kval_3_3_3 * ival3_4 ))
+//		mul_val_3_4_6 := ($cast ($int<16>) (kval_3_4_3 * ival4_4 ))
+//		mul_val_3_5_6 := ($cast ($int<16>) (kval_3_5_3 * ival5_4 ))
+//		mul_val_3_6_6 := ($cast ($int<16>) (kval_3_6_3 * ival6_4 ))
+//		mul_val_3_7_6 := ($cast ($int<16>) (kval_3_7_3 * ival7_4 ))
+//		mul_val_3_8_6 := ($cast ($int<16>) (kval_3_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_3_1_3 )) ( mul_val_3_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_3_2_3 )) ( mul_val_3_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_3_3_3 )) ( mul_val_3_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_3_4_3 )) ( mul_val_3_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_3_5_3 )) ( mul_val_3_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_3_6_3 )) ( mul_val_3_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_3_7_3 )) ( mul_val_3_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_3_8_3 )) ( mul_val_3_8_6 )
 
 		t_acc_val_3_6 := (((mul_val_3_1_6 + mul_val_3_2_6 ) + (mul_val_3_3_6 + mul_val_3_4_6 )) + ((mul_val_3_5_6 + mul_val_3_6_6 ) + (mul_val_3_7_6 + mul_val_3_8_6 )))
 		
@@ -2002,22 +2015,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_4_1_1 := ($cast ($int<16>) (kval_4_1_1 * ival1_1 ))
-		mul_val_4_2_1 := ($cast ($int<16>) (kval_4_2_1 * ival2_1 ))
-		mul_val_4_3_1 := ($cast ($int<16>) (kval_4_3_1 * ival3_1 ))
-		mul_val_4_4_1 := ($cast ($int<16>) (kval_4_4_1 * ival4_1 ))
-		mul_val_4_5_1 := ($cast ($int<16>) (kval_4_5_1 * ival5_1 ))
-		mul_val_4_6_1 := ($cast ($int<16>) (kval_4_6_1 * ival6_1 ))
-		mul_val_4_7_1 := ($cast ($int<16>) (kval_4_7_1 * ival7_1 ))
-		mul_val_4_8_1 := ($cast ($int<16>) (kval_4_8_1 * ival8_1 ))
-//		$call multiplier4 (ival1_1 kval_4_1_1 ) ( mul_val_4_1_1 )
-//		$call multiplier4 (ival2_1 kval_4_2_1 ) ( mul_val_4_2_1 )
-//		$call multiplier4 (ival3_1 kval_4_3_1 ) ( mul_val_4_3_1 )
-//		$call multiplier4 (ival4_1 kval_4_4_1 ) ( mul_val_4_4_1 )
-//		$call multiplier4 (ival5_1 kval_4_5_1 ) ( mul_val_4_5_1 )
-//		$call multiplier4 (ival6_1 kval_4_6_1 ) ( mul_val_4_6_1 )
-//		$call multiplier4 (ival7_1 kval_4_7_1 ) ( mul_val_4_7_1 )
-//		$call multiplier4 (ival8_1 kval_4_8_1 ) ( mul_val_4_8_1 )
+//		mul_val_4_1_1 := ($cast ($int<16>) (kval_4_1_1 * ival1_1 ))
+//		mul_val_4_2_1 := ($cast ($int<16>) (kval_4_2_1 * ival2_1 ))
+//		mul_val_4_3_1 := ($cast ($int<16>) (kval_4_3_1 * ival3_1 ))
+//		mul_val_4_4_1 := ($cast ($int<16>) (kval_4_4_1 * ival4_1 ))
+//		mul_val_4_5_1 := ($cast ($int<16>) (kval_4_5_1 * ival5_1 ))
+//		mul_val_4_6_1 := ($cast ($int<16>) (kval_4_6_1 * ival6_1 ))
+//		mul_val_4_7_1 := ($cast ($int<16>) (kval_4_7_1 * ival7_1 ))
+//		mul_val_4_8_1 := ($cast ($int<16>) (kval_4_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_4_1_1 )) ( mul_val_4_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_4_2_1 )) ( mul_val_4_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_4_3_1 )) ( mul_val_4_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_4_4_1 )) ( mul_val_4_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_4_5_1 )) ( mul_val_4_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_4_6_1 )) ( mul_val_4_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_4_7_1 )) ( mul_val_4_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_4_8_1 )) ( mul_val_4_8_1 )
 
 		t_acc_val_4_1 := (((mul_val_4_1_1 + mul_val_4_2_1 ) + (mul_val_4_3_1 + mul_val_4_4_1 )) + ((mul_val_4_5_1 + mul_val_4_6_1 ) + (mul_val_4_7_1 + mul_val_4_8_1 )))
 		
@@ -2027,22 +2040,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_4_1_4 := ($cast ($int<16>) (kval_4_1_1 * ival1_2 ))
-		mul_val_4_2_4 := ($cast ($int<16>) (kval_4_2_1 * ival2_2 ))
-		mul_val_4_3_4 := ($cast ($int<16>) (kval_4_3_1 * ival3_2 ))
-		mul_val_4_4_4 := ($cast ($int<16>) (kval_4_4_1 * ival4_2 ))
-		mul_val_4_5_4 := ($cast ($int<16>) (kval_4_5_1 * ival5_2 ))
-		mul_val_4_6_4 := ($cast ($int<16>) (kval_4_6_1 * ival6_2 ))
-		mul_val_4_7_4 := ($cast ($int<16>) (kval_4_7_1 * ival7_2 ))
-		mul_val_4_8_4 := ($cast ($int<16>) (kval_4_8_1 * ival8_2 ))
-//		$call multiplier4 (ival1_2 kval_4_1_1 ) ( mul_val_4_1_4 )
-//		$call multiplier4 (ival2_2 kval_4_2_1 ) ( mul_val_4_2_4 )
-//		$call multiplier4 (ival3_2 kval_4_3_1 ) ( mul_val_4_3_4 )
-//		$call multiplier4 (ival4_2 kval_4_4_1 ) ( mul_val_4_4_4 )
-//		$call multiplier4 (ival5_2 kval_4_5_1 ) ( mul_val_4_5_4 )
-//		$call multiplier4 (ival6_2 kval_4_6_1 ) ( mul_val_4_6_4 )
-//		$call multiplier4 (ival7_2 kval_4_7_1 ) ( mul_val_4_7_4 )
-//		$call multiplier4 (ival8_2 kval_4_8_1 ) ( mul_val_4_8_4 )
+//		mul_val_4_1_4 := ($cast ($int<16>) (kval_4_1_1 * ival1_2 ))
+//		mul_val_4_2_4 := ($cast ($int<16>) (kval_4_2_1 * ival2_2 ))
+//		mul_val_4_3_4 := ($cast ($int<16>) (kval_4_3_1 * ival3_2 ))
+//		mul_val_4_4_4 := ($cast ($int<16>) (kval_4_4_1 * ival4_2 ))
+//		mul_val_4_5_4 := ($cast ($int<16>) (kval_4_5_1 * ival5_2 ))
+//		mul_val_4_6_4 := ($cast ($int<16>) (kval_4_6_1 * ival6_2 ))
+//		mul_val_4_7_4 := ($cast ($int<16>) (kval_4_7_1 * ival7_2 ))
+//		mul_val_4_8_4 := ($cast ($int<16>) (kval_4_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_4_1_1 )) ( mul_val_4_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_4_2_1 )) ( mul_val_4_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_4_3_1 )) ( mul_val_4_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_4_4_1 )) ( mul_val_4_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_4_5_1 )) ( mul_val_4_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_4_6_1 )) ( mul_val_4_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_4_7_1 )) ( mul_val_4_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_4_8_1 )) ( mul_val_4_8_4 )
 
 		t_acc_val_4_4 := (((mul_val_4_1_4 + mul_val_4_2_4 ) + (mul_val_4_3_4 + mul_val_4_4_4 )) + ((mul_val_4_5_4 + mul_val_4_6_4 ) + (mul_val_4_7_4 + mul_val_4_8_4 )))
 		
@@ -2071,22 +2084,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_4_1_2 := ($cast ($int<16>) (kval_4_1_2 * ival1_2 ))
-		mul_val_4_2_2 := ($cast ($int<16>) (kval_4_2_2 * ival2_2 ))
-		mul_val_4_3_2 := ($cast ($int<16>) (kval_4_3_2 * ival3_2 ))
-		mul_val_4_4_2 := ($cast ($int<16>) (kval_4_4_2 * ival4_2 ))
-		mul_val_4_5_2 := ($cast ($int<16>) (kval_4_5_2 * ival5_2 ))
-		mul_val_4_6_2 := ($cast ($int<16>) (kval_4_6_2 * ival6_2 ))
-		mul_val_4_7_2 := ($cast ($int<16>) (kval_4_7_2 * ival7_2 ))
-		mul_val_4_8_2 := ($cast ($int<16>) (kval_4_8_2 * ival8_2 ))
-//		$call multiplier4 (ival1_2 kval_4_1_2 ) ( mul_val_4_1_2 )
-//		$call multiplier4 (ival2_2 kval_4_2_2 ) ( mul_val_4_2_2 )
-//		$call multiplier4 (ival3_2 kval_4_3_2 ) ( mul_val_4_3_2 )
-//		$call multiplier4 (ival4_2 kval_4_4_2 ) ( mul_val_4_4_2 )
-//		$call multiplier4 (ival5_2 kval_4_5_2 ) ( mul_val_4_5_2 )
-//		$call multiplier4 (ival6_2 kval_4_6_2 ) ( mul_val_4_6_2 )
-//		$call multiplier4 (ival7_2 kval_4_7_2 ) ( mul_val_4_7_2 )
-//		$call multiplier4 (ival8_2 kval_4_8_2 ) ( mul_val_4_8_2 )
+//		mul_val_4_1_2 := ($cast ($int<16>) (kval_4_1_2 * ival1_2 ))
+//		mul_val_4_2_2 := ($cast ($int<16>) (kval_4_2_2 * ival2_2 ))
+//		mul_val_4_3_2 := ($cast ($int<16>) (kval_4_3_2 * ival3_2 ))
+//		mul_val_4_4_2 := ($cast ($int<16>) (kval_4_4_2 * ival4_2 ))
+//		mul_val_4_5_2 := ($cast ($int<16>) (kval_4_5_2 * ival5_2 ))
+//		mul_val_4_6_2 := ($cast ($int<16>) (kval_4_6_2 * ival6_2 ))
+//		mul_val_4_7_2 := ($cast ($int<16>) (kval_4_7_2 * ival7_2 ))
+//		mul_val_4_8_2 := ($cast ($int<16>) (kval_4_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_4_1_2 )) ( mul_val_4_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_4_2_2 )) ( mul_val_4_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_4_3_2 )) ( mul_val_4_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_4_4_2 )) ( mul_val_4_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_4_5_2 )) ( mul_val_4_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_4_6_2 )) ( mul_val_4_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_4_7_2 )) ( mul_val_4_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_4_8_2 )) ( mul_val_4_8_2 )
 
 		t_acc_val_4_2 := (((mul_val_4_1_2 + mul_val_4_2_2 ) + (mul_val_4_3_2 + mul_val_4_4_2 )) + ((mul_val_4_5_2 + mul_val_4_6_2 ) + (mul_val_4_7_2 + mul_val_4_8_2 )))
 		
@@ -2096,22 +2109,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_4_1_5 := ($cast ($int<16>) (kval_4_1_2 * ival1_3 ))
-		mul_val_4_2_5 := ($cast ($int<16>) (kval_4_2_2 * ival2_3 ))
-		mul_val_4_3_5 := ($cast ($int<16>) (kval_4_3_2 * ival3_3 ))
-		mul_val_4_4_5 := ($cast ($int<16>) (kval_4_4_2 * ival4_3 ))
-		mul_val_4_5_5 := ($cast ($int<16>) (kval_4_5_2 * ival5_3 ))
-		mul_val_4_6_5 := ($cast ($int<16>) (kval_4_6_2 * ival6_3 ))
-		mul_val_4_7_5 := ($cast ($int<16>) (kval_4_7_2 * ival7_3 ))
-		mul_val_4_8_5 := ($cast ($int<16>) (kval_4_8_2 * ival8_3 ))
-//		$call multiplier4 (ival1_3 kval_4_1_2 ) ( mul_val_4_1_5 )
-//		$call multiplier4 (ival2_3 kval_4_2_2 ) ( mul_val_4_2_5 )
-//		$call multiplier4 (ival3_3 kval_4_3_2 ) ( mul_val_4_3_5 )
-//		$call multiplier4 (ival4_3 kval_4_4_2 ) ( mul_val_4_4_5 )
-//		$call multiplier4 (ival5_3 kval_4_5_2 ) ( mul_val_4_5_5 )
-//		$call multiplier4 (ival6_3 kval_4_6_2 ) ( mul_val_4_6_5 )
-//		$call multiplier4 (ival7_3 kval_4_7_2 ) ( mul_val_4_7_5 )
-//		$call multiplier4 (ival8_3 kval_4_8_2 ) ( mul_val_4_8_5 )
+//		mul_val_4_1_5 := ($cast ($int<16>) (kval_4_1_2 * ival1_3 ))
+//		mul_val_4_2_5 := ($cast ($int<16>) (kval_4_2_2 * ival2_3 ))
+//		mul_val_4_3_5 := ($cast ($int<16>) (kval_4_3_2 * ival3_3 ))
+//		mul_val_4_4_5 := ($cast ($int<16>) (kval_4_4_2 * ival4_3 ))
+//		mul_val_4_5_5 := ($cast ($int<16>) (kval_4_5_2 * ival5_3 ))
+//		mul_val_4_6_5 := ($cast ($int<16>) (kval_4_6_2 * ival6_3 ))
+//		mul_val_4_7_5 := ($cast ($int<16>) (kval_4_7_2 * ival7_3 ))
+//		mul_val_4_8_5 := ($cast ($int<16>) (kval_4_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_4_1_2 )) ( mul_val_4_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_4_2_2 )) ( mul_val_4_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_4_3_2 )) ( mul_val_4_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_4_4_2 )) ( mul_val_4_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_4_5_2 )) ( mul_val_4_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_4_6_2 )) ( mul_val_4_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_4_7_2 )) ( mul_val_4_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_4_8_2 )) ( mul_val_4_8_5 )
 
 		t_acc_val_4_5 := (((mul_val_4_1_5 + mul_val_4_2_5 ) + (mul_val_4_3_5 + mul_val_4_4_5 )) + ((mul_val_4_5_5 + mul_val_4_6_5 ) + (mul_val_4_7_5 + mul_val_4_8_5 )))
 		
@@ -2144,22 +2157,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_4_1_3 := ($cast ($int<16>) (kval_4_1_3 * ival1_3 ))
-		mul_val_4_2_3 := ($cast ($int<16>) (kval_4_2_3 * ival2_3 ))
-		mul_val_4_3_3 := ($cast ($int<16>) (kval_4_3_3 * ival3_3 ))
-		mul_val_4_4_3 := ($cast ($int<16>) (kval_4_4_3 * ival4_3 ))
-		mul_val_4_5_3 := ($cast ($int<16>) (kval_4_5_3 * ival5_3 ))
-		mul_val_4_6_3 := ($cast ($int<16>) (kval_4_6_3 * ival6_3 ))
-		mul_val_4_7_3 := ($cast ($int<16>) (kval_4_7_3 * ival7_3 ))
-		mul_val_4_8_3 := ($cast ($int<16>) (kval_4_8_3 * ival8_3 ))
-//		$call multiplier4 (ival1_3 kval_4_1_3 ) ( mul_val_4_1_3 )
-//		$call multiplier4 (ival2_3 kval_4_2_3 ) ( mul_val_4_2_3 )
-//		$call multiplier4 (ival3_3 kval_4_3_3 ) ( mul_val_4_3_3 )
-//		$call multiplier4 (ival4_3 kval_4_4_3 ) ( mul_val_4_4_3 )
-//		$call multiplier4 (ival5_3 kval_4_5_3 ) ( mul_val_4_5_3 )
-//		$call multiplier4 (ival6_3 kval_4_6_3 ) ( mul_val_4_6_3 )
-//		$call multiplier4 (ival7_3 kval_4_7_3 ) ( mul_val_4_7_3 )
-//		$call multiplier4 (ival8_3 kval_4_8_3 ) ( mul_val_4_8_3 )
+//		mul_val_4_1_3 := ($cast ($int<16>) (kval_4_1_3 * ival1_3 ))
+//		mul_val_4_2_3 := ($cast ($int<16>) (kval_4_2_3 * ival2_3 ))
+//		mul_val_4_3_3 := ($cast ($int<16>) (kval_4_3_3 * ival3_3 ))
+//		mul_val_4_4_3 := ($cast ($int<16>) (kval_4_4_3 * ival4_3 ))
+//		mul_val_4_5_3 := ($cast ($int<16>) (kval_4_5_3 * ival5_3 ))
+//		mul_val_4_6_3 := ($cast ($int<16>) (kval_4_6_3 * ival6_3 ))
+//		mul_val_4_7_3 := ($cast ($int<16>) (kval_4_7_3 * ival7_3 ))
+//		mul_val_4_8_3 := ($cast ($int<16>) (kval_4_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_4_1_3 )) ( mul_val_4_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_4_2_3 )) ( mul_val_4_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_4_3_3 )) ( mul_val_4_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_4_4_3 )) ( mul_val_4_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_4_5_3 )) ( mul_val_4_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_4_6_3 )) ( mul_val_4_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_4_7_3 )) ( mul_val_4_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_4_8_3 )) ( mul_val_4_8_3 )
 
 		t_acc_val_4_3 := (((mul_val_4_1_3 + mul_val_4_2_3 ) + (mul_val_4_3_3 + mul_val_4_4_3 )) + ((mul_val_4_5_3 + mul_val_4_6_3 ) + (mul_val_4_7_3 + mul_val_4_8_3 )))
 		
@@ -2169,22 +2182,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_4_1_6 := ($cast ($int<16>) (kval_4_1_3 * ival1_4 ))
-		mul_val_4_2_6 := ($cast ($int<16>) (kval_4_2_3 * ival2_4 ))
-		mul_val_4_3_6 := ($cast ($int<16>) (kval_4_3_3 * ival3_4 ))
-		mul_val_4_4_6 := ($cast ($int<16>) (kval_4_4_3 * ival4_4 ))
-		mul_val_4_5_6 := ($cast ($int<16>) (kval_4_5_3 * ival5_4 ))
-		mul_val_4_6_6 := ($cast ($int<16>) (kval_4_6_3 * ival6_4 ))
-		mul_val_4_7_6 := ($cast ($int<16>) (kval_4_7_3 * ival7_4 ))
-		mul_val_4_8_6 := ($cast ($int<16>) (kval_4_8_3 * ival8_4 ))
-//		$call multiplier4 (ival1_4 kval_4_1_3 ) ( mul_val_4_1_6 )
-//		$call multiplier4 (ival2_4 kval_4_2_3 ) ( mul_val_4_2_6 )
-//		$call multiplier4 (ival3_4 kval_4_3_3 ) ( mul_val_4_3_6 )
-//		$call multiplier4 (ival4_4 kval_4_4_3 ) ( mul_val_4_4_6 )
-//		$call multiplier4 (ival5_4 kval_4_5_3 ) ( mul_val_4_5_6 )
-//		$call multiplier4 (ival6_4 kval_4_6_3 ) ( mul_val_4_6_6 )
-//		$call multiplier4 (ival7_4 kval_4_7_3 ) ( mul_val_4_7_6 )
-//		$call multiplier4 (ival8_4 kval_4_8_3 ) ( mul_val_4_8_6 )
+//		mul_val_4_1_6 := ($cast ($int<16>) (kval_4_1_3 * ival1_4 ))
+//		mul_val_4_2_6 := ($cast ($int<16>) (kval_4_2_3 * ival2_4 ))
+//		mul_val_4_3_6 := ($cast ($int<16>) (kval_4_3_3 * ival3_4 ))
+//		mul_val_4_4_6 := ($cast ($int<16>) (kval_4_4_3 * ival4_4 ))
+//		mul_val_4_5_6 := ($cast ($int<16>) (kval_4_5_3 * ival5_4 ))
+//		mul_val_4_6_6 := ($cast ($int<16>) (kval_4_6_3 * ival6_4 ))
+//		mul_val_4_7_6 := ($cast ($int<16>) (kval_4_7_3 * ival7_4 ))
+//		mul_val_4_8_6 := ($cast ($int<16>) (kval_4_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_4_1_3 )) ( mul_val_4_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_4_2_3 )) ( mul_val_4_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_4_3_3 )) ( mul_val_4_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_4_4_3 )) ( mul_val_4_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_4_5_3 )) ( mul_val_4_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_4_6_3 )) ( mul_val_4_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_4_7_3 )) ( mul_val_4_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_4_8_3 )) ( mul_val_4_8_6 )
 
 		t_acc_val_4_6 := (((mul_val_4_1_6 + mul_val_4_2_6 ) + (mul_val_4_3_6 + mul_val_4_4_6 )) + ((mul_val_4_5_6 + mul_val_4_6_6 ) + (mul_val_4_7_6 + mul_val_4_8_6 )))
 		
@@ -2231,22 +2244,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_5_1_1 := ($cast ($int<16>) (kval_5_1_1 * ival1_1 ))
-		mul_val_5_2_1 := ($cast ($int<16>) (kval_5_2_1 * ival2_1 ))
-		mul_val_5_3_1 := ($cast ($int<16>) (kval_5_3_1 * ival3_1 ))
-		mul_val_5_4_1 := ($cast ($int<16>) (kval_5_4_1 * ival4_1 ))
-		mul_val_5_5_1 := ($cast ($int<16>) (kval_5_5_1 * ival5_1 ))
-		mul_val_5_6_1 := ($cast ($int<16>) (kval_5_6_1 * ival6_1 ))
-		mul_val_5_7_1 := ($cast ($int<16>) (kval_5_7_1 * ival7_1 ))
-		mul_val_5_8_1 := ($cast ($int<16>) (kval_5_8_1 * ival8_1 ))
-//		$call multiplier5 (ival1_1 kval_5_1_1 ) ( mul_val_5_1_1 )
-//		$call multiplier5 (ival2_1 kval_5_2_1 ) ( mul_val_5_2_1 )
-//		$call multiplier5 (ival3_1 kval_5_3_1 ) ( mul_val_5_3_1 )
-//		$call multiplier5 (ival4_1 kval_5_4_1 ) ( mul_val_5_4_1 )
-//		$call multiplier5 (ival5_1 kval_5_5_1 ) ( mul_val_5_5_1 )
-//		$call multiplier5 (ival6_1 kval_5_6_1 ) ( mul_val_5_6_1 )
-//		$call multiplier5 (ival7_1 kval_5_7_1 ) ( mul_val_5_7_1 )
-//		$call multiplier5 (ival8_1 kval_5_8_1 ) ( mul_val_5_8_1 )
+//		mul_val_5_1_1 := ($cast ($int<16>) (kval_5_1_1 * ival1_1 ))
+//		mul_val_5_2_1 := ($cast ($int<16>) (kval_5_2_1 * ival2_1 ))
+//		mul_val_5_3_1 := ($cast ($int<16>) (kval_5_3_1 * ival3_1 ))
+//		mul_val_5_4_1 := ($cast ($int<16>) (kval_5_4_1 * ival4_1 ))
+//		mul_val_5_5_1 := ($cast ($int<16>) (kval_5_5_1 * ival5_1 ))
+//		mul_val_5_6_1 := ($cast ($int<16>) (kval_5_6_1 * ival6_1 ))
+//		mul_val_5_7_1 := ($cast ($int<16>) (kval_5_7_1 * ival7_1 ))
+//		mul_val_5_8_1 := ($cast ($int<16>) (kval_5_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_5_1_1 )) ( mul_val_5_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_5_2_1 )) ( mul_val_5_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_5_3_1 )) ( mul_val_5_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_5_4_1 )) ( mul_val_5_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_5_5_1 )) ( mul_val_5_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_5_6_1 )) ( mul_val_5_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_5_7_1 )) ( mul_val_5_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_5_8_1 )) ( mul_val_5_8_1 )
 
 		t_acc_val_5_1 := (((mul_val_5_1_1 + mul_val_5_2_1 ) + (mul_val_5_3_1 + mul_val_5_4_1 )) + ((mul_val_5_5_1 + mul_val_5_6_1 ) + (mul_val_5_7_1 + mul_val_5_8_1 )))
 		
@@ -2256,22 +2269,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_5_1_4 := ($cast ($int<16>) (kval_5_1_1 * ival1_2 ))
-		mul_val_5_2_4 := ($cast ($int<16>) (kval_5_2_1 * ival2_2 ))
-		mul_val_5_3_4 := ($cast ($int<16>) (kval_5_3_1 * ival3_2 ))
-		mul_val_5_4_4 := ($cast ($int<16>) (kval_5_4_1 * ival4_2 ))
-		mul_val_5_5_4 := ($cast ($int<16>) (kval_5_5_1 * ival5_2 ))
-		mul_val_5_6_4 := ($cast ($int<16>) (kval_5_6_1 * ival6_2 ))
-		mul_val_5_7_4 := ($cast ($int<16>) (kval_5_7_1 * ival7_2 ))
-		mul_val_5_8_4 := ($cast ($int<16>) (kval_5_8_1 * ival8_2 ))
-//		$call multiplier5 (ival1_2 kval_5_1_1 ) ( mul_val_5_1_4 )
-//		$call multiplier5 (ival2_2 kval_5_2_1 ) ( mul_val_5_2_4 )
-//		$call multiplier5 (ival3_2 kval_5_3_1 ) ( mul_val_5_3_4 )
-//		$call multiplier5 (ival4_2 kval_5_4_1 ) ( mul_val_5_4_4 )
-//		$call multiplier5 (ival5_2 kval_5_5_1 ) ( mul_val_5_5_4 )
-//		$call multiplier5 (ival6_2 kval_5_6_1 ) ( mul_val_5_6_4 )
-//		$call multiplier5 (ival7_2 kval_5_7_1 ) ( mul_val_5_7_4 )
-//		$call multiplier5 (ival8_2 kval_5_8_1 ) ( mul_val_5_8_4 )
+//		mul_val_5_1_4 := ($cast ($int<16>) (kval_5_1_1 * ival1_2 ))
+//		mul_val_5_2_4 := ($cast ($int<16>) (kval_5_2_1 * ival2_2 ))
+//		mul_val_5_3_4 := ($cast ($int<16>) (kval_5_3_1 * ival3_2 ))
+//		mul_val_5_4_4 := ($cast ($int<16>) (kval_5_4_1 * ival4_2 ))
+//		mul_val_5_5_4 := ($cast ($int<16>) (kval_5_5_1 * ival5_2 ))
+//		mul_val_5_6_4 := ($cast ($int<16>) (kval_5_6_1 * ival6_2 ))
+//		mul_val_5_7_4 := ($cast ($int<16>) (kval_5_7_1 * ival7_2 ))
+//		mul_val_5_8_4 := ($cast ($int<16>) (kval_5_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_5_1_1 )) ( mul_val_5_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_5_2_1 )) ( mul_val_5_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_5_3_1 )) ( mul_val_5_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_5_4_1 )) ( mul_val_5_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_5_5_1 )) ( mul_val_5_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_5_6_1 )) ( mul_val_5_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_5_7_1 )) ( mul_val_5_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_5_8_1 )) ( mul_val_5_8_4 )
 
 		t_acc_val_5_4 := (((mul_val_5_1_4 + mul_val_5_2_4 ) + (mul_val_5_3_4 + mul_val_5_4_4 )) + ((mul_val_5_5_4 + mul_val_5_6_4 ) + (mul_val_5_7_4 + mul_val_5_8_4 )))
 		
@@ -2300,22 +2313,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_5_1_2 := ($cast ($int<16>) (kval_5_1_2 * ival1_2 ))
-		mul_val_5_2_2 := ($cast ($int<16>) (kval_5_2_2 * ival2_2 ))
-		mul_val_5_3_2 := ($cast ($int<16>) (kval_5_3_2 * ival3_2 ))
-		mul_val_5_4_2 := ($cast ($int<16>) (kval_5_4_2 * ival4_2 ))
-		mul_val_5_5_2 := ($cast ($int<16>) (kval_5_5_2 * ival5_2 ))
-		mul_val_5_6_2 := ($cast ($int<16>) (kval_5_6_2 * ival6_2 ))
-		mul_val_5_7_2 := ($cast ($int<16>) (kval_5_7_2 * ival7_2 ))
-		mul_val_5_8_2 := ($cast ($int<16>) (kval_5_8_2 * ival8_2 ))
-//		$call multiplier5 (ival1_2 kval_5_1_2 ) ( mul_val_5_1_2 )
-//		$call multiplier5 (ival2_2 kval_5_2_2 ) ( mul_val_5_2_2 )
-//		$call multiplier5 (ival3_2 kval_5_3_2 ) ( mul_val_5_3_2 )
-//		$call multiplier5 (ival4_2 kval_5_4_2 ) ( mul_val_5_4_2 )
-//		$call multiplier5 (ival5_2 kval_5_5_2 ) ( mul_val_5_5_2 )
-//		$call multiplier5 (ival6_2 kval_5_6_2 ) ( mul_val_5_6_2 )
-//		$call multiplier5 (ival7_2 kval_5_7_2 ) ( mul_val_5_7_2 )
-//		$call multiplier5 (ival8_2 kval_5_8_2 ) ( mul_val_5_8_2 )
+//		mul_val_5_1_2 := ($cast ($int<16>) (kval_5_1_2 * ival1_2 ))
+//		mul_val_5_2_2 := ($cast ($int<16>) (kval_5_2_2 * ival2_2 ))
+//		mul_val_5_3_2 := ($cast ($int<16>) (kval_5_3_2 * ival3_2 ))
+//		mul_val_5_4_2 := ($cast ($int<16>) (kval_5_4_2 * ival4_2 ))
+//		mul_val_5_5_2 := ($cast ($int<16>) (kval_5_5_2 * ival5_2 ))
+//		mul_val_5_6_2 := ($cast ($int<16>) (kval_5_6_2 * ival6_2 ))
+//		mul_val_5_7_2 := ($cast ($int<16>) (kval_5_7_2 * ival7_2 ))
+//		mul_val_5_8_2 := ($cast ($int<16>) (kval_5_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_5_1_2 )) ( mul_val_5_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_5_2_2 )) ( mul_val_5_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_5_3_2 )) ( mul_val_5_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_5_4_2 )) ( mul_val_5_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_5_5_2 )) ( mul_val_5_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_5_6_2 )) ( mul_val_5_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_5_7_2 )) ( mul_val_5_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_5_8_2 )) ( mul_val_5_8_2 )
 
 		t_acc_val_5_2 := (((mul_val_5_1_2 + mul_val_5_2_2 ) + (mul_val_5_3_2 + mul_val_5_4_2 )) + ((mul_val_5_5_2 + mul_val_5_6_2 ) + (mul_val_5_7_2 + mul_val_5_8_2 )))
 		
@@ -2325,22 +2338,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_5_1_5 := ($cast ($int<16>) (kval_5_1_2 * ival1_3 ))
-		mul_val_5_2_5 := ($cast ($int<16>) (kval_5_2_2 * ival2_3 ))
-		mul_val_5_3_5 := ($cast ($int<16>) (kval_5_3_2 * ival3_3 ))
-		mul_val_5_4_5 := ($cast ($int<16>) (kval_5_4_2 * ival4_3 ))
-		mul_val_5_5_5 := ($cast ($int<16>) (kval_5_5_2 * ival5_3 ))
-		mul_val_5_6_5 := ($cast ($int<16>) (kval_5_6_2 * ival6_3 ))
-		mul_val_5_7_5 := ($cast ($int<16>) (kval_5_7_2 * ival7_3 ))
-		mul_val_5_8_5 := ($cast ($int<16>) (kval_5_8_2 * ival8_3 ))
-//		$call multiplier5 (ival1_3 kval_5_1_2 ) ( mul_val_5_1_5 )
-//		$call multiplier5 (ival2_3 kval_5_2_2 ) ( mul_val_5_2_5 )
-//		$call multiplier5 (ival3_3 kval_5_3_2 ) ( mul_val_5_3_5 )
-//		$call multiplier5 (ival4_3 kval_5_4_2 ) ( mul_val_5_4_5 )
-//		$call multiplier5 (ival5_3 kval_5_5_2 ) ( mul_val_5_5_5 )
-//		$call multiplier5 (ival6_3 kval_5_6_2 ) ( mul_val_5_6_5 )
-//		$call multiplier5 (ival7_3 kval_5_7_2 ) ( mul_val_5_7_5 )
-//		$call multiplier5 (ival8_3 kval_5_8_2 ) ( mul_val_5_8_5 )
+//		mul_val_5_1_5 := ($cast ($int<16>) (kval_5_1_2 * ival1_3 ))
+//		mul_val_5_2_5 := ($cast ($int<16>) (kval_5_2_2 * ival2_3 ))
+//		mul_val_5_3_5 := ($cast ($int<16>) (kval_5_3_2 * ival3_3 ))
+//		mul_val_5_4_5 := ($cast ($int<16>) (kval_5_4_2 * ival4_3 ))
+//		mul_val_5_5_5 := ($cast ($int<16>) (kval_5_5_2 * ival5_3 ))
+//		mul_val_5_6_5 := ($cast ($int<16>) (kval_5_6_2 * ival6_3 ))
+//		mul_val_5_7_5 := ($cast ($int<16>) (kval_5_7_2 * ival7_3 ))
+//		mul_val_5_8_5 := ($cast ($int<16>) (kval_5_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_5_1_2 )) ( mul_val_5_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_5_2_2 )) ( mul_val_5_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_5_3_2 )) ( mul_val_5_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_5_4_2 )) ( mul_val_5_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_5_5_2 )) ( mul_val_5_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_5_6_2 )) ( mul_val_5_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_5_7_2 )) ( mul_val_5_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_5_8_2 )) ( mul_val_5_8_5 )
 
 		t_acc_val_5_5 := (((mul_val_5_1_5 + mul_val_5_2_5 ) + (mul_val_5_3_5 + mul_val_5_4_5 )) + ((mul_val_5_5_5 + mul_val_5_6_5 ) + (mul_val_5_7_5 + mul_val_5_8_5 )))
 		
@@ -2373,22 +2386,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_5_1_3 := ($cast ($int<16>) (kval_5_1_3 * ival1_3 ))
-		mul_val_5_2_3 := ($cast ($int<16>) (kval_5_2_3 * ival2_3 ))
-		mul_val_5_3_3 := ($cast ($int<16>) (kval_5_3_3 * ival3_3 ))
-		mul_val_5_4_3 := ($cast ($int<16>) (kval_5_4_3 * ival4_3 ))
-		mul_val_5_5_3 := ($cast ($int<16>) (kval_5_5_3 * ival5_3 ))
-		mul_val_5_6_3 := ($cast ($int<16>) (kval_5_6_3 * ival6_3 ))
-		mul_val_5_7_3 := ($cast ($int<16>) (kval_5_7_3 * ival7_3 ))
-		mul_val_5_8_3 := ($cast ($int<16>) (kval_5_8_3 * ival8_3 ))
-//		$call multiplier5 (ival1_3 kval_5_1_3 ) ( mul_val_5_1_3 )
-//		$call multiplier5 (ival2_3 kval_5_2_3 ) ( mul_val_5_2_3 )
-//		$call multiplier5 (ival3_3 kval_5_3_3 ) ( mul_val_5_3_3 )
-//		$call multiplier5 (ival4_3 kval_5_4_3 ) ( mul_val_5_4_3 )
-//		$call multiplier5 (ival5_3 kval_5_5_3 ) ( mul_val_5_5_3 )
-//		$call multiplier5 (ival6_3 kval_5_6_3 ) ( mul_val_5_6_3 )
-//		$call multiplier5 (ival7_3 kval_5_7_3 ) ( mul_val_5_7_3 )
-//		$call multiplier5 (ival8_3 kval_5_8_3 ) ( mul_val_5_8_3 )
+//		mul_val_5_1_3 := ($cast ($int<16>) (kval_5_1_3 * ival1_3 ))
+//		mul_val_5_2_3 := ($cast ($int<16>) (kval_5_2_3 * ival2_3 ))
+//		mul_val_5_3_3 := ($cast ($int<16>) (kval_5_3_3 * ival3_3 ))
+//		mul_val_5_4_3 := ($cast ($int<16>) (kval_5_4_3 * ival4_3 ))
+//		mul_val_5_5_3 := ($cast ($int<16>) (kval_5_5_3 * ival5_3 ))
+//		mul_val_5_6_3 := ($cast ($int<16>) (kval_5_6_3 * ival6_3 ))
+//		mul_val_5_7_3 := ($cast ($int<16>) (kval_5_7_3 * ival7_3 ))
+//		mul_val_5_8_3 := ($cast ($int<16>) (kval_5_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_5_1_3 )) ( mul_val_5_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_5_2_3 )) ( mul_val_5_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_5_3_3 )) ( mul_val_5_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_5_4_3 )) ( mul_val_5_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_5_5_3 )) ( mul_val_5_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_5_6_3 )) ( mul_val_5_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_5_7_3 )) ( mul_val_5_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_5_8_3 )) ( mul_val_5_8_3 )
 
 		t_acc_val_5_3 := (((mul_val_5_1_3 + mul_val_5_2_3 ) + (mul_val_5_3_3 + mul_val_5_4_3 )) + ((mul_val_5_5_3 + mul_val_5_6_3 ) + (mul_val_5_7_3 + mul_val_5_8_3 )))
 		
@@ -2398,22 +2411,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_5_1_6 := ($cast ($int<16>) (kval_5_1_3 * ival1_4 ))
-		mul_val_5_2_6 := ($cast ($int<16>) (kval_5_2_3 * ival2_4 ))
-		mul_val_5_3_6 := ($cast ($int<16>) (kval_5_3_3 * ival3_4 ))
-		mul_val_5_4_6 := ($cast ($int<16>) (kval_5_4_3 * ival4_4 ))
-		mul_val_5_5_6 := ($cast ($int<16>) (kval_5_5_3 * ival5_4 ))
-		mul_val_5_6_6 := ($cast ($int<16>) (kval_5_6_3 * ival6_4 ))
-		mul_val_5_7_6 := ($cast ($int<16>) (kval_5_7_3 * ival7_4 ))
-		mul_val_5_8_6 := ($cast ($int<16>) (kval_5_8_3 * ival8_4 ))
-//		$call multiplier5 (ival1_4 kval_5_1_3 ) ( mul_val_5_1_6 )
-//		$call multiplier5 (ival2_4 kval_5_2_3 ) ( mul_val_5_2_6 )
-//		$call multiplier5 (ival3_4 kval_5_3_3 ) ( mul_val_5_3_6 )
-//		$call multiplier5 (ival4_4 kval_5_4_3 ) ( mul_val_5_4_6 )
-//		$call multiplier5 (ival5_4 kval_5_5_3 ) ( mul_val_5_5_6 )
-//		$call multiplier5 (ival6_4 kval_5_6_3 ) ( mul_val_5_6_6 )
-//		$call multiplier5 (ival7_4 kval_5_7_3 ) ( mul_val_5_7_6 )
-//		$call multiplier5 (ival8_4 kval_5_8_3 ) ( mul_val_5_8_6 )
+//		mul_val_5_1_6 := ($cast ($int<16>) (kval_5_1_3 * ival1_4 ))
+//		mul_val_5_2_6 := ($cast ($int<16>) (kval_5_2_3 * ival2_4 ))
+//		mul_val_5_3_6 := ($cast ($int<16>) (kval_5_3_3 * ival3_4 ))
+//		mul_val_5_4_6 := ($cast ($int<16>) (kval_5_4_3 * ival4_4 ))
+//		mul_val_5_5_6 := ($cast ($int<16>) (kval_5_5_3 * ival5_4 ))
+//		mul_val_5_6_6 := ($cast ($int<16>) (kval_5_6_3 * ival6_4 ))
+//		mul_val_5_7_6 := ($cast ($int<16>) (kval_5_7_3 * ival7_4 ))
+//		mul_val_5_8_6 := ($cast ($int<16>) (kval_5_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_5_1_3 )) ( mul_val_5_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_5_2_3 )) ( mul_val_5_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_5_3_3 )) ( mul_val_5_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_5_4_3 )) ( mul_val_5_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_5_5_3 )) ( mul_val_5_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_5_6_3 )) ( mul_val_5_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_5_7_3 )) ( mul_val_5_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_5_8_3 )) ( mul_val_5_8_6 )
 
 		t_acc_val_5_6 := (((mul_val_5_1_6 + mul_val_5_2_6 ) + (mul_val_5_3_6 + mul_val_5_4_6 )) + ((mul_val_5_5_6 + mul_val_5_6_6 ) + (mul_val_5_7_6 + mul_val_5_8_6 )))
 		
@@ -2460,22 +2473,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_6_1_1 := ($cast ($int<16>) (kval_6_1_1 * ival1_1 ))
-		mul_val_6_2_1 := ($cast ($int<16>) (kval_6_2_1 * ival2_1 ))
-		mul_val_6_3_1 := ($cast ($int<16>) (kval_6_3_1 * ival3_1 ))
-		mul_val_6_4_1 := ($cast ($int<16>) (kval_6_4_1 * ival4_1 ))
-		mul_val_6_5_1 := ($cast ($int<16>) (kval_6_5_1 * ival5_1 ))
-		mul_val_6_6_1 := ($cast ($int<16>) (kval_6_6_1 * ival6_1 ))
-		mul_val_6_7_1 := ($cast ($int<16>) (kval_6_7_1 * ival7_1 ))
-		mul_val_6_8_1 := ($cast ($int<16>) (kval_6_8_1 * ival8_1 ))
-//		$call multiplier6 (ival1_1 kval_6_1_1 ) ( mul_val_6_1_1 )
-//		$call multiplier6 (ival2_1 kval_6_2_1 ) ( mul_val_6_2_1 )
-//		$call multiplier6 (ival3_1 kval_6_3_1 ) ( mul_val_6_3_1 )
-//		$call multiplier6 (ival4_1 kval_6_4_1 ) ( mul_val_6_4_1 )
-//		$call multiplier6 (ival5_1 kval_6_5_1 ) ( mul_val_6_5_1 )
-//		$call multiplier6 (ival6_1 kval_6_6_1 ) ( mul_val_6_6_1 )
-//		$call multiplier6 (ival7_1 kval_6_7_1 ) ( mul_val_6_7_1 )
-//		$call multiplier6 (ival8_1 kval_6_8_1 ) ( mul_val_6_8_1 )
+//		mul_val_6_1_1 := ($cast ($int<16>) (kval_6_1_1 * ival1_1 ))
+//		mul_val_6_2_1 := ($cast ($int<16>) (kval_6_2_1 * ival2_1 ))
+//		mul_val_6_3_1 := ($cast ($int<16>) (kval_6_3_1 * ival3_1 ))
+//		mul_val_6_4_1 := ($cast ($int<16>) (kval_6_4_1 * ival4_1 ))
+//		mul_val_6_5_1 := ($cast ($int<16>) (kval_6_5_1 * ival5_1 ))
+//		mul_val_6_6_1 := ($cast ($int<16>) (kval_6_6_1 * ival6_1 ))
+//		mul_val_6_7_1 := ($cast ($int<16>) (kval_6_7_1 * ival7_1 ))
+//		mul_val_6_8_1 := ($cast ($int<16>) (kval_6_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_6_1_1 )) ( mul_val_6_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_6_2_1 )) ( mul_val_6_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_6_3_1 )) ( mul_val_6_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_6_4_1 )) ( mul_val_6_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_6_5_1 )) ( mul_val_6_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_6_6_1 )) ( mul_val_6_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_6_7_1 )) ( mul_val_6_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_6_8_1 )) ( mul_val_6_8_1 )
 
 		t_acc_val_6_1 := (((mul_val_6_1_1 + mul_val_6_2_1 ) + (mul_val_6_3_1 + mul_val_6_4_1 )) + ((mul_val_6_5_1 + mul_val_6_6_1 ) + (mul_val_6_7_1 + mul_val_6_8_1 )))
 		
@@ -2485,22 +2498,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_6_1_4 := ($cast ($int<16>) (kval_6_1_1 * ival1_2 ))
-		mul_val_6_2_4 := ($cast ($int<16>) (kval_6_2_1 * ival2_2 ))
-		mul_val_6_3_4 := ($cast ($int<16>) (kval_6_3_1 * ival3_2 ))
-		mul_val_6_4_4 := ($cast ($int<16>) (kval_6_4_1 * ival4_2 ))
-		mul_val_6_5_4 := ($cast ($int<16>) (kval_6_5_1 * ival5_2 ))
-		mul_val_6_6_4 := ($cast ($int<16>) (kval_6_6_1 * ival6_2 ))
-		mul_val_6_7_4 := ($cast ($int<16>) (kval_6_7_1 * ival7_2 ))
-		mul_val_6_8_4 := ($cast ($int<16>) (kval_6_8_1 * ival8_2 ))
-//		$call multiplier6 (ival1_2 kval_6_1_1 ) ( mul_val_6_1_4 )
-//		$call multiplier6 (ival2_2 kval_6_2_1 ) ( mul_val_6_2_4 )
-//		$call multiplier6 (ival3_2 kval_6_3_1 ) ( mul_val_6_3_4 )
-//		$call multiplier6 (ival4_2 kval_6_4_1 ) ( mul_val_6_4_4 )
-//		$call multiplier6 (ival5_2 kval_6_5_1 ) ( mul_val_6_5_4 )
-//		$call multiplier6 (ival6_2 kval_6_6_1 ) ( mul_val_6_6_4 )
-//		$call multiplier6 (ival7_2 kval_6_7_1 ) ( mul_val_6_7_4 )
-//		$call multiplier6 (ival8_2 kval_6_8_1 ) ( mul_val_6_8_4 )
+//		mul_val_6_1_4 := ($cast ($int<16>) (kval_6_1_1 * ival1_2 ))
+//		mul_val_6_2_4 := ($cast ($int<16>) (kval_6_2_1 * ival2_2 ))
+//		mul_val_6_3_4 := ($cast ($int<16>) (kval_6_3_1 * ival3_2 ))
+//		mul_val_6_4_4 := ($cast ($int<16>) (kval_6_4_1 * ival4_2 ))
+//		mul_val_6_5_4 := ($cast ($int<16>) (kval_6_5_1 * ival5_2 ))
+//		mul_val_6_6_4 := ($cast ($int<16>) (kval_6_6_1 * ival6_2 ))
+//		mul_val_6_7_4 := ($cast ($int<16>) (kval_6_7_1 * ival7_2 ))
+//		mul_val_6_8_4 := ($cast ($int<16>) (kval_6_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_6_1_1 )) ( mul_val_6_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_6_2_1 )) ( mul_val_6_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_6_3_1 )) ( mul_val_6_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_6_4_1 )) ( mul_val_6_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_6_5_1 )) ( mul_val_6_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_6_6_1 )) ( mul_val_6_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_6_7_1 )) ( mul_val_6_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_6_8_1 )) ( mul_val_6_8_4 )
 
 		t_acc_val_6_4 := (((mul_val_6_1_4 + mul_val_6_2_4 ) + (mul_val_6_3_4 + mul_val_6_4_4 )) + ((mul_val_6_5_4 + mul_val_6_6_4 ) + (mul_val_6_7_4 + mul_val_6_8_4 )))
 		
@@ -2529,22 +2542,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_6_1_2 := ($cast ($int<16>) (kval_6_1_2 * ival1_2 ))
-		mul_val_6_2_2 := ($cast ($int<16>) (kval_6_2_2 * ival2_2 ))
-		mul_val_6_3_2 := ($cast ($int<16>) (kval_6_3_2 * ival3_2 ))
-		mul_val_6_4_2 := ($cast ($int<16>) (kval_6_4_2 * ival4_2 ))
-		mul_val_6_5_2 := ($cast ($int<16>) (kval_6_5_2 * ival5_2 ))
-		mul_val_6_6_2 := ($cast ($int<16>) (kval_6_6_2 * ival6_2 ))
-		mul_val_6_7_2 := ($cast ($int<16>) (kval_6_7_2 * ival7_2 ))
-		mul_val_6_8_2 := ($cast ($int<16>) (kval_6_8_2 * ival8_2 ))
-//		$call multiplier6 (ival1_2 kval_6_1_2 ) ( mul_val_6_1_2 )
-//		$call multiplier6 (ival2_2 kval_6_2_2 ) ( mul_val_6_2_2 )
-//		$call multiplier6 (ival3_2 kval_6_3_2 ) ( mul_val_6_3_2 )
-//		$call multiplier6 (ival4_2 kval_6_4_2 ) ( mul_val_6_4_2 )
-//		$call multiplier6 (ival5_2 kval_6_5_2 ) ( mul_val_6_5_2 )
-//		$call multiplier6 (ival6_2 kval_6_6_2 ) ( mul_val_6_6_2 )
-//		$call multiplier6 (ival7_2 kval_6_7_2 ) ( mul_val_6_7_2 )
-//		$call multiplier6 (ival8_2 kval_6_8_2 ) ( mul_val_6_8_2 )
+//		mul_val_6_1_2 := ($cast ($int<16>) (kval_6_1_2 * ival1_2 ))
+//		mul_val_6_2_2 := ($cast ($int<16>) (kval_6_2_2 * ival2_2 ))
+//		mul_val_6_3_2 := ($cast ($int<16>) (kval_6_3_2 * ival3_2 ))
+//		mul_val_6_4_2 := ($cast ($int<16>) (kval_6_4_2 * ival4_2 ))
+//		mul_val_6_5_2 := ($cast ($int<16>) (kval_6_5_2 * ival5_2 ))
+//		mul_val_6_6_2 := ($cast ($int<16>) (kval_6_6_2 * ival6_2 ))
+//		mul_val_6_7_2 := ($cast ($int<16>) (kval_6_7_2 * ival7_2 ))
+//		mul_val_6_8_2 := ($cast ($int<16>) (kval_6_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_6_1_2 )) ( mul_val_6_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_6_2_2 )) ( mul_val_6_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_6_3_2 )) ( mul_val_6_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_6_4_2 )) ( mul_val_6_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_6_5_2 )) ( mul_val_6_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_6_6_2 )) ( mul_val_6_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_6_7_2 )) ( mul_val_6_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_6_8_2 )) ( mul_val_6_8_2 )
 
 		t_acc_val_6_2 := (((mul_val_6_1_2 + mul_val_6_2_2 ) + (mul_val_6_3_2 + mul_val_6_4_2 )) + ((mul_val_6_5_2 + mul_val_6_6_2 ) + (mul_val_6_7_2 + mul_val_6_8_2 )))
 		
@@ -2554,22 +2567,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_6_1_5 := ($cast ($int<16>) (kval_6_1_2 * ival1_3 ))
-		mul_val_6_2_5 := ($cast ($int<16>) (kval_6_2_2 * ival2_3 ))
-		mul_val_6_3_5 := ($cast ($int<16>) (kval_6_3_2 * ival3_3 ))
-		mul_val_6_4_5 := ($cast ($int<16>) (kval_6_4_2 * ival4_3 ))
-		mul_val_6_5_5 := ($cast ($int<16>) (kval_6_5_2 * ival5_3 ))
-		mul_val_6_6_5 := ($cast ($int<16>) (kval_6_6_2 * ival6_3 ))
-		mul_val_6_7_5 := ($cast ($int<16>) (kval_6_7_2 * ival7_3 ))
-		mul_val_6_8_5 := ($cast ($int<16>) (kval_6_8_2 * ival8_3 ))
-//		$call multiplier6 (ival1_3 kval_6_1_2 ) ( mul_val_6_1_5 )
-//		$call multiplier6 (ival2_3 kval_6_2_2 ) ( mul_val_6_2_5 )
-//		$call multiplier6 (ival3_3 kval_6_3_2 ) ( mul_val_6_3_5 )
-//		$call multiplier6 (ival4_3 kval_6_4_2 ) ( mul_val_6_4_5 )
-//		$call multiplier6 (ival5_3 kval_6_5_2 ) ( mul_val_6_5_5 )
-//		$call multiplier6 (ival6_3 kval_6_6_2 ) ( mul_val_6_6_5 )
-//		$call multiplier6 (ival7_3 kval_6_7_2 ) ( mul_val_6_7_5 )
-//		$call multiplier6 (ival8_3 kval_6_8_2 ) ( mul_val_6_8_5 )
+//		mul_val_6_1_5 := ($cast ($int<16>) (kval_6_1_2 * ival1_3 ))
+//		mul_val_6_2_5 := ($cast ($int<16>) (kval_6_2_2 * ival2_3 ))
+//		mul_val_6_3_5 := ($cast ($int<16>) (kval_6_3_2 * ival3_3 ))
+//		mul_val_6_4_5 := ($cast ($int<16>) (kval_6_4_2 * ival4_3 ))
+//		mul_val_6_5_5 := ($cast ($int<16>) (kval_6_5_2 * ival5_3 ))
+//		mul_val_6_6_5 := ($cast ($int<16>) (kval_6_6_2 * ival6_3 ))
+//		mul_val_6_7_5 := ($cast ($int<16>) (kval_6_7_2 * ival7_3 ))
+//		mul_val_6_8_5 := ($cast ($int<16>) (kval_6_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_6_1_2 )) ( mul_val_6_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_6_2_2 )) ( mul_val_6_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_6_3_2 )) ( mul_val_6_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_6_4_2 )) ( mul_val_6_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_6_5_2 )) ( mul_val_6_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_6_6_2 )) ( mul_val_6_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_6_7_2 )) ( mul_val_6_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_6_8_2 )) ( mul_val_6_8_5 )
 
 		t_acc_val_6_5 := (((mul_val_6_1_5 + mul_val_6_2_5 ) + (mul_val_6_3_5 + mul_val_6_4_5 )) + ((mul_val_6_5_5 + mul_val_6_6_5 ) + (mul_val_6_7_5 + mul_val_6_8_5 )))
 		
@@ -2602,22 +2615,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_6_1_3 := ($cast ($int<16>) (kval_6_1_3 * ival1_3 ))
-		mul_val_6_2_3 := ($cast ($int<16>) (kval_6_2_3 * ival2_3 ))
-		mul_val_6_3_3 := ($cast ($int<16>) (kval_6_3_3 * ival3_3 ))
-		mul_val_6_4_3 := ($cast ($int<16>) (kval_6_4_3 * ival4_3 ))
-		mul_val_6_5_3 := ($cast ($int<16>) (kval_6_5_3 * ival5_3 ))
-		mul_val_6_6_3 := ($cast ($int<16>) (kval_6_6_3 * ival6_3 ))
-		mul_val_6_7_3 := ($cast ($int<16>) (kval_6_7_3 * ival7_3 ))
-		mul_val_6_8_3 := ($cast ($int<16>) (kval_6_8_3 * ival8_3 ))
-//		$call multiplier6 (ival1_3 kval_6_1_3 ) ( mul_val_6_1_3 )
-//		$call multiplier6 (ival2_3 kval_6_2_3 ) ( mul_val_6_2_3 )
-//		$call multiplier6 (ival3_3 kval_6_3_3 ) ( mul_val_6_3_3 )
-//		$call multiplier6 (ival4_3 kval_6_4_3 ) ( mul_val_6_4_3 )
-//		$call multiplier6 (ival5_3 kval_6_5_3 ) ( mul_val_6_5_3 )
-//		$call multiplier6 (ival6_3 kval_6_6_3 ) ( mul_val_6_6_3 )
-//		$call multiplier6 (ival7_3 kval_6_7_3 ) ( mul_val_6_7_3 )
-//		$call multiplier6 (ival8_3 kval_6_8_3 ) ( mul_val_6_8_3 )
+//		mul_val_6_1_3 := ($cast ($int<16>) (kval_6_1_3 * ival1_3 ))
+//		mul_val_6_2_3 := ($cast ($int<16>) (kval_6_2_3 * ival2_3 ))
+//		mul_val_6_3_3 := ($cast ($int<16>) (kval_6_3_3 * ival3_3 ))
+//		mul_val_6_4_3 := ($cast ($int<16>) (kval_6_4_3 * ival4_3 ))
+//		mul_val_6_5_3 := ($cast ($int<16>) (kval_6_5_3 * ival5_3 ))
+//		mul_val_6_6_3 := ($cast ($int<16>) (kval_6_6_3 * ival6_3 ))
+//		mul_val_6_7_3 := ($cast ($int<16>) (kval_6_7_3 * ival7_3 ))
+//		mul_val_6_8_3 := ($cast ($int<16>) (kval_6_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_6_1_3 )) ( mul_val_6_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_6_2_3 )) ( mul_val_6_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_6_3_3 )) ( mul_val_6_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_6_4_3 )) ( mul_val_6_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_6_5_3 )) ( mul_val_6_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_6_6_3 )) ( mul_val_6_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_6_7_3 )) ( mul_val_6_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_6_8_3 )) ( mul_val_6_8_3 )
 
 		t_acc_val_6_3 := (((mul_val_6_1_3 + mul_val_6_2_3 ) + (mul_val_6_3_3 + mul_val_6_4_3 )) + ((mul_val_6_5_3 + mul_val_6_6_3 ) + (mul_val_6_7_3 + mul_val_6_8_3 )))
 		
@@ -2627,22 +2640,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_6_1_6 := ($cast ($int<16>) (kval_6_1_3 * ival1_4 ))
-		mul_val_6_2_6 := ($cast ($int<16>) (kval_6_2_3 * ival2_4 ))
-		mul_val_6_3_6 := ($cast ($int<16>) (kval_6_3_3 * ival3_4 ))
-		mul_val_6_4_6 := ($cast ($int<16>) (kval_6_4_3 * ival4_4 ))
-		mul_val_6_5_6 := ($cast ($int<16>) (kval_6_5_3 * ival5_4 ))
-		mul_val_6_6_6 := ($cast ($int<16>) (kval_6_6_3 * ival6_4 ))
-		mul_val_6_7_6 := ($cast ($int<16>) (kval_6_7_3 * ival7_4 ))
-		mul_val_6_8_6 := ($cast ($int<16>) (kval_6_8_3 * ival8_4 ))
-//		$call multiplier6 (ival1_4 kval_6_1_3 ) ( mul_val_6_1_6 )
-//		$call multiplier6 (ival2_4 kval_6_2_3 ) ( mul_val_6_2_6 )
-//		$call multiplier6 (ival3_4 kval_6_3_3 ) ( mul_val_6_3_6 )
-//		$call multiplier6 (ival4_4 kval_6_4_3 ) ( mul_val_6_4_6 )
-//		$call multiplier6 (ival5_4 kval_6_5_3 ) ( mul_val_6_5_6 )
-//		$call multiplier6 (ival6_4 kval_6_6_3 ) ( mul_val_6_6_6 )
-//		$call multiplier6 (ival7_4 kval_6_7_3 ) ( mul_val_6_7_6 )
-//		$call multiplier6 (ival8_4 kval_6_8_3 ) ( mul_val_6_8_6 )
+//		mul_val_6_1_6 := ($cast ($int<16>) (kval_6_1_3 * ival1_4 ))
+//		mul_val_6_2_6 := ($cast ($int<16>) (kval_6_2_3 * ival2_4 ))
+//		mul_val_6_3_6 := ($cast ($int<16>) (kval_6_3_3 * ival3_4 ))
+//		mul_val_6_4_6 := ($cast ($int<16>) (kval_6_4_3 * ival4_4 ))
+//		mul_val_6_5_6 := ($cast ($int<16>) (kval_6_5_3 * ival5_4 ))
+//		mul_val_6_6_6 := ($cast ($int<16>) (kval_6_6_3 * ival6_4 ))
+//		mul_val_6_7_6 := ($cast ($int<16>) (kval_6_7_3 * ival7_4 ))
+//		mul_val_6_8_6 := ($cast ($int<16>) (kval_6_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_6_1_3 )) ( mul_val_6_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_6_2_3 )) ( mul_val_6_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_6_3_3 )) ( mul_val_6_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_6_4_3 )) ( mul_val_6_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_6_5_3 )) ( mul_val_6_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_6_6_3 )) ( mul_val_6_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_6_7_3 )) ( mul_val_6_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_6_8_3 )) ( mul_val_6_8_6 )
 
 		t_acc_val_6_6 := (((mul_val_6_1_6 + mul_val_6_2_6 ) + (mul_val_6_3_6 + mul_val_6_4_6 )) + ((mul_val_6_5_6 + mul_val_6_6_6 ) + (mul_val_6_7_6 + mul_val_6_8_6 )))
 		
@@ -2689,22 +2702,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_7_1_1 := ($cast ($int<16>) (kval_7_1_1 * ival1_1 ))
-		mul_val_7_2_1 := ($cast ($int<16>) (kval_7_2_1 * ival2_1 ))
-		mul_val_7_3_1 := ($cast ($int<16>) (kval_7_3_1 * ival3_1 ))
-		mul_val_7_4_1 := ($cast ($int<16>) (kval_7_4_1 * ival4_1 ))
-		mul_val_7_5_1 := ($cast ($int<16>) (kval_7_5_1 * ival5_1 ))
-		mul_val_7_6_1 := ($cast ($int<16>) (kval_7_6_1 * ival6_1 ))
-		mul_val_7_7_1 := ($cast ($int<16>) (kval_7_7_1 * ival7_1 ))
-		mul_val_7_8_1 := ($cast ($int<16>) (kval_7_8_1 * ival8_1 ))
-//		$call multiplier7 (ival1_1 kval_7_1_1 ) ( mul_val_7_1_1 )
-//		$call multiplier7 (ival2_1 kval_7_2_1 ) ( mul_val_7_2_1 )
-//		$call multiplier7 (ival3_1 kval_7_3_1 ) ( mul_val_7_3_1 )
-//		$call multiplier7 (ival4_1 kval_7_4_1 ) ( mul_val_7_4_1 )
-//		$call multiplier7 (ival5_1 kval_7_5_1 ) ( mul_val_7_5_1 )
-//		$call multiplier7 (ival6_1 kval_7_6_1 ) ( mul_val_7_6_1 )
-//		$call multiplier7 (ival7_1 kval_7_7_1 ) ( mul_val_7_7_1 )
-//		$call multiplier7 (ival8_1 kval_7_8_1 ) ( mul_val_7_8_1 )
+//		mul_val_7_1_1 := ($cast ($int<16>) (kval_7_1_1 * ival1_1 ))
+//		mul_val_7_2_1 := ($cast ($int<16>) (kval_7_2_1 * ival2_1 ))
+//		mul_val_7_3_1 := ($cast ($int<16>) (kval_7_3_1 * ival3_1 ))
+//		mul_val_7_4_1 := ($cast ($int<16>) (kval_7_4_1 * ival4_1 ))
+//		mul_val_7_5_1 := ($cast ($int<16>) (kval_7_5_1 * ival5_1 ))
+//		mul_val_7_6_1 := ($cast ($int<16>) (kval_7_6_1 * ival6_1 ))
+//		mul_val_7_7_1 := ($cast ($int<16>) (kval_7_7_1 * ival7_1 ))
+//		mul_val_7_8_1 := ($cast ($int<16>) (kval_7_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_7_1_1 )) ( mul_val_7_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_7_2_1 )) ( mul_val_7_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_7_3_1 )) ( mul_val_7_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_7_4_1 )) ( mul_val_7_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_7_5_1 )) ( mul_val_7_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_7_6_1 )) ( mul_val_7_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_7_7_1 )) ( mul_val_7_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_7_8_1 )) ( mul_val_7_8_1 )
 
 		t_acc_val_7_1 := (((mul_val_7_1_1 + mul_val_7_2_1 ) + (mul_val_7_3_1 + mul_val_7_4_1 )) + ((mul_val_7_5_1 + mul_val_7_6_1 ) + (mul_val_7_7_1 + mul_val_7_8_1 )))
 		
@@ -2714,22 +2727,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_7_1_4 := ($cast ($int<16>) (kval_7_1_1 * ival1_2 ))
-		mul_val_7_2_4 := ($cast ($int<16>) (kval_7_2_1 * ival2_2 ))
-		mul_val_7_3_4 := ($cast ($int<16>) (kval_7_3_1 * ival3_2 ))
-		mul_val_7_4_4 := ($cast ($int<16>) (kval_7_4_1 * ival4_2 ))
-		mul_val_7_5_4 := ($cast ($int<16>) (kval_7_5_1 * ival5_2 ))
-		mul_val_7_6_4 := ($cast ($int<16>) (kval_7_6_1 * ival6_2 ))
-		mul_val_7_7_4 := ($cast ($int<16>) (kval_7_7_1 * ival7_2 ))
-		mul_val_7_8_4 := ($cast ($int<16>) (kval_7_8_1 * ival8_2 ))
-//		$call multiplier7 (ival1_2 kval_7_1_1 ) ( mul_val_7_1_4 )
-//		$call multiplier7 (ival2_2 kval_7_2_1 ) ( mul_val_7_2_4 )
-//		$call multiplier7 (ival3_2 kval_7_3_1 ) ( mul_val_7_3_4 )
-//		$call multiplier7 (ival4_2 kval_7_4_1 ) ( mul_val_7_4_4 )
-//		$call multiplier7 (ival5_2 kval_7_5_1 ) ( mul_val_7_5_4 )
-//		$call multiplier7 (ival6_2 kval_7_6_1 ) ( mul_val_7_6_4 )
-//		$call multiplier7 (ival7_2 kval_7_7_1 ) ( mul_val_7_7_4 )
-//		$call multiplier7 (ival8_2 kval_7_8_1 ) ( mul_val_7_8_4 )
+//		mul_val_7_1_4 := ($cast ($int<16>) (kval_7_1_1 * ival1_2 ))
+//		mul_val_7_2_4 := ($cast ($int<16>) (kval_7_2_1 * ival2_2 ))
+//		mul_val_7_3_4 := ($cast ($int<16>) (kval_7_3_1 * ival3_2 ))
+//		mul_val_7_4_4 := ($cast ($int<16>) (kval_7_4_1 * ival4_2 ))
+//		mul_val_7_5_4 := ($cast ($int<16>) (kval_7_5_1 * ival5_2 ))
+//		mul_val_7_6_4 := ($cast ($int<16>) (kval_7_6_1 * ival6_2 ))
+//		mul_val_7_7_4 := ($cast ($int<16>) (kval_7_7_1 * ival7_2 ))
+//		mul_val_7_8_4 := ($cast ($int<16>) (kval_7_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_7_1_1 )) ( mul_val_7_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_7_2_1 )) ( mul_val_7_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_7_3_1 )) ( mul_val_7_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_7_4_1 )) ( mul_val_7_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_7_5_1 )) ( mul_val_7_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_7_6_1 )) ( mul_val_7_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_7_7_1 )) ( mul_val_7_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_7_8_1 )) ( mul_val_7_8_4 )
 
 		t_acc_val_7_4 := (((mul_val_7_1_4 + mul_val_7_2_4 ) + (mul_val_7_3_4 + mul_val_7_4_4 )) + ((mul_val_7_5_4 + mul_val_7_6_4 ) + (mul_val_7_7_4 + mul_val_7_8_4 )))
 		
@@ -2758,22 +2771,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_7_1_2 := ($cast ($int<16>) (kval_7_1_2 * ival1_2 ))
-		mul_val_7_2_2 := ($cast ($int<16>) (kval_7_2_2 * ival2_2 ))
-		mul_val_7_3_2 := ($cast ($int<16>) (kval_7_3_2 * ival3_2 ))
-		mul_val_7_4_2 := ($cast ($int<16>) (kval_7_4_2 * ival4_2 ))
-		mul_val_7_5_2 := ($cast ($int<16>) (kval_7_5_2 * ival5_2 ))
-		mul_val_7_6_2 := ($cast ($int<16>) (kval_7_6_2 * ival6_2 ))
-		mul_val_7_7_2 := ($cast ($int<16>) (kval_7_7_2 * ival7_2 ))
-		mul_val_7_8_2 := ($cast ($int<16>) (kval_7_8_2 * ival8_2 ))
-//		$call multiplier7 (ival1_2 kval_7_1_2 ) ( mul_val_7_1_2 )
-//		$call multiplier7 (ival2_2 kval_7_2_2 ) ( mul_val_7_2_2 )
-//		$call multiplier7 (ival3_2 kval_7_3_2 ) ( mul_val_7_3_2 )
-//		$call multiplier7 (ival4_2 kval_7_4_2 ) ( mul_val_7_4_2 )
-//		$call multiplier7 (ival5_2 kval_7_5_2 ) ( mul_val_7_5_2 )
-//		$call multiplier7 (ival6_2 kval_7_6_2 ) ( mul_val_7_6_2 )
-//		$call multiplier7 (ival7_2 kval_7_7_2 ) ( mul_val_7_7_2 )
-//		$call multiplier7 (ival8_2 kval_7_8_2 ) ( mul_val_7_8_2 )
+//		mul_val_7_1_2 := ($cast ($int<16>) (kval_7_1_2 * ival1_2 ))
+//		mul_val_7_2_2 := ($cast ($int<16>) (kval_7_2_2 * ival2_2 ))
+//		mul_val_7_3_2 := ($cast ($int<16>) (kval_7_3_2 * ival3_2 ))
+//		mul_val_7_4_2 := ($cast ($int<16>) (kval_7_4_2 * ival4_2 ))
+//		mul_val_7_5_2 := ($cast ($int<16>) (kval_7_5_2 * ival5_2 ))
+//		mul_val_7_6_2 := ($cast ($int<16>) (kval_7_6_2 * ival6_2 ))
+//		mul_val_7_7_2 := ($cast ($int<16>) (kval_7_7_2 * ival7_2 ))
+//		mul_val_7_8_2 := ($cast ($int<16>) (kval_7_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_7_1_2 )) ( mul_val_7_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_7_2_2 )) ( mul_val_7_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_7_3_2 )) ( mul_val_7_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_7_4_2 )) ( mul_val_7_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_7_5_2 )) ( mul_val_7_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_7_6_2 )) ( mul_val_7_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_7_7_2 )) ( mul_val_7_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_7_8_2 )) ( mul_val_7_8_2 )
 
 		t_acc_val_7_2 := (((mul_val_7_1_2 + mul_val_7_2_2 ) + (mul_val_7_3_2 + mul_val_7_4_2 )) + ((mul_val_7_5_2 + mul_val_7_6_2 ) + (mul_val_7_7_2 + mul_val_7_8_2 )))
 		
@@ -2783,22 +2796,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_7_1_5 := ($cast ($int<16>) (kval_7_1_2 * ival1_3 ))
-		mul_val_7_2_5 := ($cast ($int<16>) (kval_7_2_2 * ival2_3 ))
-		mul_val_7_3_5 := ($cast ($int<16>) (kval_7_3_2 * ival3_3 ))
-		mul_val_7_4_5 := ($cast ($int<16>) (kval_7_4_2 * ival4_3 ))
-		mul_val_7_5_5 := ($cast ($int<16>) (kval_7_5_2 * ival5_3 ))
-		mul_val_7_6_5 := ($cast ($int<16>) (kval_7_6_2 * ival6_3 ))
-		mul_val_7_7_5 := ($cast ($int<16>) (kval_7_7_2 * ival7_3 ))
-		mul_val_7_8_5 := ($cast ($int<16>) (kval_7_8_2 * ival8_3 ))
-//		$call multiplier7 (ival1_3 kval_7_1_2 ) ( mul_val_7_1_5 )
-//		$call multiplier7 (ival2_3 kval_7_2_2 ) ( mul_val_7_2_5 )
-//		$call multiplier7 (ival3_3 kval_7_3_2 ) ( mul_val_7_3_5 )
-//		$call multiplier7 (ival4_3 kval_7_4_2 ) ( mul_val_7_4_5 )
-//		$call multiplier7 (ival5_3 kval_7_5_2 ) ( mul_val_7_5_5 )
-//		$call multiplier7 (ival6_3 kval_7_6_2 ) ( mul_val_7_6_5 )
-//		$call multiplier7 (ival7_3 kval_7_7_2 ) ( mul_val_7_7_5 )
-//		$call multiplier7 (ival8_3 kval_7_8_2 ) ( mul_val_7_8_5 )
+//		mul_val_7_1_5 := ($cast ($int<16>) (kval_7_1_2 * ival1_3 ))
+//		mul_val_7_2_5 := ($cast ($int<16>) (kval_7_2_2 * ival2_3 ))
+//		mul_val_7_3_5 := ($cast ($int<16>) (kval_7_3_2 * ival3_3 ))
+//		mul_val_7_4_5 := ($cast ($int<16>) (kval_7_4_2 * ival4_3 ))
+//		mul_val_7_5_5 := ($cast ($int<16>) (kval_7_5_2 * ival5_3 ))
+//		mul_val_7_6_5 := ($cast ($int<16>) (kval_7_6_2 * ival6_3 ))
+//		mul_val_7_7_5 := ($cast ($int<16>) (kval_7_7_2 * ival7_3 ))
+//		mul_val_7_8_5 := ($cast ($int<16>) (kval_7_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_7_1_2 )) ( mul_val_7_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_7_2_2 )) ( mul_val_7_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_7_3_2 )) ( mul_val_7_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_7_4_2 )) ( mul_val_7_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_7_5_2 )) ( mul_val_7_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_7_6_2 )) ( mul_val_7_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_7_7_2 )) ( mul_val_7_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_7_8_2 )) ( mul_val_7_8_5 )
 
 		t_acc_val_7_5 := (((mul_val_7_1_5 + mul_val_7_2_5 ) + (mul_val_7_3_5 + mul_val_7_4_5 )) + ((mul_val_7_5_5 + mul_val_7_6_5 ) + (mul_val_7_7_5 + mul_val_7_8_5 )))
 		
@@ -2831,22 +2844,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_7_1_3 := ($cast ($int<16>) (kval_7_1_3 * ival1_3 ))
-		mul_val_7_2_3 := ($cast ($int<16>) (kval_7_2_3 * ival2_3 ))
-		mul_val_7_3_3 := ($cast ($int<16>) (kval_7_3_3 * ival3_3 ))
-		mul_val_7_4_3 := ($cast ($int<16>) (kval_7_4_3 * ival4_3 ))
-		mul_val_7_5_3 := ($cast ($int<16>) (kval_7_5_3 * ival5_3 ))
-		mul_val_7_6_3 := ($cast ($int<16>) (kval_7_6_3 * ival6_3 ))
-		mul_val_7_7_3 := ($cast ($int<16>) (kval_7_7_3 * ival7_3 ))
-		mul_val_7_8_3 := ($cast ($int<16>) (kval_7_8_3 * ival8_3 ))
-//		$call multiplier7 (ival1_3 kval_7_1_3 ) ( mul_val_7_1_3 )
-//		$call multiplier7 (ival2_3 kval_7_2_3 ) ( mul_val_7_2_3 )
-//		$call multiplier7 (ival3_3 kval_7_3_3 ) ( mul_val_7_3_3 )
-//		$call multiplier7 (ival4_3 kval_7_4_3 ) ( mul_val_7_4_3 )
-//		$call multiplier7 (ival5_3 kval_7_5_3 ) ( mul_val_7_5_3 )
-//		$call multiplier7 (ival6_3 kval_7_6_3 ) ( mul_val_7_6_3 )
-//		$call multiplier7 (ival7_3 kval_7_7_3 ) ( mul_val_7_7_3 )
-//		$call multiplier7 (ival8_3 kval_7_8_3 ) ( mul_val_7_8_3 )
+//		mul_val_7_1_3 := ($cast ($int<16>) (kval_7_1_3 * ival1_3 ))
+//		mul_val_7_2_3 := ($cast ($int<16>) (kval_7_2_3 * ival2_3 ))
+//		mul_val_7_3_3 := ($cast ($int<16>) (kval_7_3_3 * ival3_3 ))
+//		mul_val_7_4_3 := ($cast ($int<16>) (kval_7_4_3 * ival4_3 ))
+//		mul_val_7_5_3 := ($cast ($int<16>) (kval_7_5_3 * ival5_3 ))
+//		mul_val_7_6_3 := ($cast ($int<16>) (kval_7_6_3 * ival6_3 ))
+//		mul_val_7_7_3 := ($cast ($int<16>) (kval_7_7_3 * ival7_3 ))
+//		mul_val_7_8_3 := ($cast ($int<16>) (kval_7_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_7_1_3 )) ( mul_val_7_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_7_2_3 )) ( mul_val_7_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_7_3_3 )) ( mul_val_7_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_7_4_3 )) ( mul_val_7_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_7_5_3 )) ( mul_val_7_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_7_6_3 )) ( mul_val_7_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_7_7_3 )) ( mul_val_7_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_7_8_3 )) ( mul_val_7_8_3 )
 
 		t_acc_val_7_3 := (((mul_val_7_1_3 + mul_val_7_2_3 ) + (mul_val_7_3_3 + mul_val_7_4_3 )) + ((mul_val_7_5_3 + mul_val_7_6_3 ) + (mul_val_7_7_3 + mul_val_7_8_3 )))
 		
@@ -2856,22 +2869,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_7_1_6 := ($cast ($int<16>) (kval_7_1_3 * ival1_4 ))
-		mul_val_7_2_6 := ($cast ($int<16>) (kval_7_2_3 * ival2_4 ))
-		mul_val_7_3_6 := ($cast ($int<16>) (kval_7_3_3 * ival3_4 ))
-		mul_val_7_4_6 := ($cast ($int<16>) (kval_7_4_3 * ival4_4 ))
-		mul_val_7_5_6 := ($cast ($int<16>) (kval_7_5_3 * ival5_4 ))
-		mul_val_7_6_6 := ($cast ($int<16>) (kval_7_6_3 * ival6_4 ))
-		mul_val_7_7_6 := ($cast ($int<16>) (kval_7_7_3 * ival7_4 ))
-		mul_val_7_8_6 := ($cast ($int<16>) (kval_7_8_3 * ival8_4 ))
-//		$call multiplier7 (ival1_4 kval_7_1_3 ) ( mul_val_7_1_6 )
-//		$call multiplier7 (ival2_4 kval_7_2_3 ) ( mul_val_7_2_6 )
-//		$call multiplier7 (ival3_4 kval_7_3_3 ) ( mul_val_7_3_6 )
-//		$call multiplier7 (ival4_4 kval_7_4_3 ) ( mul_val_7_4_6 )
-//		$call multiplier7 (ival5_4 kval_7_5_3 ) ( mul_val_7_5_6 )
-//		$call multiplier7 (ival6_4 kval_7_6_3 ) ( mul_val_7_6_6 )
-//		$call multiplier7 (ival7_4 kval_7_7_3 ) ( mul_val_7_7_6 )
-//		$call multiplier7 (ival8_4 kval_7_8_3 ) ( mul_val_7_8_6 )
+//		mul_val_7_1_6 := ($cast ($int<16>) (kval_7_1_3 * ival1_4 ))
+//		mul_val_7_2_6 := ($cast ($int<16>) (kval_7_2_3 * ival2_4 ))
+//		mul_val_7_3_6 := ($cast ($int<16>) (kval_7_3_3 * ival3_4 ))
+//		mul_val_7_4_6 := ($cast ($int<16>) (kval_7_4_3 * ival4_4 ))
+//		mul_val_7_5_6 := ($cast ($int<16>) (kval_7_5_3 * ival5_4 ))
+//		mul_val_7_6_6 := ($cast ($int<16>) (kval_7_6_3 * ival6_4 ))
+//		mul_val_7_7_6 := ($cast ($int<16>) (kval_7_7_3 * ival7_4 ))
+//		mul_val_7_8_6 := ($cast ($int<16>) (kval_7_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_7_1_3 )) ( mul_val_7_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_7_2_3 )) ( mul_val_7_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_7_3_3 )) ( mul_val_7_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_7_4_3 )) ( mul_val_7_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_7_5_3 )) ( mul_val_7_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_7_6_3 )) ( mul_val_7_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_7_7_3 )) ( mul_val_7_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_7_8_3 )) ( mul_val_7_8_6 )
 
 		t_acc_val_7_6 := (((mul_val_7_1_6 + mul_val_7_2_6 ) + (mul_val_7_3_6 + mul_val_7_4_6 )) + ((mul_val_7_5_6 + mul_val_7_6_6 ) + (mul_val_7_7_6 + mul_val_7_8_6 )))
 		
@@ -2918,22 +2931,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_8_1_1 := ($cast ($int<16>) (kval_8_1_1 * ival1_1 ))
-		mul_val_8_2_1 := ($cast ($int<16>) (kval_8_2_1 * ival2_1 ))
-		mul_val_8_3_1 := ($cast ($int<16>) (kval_8_3_1 * ival3_1 ))
-		mul_val_8_4_1 := ($cast ($int<16>) (kval_8_4_1 * ival4_1 ))
-		mul_val_8_5_1 := ($cast ($int<16>) (kval_8_5_1 * ival5_1 ))
-		mul_val_8_6_1 := ($cast ($int<16>) (kval_8_6_1 * ival6_1 ))
-		mul_val_8_7_1 := ($cast ($int<16>) (kval_8_7_1 * ival7_1 ))
-		mul_val_8_8_1 := ($cast ($int<16>) (kval_8_8_1 * ival8_1 ))
-//		$call multiplier8 (ival1_1 kval_8_1_1 ) ( mul_val_8_1_1 )
-//		$call multiplier8 (ival2_1 kval_8_2_1 ) ( mul_val_8_2_1 )
-//		$call multiplier8 (ival3_1 kval_8_3_1 ) ( mul_val_8_3_1 )
-//		$call multiplier8 (ival4_1 kval_8_4_1 ) ( mul_val_8_4_1 )
-//		$call multiplier8 (ival5_1 kval_8_5_1 ) ( mul_val_8_5_1 )
-//		$call multiplier8 (ival6_1 kval_8_6_1 ) ( mul_val_8_6_1 )
-//		$call multiplier8 (ival7_1 kval_8_7_1 ) ( mul_val_8_7_1 )
-//		$call multiplier8 (ival8_1 kval_8_8_1 ) ( mul_val_8_8_1 )
+//		mul_val_8_1_1 := ($cast ($int<16>) (kval_8_1_1 * ival1_1 ))
+//		mul_val_8_2_1 := ($cast ($int<16>) (kval_8_2_1 * ival2_1 ))
+//		mul_val_8_3_1 := ($cast ($int<16>) (kval_8_3_1 * ival3_1 ))
+//		mul_val_8_4_1 := ($cast ($int<16>) (kval_8_4_1 * ival4_1 ))
+//		mul_val_8_5_1 := ($cast ($int<16>) (kval_8_5_1 * ival5_1 ))
+//		mul_val_8_6_1 := ($cast ($int<16>) (kval_8_6_1 * ival6_1 ))
+//		mul_val_8_7_1 := ($cast ($int<16>) (kval_8_7_1 * ival7_1 ))
+//		mul_val_8_8_1 := ($cast ($int<16>) (kval_8_8_1 * ival8_1 ))
+                $call multiplier (($cast ($int<16>) ival1_1 ) ($cast ($int<16>) kval_8_1_1 )) ( mul_val_8_1_1 )
+                $call multiplier (($cast ($int<16>) ival2_1 ) ($cast ($int<16>) kval_8_2_1 )) ( mul_val_8_2_1 )
+                $call multiplier (($cast ($int<16>) ival3_1 ) ($cast ($int<16>) kval_8_3_1 )) ( mul_val_8_3_1 )
+                $call multiplier (($cast ($int<16>) ival4_1 ) ($cast ($int<16>) kval_8_4_1 )) ( mul_val_8_4_1 )
+                $call multiplier (($cast ($int<16>) ival5_1 ) ($cast ($int<16>) kval_8_5_1 )) ( mul_val_8_5_1 )
+                $call multiplier (($cast ($int<16>) ival6_1 ) ($cast ($int<16>) kval_8_6_1 )) ( mul_val_8_6_1 )
+                $call multiplier (($cast ($int<16>) ival7_1 ) ($cast ($int<16>) kval_8_7_1 )) ( mul_val_8_7_1 )
+                $call multiplier (($cast ($int<16>) ival8_1 ) ($cast ($int<16>) kval_8_8_1 )) ( mul_val_8_8_1 )
 
 		t_acc_val_8_1 := (((mul_val_8_1_1 + mul_val_8_2_1 ) + (mul_val_8_3_1 + mul_val_8_4_1 )) + ((mul_val_8_5_1 + mul_val_8_6_1 ) + (mul_val_8_7_1 + mul_val_8_8_1 )))
 		
@@ -2943,22 +2956,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_8_1_4 := ($cast ($int<16>) (kval_8_1_1 * ival1_2 ))
-		mul_val_8_2_4 := ($cast ($int<16>) (kval_8_2_1 * ival2_2 ))
-		mul_val_8_3_4 := ($cast ($int<16>) (kval_8_3_1 * ival3_2 ))
-		mul_val_8_4_4 := ($cast ($int<16>) (kval_8_4_1 * ival4_2 ))
-		mul_val_8_5_4 := ($cast ($int<16>) (kval_8_5_1 * ival5_2 ))
-		mul_val_8_6_4 := ($cast ($int<16>) (kval_8_6_1 * ival6_2 ))
-		mul_val_8_7_4 := ($cast ($int<16>) (kval_8_7_1 * ival7_2 ))
-		mul_val_8_8_4 := ($cast ($int<16>) (kval_8_8_1 * ival8_2 ))
-//		$call multiplier8 (ival1_2 kval_8_1_1 ) ( mul_val_8_1_4 )
-//		$call multiplier8 (ival2_2 kval_8_2_1 ) ( mul_val_8_2_4 )
-//		$call multiplier8 (ival3_2 kval_8_3_1 ) ( mul_val_8_3_4 )
-//		$call multiplier8 (ival4_2 kval_8_4_1 ) ( mul_val_8_4_4 )
-//		$call multiplier8 (ival5_2 kval_8_5_1 ) ( mul_val_8_5_4 )
-//		$call multiplier8 (ival6_2 kval_8_6_1 ) ( mul_val_8_6_4 )
-//		$call multiplier8 (ival7_2 kval_8_7_1 ) ( mul_val_8_7_4 )
-//		$call multiplier8 (ival8_2 kval_8_8_1 ) ( mul_val_8_8_4 )
+//		mul_val_8_1_4 := ($cast ($int<16>) (kval_8_1_1 * ival1_2 ))
+//		mul_val_8_2_4 := ($cast ($int<16>) (kval_8_2_1 * ival2_2 ))
+//		mul_val_8_3_4 := ($cast ($int<16>) (kval_8_3_1 * ival3_2 ))
+//		mul_val_8_4_4 := ($cast ($int<16>) (kval_8_4_1 * ival4_2 ))
+//		mul_val_8_5_4 := ($cast ($int<16>) (kval_8_5_1 * ival5_2 ))
+//		mul_val_8_6_4 := ($cast ($int<16>) (kval_8_6_1 * ival6_2 ))
+//		mul_val_8_7_4 := ($cast ($int<16>) (kval_8_7_1 * ival7_2 ))
+//		mul_val_8_8_4 := ($cast ($int<16>) (kval_8_8_1 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_8_1_1 )) ( mul_val_8_1_4 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_8_2_1 )) ( mul_val_8_2_4 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_8_3_1 )) ( mul_val_8_3_4 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_8_4_1 )) ( mul_val_8_4_4 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_8_5_1 )) ( mul_val_8_5_4 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_8_6_1 )) ( mul_val_8_6_4 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_8_7_1 )) ( mul_val_8_7_4 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_8_8_1 )) ( mul_val_8_8_4 )
 
 		t_acc_val_8_4 := (((mul_val_8_1_4 + mul_val_8_2_4 ) + (mul_val_8_3_4 + mul_val_8_4_4 )) + ((mul_val_8_5_4 + mul_val_8_6_4 ) + (mul_val_8_7_4 + mul_val_8_8_4 )))
 		
@@ -2987,22 +3000,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_8_1_2 := ($cast ($int<16>) (kval_8_1_2 * ival1_2 ))
-		mul_val_8_2_2 := ($cast ($int<16>) (kval_8_2_2 * ival2_2 ))
-		mul_val_8_3_2 := ($cast ($int<16>) (kval_8_3_2 * ival3_2 ))
-		mul_val_8_4_2 := ($cast ($int<16>) (kval_8_4_2 * ival4_2 ))
-		mul_val_8_5_2 := ($cast ($int<16>) (kval_8_5_2 * ival5_2 ))
-		mul_val_8_6_2 := ($cast ($int<16>) (kval_8_6_2 * ival6_2 ))
-		mul_val_8_7_2 := ($cast ($int<16>) (kval_8_7_2 * ival7_2 ))
-		mul_val_8_8_2 := ($cast ($int<16>) (kval_8_8_2 * ival8_2 ))
-//		$call multiplier8 (ival1_2 kval_8_1_2 ) ( mul_val_8_1_2 )
-//		$call multiplier8 (ival2_2 kval_8_2_2 ) ( mul_val_8_2_2 )
-//		$call multiplier8 (ival3_2 kval_8_3_2 ) ( mul_val_8_3_2 )
-//		$call multiplier8 (ival4_2 kval_8_4_2 ) ( mul_val_8_4_2 )
-//		$call multiplier8 (ival5_2 kval_8_5_2 ) ( mul_val_8_5_2 )
-//		$call multiplier8 (ival6_2 kval_8_6_2 ) ( mul_val_8_6_2 )
-//		$call multiplier8 (ival7_2 kval_8_7_2 ) ( mul_val_8_7_2 )
-//		$call multiplier8 (ival8_2 kval_8_8_2 ) ( mul_val_8_8_2 )
+//		mul_val_8_1_2 := ($cast ($int<16>) (kval_8_1_2 * ival1_2 ))
+//		mul_val_8_2_2 := ($cast ($int<16>) (kval_8_2_2 * ival2_2 ))
+//		mul_val_8_3_2 := ($cast ($int<16>) (kval_8_3_2 * ival3_2 ))
+//		mul_val_8_4_2 := ($cast ($int<16>) (kval_8_4_2 * ival4_2 ))
+//		mul_val_8_5_2 := ($cast ($int<16>) (kval_8_5_2 * ival5_2 ))
+//		mul_val_8_6_2 := ($cast ($int<16>) (kval_8_6_2 * ival6_2 ))
+//		mul_val_8_7_2 := ($cast ($int<16>) (kval_8_7_2 * ival7_2 ))
+//		mul_val_8_8_2 := ($cast ($int<16>) (kval_8_8_2 * ival8_2 ))
+                $call multiplier (($cast ($int<16>) ival1_2 ) ($cast ($int<16>) kval_8_1_2 )) ( mul_val_8_1_2 )
+                $call multiplier (($cast ($int<16>) ival2_2 ) ($cast ($int<16>) kval_8_2_2 )) ( mul_val_8_2_2 )
+                $call multiplier (($cast ($int<16>) ival3_2 ) ($cast ($int<16>) kval_8_3_2 )) ( mul_val_8_3_2 )
+                $call multiplier (($cast ($int<16>) ival4_2 ) ($cast ($int<16>) kval_8_4_2 )) ( mul_val_8_4_2 )
+                $call multiplier (($cast ($int<16>) ival5_2 ) ($cast ($int<16>) kval_8_5_2 )) ( mul_val_8_5_2 )
+                $call multiplier (($cast ($int<16>) ival6_2 ) ($cast ($int<16>) kval_8_6_2 )) ( mul_val_8_6_2 )
+                $call multiplier (($cast ($int<16>) ival7_2 ) ($cast ($int<16>) kval_8_7_2 )) ( mul_val_8_7_2 )
+                $call multiplier (($cast ($int<16>) ival8_2 ) ($cast ($int<16>) kval_8_8_2 )) ( mul_val_8_8_2 )
 
 		t_acc_val_8_2 := (((mul_val_8_1_2 + mul_val_8_2_2 ) + (mul_val_8_3_2 + mul_val_8_4_2 )) + ((mul_val_8_5_2 + mul_val_8_6_2 ) + (mul_val_8_7_2 + mul_val_8_8_2 )))
 		
@@ -3012,22 +3025,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_8_1_5 := ($cast ($int<16>) (kval_8_1_2 * ival1_3 ))
-		mul_val_8_2_5 := ($cast ($int<16>) (kval_8_2_2 * ival2_3 ))
-		mul_val_8_3_5 := ($cast ($int<16>) (kval_8_3_2 * ival3_3 ))
-		mul_val_8_4_5 := ($cast ($int<16>) (kval_8_4_2 * ival4_3 ))
-		mul_val_8_5_5 := ($cast ($int<16>) (kval_8_5_2 * ival5_3 ))
-		mul_val_8_6_5 := ($cast ($int<16>) (kval_8_6_2 * ival6_3 ))
-		mul_val_8_7_5 := ($cast ($int<16>) (kval_8_7_2 * ival7_3 ))
-		mul_val_8_8_5 := ($cast ($int<16>) (kval_8_8_2 * ival8_3 ))
-//		$call multiplier8 (ival1_3 kval_8_1_2 ) ( mul_val_8_1_5 )
-//		$call multiplier8 (ival2_3 kval_8_2_2 ) ( mul_val_8_2_5 )
-//		$call multiplier8 (ival3_3 kval_8_3_2 ) ( mul_val_8_3_5 )
-//		$call multiplier8 (ival4_3 kval_8_4_2 ) ( mul_val_8_4_5 )
-//		$call multiplier8 (ival5_3 kval_8_5_2 ) ( mul_val_8_5_5 )
-//		$call multiplier8 (ival6_3 kval_8_6_2 ) ( mul_val_8_6_5 )
-//		$call multiplier8 (ival7_3 kval_8_7_2 ) ( mul_val_8_7_5 )
-//		$call multiplier8 (ival8_3 kval_8_8_2 ) ( mul_val_8_8_5 )
+//		mul_val_8_1_5 := ($cast ($int<16>) (kval_8_1_2 * ival1_3 ))
+//		mul_val_8_2_5 := ($cast ($int<16>) (kval_8_2_2 * ival2_3 ))
+//		mul_val_8_3_5 := ($cast ($int<16>) (kval_8_3_2 * ival3_3 ))
+//		mul_val_8_4_5 := ($cast ($int<16>) (kval_8_4_2 * ival4_3 ))
+//		mul_val_8_5_5 := ($cast ($int<16>) (kval_8_5_2 * ival5_3 ))
+//		mul_val_8_6_5 := ($cast ($int<16>) (kval_8_6_2 * ival6_3 ))
+//		mul_val_8_7_5 := ($cast ($int<16>) (kval_8_7_2 * ival7_3 ))
+//		mul_val_8_8_5 := ($cast ($int<16>) (kval_8_8_2 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_8_1_2 )) ( mul_val_8_1_5 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_8_2_2 )) ( mul_val_8_2_5 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_8_3_2 )) ( mul_val_8_3_5 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_8_4_2 )) ( mul_val_8_4_5 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_8_5_2 )) ( mul_val_8_5_5 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_8_6_2 )) ( mul_val_8_6_5 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_8_7_2 )) ( mul_val_8_7_5 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_8_8_2 )) ( mul_val_8_8_5 )
 
 		t_acc_val_8_5 := (((mul_val_8_1_5 + mul_val_8_2_5 ) + (mul_val_8_3_5 + mul_val_8_4_5 )) + ((mul_val_8_5_5 + mul_val_8_6_5 ) + (mul_val_8_7_5 + mul_val_8_8_5 )))
 		
@@ -3060,22 +3073,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_8_1_3 := ($cast ($int<16>) (kval_8_1_3 * ival1_3 ))
-		mul_val_8_2_3 := ($cast ($int<16>) (kval_8_2_3 * ival2_3 ))
-		mul_val_8_3_3 := ($cast ($int<16>) (kval_8_3_3 * ival3_3 ))
-		mul_val_8_4_3 := ($cast ($int<16>) (kval_8_4_3 * ival4_3 ))
-		mul_val_8_5_3 := ($cast ($int<16>) (kval_8_5_3 * ival5_3 ))
-		mul_val_8_6_3 := ($cast ($int<16>) (kval_8_6_3 * ival6_3 ))
-		mul_val_8_7_3 := ($cast ($int<16>) (kval_8_7_3 * ival7_3 ))
-		mul_val_8_8_3 := ($cast ($int<16>) (kval_8_8_3 * ival8_3 ))
-//		$call multiplier8 (ival1_3 kval_8_1_3 ) ( mul_val_8_1_3 )
-//		$call multiplier8 (ival2_3 kval_8_2_3 ) ( mul_val_8_2_3 )
-//		$call multiplier8 (ival3_3 kval_8_3_3 ) ( mul_val_8_3_3 )
-//		$call multiplier8 (ival4_3 kval_8_4_3 ) ( mul_val_8_4_3 )
-//		$call multiplier8 (ival5_3 kval_8_5_3 ) ( mul_val_8_5_3 )
-//		$call multiplier8 (ival6_3 kval_8_6_3 ) ( mul_val_8_6_3 )
-//		$call multiplier8 (ival7_3 kval_8_7_3 ) ( mul_val_8_7_3 )
-//		$call multiplier8 (ival8_3 kval_8_8_3 ) ( mul_val_8_8_3 )
+//		mul_val_8_1_3 := ($cast ($int<16>) (kval_8_1_3 * ival1_3 ))
+//		mul_val_8_2_3 := ($cast ($int<16>) (kval_8_2_3 * ival2_3 ))
+//		mul_val_8_3_3 := ($cast ($int<16>) (kval_8_3_3 * ival3_3 ))
+//		mul_val_8_4_3 := ($cast ($int<16>) (kval_8_4_3 * ival4_3 ))
+//		mul_val_8_5_3 := ($cast ($int<16>) (kval_8_5_3 * ival5_3 ))
+//		mul_val_8_6_3 := ($cast ($int<16>) (kval_8_6_3 * ival6_3 ))
+//		mul_val_8_7_3 := ($cast ($int<16>) (kval_8_7_3 * ival7_3 ))
+//		mul_val_8_8_3 := ($cast ($int<16>) (kval_8_8_3 * ival8_3 ))
+                $call multiplier (($cast ($int<16>) ival1_3 ) ($cast ($int<16>) kval_8_1_3 )) ( mul_val_8_1_3 )
+                $call multiplier (($cast ($int<16>) ival2_3 ) ($cast ($int<16>) kval_8_2_3 )) ( mul_val_8_2_3 )
+                $call multiplier (($cast ($int<16>) ival3_3 ) ($cast ($int<16>) kval_8_3_3 )) ( mul_val_8_3_3 )
+                $call multiplier (($cast ($int<16>) ival4_3 ) ($cast ($int<16>) kval_8_4_3 )) ( mul_val_8_4_3 )
+                $call multiplier (($cast ($int<16>) ival5_3 ) ($cast ($int<16>) kval_8_5_3 )) ( mul_val_8_5_3 )
+                $call multiplier (($cast ($int<16>) ival6_3 ) ($cast ($int<16>) kval_8_6_3 )) ( mul_val_8_6_3 )
+                $call multiplier (($cast ($int<16>) ival7_3 ) ($cast ($int<16>) kval_8_7_3 )) ( mul_val_8_7_3 )
+                $call multiplier (($cast ($int<16>) ival8_3 ) ($cast ($int<16>) kval_8_8_3 )) ( mul_val_8_8_3 )
 
 		t_acc_val_8_3 := (((mul_val_8_1_3 + mul_val_8_2_3 ) + (mul_val_8_3_3 + mul_val_8_4_3 )) + ((mul_val_8_5_3 + mul_val_8_6_3 ) + (mul_val_8_7_3 + mul_val_8_8_3 )))
 		
@@ -3085,22 +3098,22 @@ $is
 		
 		// Start of macro_file3
 
-		mul_val_8_1_6 := ($cast ($int<16>) (kval_8_1_3 * ival1_4 ))
-		mul_val_8_2_6 := ($cast ($int<16>) (kval_8_2_3 * ival2_4 ))
-		mul_val_8_3_6 := ($cast ($int<16>) (kval_8_3_3 * ival3_4 ))
-		mul_val_8_4_6 := ($cast ($int<16>) (kval_8_4_3 * ival4_4 ))
-		mul_val_8_5_6 := ($cast ($int<16>) (kval_8_5_3 * ival5_4 ))
-		mul_val_8_6_6 := ($cast ($int<16>) (kval_8_6_3 * ival6_4 ))
-		mul_val_8_7_6 := ($cast ($int<16>) (kval_8_7_3 * ival7_4 ))
-		mul_val_8_8_6 := ($cast ($int<16>) (kval_8_8_3 * ival8_4 ))
-//		$call multiplier8 (ival1_4 kval_8_1_3 ) ( mul_val_8_1_6 )
-//		$call multiplier8 (ival2_4 kval_8_2_3 ) ( mul_val_8_2_6 )
-//		$call multiplier8 (ival3_4 kval_8_3_3 ) ( mul_val_8_3_6 )
-//		$call multiplier8 (ival4_4 kval_8_4_3 ) ( mul_val_8_4_6 )
-//		$call multiplier8 (ival5_4 kval_8_5_3 ) ( mul_val_8_5_6 )
-//		$call multiplier8 (ival6_4 kval_8_6_3 ) ( mul_val_8_6_6 )
-//		$call multiplier8 (ival7_4 kval_8_7_3 ) ( mul_val_8_7_6 )
-//		$call multiplier8 (ival8_4 kval_8_8_3 ) ( mul_val_8_8_6 )
+//		mul_val_8_1_6 := ($cast ($int<16>) (kval_8_1_3 * ival1_4 ))
+//		mul_val_8_2_6 := ($cast ($int<16>) (kval_8_2_3 * ival2_4 ))
+//		mul_val_8_3_6 := ($cast ($int<16>) (kval_8_3_3 * ival3_4 ))
+//		mul_val_8_4_6 := ($cast ($int<16>) (kval_8_4_3 * ival4_4 ))
+//		mul_val_8_5_6 := ($cast ($int<16>) (kval_8_5_3 * ival5_4 ))
+//		mul_val_8_6_6 := ($cast ($int<16>) (kval_8_6_3 * ival6_4 ))
+//		mul_val_8_7_6 := ($cast ($int<16>) (kval_8_7_3 * ival7_4 ))
+//		mul_val_8_8_6 := ($cast ($int<16>) (kval_8_8_3 * ival8_4 ))
+                $call multiplier (($cast ($int<16>) ival1_4 ) ($cast ($int<16>) kval_8_1_3 )) ( mul_val_8_1_6 )
+                $call multiplier (($cast ($int<16>) ival2_4 ) ($cast ($int<16>) kval_8_2_3 )) ( mul_val_8_2_6 )
+                $call multiplier (($cast ($int<16>) ival3_4 ) ($cast ($int<16>) kval_8_3_3 )) ( mul_val_8_3_6 )
+                $call multiplier (($cast ($int<16>) ival4_4 ) ($cast ($int<16>) kval_8_4_3 )) ( mul_val_8_4_6 )
+                $call multiplier (($cast ($int<16>) ival5_4 ) ($cast ($int<16>) kval_8_5_3 )) ( mul_val_8_5_6 )
+                $call multiplier (($cast ($int<16>) ival6_4 ) ($cast ($int<16>) kval_8_6_3 )) ( mul_val_8_6_6 )
+                $call multiplier (($cast ($int<16>) ival7_4 ) ($cast ($int<16>) kval_8_7_3 )) ( mul_val_8_7_6 )
+                $call multiplier (($cast ($int<16>) ival8_4 ) ($cast ($int<16>) kval_8_8_3 )) ( mul_val_8_8_6 )
 
 		t_acc_val_8_6 := (((mul_val_8_1_6 + mul_val_8_2_6 ) + (mul_val_8_3_6 + mul_val_8_4_6 )) + ((mul_val_8_5_6 + mul_val_8_6_6 ) + (mul_val_8_7_6 + mul_val_8_8_6 )))
 		
@@ -3154,22 +3167,22 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 		acc_count := ((chl_in * ck) - 1)
 		$dopipeline $depth 15 $buffering 2 $fullrate
 		$merge $entry $loopback
-		$phi acc1_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
-		$phi acc1_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
-		$phi acc2_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val2_1) $on $loopback
-		$phi acc2_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val2_2) $on $loopback
-		$phi acc3_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val3_1) $on $loopback
-		$phi acc3_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val3_2) $on $loopback
-		$phi acc4_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val4_1) $on $loopback
-		$phi acc4_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val4_2) $on $loopback
-		$phi acc5_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val5_1) $on $loopback
-		$phi acc5_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val5_2) $on $loopback
-		$phi acc6_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val6_1) $on $loopback
-		$phi acc6_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val6_2) $on $loopback
-		$phi acc7_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val7_1) $on $loopback
-		$phi acc7_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val7_2) $on $loopback
-		$phi acc8_1 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val8_1) $on $loopback
-		$phi acc8_2 := ($bitcast ($uint<16>) 0) $on $entry ($mux num_done 0 acc_val8_2) $on $loopback
+		$phi acc1_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val1_1) $on $loopback
+		$phi acc1_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val1_2) $on $loopback
+		$phi acc2_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val2_1) $on $loopback
+		$phi acc2_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val2_2) $on $loopback
+		$phi acc3_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val3_1) $on $loopback
+		$phi acc3_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val3_2) $on $loopback
+		$phi acc4_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val4_1) $on $loopback
+		$phi acc4_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val4_2) $on $loopback
+		$phi acc5_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val5_1) $on $loopback
+		$phi acc5_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val5_2) $on $loopback
+		$phi acc6_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val6_1) $on $loopback
+		$phi acc6_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val6_2) $on $loopback
+		$phi acc7_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val7_1) $on $loopback
+		$phi acc7_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val7_2) $on $loopback
+		$phi acc8_1 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val8_1) $on $loopback
+		$phi acc8_2 := ($bitcast ($uint<ACC_WIDTH>) 0) $on $entry ($mux num_done 0 acc_val8_2) $on $loopback
 		$phi c_count := ($bitcast ($uint<16>) 0) $on $entry nc_count $on $loopback
 		$phi op_count := ($bitcast ($uint<32>) 0) $on $entry nop_count $on $loopback
 		$phi t1 := acc_pipe1_1 $on $entry, $loopback
@@ -3234,7 +3247,7 @@ $module [accumulator] $in (chl_in ck: $uint<16> op_size : $uint<32>) $out () $is
 }
 
 
-$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> scale_val : $uint<32> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> base_address : $uint<ADDRESS_WIDTH>) $out () $is
+$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> scale_val : $uint<32> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH>) $out () $is
 {
 	$parallelblock [sendBlock]{
 		$call sendInner1 (0 rb cb chl_out shift_val scale_val num_parts max_chl activation base_address) ()
@@ -3244,7 +3257,7 @@ $opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> scale_val 
 
 
 $module [sendInner1 ]
-$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> scale_val : $uint<32>  num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> base_address : $uint<ADDRESS_WIDTH>)
+$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> scale_val : $uint<32>  num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH>)
 $out ()
 $is
 {
@@ -3401,7 +3414,7 @@ $is
 
 
 $module [sendInner2 ]
-$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> scale_val : $uint<32>  num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> base_address : $uint<ADDRESS_WIDTH>)
+$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> scale_val : $uint<32>  num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH>)
 $out ()
 $is
 {
@@ -3559,7 +3572,7 @@ $is
 
 //
 
-$opaque $module [sendModule8] $in (rb cb chl_out shift_val : $uint<16> scale_val : $uint<32> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH>) $out () $is
+$opaque $module [sendModule8] $in (rb cb chl_out shift_val : $uint<16> scale_val : $uint<32> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH> pool : $uint<1> save : $uint<1>) $out () $is
 {
     $branchblock [sendBlock]{
     	row_size := ($bitcast ($uint<32>) (chl_out*cb))
@@ -3611,22 +3624,6 @@ $opaque $module [sendModule8] $in (rb cb chl_out shift_val : $uint<16> scale_val
         read_val6_2 := output_pipe6_2
         read_val7_2 := output_pipe7_2
         read_val8_2 := output_pipe8_2
-        //tmp1_1 := ($mux (apply_relu & ((read_val1_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_1 >> shift_val)))
-        //tmp2_1 := ($mux (apply_relu & ((read_val2_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_1 >> shift_val)))
-        //tmp3_1 := ($mux (apply_relu & ((read_val3_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_1 >> shift_val)))
-        //tmp4_1 := ($mux (apply_relu & ((read_val4_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_1 >> shift_val)))
-        //tmp5_1 := ($mux (apply_relu & ((read_val5_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_1 >> shift_val)))
-        //tmp6_1 := ($mux (apply_relu & ((read_val6_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_1 >> shift_val)))
-        //tmp7_1 := ($mux (apply_relu & ((read_val7_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_1 >> shift_val)))
-        //tmp8_1 := ($mux (apply_relu & ((read_val8_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_1 >> shift_val)))
-        //tmp1_2 := ($mux (apply_relu & ((read_val1_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_2 >> shift_val)))
-        //tmp2_2 := ($mux (apply_relu & ((read_val2_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_2 >> shift_val)))
-        //tmp3_2 := ($mux (apply_relu & ((read_val3_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_2 >> shift_val)))
-        //tmp4_2 := ($mux (apply_relu & ((read_val4_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_2 >> shift_val)))
-        //tmp5_2 := ($mux (apply_relu & ((read_val5_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_2 >> shift_val)))
-        //tmp6_2 := ($mux (apply_relu & ((read_val6_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_2 >> shift_val)))
-        //tmp7_2 := ($mux (apply_relu & ((read_val7_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_2 >> shift_val)))
-        //tmp8_2 := ($mux (apply_relu & ((read_val8_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_2 >> shift_val)))
 
 
 		grd_cnd1_1 :=  (apply_relu & ((read_val1_1[]{ACC_WIDTH-1}) == 1))
@@ -3680,8 +3677,10 @@ $opaque $module [sendModule8] $in (rb cb chl_out shift_val : $uint<16> scale_val
 
         $volatile rd1 := ($concat tmp1_1 tmp2_1 tmp3_1 tmp4_1 tmp5_1 tmp6_1 tmp7_1 tmp8_1)
         $volatile rd2 := ($concat tmp1_2 tmp2_2 tmp3_2 tmp4_2 tmp5_2 tmp6_2 tmp7_2 tmp8_2)
-        $call writeModule_convolution (base_address address1 rd1 255) (a1)
-        $call writeModule_convolution (base_address address2 rd2 255) (a2)
+        $guard (save) $call writeModule_convolution (base_address address1 rd1 255) (a1)
+        $guard (save) $call writeModule_convolution (base_address address2 rd2 255) (a2)
+	$guard (pool) send_to_pool_pipe1 := rd1
+	$guard (pool) send_to_pool_pipe2 := rd2
 
 		continue_flag := ((row >= (rb -1)) ~& row_change)
 		$while continue_flag
@@ -3696,15 +3695,10 @@ $opaque $module [sendModule8] $in (rb cb chl_out shift_val : $uint<16> scale_val
     }
 }
 
-//
-// $pipe pool_buffer : $uint<64> $depth 64
-
-
-$opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> scale_val : $uint<32> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> base_address : $uint<ADDRESS_WIDTH>) $out () $is
+$opaque $module [sendPool] $in (rb cb chl_out : $uint<16> num_parts : $uint<8> max_chl : $uint<16> base_address : $uint<ADDRESS_WIDTH>) $out () $is
 {
 	$branchblock [sendBlock]{
 		row_size := ($bitcast ($uint<32>) (chl_out*cb))
-		apply_relu := (activation == 1)
 
 		$merge $entry loopback
 		$phi p_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on loopback
@@ -3731,87 +3725,10 @@ $opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> scale_val : 
 		$volatile n_col := ($mux row_change 1 ($mux chl_change (col + 1) col))
 		$volatile n_row := ($mux row_change (row + N_ROWS_S) row)
 
-		read_val1_1 := output_pipe1_1
-		read_val2_1 := output_pipe2_1
-		read_val3_1 := output_pipe3_1
-		read_val4_1 := output_pipe4_1
-		read_val5_1 := output_pipe5_1
-		read_val6_1 := output_pipe6_1
-		read_val7_1 := output_pipe7_1
-		read_val8_1 := output_pipe8_1
-		read_val1_2 := output_pipe1_2
-		read_val2_2 := output_pipe2_2
-		read_val3_2 := output_pipe3_2
-		read_val4_2 := output_pipe4_2
-		read_val5_2 := output_pipe5_2
-		read_val6_2 := output_pipe6_2
-		read_val7_2 := output_pipe7_2
-		read_val8_2 := output_pipe8_2
-		//tmp1_1 := ($mux (apply_relu & ((read_val1_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_1 >> shift_val)))
-		//tmp2_1 := ($mux (apply_relu & ((read_val2_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_1 >> shift_val)))
-		//tmp3_1 := ($mux (apply_relu & ((read_val3_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_1 >> shift_val)))
-		//tmp4_1 := ($mux (apply_relu & ((read_val4_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_1 >> shift_val)))
-		//tmp5_1 := ($mux (apply_relu & ((read_val5_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_1 >> shift_val)))
-		//tmp6_1 := ($mux (apply_relu & ((read_val6_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_1 >> shift_val)))
-		//tmp7_1 := ($mux (apply_relu & ((read_val7_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_1 >> shift_val)))
-		//tmp8_1 := ($mux (apply_relu & ((read_val8_1[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_1 >> shift_val)))
-		//tmp1_2 := ($mux (apply_relu & ((read_val1_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val1_2 >> shift_val)))
-		//tmp2_2 := ($mux (apply_relu & ((read_val2_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val2_2 >> shift_val)))
-		//tmp3_2 := ($mux (apply_relu & ((read_val3_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val3_2 >> shift_val)))
-		//tmp4_2 := ($mux (apply_relu & ((read_val4_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val4_2 >> shift_val)))
-		//tmp5_2 := ($mux (apply_relu & ((read_val5_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val5_2 >> shift_val)))
-		//tmp6_2 := ($mux (apply_relu & ((read_val6_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val6_2 >> shift_val)))
-		//tmp7_2 := ($mux (apply_relu & ((read_val7_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val7_2 >> shift_val)))
-		//tmp8_2 := ($mux (apply_relu & ((read_val8_2[]{ACC_WIDTH-1}) == 1)) 0 ($bitcast ($uint<8>) (read_val8_2 >> shift_val)))
-
-		grd_cnd1_1 :=  (apply_relu & ((read_val1_1[]{ACC_WIDTH-1}) == 1))
-                grd_cnd2_1 :=  (apply_relu & ((read_val2_1[]{ACC_WIDTH-1}) == 1))
-                grd_cnd3_1 :=  (apply_relu & ((read_val3_1[]{ACC_WIDTH-1}) == 1))
-                grd_cnd4_1 :=  (apply_relu & ((read_val4_1[]{ACC_WIDTH-1}) == 1))
-                grd_cnd5_1 :=  (apply_relu & ((read_val5_1[]{ACC_WIDTH-1}) == 1))
-                grd_cnd6_1 :=  (apply_relu & ((read_val6_1[]{ACC_WIDTH-1}) == 1))
-                grd_cnd7_1 :=  (apply_relu & ((read_val7_1[]{ACC_WIDTH-1}) == 1))
-                grd_cnd8_1 :=  (apply_relu & ((read_val8_1[]{ACC_WIDTH-1}) == 1))
-                $guard (~grd_cnd1_1) $call scaler (read_val1_1 scale_val shift_val) (scaled1_1)
-                $guard (~grd_cnd2_1) $call scaler (read_val2_1 scale_val shift_val) (scaled2_1)
-                $guard (~grd_cnd3_1) $call scaler (read_val3_1 scale_val shift_val) (scaled3_1)
-                $guard (~grd_cnd4_1) $call scaler (read_val4_1 scale_val shift_val) (scaled4_1)
-                $guard (~grd_cnd5_1) $call scaler (read_val5_1 scale_val shift_val) (scaled5_1)
-                $guard (~grd_cnd6_1) $call scaler (read_val6_1 scale_val shift_val) (scaled6_1)
-                $guard (~grd_cnd7_1) $call scaler (read_val7_1 scale_val shift_val) (scaled7_1)
-                $guard (~grd_cnd8_1) $call scaler (read_val8_1 scale_val shift_val) (scaled8_1)
-                tmp1_1 := ($mux grd_cnd1_1 0 scaled1_1)
-                tmp2_1 := ($mux grd_cnd2_1 0 scaled2_1)
-                tmp3_1 := ($mux grd_cnd3_1 0 scaled3_1)
-                tmp4_1 := ($mux grd_cnd4_1 0 scaled4_1)
-                tmp5_1 := ($mux grd_cnd5_1 0 scaled5_1)
-                tmp6_1 := ($mux grd_cnd6_1 0 scaled6_1)
-                tmp7_1 := ($mux grd_cnd7_1 0 scaled7_1)
-                tmp8_1 := ($mux grd_cnd8_1 0 scaled8_1)
-		grd_cnd1_2 :=  (apply_relu & ((read_val1_2[]{ACC_WIDTH-1}) == 1))
-                grd_cnd2_2 :=  (apply_relu & ((read_val2_2[]{ACC_WIDTH-1}) == 1))
-                grd_cnd3_2 :=  (apply_relu & ((read_val3_2[]{ACC_WIDTH-1}) == 1))
-                grd_cnd4_2 :=  (apply_relu & ((read_val4_2[]{ACC_WIDTH-1}) == 1))
-                grd_cnd5_2 :=  (apply_relu & ((read_val5_2[]{ACC_WIDTH-1}) == 1))
-                grd_cnd6_2 :=  (apply_relu & ((read_val6_2[]{ACC_WIDTH-1}) == 1))
-                grd_cnd7_2 :=  (apply_relu & ((read_val7_2[]{ACC_WIDTH-1}) == 1))
-                grd_cnd8_2 :=  (apply_relu & ((read_val8_2[]{ACC_WIDTH-1}) == 1))
-                $guard (~grd_cnd1_2) $call scaler (read_val1_2 scale_val shift_val) (scaled1_2)
-                $guard (~grd_cnd2_2) $call scaler (read_val2_2 scale_val shift_val) (scaled2_2)
-                $guard (~grd_cnd3_2) $call scaler (read_val3_2 scale_val shift_val) (scaled3_2)
-                $guard (~grd_cnd4_2) $call scaler (read_val4_2 scale_val shift_val) (scaled4_2)
-                $guard (~grd_cnd5_2) $call scaler (read_val5_2 scale_val shift_val) (scaled5_2)
-                $guard (~grd_cnd6_2) $call scaler (read_val6_2 scale_val shift_val) (scaled6_2)
-                $guard (~grd_cnd7_2) $call scaler (read_val7_2 scale_val shift_val) (scaled7_2)
-                $guard (~grd_cnd8_2) $call scaler (read_val8_2 scale_val shift_val) (scaled8_2)
-                tmp1_2 := ($mux grd_cnd1_2 0 scaled1_2)
-                tmp2_2 := ($mux grd_cnd2_2 0 scaled2_2)
-                tmp3_2 := ($mux grd_cnd3_2 0 scaled3_2)
-                tmp4_2 := ($mux grd_cnd4_2 0 scaled4_2)
-                tmp5_2 := ($mux grd_cnd5_2 0 scaled5_2)
-                tmp6_2 := ($mux grd_cnd6_2 0 scaled6_2)
-                tmp7_2 := ($mux grd_cnd7_2 0 scaled7_2)
-                tmp8_2 := ($mux grd_cnd8_2 0 scaled8_2)
+		r1 := send_to_pool_pipe1
+		r2 := send_to_pool_pipe2
+		$split (r1 8 8 8 8 8 8 8 8) (tmp1_1 tmp2_1 tmp3_1 tmp4_1 tmp5_1 tmp6_1 tmp7_1 tmp8_1)
+		$split (r2 8 8 8 8 8 8 8 8) (tmp1_2 tmp2_2 tmp3_2 tmp4_2 tmp5_2 tmp6_2 tmp7_2 tmp8_2)
 
 		mx1 := ($mux (($bitcast ($int<8>) tmp1_1) > ($bitcast ($int<8>) tmp1_2)) tmp1_1 tmp1_2)
 		mx2 := ($mux (($bitcast ($int<8>) tmp2_1) > ($bitcast ($int<8>) tmp2_2)) tmp2_1 tmp2_2)
@@ -3858,6 +3775,7 @@ $opaque $module [sendPool] $in (rb cb chl_out shift_val : $uint<16> scale_val : 
 }
 
 
+
 $pipeline $depth 15 $fullrate
 $module [scaler]
 $in (input : $uint<ACC_WIDTH> scale_val_in : $uint<32> shift_val : $uint<16>)
@@ -3865,7 +3783,7 @@ $out (output : $uint<8>)
 $is
 {
 	$volatile scale_val := ($cast ($int<32>) scale_val_in)
-	$volatile in_adj := ($cast ($int<32>) ($cast ($int<16>) input))
+	$volatile in_adj := ($cast ($int<32>) ($cast ($int<ACC_WIDTH>) input))
 	$volatile mul_output := ($bitcast ($uint<32>) (in_adj * scale_val))
 	$volatile ret_val := (mul_output >> ($bitcast ($uint<32>) shift_val))
 	output := ($bitcast ($uint<8>) ret_val)

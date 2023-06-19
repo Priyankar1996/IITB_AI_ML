@@ -1,5 +1,5 @@
 $module [sendInner##num ]
-$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> scale_val : $uint<32>  num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> base_address : $uint<ADDRESS_WIDTH>)
+$in (init_addr : $uint<32> rb cb chl_out shift_val : $uint<16> scale_val : $uint<32>  num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH>)
 $out ()
 $is
 {

@@ -1,4 +1,4 @@
-$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> scale_val : $uint<32> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<1> base_address : $uint<ADDRESS_WIDTH>) $out () $is
+$opaque $module [sendModule] $in (rb cb chl_out shift_val : $uint<16> scale_val : $uint<32> num_parts : $uint<8> max_chl : $uint<16> activation : $uint<8> base_address : $uint<ADDRESS_WIDTH>) $out () $is
 {
 	$parallelblock [sendBlock]{
 		$call sendInner1 (0 rb cb chl_out shift_val scale_val num_parts max_chl activation base_address) ()

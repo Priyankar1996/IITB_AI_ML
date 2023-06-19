@@ -1,0 +1,123 @@
+$module [inputModule8]
+$in(row_in ct chl_in rk pad: $uint<16> num_parts : $uint<8>)
+$out()
+$is
+{
+        mode_3 := (rk == 3)
+        $parallelblock [blk]
+        {
+        $call singleFetch (row_in ct pad chl_in num_parts) ()
+
+        $branchblock [access_block]
+        {
+        $volatile ct_new := (ct + (pad<<1))
+        row_size_total := ($bitcast ($uint<32>) (ct_new * chl_in))
+        $volatile ct1 := (ct >> 1)
+        rs1 := (row_size_total >> 1)
+        cs1 := (chl_in >> 1)
+        m_factor := ($bitcast ($uint<32>) (ct*cs1))
+        m2_factor := (m_factor << 1)
+        m3_factor := (m2_factor+m_factor)
+        addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
+
+                // Pipeline for sending inputs
+                $dopipeline $depth 15 $buffering 2 $fullrate
+                $merge $entry $loopback
+                $phi address1 := addr_init $on $entry n_address1 $on $loopback
+                $phi address2 := addr_init $on $entry n_address2 $on $loopback
+                $phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+                $phi col := ($bitcast ($uint<16>) 0) $on $entry n_col $on $loopback
+                $phi chl := ($bitcast ($uint<16>) 0) $on $entry n_chl $on $loopback
+                $phi part_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on $loopback
+                $endmerge
+
+                $volatile chl_done := (chl == (chl_in - 1))
+                $volatile col_done := (col == (ct_new - 1))
+                $volatile next_row := (col_done & chl_done)
+                $volatile n_chl := ($mux chl_done  0 (chl+1)) 
+                $volatile n_col := ($mux next_row 0 (col + ($mux chl_done 1 0)))
+                $volatile inp1 := (chl < cs1)
+                $volatile inp1_done := (chl == (cs1-1))
+
+                $volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
+                $volatile continue_flag1 := (update_row < (row_in+2))
+
+                $volatile mc_lt_p := ((col < pad) | (col >= (ct_new - pad)))
+                $volatile tmp_sum := ($mux mc_lt_p 0 1)
+                $volatile update_val1 := (($mux (col_done & inp1_done) m_factor 0) + tmp_sum)
+                $volatile update_val2 := (($mux (col_done & chl_done) m_factor 0) + tmp_sum)
+                $volatile address := ($mux inp1 address1 address2)
+
+                $volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 > ((row_in + 1) - pad))))
+                $volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 > (row_in- pad))))
+                $volatile addr2 := (address+ m_factor)
+
+		$volatile base := ($mux inp1 0 ($bitcast ($uint<32>) (row_in * (ct*cs1))))
+
+		$guard (~p1_zero) val1 := T[0][(base+address)]
+		$guard (~p2_zero) val2 := T[0][(base+addr2)]
+		$volatile send_val1 := ($mux p1_zero 0 val1)
+		prev_core_ip1 := send_val1
+		$volatile send_val2 := ($mux p2_zero 0 val2)
+		prev_core_ip2 := send_val2
+
+                $volatile n_row1 := ($mux continue_flag1 update_row 0)
+                $volatile n_address1 := ($mux continue_flag1 ($mux inp1 (address1 + update_val1) address1)  addr_init)
+                $volatile n_address2 := ($mux continue_flag1 ($mux inp1 address2 (address2 + update_val2))  addr_init)
+                $volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
+
+		//time_pipe := ($bitcast ($uint<64>) ($concat 
+		//	p1_zero p2_zero inp1
+		//	($bitcast ($uint<8>) row1)
+		//	($bitcast ($uint<8>) col)
+		//	($bitcast ($uint<8>) chl)
+		//	($bitcast ($uint<16>) address2)
+		//	($bitcast ($uint<16>) address1)
+//))
+		time_pipe := send_val1
+		time_pipe := send_val2
+                $while (continue_flag1 | (part_cnt < num_parts))
+}}}
+
+$module [singleFetch] $in (rt ct pad chl_in : $uint<16> max_parts : $uint<8>) $out  ()
+$is
+{
+	$branchblock [block]
+	{
+		cnt_max := ((ct + (pad << 1))*chl_in)
+		$dopipeline $depth 15 $fullrate
+		$merge $entry $loopback
+		$phi start := ($bitcast ($uint<1>) 1) $on $entry n_start $on $loopback
+		$phi cnt := ($bitcast ($uint<16>) 1) $on $entry n_cnt $on $loopback
+		$phi row := ($bitcast ($uint<16>) 0) $on $entry n_row $on $loopback
+		$phi parts := 0 $on $entry n_parts $on $loopback
+		$endmerge
+		val_read1 := prev_core_ip1
+		val_read2 := prev_core_ip2
+
+		$volatile change := (cnt == cnt_max)
+		n_cnt := ($mux change 1 (cnt+1))
+		incr_row := (row + N_ROWS_S)
+		update_row := ($mux change incr_row row)
+		chng_prt := (update_row > rt)
+		n_row := ($mux chng_prt 0 update_row)
+		n_parts := ($mux chng_prt (parts + 1) parts)
+		n_start := (n_row == 0)
+		$volatile end := (incr_row > rt)
+		$guard (~end) core_ip1 := val_read1
+		$guard (~start) core_ip3 := val_read1
+		$guard (~end) core_ip2 := val_read2
+		$guard (~start) core_ip4 := val_read2
+
+		$while (n_parts <= max_parts)
+	}
+}
+
+#define num 1
+#include inputInner.aa
+#define num 2
+#include inputInner.aa
+//# define num 3
+//# include inputInner.aa
+//# define num 4
+//# include inputInner.aa

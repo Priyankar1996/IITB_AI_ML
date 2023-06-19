@@ -75,12 +75,10 @@ $module [topModule] $in () $out() $is
 			
 
 			$call loadKernel (chl_in chl_out rk ck 1) ()
-			//$call access_T (rb rt ct chl_in rk pad parts) ()
 			$call inputModule8 (rb ct chl_in_ceil rk pad parts) ()
 			$call convolveCore (rb cb chl_in_ceil chl_out rk ck parts max_per_part) ()
 			$call accumulator (chl_in_ceil ck (op_size >> 1)) ()
 			$call sendModule (rb cb chl_out shift_val parts max_per_part RELU scale_val) ()
-			//$call sendPool (rb cb chl_out_ceil shift_val parts max_per_part2 NO_ACT ) ()
 		}(start_time => start_time)
 		
 		$call timer (2)  (end_time)

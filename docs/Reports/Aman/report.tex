@@ -53,7 +53,7 @@
   \vspace{0.25cm}
   {for}\\
   \vspace{1cm}
-  \textbf{ Dual Degree Programme}\\
+  \textbf{ Dual Degree Programme \\(B.Tech + M.Tech in Electrical Engineering \\with specialization in Electronic Systems)}\\
   \vspace{1.50cm}
   {by}\\
   \vspace{0.20cm}
@@ -140,7 +140,7 @@ We present a high-performance input-streaming based CNN inference engine operati
 \chapter{Introduction}
   \pagenumbering{arabic}
 
-Machine Learning is a thriving area in the field of Artificial Intelligence, which involves design and deployment of algorithms that can learn and predict through models trained using given datasets. In recent years, many machine learning techniques, such as Convolution Neural Networks (CNN) \cite{CNNs} and Support Vector Machines (SVM) \cite{SVMs}, have shown promise in many application domains, such as image processing \cite{LeNet,CNN1,CNN2,GoogleNet,ALexNet,ResNet,YOLO,CNN3,CNN7,CNN5} and speech recognition. 
+Machine Learning is a thriving area in the field of Artificial Intelligence, which involves design and deployment of algorithms that can learn and predict through models trained using given datasets. In recent years, many machine learning techniques, such as Convolution Neural Networks (CNN) \cite{CNNs} and Support Vector Machines (SVM) \cite{SVMs}, have shown promise in many application domains, such as image processing and speech recognition \cite{LeNet,CNN1,CNN2,GoogleNet,ALexNet,ResNet,YOLO,CNN7,CNN5}.  
 \\
 
 We focus our attention to CNNs, which forms the backbone for most image processing tasks. They are able to capture the image data and modify them through a series of trained filters (kernels) \cite{CNNs}. However, with the increasing depth and complexities of the CNNs, accompanied by large feature maps, it leads to an enormous amounts of computation to process one image, which is beyond the capability of a CPU, which has limited avenes for data-level parallelism. Furthermore, limited on-chip memory necessitates the reuse of the data to reduce memory accesses, requiring specialised architecture with high memory bandwidths and data buffers that can leverage the high levels of parallelism available in such tasks.
@@ -154,7 +154,7 @@ This makes FPGAs and ASICs a promising technology due to their low power consump
 
 \section{Design Methodology}
 
-The system is designed using C and Aa, a high-level hardware intermediate language \cite{inproceedings} capable of describing high-performance digital systems using algorithmic description. We use the AHIR-V2 toolchain \cite{ahir} for converting modules designed primarily using Aa to generate the VHDL model of the system. At the same time, the tools produce a couple of binaries using the C testbench written by the user. These testbench binaries can be used to simulate and verify the working of the C model of the hardware, and the generated VHDL design, thereby allowing functional verification before hardware synthesis. The use of algorithmic design and simulation-based verification cuts down the production time significantly as a majority of the functionality in the individual components can be verified and corrected before synthesising the hardware.
+The system is designed using C and Aa, a hardware intermediate language \cite{ahir} capable of describing high-performance digital systems using algorithmic description. We use the AHIR-V2 toolchain \cite{ahir} for converting modules designed primarily using Aa to generate the VHDL model of the system. At the same time, the tools produce a couple of binaries using the C testbench written by the user. These testbench binaries can be used to simulate and verify the working of the C model of the hardware, and the generated VHDL design, thereby allowing functional verification before hardware synthesis. The use of algorithmic design and simulation-based verification cuts down the production time significantly as a majority of the functionality in the individual components can be verified and corrected before synthesising the hardware.
 \\
 
 The generated design is then instantiated in a top-level VHDL module, which contains other peripheral modules like UART connections, DRAM controller, clock circuitry etc. Appropriate constraint files are set to provide IO functionality for the FPGA card. We use Xilinx Vivado 2019.1 to synthesize, optimise, place and route the system so that it can be deployed on VCU128 FPGA.
@@ -350,7 +350,7 @@ Studies have found that fixed point computation for CNNs can achieve similar acc
 In order to perform inference tasks successfully, the engine must have the ability to perform operations like concatenation, convolution, zero-padding, max-pooling, non-linear activation (relu) and transpose convolution. Fig~\ref{fig:block_dia} shows the block diagram indicating the modules used and the flow of data within the system. On the left are the set of input modules and the kernel modules. They are responsible for fetching the inputs and the kernels from the memory. They are supported by the readModules which are connected through a deadlock prevention mechanism. The fetched data is forwarded through pipes to the convolveCore, where the bulk of the computation occurs. The partial sums are then accumulated in the accumulator, after which the outputs are generated through scaling and applying activation functions before being written back to the memory using the sendModules. The design and working of individual modules are described in the following sections.
 \\
 
-The primary requirement from the engine is that it should be able to perform all the operations listed above with a high throughput. In order to do so, a core unit that can perform multiple parallel MACs is important. Since the core operation of CNNs is convolution, and all other operations are generally done before or after convolution, we cascade the layers to generate hardware that executes other operations as a preprocessing or postprocessing step to the execution of convolution layer. By doing so, we eliminate the need for a memory access after every layer, and hence, the latency of operations improves significantly. We call the combined execution of the preprocesssing, one layer of convolution and postprocessing as a stage. By structuring the engine in this manner, we are able to perform an end-to-end UNET implementation in 18 stages, as opposed to the 38 layers required during training. In addition to the parallelism to generate high throughput, we require minimum data movement across the processing elements to ensure low resource consumption and interconnect delays. So, we use a 384 processing element streaming architecture as described in \ref{sec:convCore}.
+The primary requirement from the engine is that it should be able to perform all the operations listed above with a high throughput. In order to do so, a core unit that can perform multiple parallel MACs is important. Since the core operation of CNNs is convolution, and all other operations are generally done before or after convolution, we cascade the layers to generate hardware that executes other operations as a preprocessing or postprocessing step to the execution of convolution layer. By doing so, we eliminate the need for a memory access after every layer, and hence, the latency of operations improves significantly. We call the combined execution of the preprocesssing, one layer of convolution and postprocessing as a stage. By structuring the engine in this manner, we are able to perform an end-to-end UNET implementation in 18 stages, as opposed to the 38 layers required during training. In addition to the parallelism to generate high throughput, we require minimum data movement across the processing elements to ensure low resource consumption and interconnect delays. So, we use a 384 processing element streaming architecture as described in Section~\ref{sec:convCore}.
 \\
 
 
@@ -367,7 +367,7 @@ An important design consideration while developing the inference engine is the m
 However, each input is used $r_k*c_k*chl_o$ times throughout the execution, which means that the memory IO requirements for input fetching could go over 200 million accesses for a given stage, with each input being fetched over 4500 times. This could lead to a huge load on the memory bandwidth, and will undoubtedly slow down the system. This calls for the need of a system to reuse the inputs completely before they are discarded. The importance of reuse of data is most noticable for kernel data, which are used as much a s$r_*c_i$, which can be in excess of 50000 for feature maps of size 224*224 seen in UNET implemented by us. For layers having larger image size like 572*572 used in the first stage original architecture \cite{UNET}, each kernel value is used a staggering 327184, making it extremely necessary to optimise on the kernel reuse.
 \\
 
-The most direct way is to buffer the kernels directly. This method is feasible if the size of the kernels are small, however real life kernels can be extremely large. An example is the kernel used in the UNET architecture just before the upsampling block. This kernel has $3*3*1024*1024$ elements, which will require a storage space of 9MB.
+The most direct way is to buffer the kernels directly. This method is feasible if the size of the kernels are small, however real life kernels can be extremely large. An example is the kernel used in the UNET architecture just before the upsampling block. This kernel has $3*3*1024*1024$ elements, which will require a storage space of 9MB using 8-bit data.
 \\
 
 To mitigate this issue, the kernels are partitioned into units that can be stored on the on-chip FIFOs. The partitioning is done to accommodate as many output channels as possible in the buffers, thereby minimising the number of partitions. The inputs have to be streamed once for every kernel partition. Since the number of times each input is fetched is equal to the number of partitions, it is imperative to ensure that the number of partitions are kept as low as possible to improve system performance. Currently, 768 KB of kernel buffer is provided, which keeps the maximum number of partitions as 3 for the architecture deployed.
@@ -593,7 +593,7 @@ $call convolutionAll (
 where,
 
 \begin{itemize}
-	\item ro, co, ri, ci, cho, chi, rk and ck are 16-bit values providing the dimensions of all the tensors and kernels (notation same as in \ref{Chap:2})
+	\item ro, co, ri, ci, cho, chi, rk and ck are 16-bit values providing the dimensions of all the tensors and kernels (notation same as in Chapter~\ref{Chap:2})
 	\item in1\_base\_addr, in2\_base\_addr, kernel\_base\_addr, out\_base\_addr1, out\_base\_addr2 are the base address for the location of upto two input and output tensors, and one kernel. During pooling, out\_base\_addr2 is used to configure the address to which the pooled outputs are sent. Two input base addresses are used during concatenation (skip connections)
 	\item scale\_val and shift\_val are 32-bit and 16-bit value specifying the scale value and the shift value
 	\item pad specifies the amount of zero-padding required on the input before convolution
@@ -682,10 +682,9 @@ From the above, we see that the input and kernels are always matched appropriate
 The inference engine was synthesized using Vivado 2019.1 and run on a Xilinx VCU128 FPGA at a clock frequency of 125MHz with the external memory modeled using BRAM,. With a theoretical peak performance of 96 GOPS and logic cells resource consumption of 102K LUTs, we get an average of 0.94 GOPS/KLUTs performance. The end-to-end segmentation using UNET architecture on the engine takes a total of 94 million clock cycles, taking a total time of 0.75s for processing of one image, giving an average performance of over 85 GOPS.
 \\
 
-We can verify the full rate of execution from the stage by stage breakdown shown in Table~\ref{tab:stage}, where resource utilization of about 99.75\% (383 MACs/clock) have been observed. We see that the average compute utilisation of the engine is close to 90\%, indicating the efficient use of compute resources. Furthermore, the aggressive reuse of data keeps the average memory utilisation under 10\%, which means that the engine is bottlenecked by the compute resources and not the memory. This implies that the engine can beeasily scaled to larger engine clusters sharing the same memory channel without significant degradation in preformance. We study this in \ref{sec:scale_eng}. 
+We can verify the full rate of execution from the stage by stage breakdown shown in Table~\ref{tab:stage}, where resource utilization of about 99.75\% (383 MACs/clock) have been observed. We see that the average compute utilisation of the engine is close to 90\%, indicating the efficient use of compute resources. Furthermore, the aggressive reuse of data keeps the average memory utilisation under 10\%, which means that the engine is bottlenecked by the compute resources and not the memory. The results indicate an average compute-to-memory ratio of 873 operations/byte (1 MAC = 2 ops).  This implies that the engine can be easily scaled to larger engine clusters sharing the same memory channel without significant degradation in preformance. We study this in Section~\ref{sec:scale_eng}. 
 \\
 
-The following table summarises the performance at each stage of the operation:
 
 %\renewcommand{\arraystretch}{0.5}
 %\setlength{\extrarowheight}{-20pt}
@@ -729,12 +728,12 @@ The following table summarises the performance at each stage of the operation:
 	 \label{tab:stage}
 \end{table}
 
-From Table~\ref{tab:stage}, we see that the accelerator can achieve performance equal to the rated 96 GOPS. Compared to other works,
+From Table~\ref{tab:stage}, we see that the accelerator can achieve performance equal to the rated 96 GOPS. This 
 
 
-\chapter{Interation into a System-on-chip}
+\chapter{Integration into a System-on-chip}
 
-We validate an characterize the perofrmance of the accelerator by integrating it into a System-on-chip (SoC) using AJIT Processor, which provides the accelerator with the commands to operate, and reads back the data. The whole system is also connected to a Network Interface Card, which provides high-speed IO for quick loading of images into the memory. The architecture of the system is shown in Fig~\ref{fig:SOC}.
+We validate an characterize the performance of the accelerator by integrating it into a System-on-chip (SoC) using AJIT Processor, which provides the accelerator with the commands to operate, and reads back the data. The whole system is also connected to a Network Interface Card, which provides high-speed IO for quick loading of images into the memory. The architecture of the system is shown in Fig~\ref{fig:SOC}.
 \\
 
 The system consists of 32bit wide AJIT processor at its core. The processor has an ACB interface through which it interacts with memory and other modules. The AFB interface linked to the Network Interface Controller (NIC) and the 8-engine acclerator cluster is used to transfer configuration information from the processor and relay back status flags to it. The modules are also provided with an ACB interface through which they can access the memory. The memory subsystem consists of a DRAM controller connected to an ACB to UI conversion protocol, which translates memory requests in the ACB bus to DRAM requests, and vice versa for the responses. In addition to the above, the processor has a couple of UART interfaces with which it can communicate with the outside world. Also, the NIC has an interface to connect with the Xilinx MAC IP, using which it can communicate to the host machine via Ethernet, currently configured to run at 100Mbps. 
@@ -745,6 +744,12 @@ The system consists of 32bit wide AJIT processor at its core. The processor has 
 	\caption{Block Diagram For SoC}
     \label{fig:SOC}
 \end{figure}
+
+\subsection{Performance and validation}
+
+The utilisation statistics for different components designed is present in Table~\ref{tab:utilisation}.
+
+\subsection{Processor Code}
 
 The pseudocode for the processors code is as follows:
 
@@ -800,7 +805,7 @@ The accelerator also has an interrupt daemon which waits on bit 4 of r0, and set
 
 \section{Scaling The Number Of Engines}\label{sec:scale_eng}
 
-In \ref{ch:3}, we described how the engine can exploit data-level parallelism to obtain higher throughput. In this section, we characterize the throughput improvement obtained by exploiting the parallelism between different images by implementing multiple accelerator engines in a single cluster, each working on its own input image. The number of engines actively running were increased from one to eight, and the following results were obtained:
+In Chapter~\ref{ch:3}, we described how the engine can exploit data-level parallelism to obtain higher throughput. In this section, we characterize the throughput improvement obtained by exploiting the parallelism between different images by implementing multiple accelerator engines in a single cluster, each working on its own input image. The number of engines actively running were increased from one to eight, and the following results were obtained:
 \\
 
 \begin{table}
@@ -808,26 +813,26 @@ In \ref{ch:3}, we described how the engine can exploit data-level parallelism to
 	{
 		\centering
 
-		\begin{tabular}{P{0.16\linewidth} P{0.22\linewidth} P{0.22\linewidth} P{0.16\linewidth} P{0.16\linewidth}}
+		\begin{tabular}{P{0.16\linewidth} P{0.22\linewidth} P{0.22\linewidth} P{0.16\linewidth} P{0.16\linewidth} P{0.12\linewidth}}
 		\toprule
-			No. of active cores & 	Total time taken (in clock cycles)  &	Time per image (*$10^6$ clock cycles)	& Utilisation (normalised with one engine)  & Speedup (normalised with one engine)\\
+			No. of active cores & 	Total time taken (in clock cycles)  &	Time per image (*$10^6$ clock cycles)	& Utilisation (normalised with one engine)  & Speedup (normalised with one engine) & Performance ( GOPS (fps) )\\
 
 \toprule
-1 & 116,653,415 & 116.65 & 1 & 1\\
+			1 & 116,653,415 & 116.65 & 1 & 1 & 69(1.08)\\
 \midrule
-2 & 119,693,711 & 59.85 & 0.97 & 1.94\\
+			2 & 119,693,711 & 59.85 & 0.97 & 1.94 & 134(2.09)\\
 \midrule
-3 & 123,897,062 & 41.30 & 0.94 & 2.82\\
+			3 & 123,897,062 & 41.30 & 0.94 & 2.82 & 194(3.03)\\
 \midrule
-4 & 133,412,216 & 33.35 & 0.87 & 3.48\\
+			4 & 133,412,216 & 33.35 & 0.87 & 3.48 & 240(3.75)\\
 \midrule
-5 & 146,118,721 & 29.22 & 0.80 & 4.00\\
+			5 & 146,118,721 & 29.22 & 0.80 & 4.00 & 274(4.28)\\
 \midrule
-6 & 162,244,765 & 27.04 & 0.72 & 4.32\\
+			6 & 162,244,765 & 27.04 & 0.72 & 4.32 & 296(4.63)\\
 \midrule
-7 & 178,879,023 & 25.55 & 0.65 & 4.55\\
+			7 & 178,879,023 & 25.55 & 0.65 & 4.55 & 313(4.89)\\
 \midrule
-8 & 201,227,739 & 25.15 & 0.58 & 4.64\\
+			8 & 201,227,739 & 25.15 & 0.58 & 4.64 & 318(4.97)\\
 %1 & 93,249,712  & 93.25 & 1 & 1\\
 %2 & 95,992,518  & 48.00 & 0.97 & 1.94\\
 %3 & 99,271,600  & 33.09 & 0.94 & 2.82\\
@@ -899,10 +904,8 @@ UNET has a reLU layer after every convolution layer, and 3 transpose convolution
 
 \chapter{Summary}
 
-In this work, we present a hardware acceleration engine for AI/ML inference tasks. The engine is algorithmically designed using the AHIR-V2 tools, and is optimised for maximum compute-to-memory ratio using minimal on-chip buffers. We demonstrate an application of the engine by developing a image segmentation pipeline on UNET, a well-known architecture for image segmentation, on which we are able to obtain an average throughput of 85 GOPS, with the peak throughput matching the theoretical peak performance of 96 GOPS when run on a single engine synthesized at 125MHz with an average compute-to-memory ratio of 7000 operations/bytes (OPB). We also integrate the engine with the AJIT processor and Network Interface Controller (NIC) to generate a system on chip (SoC) capable of performing at-edge AI/ML inference tasks. We demonstrate an average performance of over 240 GOPS when employing the four engines simultaneously, resulting in an average utilisation in excess of 62\% over the duration of the computation.
+In this work, we present a hardware acceleration engine for AI/ML inference tasks. The engine is algorithmically designed using the AHIR-V2 tools, and is optimised for maximum compute-to-memory ratio using minimal on-chip buffers. We demonstrate an application of the engine by developing a image segmentation pipeline on UNET, a well-known architecture for image segmentation, on which we are able to obtain an average throughput of 85 GOPS, with the peak throughput matching the theoretical peak performance of 96 GOPS when run on a single engine synthesized at 125MHz with an average compute-to-memory ratio of 873 operations/byte (OPB). We also integrate the engine with the AJIT processor and Network Interface Controller (NIC) to generate a system on chip (SoC) capable of performing at-edge AI/ML inference tasks. We demonstrate an average performance of over 240 GOPS when employing the four engines simultaneously, resulting in an average utilisation in excess of 62\% over the duration of the computation.
 \\
-
-The 
 
 
 \begin{comment}

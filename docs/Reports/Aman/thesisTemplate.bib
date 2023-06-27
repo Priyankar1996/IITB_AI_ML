@@ -215,4 +215,57 @@ year	= {2017},
 URL	= {https://arxiv.org/pdf/1704.04760.pdf}
 }
 
+@inproceedings{FPGA1,
+author = {Zhang, Chen and Li, Peng and Sun, Guangyu and Guan, Yijin and Xiao, Bingjun and Cong, Jason},
+title = {Optimizing FPGA-Based Accelerator Design for Deep Convolutional Neural Networks},
+year = {2015},
+isbn = {9781450333153},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2684746.2689060},
+doi = {10.1145/2684746.2689060},
+abstract = {Convolutional neural network (CNN) has been widely employed for image recognition because it can achieve high accuracy by emulating behavior of optic nerves in living creatures. Recently, rapid growth of modern applications based on deep learning algorithms has further improved research and implementations. Especially, various accelerators for deep CNN have been proposed based on FPGA platform because it has advantages of high performance, reconfigurability, and fast development round, etc. Although current FPGA accelerators have demonstrated better performance over generic processors, the accelerator design space has not been well exploited. One critical problem is that the computation throughput may not well match the memory bandwidth provided an FPGA platform. Consequently, existing approaches cannot achieve best performance due to under-utilization of either logic resource or memory bandwidth. At the same time, the increasing complexity and scalability of deep learning applications aggravate this problem. In order to overcome this problem, we propose an analytical design scheme using the roofline model. For any solution of a CNN design, we quantitatively analyze its computing throughput and required memory bandwidth using various optimization techniques, such as loop tiling and transformation. Then, with the help of rooine model, we can identify the solution with best performance and lowest FPGA resource requirement. As a case study, we implement a CNN accelerator on a VC707 FPGA board and compare it to previous approaches. Our implementation achieves a peak performance of 61.62 GFLOPS under 100MHz working frequency, which outperform previous approaches significantly.},
+booktitle = {Proceedings of the 2015 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays},
+pages = {161–170},
+numpages = {10},
+keywords = {roofline model, fpga, acceleration, convolutional neural network},
+location = {Monterey, California, USA},
+series = {FPGA '15}
+}
+
+@inproceedings{FPGA2,
+author = {Qiu, Jiantao and Wang, Jie and Yao, Song and Guo, Kaiyuan and Li, Boxun and Zhou, Erjin and Yu, Jincheng and Tang, Tianqi and Xu, Ningyi and Song, Sen and Wang, Yu and Yang, Huazhong},
+title = {Going Deeper with Embedded FPGA Platform for Convolutional Neural Network},
+year = {2016},
+isbn = {9781450338561},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2847263.2847265},
+doi = {10.1145/2847263.2847265},
+abstract = {In recent years, convolutional neural network (CNN) based methods have achieved great success in a large number of applications and have been among the most powerful and widely used techniques in computer vision. However, CNN-based methods are com-putational-intensive and resource-consuming, and thus are hard to be integrated into embedded systems such as smart phones, smart glasses, and robots. FPGA is one of the most promising platforms for accelerating CNN, but the limited bandwidth and on-chip memory size limit the performance of FPGA accelerator for CNN.In this paper, we go deeper with the embedded FPGA platform on accelerating CNNs and propose a CNN accelerator design on embedded FPGA for Image-Net large-scale image classification. We first present an in-depth analysis of state-of-the-art CNN models and show that Convolutional layers are computational-centric and Fully-Connected layers are memory-centric.Then the dynamic-precision data quantization method and a convolver design that is efficient for all layer types in CNN are proposed to improve the bandwidth and resource utilization. Results show that only 0.4\% accuracy loss is introduced by our data quantization flow for the very deep VGG16 model when 8/4-bit quantization is used. A data arrangement method is proposed to further ensure a high utilization of the external memory bandwidth. Finally, a state-of-the-art CNN, VGG16-SVD, is implemented on an embedded FPGA platform as a case study. VGG16-SVD is the largest and most accurate network that has been implemented on FPGA end-to-end so far. The system on Xilinx Zynq ZC706 board achieves a frame rate at 4.45 fps with the top-5 accuracy of 86.66\% using 16-bit quantization. The average performance of convolutional layers and the full CNN is 187.8 GOP/s and 137.0 GOP/s under 150MHz working frequency, which outperform previous approaches significantly.},
+booktitle = {Proceedings of the 2016 ACM/SIGDA International Symposium on Field-Programmable Gate Arrays},
+pages = {26–35},
+numpages = {10},
+keywords = {convolutional neural network (cnn), embedded fpga, bandwidth utilization, dynamic-precision data quantization},
+location = {Monterey, California, USA},
+series = {FPGA '16}
+}
+
+
+
+@Article{FPGA3,
+AUTHOR = {Cho, Mannhee and Kim, Youngmin},
+TITLE = {FPGA-Based Convolutional Neural Network Accelerator with Resource-Optimized Approximate Multiply-Accumulate Unit},
+JOURNAL = {Electronics},
+VOLUME = {10},
+YEAR = {2021},
+NUMBER = {22},
+ARTICLE-NUMBER = {2859},
+URL = {https://www.mdpi.com/2079-9292/10/22/2859},
+ISSN = {2079-9292},
+ABSTRACT = {Convolutional neural networks (CNNs) are widely used in modern applications for their versatility and high classification accuracy. Field-programmable gate arrays (FPGAs) are considered to be suitable platforms for CNNs based on their high performance, rapid development, and reconfigurability. Although many studies have proposed methods for implementing high-performance CNN accelerators on FPGAs using optimized data types and algorithm transformations, accelerators can be optimized further by investigating more efficient uses of FPGA resources. In this paper, we propose an FPGA-based CNN accelerator using multiple approximate accumulation units based on a fixed-point data type. We implemented the LeNet-5 CNN architecture, which performs classification of handwritten digits using the MNIST handwritten digit dataset. The proposed accelerator was implemented, using a high-level synthesis tool on a Xilinx FPGA. The proposed accelerator applies an optimized fixed-point data type and loop parallelization to improve performance. Approximate operation units are implemented using FPGA logic resources instead of high-precision digital signal processing (DSP) blocks, which are inefficient for low-precision data. Our accelerator model achieves 66% less memory usage and approximately 50% reduced network latency, compared to a floating point design and its resource utilization is optimized to use 78% fewer DSP blocks, compared to general fixed-point designs.},
+DOI = {10.3390/electronics10222859}
+}
+
+
 

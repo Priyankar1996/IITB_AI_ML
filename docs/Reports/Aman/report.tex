@@ -149,7 +149,7 @@ We focus our attention to CNNs, which forms the backbone for most image processi
 Many hardware technologies are available for accelerating machine learning algorithms, which include Graphics Processing Unit (GPU), Field-Programmable Gate Array (FPGA) and Application Specific Integrated Circuits (ASIC). GPUs exploit data-level parallelism to get high performance. Nonetheless, due to its general-purpose nature, it has immense complexity, leading to high power consumption of over 200 W, and hence, is not suitable for embedded applications.
 \\
 
-This makes FPGAs and ASICs a promising technology due to their low power consumption, reconfigurability, and real-time processing capability. However, ASICs incur high development cost and therefore, cannot be used for prototyping, making FPGAs the preferred option for development of low-cost ML accelerators.
+This makes FPGAs and ASICs a promising technology due to their low power consumption, reconfigurability, and real-time processing capability. However, ASICs incur high development cost and therefore, cannot be used for prototyping, making FPGAs the preferred option for development of low-cost ML accelerators \cite{FPGA1,FPGA2,FPGA3}.
 
 
 \section{Design Methodology}
@@ -160,7 +160,7 @@ The system is designed using C and Aa, a high-level hardware intermediate langua
 The generated design is then instantiated in a top-level VHDL module, which contains other peripheral modules like UART connections, DRAM controller, clock circuitry etc. Appropriate constraint files are set to provide IO functionality for the FPGA card. We use Xilinx Vivado 2019.1 to synthesize, optimise, place and route the system so that it can be deployed on VCU128 FPGA.
 \\
 
-Use of the above EDA tools allows the programmers to focus on the algorithmic design of the system, which is then processed to give the most optimal configuration. This helps in cutting down the design and verification time, while simultaneously reducing the code size and complexity, leading to faster and easier debugging. Furthermore, due to implementation of features like pipelining and parallelization, the tools can generate low-level structures having full-rate performance.
+Use of the above EDA tools allows the programmers to focus on the algorithmic design of the system, which is then processed to give the most optimal configuration. This helps in cutting down the design and verification time, while simultaneously reducing the code size and complexity, leading to faster and easier debugging \cite{FPGA1,FPGA3}. Furthermore, due to implementation of features like pipelining and parallelization, the tools can generate low-level structures having full-rate performance.
 
 
 \section{Goals}
@@ -176,7 +176,7 @@ The project intends to achieve the following goals:
 
 \chapter{Neural Network Architecture Details}\label{Chap:2}
 
-There are various CNN architectures used globally for various tasks, like Inception-Net \cite{GoogleNet}, ResNets cite{ResNet} etc. To develop and characterize our inference engine, we choose UNET as the base architecture. UNET is an CNN-based architecture proposed by Ronneberger et al. for image segmentation\cite{UNET}. It has been widely used for segmentation tasks, and provides an end-to-end image computation involving several operations used in machine learning, making it an ideal candidate to deploy on our accelerator. We first describe the UNET architecture, and then the individual operations being used to implement the architecture.
+There are various CNN architectures used globally for various tasks, like Inception-Net \cite{GoogleNet}, ResNets \cite{ResNet},  etc. To develop and characterize our inference engine, we choose UNET as the base architecture. UNET is an CNN-based architecture proposed by Ronneberger et al. for image segmentation\cite{UNET}. It has been widely used for segmentation tasks, and provides an end-to-end image computation involving several operations used in machine learning, like convolution, padding, maxpooling, upsampling, skip connections, ReLU and sigmoid activations, making it an ideal candidate to deploy on our accelerator. We first describe the UNET architecture, and then the individual operations being used to implement the architecture.
 \\
 
 \begin{figure}[h!]
@@ -190,9 +190,6 @@ The UNET architecture consists of an encoder loop, which will progressively extr
 \\
 
 After the encoding is done, there are a couple of convolution operations to generate the base layer for the decoder. The decoder is designed symmetric to the encoder network. Instead of using pooling layers to downsample the image, it uses transpose convolution (see up-conv in  Fig~\ref{fig:UNET} operation to upsamples the images to reconstruct the original image with the segmentation data. The grey arrows represent the skip connections from the encoder loops, which help in preserving context identified by the encoder loop. The last convolution reconstructs an image with the same dimensions as the input, giving the segmentation map based on the task at hand.
-\\
-
-UNET is a popular architecture which is widely used in medical image segmentation, and provides an end-to-end image computation involving several operations used in machine learning, like convolution, padding, maxpooling, upsampling, skip connections, ReLU and sigmoid activations, making it an ideal candidate to deploy on our accelerator.
 \\
 
 
@@ -266,7 +263,7 @@ Our engine supports the most common pooling seen, which is maxpooling for n=2 an
 
 \section{Residual and skip connections}
 
-Residual and skip connections are an important component of modern deep learning architectures as they help in forwarding information and hence, context over distant layers without passing the weights through non-linear activations. The former involves an element-wise summation of two tensors to give the resultant tensor. The latter, on the contrary, concatenates the two tensor maps along a fixed axis (generally the channels) to form the output.
+Residual and skip connections are an important component of modern deep learning architectures as they help in forwarding information and hence, context over distant layers without passing the weights through non-linear activations, and were introduced in the ResNet architecture \cite{ReNet}. The former involves an element-wise summation of two tensors to give the resultant tensor. The latter, on the contrary, concatenates the two tensor maps along a fixed axis (generally the channels) to form the output.
 
 \section{Transpose convolution}
 
@@ -275,6 +272,22 @@ Also known as deconvolution, this operation helps in upsampling of the featrure 
 \section{Non-linear activation}
 
 Non-linear activation functions are applied at the end of each compute layer to improve the model's ability to learn from the dataset. Common activation functions include sigmoid, tanh and Rectified linear unit (ReLU).
+\\
+
+Mathematically, we have the following:
+
+\begin{equation*}
+	tanh(x) = \dfrac{e^x - e^{-x}}{e^x + e^{-x}}
+\end{equation*}
+\begin{equation*}
+	sigmoid(x) = \dfrac{1}{1 + e^{-x}}
+\end{equation*}
+\begin{equation*}
+	ReLU(x) = x*I_{x>0}
+\end{equation*}
+where, 
+	$I_a$ is the indicator variable which takes value 1 if a is true else 0
+
 
 \section{Our Architecture}
 
@@ -329,7 +342,7 @@ def UNET:
 
 \subsection{Datatypes Used}
 
-The system uses a 8-bit fixed point format for storing all the data. The multiplication gives a 16-bit output, which is then accumulated in 32-bit buffers, which is in line with Google TPU. The scaling at the end is done using a 32-bit multiplier, from which the appropriate 8 bits are selected for write-back into the next stage.  Use of fixed-point data simplifies the hardware, allowing faster inference. The position of the decimal and scale valies are software controlled, and appropriate scaling and shifting can be done after each stage to ensure that the format is maintained with minimum loss of accuracy.
+Studies have found that fixed point computation for CNNs can achieve similar accuracies with significantly lower logic utilisation, and thereby boasts of higher resource efficiency \cite{FPGA2,FPGA3}. Hence, we design the engine for a 8-bit fixed point format for storing all the data. The multiplication gives a 16-bit output, which is then accumulated in 32-bit buffers, which is similar to the implementation done in Google TPU \cite{TPU}. The scaling at the end is done using a 32-bit multiplier, from which the appropriate 8 bits are selected for write-back into the next stage.  Use of fixed-point data simplifies the hardware, allowing faster inference. The position of the decimal and scale valies are software controlled, and appropriate scaling and shifting can be done after each stage to ensure that the format is maintained with minimum loss of accuracy.
 
 
 \chapter{Design}\label{ch:3}
@@ -715,6 +728,8 @@ The following table summarises the performance at each stage of the operation:
 	 \caption{Stage by stage memory and compute performance of the accelerator engine}
 	 \label{tab:stage}
 \end{table}
+
+From Table~\ref{tab:stage}, we see that the accelerator can achieve performance equal to the rated 96 GOPS. Compared to other works,
 
 
 \chapter{Interation into a System-on-chip}

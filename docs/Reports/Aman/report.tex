@@ -796,22 +796,31 @@ In \ref{ch:3}, we described how the engine can exploit data-level parallelism to
 		\begin{tabular}{P{0.16\linewidth} P{0.22\linewidth} P{0.22\linewidth} P{0.16\linewidth} P{0.16\linewidth}}
 		\toprule
 			No. of active cores & 	Total time taken (in clock cycles)  &	Time per image (*$10^6$ clock cycles)	& Utilisation (normalised with one engine)  & Speedup (normalised with one engine)\\
+
 \toprule
-1 & 93,249,712  & 93.25 & 1 & 1\\
+1 & 116,653,415 & 116.65 & 1 & 1\\
 \midrule
-2 & 95,992,518  & 48.00 & 0.97 & 1.94\\
+2 & 119,693,711 & 59.85 & 0.97 & 1.94\\
 \midrule
-3 & 99,271,600  & 33.09 & 0.94 & 2.82\\
+3 & 123,897,062 & 41.30 & 0.94 & 2.82\\
 \midrule
-4 & 106,323,270  & 26.58 & 0.87 & 3.48\\
+4 & 133,412,216 & 33.35 & 0.87 & 3.48\\
 \midrule
-5 & 116,061,718  & 23.21 & 0.80 & 4.00\\
+5 & 146,118,721 & 29.22 & 0.80 & 4.00\\
 \midrule
-6 & 129,573,610  & 21.59 & 0.72 & 4.32\\
+6 & 162,244,765 & 27.04 & 0.72 & 4.32\\
 \midrule
-7 & 144,883,176  & 20.69 & 0.64 & 4.47\\
+7 & 178,879,023 & 25.55 & 0.65 & 4.55\\
 \midrule
-8 & 159,762,229  & 19.97 & 0.58 & 4.64\\
+8 & 201,227,739 & 25.15 & 0.58 & 4.64\\
+%1 & 93,249,712  & 93.25 & 1 & 1\\
+%2 & 95,992,518  & 48.00 & 0.97 & 1.94\\
+%3 & 99,271,600  & 33.09 & 0.94 & 2.82\\
+%4 & 106,323,270  & 26.58 & 0.87 & 3.48\\
+%5 & 116,061,718  & 23.21 & 0.80 & 4.00\\
+%6 & 129,573,610  & 21.59 & 0.72 & 4.32\\
+%7 & 144,883,176  & 20.69 & 0.64 & 4.47\\
+%8 & 159,762,229  & 19.97 & 0.58 & 4.64\\
 		\bottomrule
 		\end{tabular}
 	}
@@ -875,7 +884,7 @@ UNET has a reLU layer after every convolution layer, and 3 transpose convolution
 
 \chapter{Summary}
 
-In this work, we present a hardware acceleration engine for AI/ML inference tasks. The engine is algorithmically designed using the AHIR-V2 tools, and is optimised for maximum compute-to-memory ratio using minimal on-chip buffers. We demonstrate an application of the engine by developing a image segmentation pipeline on UNET, a well-known architecture for image segmentation, on which we are able to obtain an average throughput of 85 GOPS, with the peak throughput matching the theoretical peak performance of 96 GOPS when run on a single engine synthesized at 125MHz with an average compute-to-memory ratio of 7000 operations/bytes (OPB). We also integrate the engine with the AJIT processor and Network Interface Controller (NIC) to generate a system on chip (SoC) capable of performing at-edge AI/ML inference tasks. We demonstrate an average performance of over 300 GOPS when employing the four engines simultaneously, resulting in an average utilisation in excess of 78\% over the duration of the computation.
+In this work, we present a hardware acceleration engine for AI/ML inference tasks. The engine is algorithmically designed using the AHIR-V2 tools, and is optimised for maximum compute-to-memory ratio using minimal on-chip buffers. We demonstrate an application of the engine by developing a image segmentation pipeline on UNET, a well-known architecture for image segmentation, on which we are able to obtain an average throughput of 85 GOPS, with the peak throughput matching the theoretical peak performance of 96 GOPS when run on a single engine synthesized at 125MHz with an average compute-to-memory ratio of 7000 operations/bytes (OPB). We also integrate the engine with the AJIT processor and Network Interface Controller (NIC) to generate a system on chip (SoC) capable of performing at-edge AI/ML inference tasks. We demonstrate an average performance of over 240 GOPS when employing the four engines simultaneously, resulting in an average utilisation in excess of 62\% over the duration of the computation.
 \\
 
 The 

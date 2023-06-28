@@ -688,7 +688,7 @@ We can verify the full rate of execution from the stage by stage breakdown shown
 
 %\renewcommand{\arraystretch}{0.5}
 %\setlength{\extrarowheight}{-20pt}
-\begin{table}\label{tab:stage}
+\begin{table}
 	\resizebox{\textwidth}{!}
 	{\centering
 
@@ -728,7 +728,36 @@ We can verify the full rate of execution from the stage by stage breakdown shown
 	 \label{tab:stage}
 \end{table}
 
-From Table~\ref{tab:stage}, we see that the accelerator can achieve performance equal to the rated 96 GOPS. This 
+\section{Comparison With Previous FPGA Accelerators}
+
+Table~\ref{tab:works} shows a cmparative analysis of the performance of our implementation with some of the reported literature for fixed-point CNN acceleration.
+
+\begin{table}
+	\resizebox{\textwidth}{!}
+	{\centering
+
+\setlength{\tabcolsep}{1pt}
+		\begin{tabular}{P{0.12\linewidth} P{0.12\linewidth} P{0.12\linewidth} P{0.08\linewidth} P{0.09\linewidth} P{0.12\linewidth} P{0.12\linewidth} P{0.12\linewidth} P{0.15\linewidth} P{0.15\linewidth}}
+		\toprule
+			Architecture & Board & Model & Design Methodology & LUTs (K) & Throughput (GOPS) & DSP Slices & Frequency (MHz) & Throughput / Logic-freq (GOPS / KLUT GHz ) & Throughput / DSP-freq ( GOPS / KLUT GHz )\\
+		\toprule
+%Compared with GPU			\cite{UNIOPU} & XC7Z100 & UNET & HLS &  & 49 & 96 & 200 & 6.22 & 0.84\\\midrule
+%16b			\cite{28} & 180 & 137 & 780 & 150 & 5.07 & 1.17\\\midrule
+			\cite{29} & Stratix 10 & VGG16 & RTL & 469 & 1604 & 8216 & 300 & 11.4 & 0.65\\\midrule
+			\cite{28} & VX980T & VGG16 & RTL & 335 & 1000 & 3395 & 150 & 19.9 & 1.96\\\midrule
+			\cite{29} & Arria 10 & VGG16 & RTL & 208 & 968 & 3036 & 240 & 19.4 & 1.33\\\midrule
+			\cite{layerCons} & VU9P & ResNet-50 (16b) & HLS & 692 & 1672 & 5632 & 180 & 13.42 & 1.65\\\midrule
+			\cite{28} & VX980T & ResNet-101 & RTL & 480 & 600 & 3121 & 100 & 12.5 & 1.9\\\midrule
+			\cite{citeUNET1} & ZC7045 & UNET (16b) & HLS & 86 & 107 & 640 & 200 & 6.22 & 0.84\\\midrule
+			\cite{citeUNET2} & Arria 10 & UNET & RTL & 250 & 1578 & 1688 & 200 & 31.56 & 0.93\\\midrule
+			Our Work & VCU128 & UNET & HLS  & 107 & 85 & 423 & 125 & 6.35 & 1.61\\ 
+		\bottomrule
+		\\
+	\end{tabular}
+	}
+	 \caption{Performance evaluation with state of the art FPGA implementations}
+	 \label{tab:works}
+\end{table}
 
 
 \chapter{Integration into a System-on-chip}

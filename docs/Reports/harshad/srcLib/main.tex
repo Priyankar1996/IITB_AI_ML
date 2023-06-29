@@ -9,7 +9,7 @@
     linkcolor=black,%
     urlcolor=cyan
 }
-\author{Rajib}
+\author{Harshad}
 \usepackage{listings}
 \usepackage{mathpazo}
 \usepackage{amsmath}
@@ -194,8 +194,8 @@ is   approved for the degree of\\
 \bigskip
 \bigskip
 I declare that this written submission represents my ideas in my own words and where
-others' ideas or words have been included, I have adequately cited and referenced the original
-sources.  I also declare that I have adhered to all principles of academic honesty and integrity
+others' ideas or words have been included, I have adequately cited and referenced the sources.  
+I also declare that I have adhered to all principles of academic honesty and integrity
 and   have   not   misrepresented   or   fabricated   or   falsified   any   idea/data/fact/source   in   my
 submission.  I understand that any violation of the above will be cause for disciplinary action
 by the Institute and can also evoke  penal action from the sources which have thus not been
@@ -220,7 +220,7 @@ Roll No. 20307R008}
 \begin{center}
 {\Large \textbf{Acknowledgment}}
 \end{center}
-I want to express my heartfelt gratitude towards \textbf{Prof. Madhav P. Desai} for giving me an opportunity to work on this project and providing her valuable guidance throughout. His suggestions have helped me in gaining a better understanding of this research topic.\\\\
+I want to express my heartfelt gratitude towards \textbf{Prof. Madhav P. Desai} for allowing to work on this project and providing her valuable guidance throughout. His suggestions have helped me in gaining a better understanding of this research topic.\\\\
 I would also like to thank members of \textbf{VLSI Lab} for providing all the necessary support.\\\\
 Lastly, I am perpetually thankful to my family and friends for their unwavering encouragement and support.
 % --------------------------------------------------------------------------------
@@ -263,22 +263,22 @@ The implications of this research extend beyond the immediate context of the AI/
  
 The rapid advancement of network technologies has revolutionized various aspects of our lives, ranging from communication to data processing and beyond. In this era of interconnected systems, the need for efficient and reliable network communication solutions has become paramount. The integration of a Network Interface Controller (NIC) into an indigenous AJIT processor-based System-on-Chip (SoC) serves as a crucial step towards achieving seamless network connectivity and communication capabilities.
 
-This chapter provides an introduction to the design and development of a Network Interface Controller for the AJIT processor-based SoC. The AJIT processor, being an indigenous processor, offers unique opportunities for customization and optimization to meet specific requirements. By integrating a NIC, the AJIT SoC can effectively send and receive data packets over the network, enabling seamless connectivity with external devices and systems. Furthermore, this chapter discusses the goals and challenges, associated with the design and development of the Network Interface Controller. The goals include integrating the Ethernet interface into the AJIT SoC prototype, demonstrating the use of an AI/ML acceleration application, and generalizing the design for network appliance SoCs such as routers. By achieving these goals, the research contributes to the broader field of network communication solutions. 
+This chapter provides an introduction to the design and development of a Network Interface Controller for the AJIT processor-based SoC. The AJIT processor, being an indigenous processor offers unique opportunities for customization and optimization to meet specific requirements. By integrating a NIC, the AJIT SoC can effectively send and receive data packets over the network, enabling seamless connectivity with external devices and systems. Furthermore, this chapter discusses the goals and challenges, associated with the design and development of the Network Interface Controller. The goals include integrating the Ethernet interface into the AJIT SoC prototype, demonstrating the use of an AI/ML acceleration application, and generalizing the design for network appliance SoCs such as routers. By achieving these goals, the research contributes to the broader field of network communication solutions. 
 
-Overall, this chapter sets the stage for the subsequent chapters, which delve into the design, implementation, and evaluation of the Network Interface Controller. It establishes the importance of network connectivity in the context of the AJIT processor-based SoC and provides a roadmap for the rest of the thesis
+Overall, this chapter sets the stage for the subsequent chapters, which delve into the design, implementation, and evaluation of the Network Interface Controller. It establishes the importance of network connectivity in the context of the AJIT processor-based SoC and provides a roadmap for the rest of the thesis.
 
 
 
 	\section{Objectives}
 
 		\subsection{Integration of Ethernet into AJIT System-on-Chip (SoC) Prototype}
-			The first goal is to successfully integrate an Ethernet interface into the AJIT SoC prototype. This involves designing and implementing the necessary hardware components(Network Interface Controller) and firmware to enable Ethernet connectivity.
+			The first objective is to successfully integrate an Ethernet interface into the AJIT SoC prototype. This involves designing and implementing the necessary hardware components(Network Interface Controller) and firmware to enable Ethernet connectivity.
 
 		\subsection{Network-Accelerated AI/ML Application using Ethernet Interface}
-			The second goal is to utilize the integrated Ethernet interface of the AJIT processor to enable network-accelerated execution of AI/ML accleration application. This demonstration highlights the synergy between the processor's advanced computing capabilities and the enhanced connectivity, showcasing the seamless integration of the Ethernet interface to support efficient processing and communication in networked AI/ML workloads.
+			The second objective is to utilize the integrated Ethernet interface of the AJIT processor to enable network-accelerated execution of AI/ML acceleration applications. This demonstration highlights the synergy between the processor's advanced computing capabilities and enhanced connectivity, showcasing the seamless integration of the Ethernet interface to support efficient processing and communication in networked AI/ML workloads.
 
 		\subsection{Generalization to Network Appliance SoC (Router)}
-			The third goal aims to generalize the network interface design to a broader context by extending it to a network appliance SoC, specifically a router. This involves evaluating the feasibility of incorporating the network interface into a router SoC, considering factors such as performance, power consumption, and compatibility with networking protocols.
+			The third objective aims to generalize the network interface design to a broader context by extending it to a network appliance SoC, specifically a router. This involves evaluating the feasibility of incorporating the network interface into a router SoC, considering factors such as performance, power consumption, and compatibility with networking protocols.
 
 By achieving these goals, this research aims to enhance the AJIT processor's capabilities and explore its potential in networked computing systems, paving the way for future advancements in indigenous processor development.
 
@@ -307,17 +307,17 @@ By achieving these goals, this research aims to enhance the AJIT processor's cap
 \rule[10pt]{\linewidth}{3pt}
 This chapter focuses on the design and validation of the Network Interface Controller (NIC) for the AJIT processor-based System-on-Chip (SoC). The NIC plays a critical role in enabling network connectivity and communication capabilities within the SoC.
 
-The design of the NIC involves several components and considerations, including the network protocol support, data packet handling, memory management, and interface with the AJIT processor. To ensure a robust and reliable design, the NIC undergoes a rigorous validation process to verify its functionality, performance, and compatibility with the AJIT SoC architecture.
+The design of the NIC involves several components and considerations, including network protocol support, data packet handling, memory management, and interface with the AJIT processor. To ensure a robust and reliable design, the NIC undergoes a rigorous validation process to verify its functionality, performance, and compatibility with the AJIT SoC architecture.
 
 The primary goal of this chapter is to provide a detailed overview of the design process, highlighting the key components and their interconnections. It explores the challenges encountered during the design phase and discusses the solutions and design choices made to overcome them. Additionally, the chapter delves into the validation methodologies employed to ensure the correctness and efficiency of the NIC design.
 
-By describing the design and validation of the NIC, this chapter aims to provide insights of implementing a network interface solution for the AJIT processor-based SoC. It serves as a foundation for subsequent chapters, which will explore specific aspects of the NIC design, such as the data packet handling mechanisms, and memory management schemes.
+By describing the design and validation of the NIC, this chapter aims to provide insights into implementing a network interface solution for the AJIT processor-based SoC. It serves as a foundation for subsequent chapters, which will explore specific aspects of the NIC design, such as the data packet handling mechanisms, and memory management schemes.
 
 	
 	\section{Design decisions}
-		Before directly jumping on NIC design lets take a look at necessry design decisions made. The NIC will receive packet data from MAC
-		which will be stored in memory. Processor will need to allocate this memory and provide that information to NIC. This overall needs to
-		3 main interfaces to NIC. The figure~\ref{fig:NIC-Proc-top-level} shows all the interfaces. Lets see each interface in detail.	
+		Before directly jumping on NIC design let's take a look at the necessary design decisions made. The NIC will receive packet data from MAC
+		which will be stored in memory. The processor will need to allocate this memory and provide that information to NIC. This overall needs to
+		3 main interfaces to NIC. Figure~\ref{fig:NIC-Proc-top-level} shows all the interfaces. Let's see each interface in detail.	
 
 		\begin{figure}[h]
 			\centering
@@ -330,8 +330,8 @@ By describing the design and validation of the NIC, this chapter aims to provide
 
 
 		\subsection{NIC-MAC interfce}
-			NIC to MAC interface will used by NIC for receiving and transmitting packtes from MAC. The memory which will be used is provides 8 bytes per request.
-			so this interface is kept 73(64 bit data + 9 bit control) bits. The bit mapping is as shown in table~\ref{tab:NIC-MAC-interface}.
+			NIC to MAC interface will used by NIC for receiving and transmitting packets from MAC. The memory which will be used is provided 8 bytes per request.
+			so this interface is kept 73(64 bit data + 9 bit control) bits. The bit mapping is shown in table~\ref{tab:NIC-MAC-interface}.
 				\begin{table}[!htbp]
 					\centering
 					\begin{tabular}{ccl}
@@ -347,11 +347,11 @@ By describing the design and validation of the NIC, this chapter aims to provide
 					\caption{NIC-MAC interface description}
 					\label{tab:NIC-MAC-interface}
 				\end{table}
-			Same interface will be used for both reception and transmission of packet.
+			The same interface will be used for both reception and transmission of packets.
 
 		\subsection{NIC-Memory interface}
-			NIC-Memory interface is required for store and load of packets to and from memory. Already developed ACB(AJIT Core Bus) protocol will be used for this.
-			The protocol consists of two interfaces,
+			The NIC-Memory interface is required for storeing and loading packets to and from memory. Already developed ACB(AJIT Core Bus) protocol will be used for this.
+                        The protocol consists of two interfaces,
 			\begin{enumerate}
 				\item ACB Requeuest : Requests from NIC to store and load the packet will be sent through this interface. see~\ref{tab:NIC-Memory-interface-req} for bit mapping.
 				\item ACB Response : Response generated by memory to the request will be sent back to NIC on this interface. see~\ref{tab:Memory-NIC-interface-resp} for bit mapping.
@@ -475,7 +475,7 @@ To ensure synchronization and prevent conflicts during access to these queues, a
 
 At startup, the processor initializes the queues by allocating memory for them and configuring their initial state. The addresses of these queues are then communicated to the NIC by writing to specific NIC registers. This process allows the NIC to access and manipulate the queues effectively during runtime. 
 
-		These are all interface decisions taken lets now move on to NIC design.Let's see the NIC registers now.
+		These are all interface decisions taken lets now move on to NIC design. Let's see the NIC registers now.
 
 	\section{Network Interface Controller}
 		
@@ -508,7 +508,7 @@ At startup, the processor initializes the queues by allocating memory for them a
 		\subsection{Packet Storage Format}
 
 		\subsection{Parser}
-				The parser daemon, receives data from the MAC (Media Access Control) through a pipe and extracts relevant information from Ethernet packets. It utilizes a state machine to process chunks of data and identifies essential details such as source and destination MAC addresses, type/length field, and packet data. The parsed information is then forwarded to receve engine daemon.
+				The parser daemon receives data from the MAC (Media Access Control) through a pipe and extracts relevant information from Ethernet packets. It utilizes a state machine to process chunks of data and identifies essential details such as source and destination MAC addresses, type/length field, and packet data. The parsed information is then forwarded to receive engine daemon.
 		\begin{verbatim}
 			loop1 :
 			if(enable_by_processor)
@@ -525,8 +525,8 @@ At startup, the processor initializes the queues by allocating memory for them a
 		\end{verbatim}
 
 		\subsection{Receive Enigne}
-				The receive engine daemon is responsible for storage of packets coming from parser. It receives the parsed packet information from the parser daemon and interacts with the processor to ensure the proper handling of received packets. The receive engine daemon uses the free\_queue, to get empty buffer address tp store the active packets in buffers.
-			Then uses rx\_queue to provide their(buffer's) addresses to the processor for processing. The algorith of receive engine is shown below,
+				The receive engine daemon is responsible for the storage of packets coming from the parser. It receives the parsed packet information from the parser daemon and interacts with the processor to ensure the proper handling of received packets. The receive engine daemon uses the free\_queue, to get an empty buffer address to store the active packets in buffers.
+			Then uses rx\_queue to provide their(buffer's) addresses to the processor for processing. The algorithm of receive engine is shown below,
 		\begin{verbatim}
 			loop1 :
 			if(enable_by_processor)
@@ -552,7 +552,7 @@ At startup, the processor initializes the queues by allocating memory for them a
 		\end{verbatim}
 
 		\subsection{Transmit Engine}
-				The transmit engine daemon focuses on transmitting processed packets from the processor to the external network. It receives the addresses of processed packet buffers from the processor via the tx\_queue and sends the corresponding packets out through the Ethernet interface. The transmit engine daemon monitors the tx\_queue and retrieves the buffer addresses to facilitate efficient packet transmission. The daemon also pushes free\_queue with the address of buffer which is sent out. This allows resue of buffers. The algorith of transmit engine is shown below,
+				The transmit engine daemon focuses on transmitting processed packets from the processor to the external network. It receives the addresses of processed packet buffers from the processor via the tx\_queue and sends the corresponding packets out through the Ethernet interface. The transmit engine daemon monitors the tx\_queue and retrieves the buffer addresses to facilitate efficient packet transmission. The daemon also pushes free\_queue with the address of buffers which is sent out. This allows the reuse of buffers. The algorithm of transmit engine is shown below,
 		\begin{verbatim}
 			loop1 : 
 			if(enable_by_processor)
@@ -577,7 +577,7 @@ At startup, the processor initializes the queues by allocating memory for them a
 		\end{verbatim}
 
 		\subsection{Software register Access}
-				The software register access daemon enables the processor to access and modify the NIC's software registers. These registers contain various control and configuration parameters, allowing the processor to configure and manage the behavior of the NIC. The software register access daemon handles the communication between the processor and the NIC registers, ensuring reliable and secure access. Processor uses AFB protocol(see ~\ref{AFB}) for register access.\\
+				The software register access daemon enables the processor to access and modify the NIC's software registers. These registers contain various control and configuration parameters, allowing the processor to configure and manage the behavior of the NIC. The software register access daemon handles the communication between the processor and the NIC registers, ensuring reliable and secure access. The processor uses AFB protocol(see ~\ref{AFB}) for register access.\\
 
 	
 
@@ -625,7 +625,7 @@ At startup, the processor initializes the queues by allocating memory for them a
 
 	\section{Test Setup}
 	\section{Validation and Performance}
-		The data rate found using 1x1x32 (single core single threaded) AJIT processor are as shown in table~\ref{table_dataRate}
+		The data rate found using 1x1x32 (single core single-threaded) AJIT processor are as shown in table~\ref{table_dataRate}
 		\begin{table*}[htbp]
 			\caption{Data rate achieved for differnet number of packets \& packet sizes}
 			\begin{center}
@@ -658,7 +658,7 @@ At startup, the processor initializes the queues by allocating memory for them a
 			\end{center}
 		\end{table*}
 	
-	Only NIC with Memory we are able to achieve 433.2847 Mbps for 1750 packets of size 146 Byets.
+	Only NIC with Memory we are able to achieve 433.2847 Mbps for 1750 packets of size 146 Bytes.
 
 
  
@@ -684,10 +684,10 @@ At startup, the processor initializes the queues by allocating memory for them a
 \newpage
 \chapter{SoC Design and Validation} \label{3}
 \rule[10pt]{\linewidth}{3pt}
-We validate an characterize the perofrmance of the accelerator by integrating it into a System-on-chip (SoC) using AJIT Processor, which provides the accelerator with the commands to operate, and reads back the data. The whole system is also connected to a Network Interface Card, which provides high-speed IO for quick loading of images into the memory. The architecture of the system is shown in Fig~\ref{fig:SoC}.
+We validate an characterize the performance of the accelerator by integrating it into a System-on-chip (SoC) using AJIT Processor, which provides the accelerator with the commands to operate, and reads back the data. The whole system is also connected to a Network Interface Card, which provides high-speed IO for the quick loading of images into the memory. The architecture of the system is shown in Fig~\ref{fig:SoC}.
 \\
 
-The system consists of 32bit wide AJIT processor at its core. The processor has an ACB interface through which it interacts with memory and other modules. The AFB interface linked to the Network Interface Controller (NIC) and the 8-engine acclerator cluster is used to transfer configuration information from the processor and relay back status flags to it. The modules are also provided with an ACB interface through which they can access the memory. The memory subsystem consists of a DRAM controller connected to an ACB to UI conversion protocol, which translates memory requests in the ACB bus to DRAM requests, and vice versa for the responses. In addition to the above, the processor has a couple of UART interfaces with which it can communicate with the outside world. Also, the NIC has an interface to connect with the Xilinx MAC IP, using which it can communicate to the host machine via Ethernet, currently configured to run at 100Mbps. 
+The system consists of a 32-bit wide AJIT processor at its core. The processor has an ACB interface through which it interacts with memory and other modules. The AFB interface linked to the Network Interface Controller (NIC) and the 8-engine accelerator cluster is used to transfer configuration information from the processor and relay back status flags to it. The modules are also provided with an ACB interface through which they can access the memory. The memory subsystem consists of a DRAM controller connected to an ACB to UI conversion protocol, which translates memory requests in the ACB bus to DRAM requests, and vice versa for the responses. In addition to the above, the processor has a couple of UART interfaces with which it can communicate with the outside world. Also, the NIC has an interface to connect with the Xilinx MAC IP, using which it can communicate to the host machine via Ethernet, currently configured to run at 100Mbps. 
 \\
 		\begin{figure}[h]
 			\centering
@@ -722,39 +722,34 @@ end while
 The above pseudocode explains the working of the processor code. It first initialise memory spaces required by all modules. These include the queues required by NIC, the kernel addresses for the accelerators and the memory spaces for receiving and storing tensors during computation by the engines. After the memory spaces are initialised, all the queues for NIC are configured and initialised, and the Network Interface Controller starts executing. The kernels are then fetched in through Ethernet, which is then followed by the input tensors for all the engines. With the setup ready, NIC is turned off and the engines are allowed to execute on the data stage by stage. When all the acclerators are done with their computation, the output data is sent to the host PC through Ethernet, where the output is verified for correctness.
 \\
 
-The above is a simplified driver to demonstrate the functionality of using multiple accelerator engines inside the system using polling. The processor and the  accelerators both support the use of interrupts. The Interrupt Service Routine corresponding to the accelerator interrupts can be suitably confiured to allow the processor to be used for other processes, while the engines work on the compute-intensive AI/ML tasks, the completion of which can be signalled to the processor, at which the processor interrupts and schedules the next task to the accelerator before resuming its own execution.
+The above is a simplified driver to demonstrate the functionality of using multiple accelerator engines inside the system using polling. The processor and the accelerators both support the use of interrupts. The Interrupt Service Routine corresponding to the accelerator interrupts can be suitably configured to allow the processor to be used for other processes, while the engines work on the compute-intensive AI/ML tasks, the completion of which can be signaled to the processor, at which the processor interrupts and schedules the next task to the accelerator before resuming its execution.
 \\
 
 
 \section{Processor NIC Interface}
 
-The processor initialises the queues for the NIC and starts the NIC. When NIC recives data from MAC it pops the free\_queue which has empty packet buffers address stored in it and writes the packet to that buffer. After successfully writting the packet NIC pushes the address of buffer to rx\_queue, any buffer address in rx\_queue indicates that this is the received packet and needs some action by processor. While this thing is going on processor keeps polling the rx\_queue, as soon as it gets any data over there it reads it and takes decision. In this setup processor is expected to store the packet at some memory location which is shared with acclerator through its registers. After this packet storage is complete processor pushes this address to tx\_queue which works as acknowledgement for the host, after receiving which it(host) sends new packet. This is overall flow for storing file in the memroy.
+The processor initializes the queues for the NIC and starts the NIC. When NIC receives data from MAC it pops the free\_queue which has empty packet buffers address stored in it and writes the packet to that buffer. After successfully writing the packet NIC pushes the address of the buffer to rx\_queue, any buffer address in rx\_queue indicates that this is the received packet and needs some action by the processor. While this thing is going on processor keeps polling the rx\_queue, as soon as it gets any data over there it reads it and takes the decision. In this setup, the processor is expected to store the packet at some memory location which is shared with the accelerator through its registers. After this packet storage is complete processor pushes this address to tx\_queue which works as acknowledgment for the host, after receiving it (the host) sends a new packet. This is the overall flow for storing files in the memory.
 \\
 
-Now to send file out on ethernet interface processor breaks file into number of packets, pops free\_queue for empty buffer address and stores packet at that address. After storing packet successfully processor pushes the buffer address to tx\_queue. The transmit engine running inside NIC which is polling this tx\_queue reads that buffer and sends it out. One by one all the packets sent out.
+Now to send the files out on the ethernet interface processor breaks a file into a number of packets, pops free\_queue for empty buffer address, and stores the packet at that address. After storing the packet successfully processor pushes the buffer address to tx\_queue. The transmit engine running inside NIC which is polling this tx\_queue reads that buffer and sends it out. One by one all the packets are sent out.
 
 
 
 \section{Processor Accelerator Interface}
 
-The processor begins by feeding the data to the registers 1 to 12. After that, it sets the bits 0 and 2 of register 0, which signals the accelerator to start working. The processor can then continue with other tasks or poll on the register 0 as it waits for the accelerator to complete, which is indicated by setting bit 4 of register 0 as high. Then, the processor updates the registers to the parameters for the next stage or image.
+The processor begins by feeding the data to registers 1 to 12. After that, it sets the bits 0 and 2 of register 0, which signals the accelerator to start working. The processor can then continue with other tasks or poll on register 0 as it waits for the accelerator to complete, which is indicated by setting bit 4 of register 0 as high. Then, the processor updates the registers to the parameters for the next stage or image.
 \\
 
-In addition, the accelerator has a control daemon which resets the registers, reads the data from the AFB\_ACCELERATOR\_REQUEST, writes them onto the accelerator registers, and sends back the resposne to the AFB\_ACCELERATOR\_RESPONSE. The control daemon runs infinitely waiting on AFB\_ACCELERATOR\_REQUEST requests from the processor.
+In addition, the accelerator has a control daemon that resets the registers, reads the data from the AFB\_ACCELERATOR\_REQUEST, writes them onto the accelerator registers, and sends back the response to the AFB\_ACCELERATOR\_RESPONSE. The control daemon runs infinitely waiting on AFB\_ACCELERATOR\_REQUEST requests from the processor.
 \\
 
-The accelerator also has a worker daemon, which waits for the appropriate bits to be set in the r0 register. When the processor sends the request to execute through the registers, it calls the core function with the parameters stored by the processor in other registers. When the execution is completed, it writes back 0 into bit 4 of r0, thereby signalling the processor that the computation is completed.
+The accelerator also has a worker daemon, which waits for the appropriate bits to be set in the r0 register. When the processor sends the request to execute through the registers, it calls the core function with the parameters stored by the processor in other registers. When the execution is completed, it writes back 0 into bit 4 of r0, thereby signaling the processor that the computation is completed.
 \\
 
-The accelerator also has an interrupt daemon which waits on bit 4 of r0, and sets the signal ACCELERATOR\_INTERRUPT\_8 corresponding to the above bit. The interrupt signal is not currently used, but can be utilised to prevent the processor from polling on r0 while the accelerator performs the computation.
+The accelerator also has an interrupt daemon that waits on bit 4 of r0, and sets the signal ACCELERATOR\_INTERRUPT\_8 corresponding to the above bit. The interrupt signal is not currently used but can be utilized to prevent the processor from polling on r0 while the accelerator performs the computation.
 \\
 
-
-\section{Scaling The Number Of Engines}\label{sec:scale_eng}
-
-In \ref{ch:3}, we described how the engine can eploit parallelism to obtain higher throughput. In this section, we characterize the throughput improvement obtained by exploiting the parallelism between different images by implementing multiple accelerator engines in a single cluster, each working on its own input image. The number of engines actively running were increased from one to eight, and the following results were obtained:
-\\
-
+\section{Timing Result and Performance}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \chapter{Summary \& Conclusion} \label{5}

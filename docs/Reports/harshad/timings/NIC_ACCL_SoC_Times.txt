@@ -1,0 +1,12 @@
+
+
+1.Time for kernels = 4352985023
+2. Time for input = 82699315
+3. Time for output = 475239087
+4. Round trip time = 11897609993 
+
+
+1. Time for kernels = 4591986398
+2. Time for input = 89461550
+3. Time for output = 94604078
+4. Round trip time = 10797970709

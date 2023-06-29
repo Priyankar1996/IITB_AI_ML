@@ -1,1 +1,12 @@
-Design and Development of Networking Interface to AJIT processor on different FPGA.
+------------------------------------------------------------------
+-- Design and Development of Network Interface controller 
+--              for AJIT processor based SoC
+------------------------------------------------------------------
+
+Contents :
+	
+	build.sh   : To generate pdf (Give src or srcLib as argument)
+	src        : Report old format
+	srcLib     : Report according to Library format
+	thesis.pdf : Report PDF
+	timings    : Timing related data.

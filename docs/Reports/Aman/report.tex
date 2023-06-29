@@ -22,6 +22,7 @@
 \usepackage{mathtools}
 \usepackage{amsmath}
 \usepackage[top=0.5in, bottom=1in, left=1in, right=1in]{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=2.8cm,rmargin=2.8cm}
 \usepackage{xcolor}
 \usepackage{comment}
 \usepackage{fancyvrb}
@@ -53,7 +54,7 @@
   \vspace{0.25cm}
   {for}\\
   \vspace{1cm}
-  \textbf{ Dual Degree Programme \\(B.Tech + M.Tech in Electrical Engineering \\with specialization in Electronic Systems)}\\
+  \textbf{ Dual Degree \\(B.Tech + M.Tech in Electrical Engineering \\with specialization in Electronic Systems)}\\
   \vspace{1.50cm}
   {by}\\
   \vspace{0.20cm}
@@ -67,7 +68,7 @@
     \end{center}
     \end{figure}
   \vspace{1.450cm}
-  {Under the guidance of}\\
+  {Under the supervision of}\\
   \vspace{0.20cm}
   \textbf{\large Prof. Madhav Desai}\\
     \vspace{0.30cm}
@@ -81,6 +82,53 @@
 
 \newpage
 \pagenumbering{roman}
+
+
+\chapter*{}
+\begin{center}
+{\Large \textbf{Dissertation Approval}}
+
+\bigskip
+\bigskip
+\bigskip
+This dissertation entitled\\
+\bigskip
+\textbf{Design and Development of Network Interface controller for AJIT processor based SoC}\\
+\bigskip
+
+by\\
+\bigskip
+
+Mr. Harshad Bhausaheb Ugale\\
+Roll No. 20307R008\\
+\bigskip
+is   approved for the degree of\\
+\textbf{Master of Technology in Electrical Engineering}\\
+
+\end{center}
+ \vspace{10mm}
+\begingroup
+\setlength{\tabcolsep}{30pt}
+\begin{center}
+    \begin{tabular}{c c}
+        ..................................................... & .....................................................\\
+        Prof. Madhav P. Desai & Prof. D. Manjunath\\
+        (Supervisor)     & (Examiner)\\
+        \\\\
+        ..................................................... & .....................................................\\
+        Prof.   & Prof. Kavi Arya\\
+        (Chairman) & (Examiner)\\
+    \end{tabular}
+\end{center}
+\endgroup
+\bigskip
+{Date: \today}\\
+{Place: IIT Bombay}
+
+
+% ------------------------------------------------------------------------------
+\newpage
+
  \linespread{1.5}
 \chapter*{Declaration}
 %\pagenumbering{gobble}
@@ -356,7 +404,7 @@ The primary requirement from the engine is that it should be able to perform all
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{block_dia.jpg}
+	\includegraphics[width=\textwidth]{updated_modules.pdf}
     \caption{Block Diagram For The System Implementation}
     \label{fig:block_dia}
 \end{figure}
@@ -486,7 +534,15 @@ This modules reads the input tensor from the memory, and sends it to the core fo
 \item Since the output produces two rows at a time, having two input rows provides an opportunity to cascade multiple engines to eliminate intermediate memory accesses.
 \end{enumerate}
 
-All the input modules have support for padding with zeros by sending in zeros at the desired positions. This enables us to prevent restructuring of the tensor to enable zero-padding. They call a two concurrent submodules to fetch one row each - the first module handles the odd numbered rows, while the second handles the even numbered rows. The modules ensure that the zeros created due to padding are transmitted to the singleFetch module.
+All the input modules have support for padding with zeros by sending in zeros at the desired positions. This enables us to prevent restructuring of the tensor to enable zero-padding. They call a two concurrent submodules to fetch one row each - the first module handles the odd numbered rows, while the second handles the even numbered rows. The modules ensure that the zeros created due to padding are transmitted to the singleFetch module. Fig~\ref{fig:inputModules} represents the organisation of the input modules in the system.
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{inputModule.pdf}
+    \caption{Organisation of the input modules}
+    \label{fig:inputModules}
+\end{figure}
 
 \subsubsection{Single Fetch}
 
@@ -534,8 +590,14 @@ As this module transmits kernel values for 8 channels in parallel, we get loop u
 
 \subsection{Output Modules}
 
-The output modules receives the data from the accumulator, and writes them back into the memory after applying the required operations. If the number of output channels is not a multiple of 8, it packs the data into words before writing it into memory. All the send modules are equipped to perform non-linear activation on the output data which is received from the accumulator through two sets of eight FIFOs each 32bit wide.
+The output modules receives the data from the accumulator, and writes them back into the memory after applying the required operations. If the number of output channels is not a multiple of 8, it packs the data into words before writing it into memory. All the send modules are equipped to perform non-linear activation on the output data which is received from the accumulator through two sets of eight FIFOs each 32bit wide. The organisation of the modules in the system is shown in Fig~\ref{fig:outputModules}.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{outputModule.pdf}
+    \caption{Organisation of the output modules}
+    \label{fig:outputModules}
+\end{figure}
 \subsubsection{Scaling}
 
 The received data is sent to the scaler module, which translates the data by multiplying with a 32-bit scale value which is fixed for a given stage of the network. When the multiplication is done, the data is sent back to the calling module for shifting the data to obtain the final value. This way, a high accuracy can be obtained by minimising the loss of information. During a read from the accumulator, 16 outputs are fetched, but only 1 scaler is used as the accumulator provides data once every $\dfrac{3n}{8}+ 1$ cycles, where n is the number of input channels. Thus, if the number of input channels is 128, writeback happens once every 49 cycles, and hence the multiplier associated with the scaler module can be shared across all outputs.
@@ -679,7 +741,7 @@ From the above, we see that the input and kernels are always matched appropriate
 
 \section{Validation and Performance}
 
-The inference engine was synthesized using Vivado 2019.1 and run on a Xilinx VCU128 FPGA at a clock frequency of 125MHz with the external memory modeled using BRAM,. With a theoretical peak performance of 96 GOPS and logic cells resource consumption of 102K LUTs, we get an average of 0.94 GOPS/KLUTs performance. The end-to-end segmentation using UNET architecture on the engine takes a total of 94 million clock cycles, taking a total time of 0.75s for processing of one image, giving an average performance of over 85 GOPS.
+The inference engine was synthesized using Vivado 2019.1 and run on a Xilinx VCU128 FPGA at a clock frequency of 125MHz with the external memory modeled using BRAM,. With a theoretical peak performance of 96 GOPS and logic cells resource consumption of 107K LUTs, we get an average of 0.90 GOPS/KLUTs performance. The end-to-end segmentation using UNET architecture on the engine takes a total of 94 million clock cycles, taking a total time of 0.75s for processing of one image, giving an average performance of over 85 GOPS.
 \\
 
 We can verify the full rate of execution from the stage by stage breakdown shown in Table~\ref{tab:stage}, where resource utilization of about 99.75\% (383 MACs/clock) have been observed. We see that the average compute utilisation of the engine is close to 90\%, indicating the efficient use of compute resources. Furthermore, the aggressive reuse of data keeps the average memory utilisation under 10\%, which means that the engine is bottlenecked by the compute resources and not the memory. The results indicate an average compute-to-memory ratio of 873 operations/byte (1 MAC = 2 ops).  This implies that the engine can be easily scaled to larger engine clusters sharing the same memory channel without significant degradation in preformance. We study this in Section~\ref{sec:scale_eng}. 
@@ -688,7 +750,7 @@ We can verify the full rate of execution from the stage by stage breakdown shown
 
 %\renewcommand{\arraystretch}{0.5}
 %\setlength{\extrarowheight}{-20pt}
-\begin{table}\label{tab:stage}
+\begin{table}
 	\resizebox{\textwidth}{!}
 	{\centering
 
@@ -728,7 +790,37 @@ We can verify the full rate of execution from the stage by stage breakdown shown
 	 \label{tab:stage}
 \end{table}
 
-From Table~\ref{tab:stage}, we see that the accelerator can achieve performance equal to the rated 96 GOPS. This 
+\section{Comparison With Previous FPGA Accelerators}
+
+Table~\ref{tab:works} shows a cmparative analysis of the performance of our implementation with some of the reported literature for fixed-point CNN acceleration.
+
+\begin{table}
+	\resizebox{\textwidth}{!}
+	{\centering
+
+\setlength{\tabcolsep}{1pt}
+		\begin{tabular}{P{0.12\linewidth} P{0.12\linewidth} P{0.12\linewidth} P{0.08\linewidth} P{0.09\linewidth} P{0.12\linewidth} P{0.12\linewidth} P{0.12\linewidth} P{0.15\linewidth} P{0.15\linewidth}}
+		\toprule
+			Architecture & Board & Model & Design Methodology & LUTs (K) & Throughput (GOPS) & DSP Slices & Frequency (MHz) & Throughput / Logic-freq (GOPS / KLUT GHz ) & Throughput / DSP-freq ( GOPS / KLUT GHz )\\
+		\toprule
+%Compared with GPU			\cite{UNIOPU} & XC7Z100 & UNET & HLS &  & 49 & 96 & 200 & 6.22 & 0.84\\\midrule
+%16b			\cite{28} & 180 & 137 & 780 & 150 & 5.07 & 1.17\\\midrule
+			\cite{29} & Stratix 10 & VGG16 & RTL & 469 & 1604 & 8216 & 300 & 11.4 & 0.65\\\midrule
+			\cite{28} & VX980T & VGG16 & RTL & 335 & 1000 & 3395 & 150 & 19.9 & 1.96\\\midrule
+			\cite{29} & Arria 10 & VGG16 & RTL & 208 & 968 & 3036 & 240 & 19.4 & 1.33\\\midrule
+			\cite{layerCons} & VU9P & ResNet-50 (16b) & HLS & 692 & 1672 & 5632 & 180 & 13.42 & 1.65\\\midrule
+			\cite{28} & VX980T & ResNet-101 & RTL & 480 & 600 & 3121 & 100 & 12.5 & 1.9\\\midrule
+			\cite{BFP} & VX690T & VGG16 & RTL & 232 &  761 & 1027 & 200 & 16.40 & 3.70\\\midrule
+			\cite{citeUNET1} & ZC7045 & UNET (16b) & HLS & 86 & 107 & 640 & 200 & 6.22 & 0.84\\\midrule
+			\cite{citeUNET2} & Arria 10 & UNET & RTL & 250 & 1578 & 1688 & 200 & 31.56 & 0.93\\\midrule
+			Our Work & VCU128 & UNET & HLS  & 107 & 85 & 423 & 125 & 6.35 & 1.61\\ 
+		\bottomrule
+		\\
+	\end{tabular}
+	}
+	 \caption{Performance evaluation with state of the art FPGA implementations}
+	 \label{tab:works}
+\end{table}
 
 
 \chapter{Integration into a System-on-chip}

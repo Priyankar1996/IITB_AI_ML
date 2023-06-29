@@ -41,33 +41,33 @@
 \parindent 8pt
 \begin{document}
   \thispagestyle{empty}
-  \vspace*{1cm}
+  \vspace*{0.9cm}
   {\centering     
-  \textbf{\LARGE An AI/ML Inference Engine Developed Using AHIR-V2 Tools For Use In AJIT Processor Based Systems-on-Chip}\\
-  \vspace{1.20cm}
+  \textbf{\LARGE An AI/ML Inference Engine Developed Using AHIR-V2 Tools}\\
+  \vspace{1.10cm}
   %\it
   %\vspace{.5cm}
   %\rm
   \textbf{\large Dual Degree Project Report}\\
-  \vspace{1cm}
+  \vspace{0.7cm}
   {Submitted in partial fulfilment of the requirements}\\
   \vspace{0.25cm}
   {for}\\
-  \vspace{1cm}
+  \vspace{0.9cm}
   \textbf{ Dual Degree \\(B.Tech + M.Tech in Electrical Engineering \\with specialization in Electronic Systems)}\\
-  \vspace{1.50cm}
+  \vspace{1.00cm}
   {by}\\
   \vspace{0.20cm}
   \textbf{\large Aman Dhammani}\\
   \vspace{0.25cm}
   \textbf{\large (Roll No. 18D180002)}\\
-  \vspace{1.8cm}
+  \vspace{1.7cm}
     \begin{figure}[htb]
     \begin{center}
     \includegraphics[height=1.5in,width=1.5in]{iitblogo.png}
     \end{center}
     \end{figure}
-  \vspace{1.450cm}
+  \vspace{1.350cm}
   {Under the supervision of}\\
   \vspace{0.20cm}
   \textbf{\large Prof. Madhav Desai}\\
@@ -93,17 +93,17 @@
 \bigskip
 This dissertation entitled\\
 \bigskip
-\textbf{Design and Development of Network Interface controller for AJIT processor based SoC}\\
+\textbf{An AI/ML Inference Engine Developed Using AHIR-V2 Tools For Use In AJIT Processor Based Systems-on-Chip}\\
 \bigskip
 
 by\\
 \bigskip
 
-Mr. Harshad Bhausaheb Ugale\\
-Roll No. 20307R008\\
+Aman Dhammani\\
+Roll No. 18D180002\\
 \bigskip
-is   approved for the degree of\\
-\textbf{Master of Technology in Electrical Engineering}\\
+is approved for the degree of\\
+\textbf{Bachelor Of Technology + Master of Technology in Electrical Engineering}\\
 
 \end{center}
  \vspace{10mm}
@@ -188,7 +188,7 @@ We present a high-performance input-streaming based CNN inference engine operati
 \chapter{Introduction}
   \pagenumbering{arabic}
 
-Machine Learning is a thriving area in the field of Artificial Intelligence, which involves design and deployment of algorithms that can learn and predict through models trained using given datasets. In recent years, many machine learning techniques, such as Convolution Neural Networks (CNN) \cite{CNNs} and Support Vector Machines (SVM) \cite{SVMs}, have shown promise in many application domains, such as image processing and speech recognition \cite{LeNet,CNN1,CNN2,GoogleNet,ALexNet,ResNet,YOLO,CNN7,CNN5}.  
+Machine Learning is a thriving area in the field of Artificial Intelligence, which involves design and deployment of algorithms that can learn and predict through models trained using given datasets. In recent years, many machine learning techniques, such as Convolution Neural Networks (CNN) \cite{CNNs} and Support Vector Machines (SVM) \cite{SVMs}, have shown promise in many application domains, such as image processing and speech recognition \cite{LeNet,CNN1,GoogleNet,ALexNet,ResNet,YOLO,CNN7,CNN5}.  
 \\
 
 We focus our attention to CNNs, which forms the backbone for most image processing tasks. They are able to capture the image data and modify them through a series of trained filters (kernels) \cite{CNNs}. However, with the increasing depth and complexities of the CNNs, accompanied by large feature maps, it leads to an enormous amounts of computation to process one image, which is beyond the capability of a CPU, which has limited avenes for data-level parallelism. Furthermore, limited on-chip memory necessitates the reuse of the data to reduce memory accesses, requiring specialised architecture with high memory bandwidths and data buffers that can leverage the high levels of parallelism available in such tasks.
@@ -234,10 +234,10 @@ There are various CNN architectures used globally for various tasks, like Incept
     \label{fig:UNET}
 \end{figure}
 
-The UNET architecture consists of an encoder loop, which will progressively extract the critical information from the image, creating smaller and deeper feature maps. The encoder loop extracts information by performing a series of convolution operation and maxpooling. The pooling layer helps in reducing the dimensions of the feature maps, helping in encapsulating more and more key features with fewer parameters. The convolution operations are all followed by ReLU activation to maintain non-linerity. There are four encoder loops comprising of two convolutions and a maxpooling layer each. Furthermore, the inputs of the maxpooling layer are stored to be passed on to future layers through skip connections. The left half of Fig~\ref{fig:UNET} forms the encoder network.
+The UNET architecture consists of an encoder loop, which will progressively extract the critical information from the image, creating smaller and deeper feature maps. The encoder loop extracts information by performing a series of convolution operation and maxpooling. The pooling layer helps in reducing the dimensions of the feature maps, helping in encapsulating more and more key features with fewer parameters. The convolution operations are all followed by ReLU activation to maintain non-linerity. There are four encoder loops comprising of two convolutions and a maxpooling layer each. Furthermore, the inputs of the maxpooling layer are stored to be passed on to future layers through skip connections. The left half of Figure~\ref{fig:UNET} forms the encoder network.
 \\
 
-After the encoding is done, there are a couple of convolution operations to generate the base layer for the decoder. The decoder is designed symmetric to the encoder network. Instead of using pooling layers to downsample the image, it uses transpose convolution (see up-conv in  Fig~\ref{fig:UNET} operation to upsamples the images to reconstruct the original image with the segmentation data. The grey arrows represent the skip connections from the encoder loops, which help in preserving context identified by the encoder loop. The last convolution reconstructs an image with the same dimensions as the input, giving the segmentation map based on the task at hand.
+After the encoding is done, there are a couple of convolution operations to generate the base layer for the decoder. The decoder is designed symmetric to the encoder network. Instead of using pooling layers to downsample the image, it uses transpose convolution (see up-conv in  Figure~\ref{fig:UNET} operation to upsamples the images to reconstruct the original image with the segmentation data. The grey arrows represent the skip connections from the encoder loops, which help in preserving context identified by the encoder loop. The last convolution reconstructs an image with the same dimensions as the input, giving the segmentation map based on the task at hand.
 \\
 
 
@@ -255,7 +255,7 @@ This gives the total number of computations for one convolution layer as
 r_o * c_o * chl_o * r_k * c_k * chl_i
 \end{equation*}
 
-For a typical feature map of size 112*112*128, with 128 output channels and 3*3 kernel, this corresponds to a total over 1.8 billion multiplications for a single layer. As we have seen in Fig~\ref{fig:UNET}, the architecture involves over 18 convolution layers, leading to a computational expense of over 30 billion MAC operations.
+For a typical feature map of size 112*112*128, with 128 output channels and 3*3 kernel, this corresponds to a total over 1.8 billion multiplications for a single layer. As we have seen in Figure~\ref{fig:UNET}, the architecture involves over 18 convolution layers, leading to a computational expense of over 30 billion MAC operations.
 
 We also provide a mathematical description for the convolution operation. A n*n ($\implies r_k = c_k = n$) convolution operation can be defined as:
 
@@ -265,7 +265,7 @@ We also provide a mathematical description for the convolution operation. A n*n 
 where $\cdot$ denotes the dot product between two tensors.
 \\
 
-Using Equation~\ref{eq:conv}, the algorithm for convolution can be described as follows:
+Using Equation~\ref{eq:conv}, the algorithm for convolution is described in Algorithm~\ref{Algo:cov}.
 
 \begin{Verbatim}[numbers=left,commandchars=\\\{\}]
 \label{Algo:conv}for co in 1:chl_o do
@@ -353,10 +353,10 @@ Since the goal of the project is to highlight the efficiency of the engine to ac
 
 \subsection{Pseudocode}\label{pseudocode}
 
-The following algorithm describes the implementation of UNET (the parameters used in each function calls are not shown here).
+Algorithm~\ref{Algo:UNET} describes the implementation of UNET (the parameters used in each function calls are not shown here).
 
-\begin{Verbatim}
-def UNET:
+\begin{Verbatim}[numbers=left,commandchars=\\\{\}]
+\label{Algo:UNET}def UNET:
     T = read_input_tensor()
     K = read_kernels()
     for iter in [1:3] do
@@ -395,7 +395,7 @@ Studies have found that fixed point computation for CNNs can achieve similar acc
 
 \chapter{Design}\label{ch:3}
 
-In order to perform inference tasks successfully, the engine must have the ability to perform operations like concatenation, convolution, zero-padding, max-pooling, non-linear activation (relu) and transpose convolution. Fig~\ref{fig:block_dia} shows the block diagram indicating the modules used and the flow of data within the system. On the left are the set of input modules and the kernel modules. They are responsible for fetching the inputs and the kernels from the memory. They are supported by the readModules which are connected through a deadlock prevention mechanism. The fetched data is forwarded through pipes to the convolveCore, where the bulk of the computation occurs. The partial sums are then accumulated in the accumulator, after which the outputs are generated through scaling and applying activation functions before being written back to the memory using the sendModules. The design and working of individual modules are described in the following sections.
+In order to perform inference tasks successfully, the engine must have the ability to perform operations like concatenation, convolution, zero-padding, max-pooling, non-linear activation (relu) and transpose convolution. Figure~\ref{fig:block_dia} shows the block diagram indicating the modules used and the flow of data within the system. On the left are the set of input modules and the kernel modules. They are responsible for fetching the inputs and the kernels from the memory. They are supported by the readModules which are connected through a deadlock prevention mechanism. The fetched data is forwarded through pipes to the convolveCore, where the bulk of the computation occurs. The partial sums are then accumulated in the accumulator, after which the outputs are generated through scaling and applying activation functions before being written back to the memory using the sendModules. The design and working of individual modules are described in the following sections.
 \\
 
 The primary requirement from the engine is that it should be able to perform all the operations listed above with a high throughput. In order to do so, a core unit that can perform multiple parallel MACs is important. Since the core operation of CNNs is convolution, and all other operations are generally done before or after convolution, we cascade the layers to generate hardware that executes other operations as a preprocessing or postprocessing step to the execution of convolution layer. By doing so, we eliminate the need for a memory access after every layer, and hence, the latency of operations improves significantly. We call the combined execution of the preprocesssing, one layer of convolution and postprocessing as a stage. By structuring the engine in this manner, we are able to perform an end-to-end UNET implementation in 18 stages, as opposed to the 38 layers required during training. In addition to the parallelism to generate high throughput, we require minimum data movement across the processing elements to ensure low resource consumption and interconnect delays. So, we use a 384 processing element streaming architecture as described in Section~\ref{sec:convCore}.
@@ -426,7 +426,7 @@ The design involves two aspect - the critical component involving the convolutio
 
 \section{Algorithm}
 
-Rewriting Algorithm~\ref{Algo:conv}, we get the following algorithm that is implemented by the two modules (blue denotes convolveCore specific tasks, red denotes accumulator tasks):
+Rewriting Algorithm~\ref{Algo:conv}, we get Algorithm~\ref{algo:convCore}. This is the one that is implemented by the two modules (blue denotes convolveCore specific tasks, red denotes accumulator tasks).
 
 \begin{Verbatim}[numbers=left,commandchars=\\\{\}]
 \label{algo:convCore}\textcolor{brown}{// Two output rows at a time}
@@ -477,7 +477,7 @@ endfor
 The convolveCore is the most critical component in the accelerator. The purpose of the module is to ensure that a large number of computations can be carried out simultaneously to facilitate the acceleration we desire. In order to do so, the core unit is designed as a 2*8*8*3 multiplier system. This provides a theoretical peak of 768 operations per clock cycle. The organisation of the multiplier array was chosen to allow for two rows of ouputs processed 8 channels at a time, with support of kernels upto 3 rows, and inputs received 8 channels at a time. The use of 8 input/output channels was motivated by the use of 8-bit datatype, allowing us to process an write-back whole word at a time, thereby improving memory performance. Also, two rows of outputs are delivered simultaneously, as this facilitates easier maxpooling, as the two outputs can be compared immediately to get the pooled result.
 \\
 
-The processing elements can be viewed as 6 logical sections of 8*8 multipliers arranged as shown in Fig~\ref{fig:core}, and represents the unrolling obtained in line 20,22 and 23 of Algorithm~\ref{algo:convCore}. The inputs and kernels are multiplexed such that the first three sections compute the partial products for the first output row, while the next three sections produce the partial products for the second output row. Since convolution uses a sliding kernel window, the kernel remains the same across each row, while the input is shifted by a single row. This implies that the second and third inputs are utilised by two sections each.
+The processing elements can be viewed as 6 logical sections of 8*8 multipliers arranged as shown in Figure~\ref{fig:core}, and represents the unrolling obtained in line 20,22 and 23 of Algorithm~\ref{algo:convCore}. The inputs and kernels are multiplexed such that the first three sections compute the partial products for the first output row, while the next three sections produce the partial products for the second output row. Since convolution uses a sliding kernel window, the kernel remains the same across each row, while the input is shifted by a single row. This implies that the second and third inputs are utilised by two sections each.
 \\
 
 Each logical section can be broken down into an 8*8 processing element grid, where there are 8 sections corresponding to the 8 output rows. All of them receive separate kernel values but the same inputs. Each sebsequent block receives 64-bit values, which are sliced into 8 8-bit values and a dot product over them is computed. This corresponds to the for\_unrolled loop in the algorithm described in line 21 of Algorithm~\ref{algo:convCore}. The outer 8 sections each represent a unit from the unrolling of line 19 of the same algorithm.
@@ -534,7 +534,7 @@ This modules reads the input tensor from the memory, and sends it to the core fo
 \item Since the output produces two rows at a time, having two input rows provides an opportunity to cascade multiple engines to eliminate intermediate memory accesses.
 \end{enumerate}
 
-All the input modules have support for padding with zeros by sending in zeros at the desired positions. This enables us to prevent restructuring of the tensor to enable zero-padding. They call a two concurrent submodules to fetch one row each - the first module handles the odd numbered rows, while the second handles the even numbered rows. The modules ensure that the zeros created due to padding are transmitted to the singleFetch module. Fig~\ref{fig:inputModules} represents the organisation of the input modules in the system.
+All the input modules have support for padding with zeros by sending in zeros at the desired positions. This enables us to prevent restructuring of the tensor to enable zero-padding. They call a two concurrent submodules to fetch one row each - the first module handles the odd numbered rows, while the second handles the even numbered rows. The modules ensure that the zeros created due to padding are transmitted to the singleFetch module. Figure~\ref{fig:inputModules} represents the organisation of the input modules in the system.
 
 
 \begin{figure}[h!]
@@ -590,7 +590,7 @@ As this module transmits kernel values for 8 channels in parallel, we get loop u
 
 \subsection{Output Modules}
 
-The output modules receives the data from the accumulator, and writes them back into the memory after applying the required operations. If the number of output channels is not a multiple of 8, it packs the data into words before writing it into memory. All the send modules are equipped to perform non-linear activation on the output data which is received from the accumulator through two sets of eight FIFOs each 32bit wide. The organisation of the modules in the system is shown in Fig~\ref{fig:outputModules}.
+The output modules receives the data from the accumulator, and writes them back into the memory after applying the required operations. If the number of output channels is not a multiple of 8, it packs the data into words before writing it into memory. All the send modules are equipped to perform non-linear activation on the output data which is received from the accumulator through two sets of eight FIFOs each 32bit wide. The organisation of the modules in the system is shown in Figure~\ref{fig:outputModules}.
 
 \begin{figure}[h!]
     \centering
@@ -618,7 +618,7 @@ In addition to the the above modules, we have some auxiliary components that hel
 These modules are an interface between the functional pipelines and the memoryModule, and operate by providing address and/or data along with the appropriate bitmask to the memoryModule for read/write to memory, and delivering the read data back to the calling module in case of a load from memory.
 \\
 
-Although There are no cyclic dependencies amongst the core modules, they have one shared resource - the memory which is accessible via the memoryModule. This creates a potential for deadlock as the input module may be blocked by the pipes to the core. This in turn blocks the readModule and hence, the return of data from memory, therefore blocking the memory, which will prevent writeback from the send modules. This will eventually choke the accumulator and the core as the data is still pumped into the send modules but not cleared. In the end, all modules block resulting in a deadlock. Any deadlocks arising due to blocking of shared resource is mitigated in the read modules using the mechanism shown in Fig~\ref{fig:deadlock}.
+Although There are no cyclic dependencies amongst the core modules, they have one shared resource - the memory which is accessible via the memoryModule. This creates a potential for deadlock as the input module may be blocked by the pipes to the core. This in turn blocks the readModule and hence, the return of data from memory, therefore blocking the memory, which will prevent writeback from the send modules. This will eventually choke the accumulator and the core as the data is still pumped into the send modules but not cleared. In the end, all modules block resulting in a deadlock. Any deadlocks arising due to blocking of shared resource is mitigated in the read modules using the mechanism shown in Figure~\ref{fig:deadlock}.
 \\
 
 The mechanism in the figure works on the fact that the number of live iterations of readModule1 will be bound by the pipeline depth 7, and hence, there can be at most 7 entries in the PIPE, and hence, it will never block. Thus, every call to the memory by the readModule1 is eventually returned, thereby preventing any resource contention leading to deadlocks.
@@ -825,7 +825,7 @@ Table~\ref{tab:works} shows a cmparative analysis of the performance of our impl
 
 \chapter{Integration into a System-on-chip}
 
-We validate an characterize the performance of the accelerator by integrating it into a System-on-chip (SoC) using AJIT Processor, which provides the accelerator with the commands to operate, and reads back the data. The whole system is also connected to a Network Interface Card, which provides high-speed IO for quick loading of images into the memory. The architecture of the system is shown in Fig~\ref{fig:SOC}.
+We validate an characterize the performance of the accelerator by integrating it into a System-on-chip (SoC) using AJIT Processor, which provides the accelerator with the commands to operate, and reads back the data. The whole system is also connected to a Network Interface Card, which provides high-speed IO for quick loading of images into the memory. The architecture of the system is shown in Figure~\ref{fig:SOC}.
 \\
 
 The system consists of 32bit wide AJIT processor at its core. The processor has an ACB interface through which it interacts with memory and other modules. The AFB interface linked to the Network Interface Controller (NIC) and the 8-engine acclerator cluster is used to transfer configuration information from the processor and relay back status flags to it. The modules are also provided with an ACB interface through which they can access the memory. The memory subsystem consists of a DRAM controller connected to an ACB to UI conversion protocol, which translates memory requests in the ACB bus to DRAM requests, and vice versa for the responses. In addition to the above, the processor has a couple of UART interfaces with which it can communicate with the outside world. Also, the NIC has an interface to connect with the Xilinx MAC IP, using which it can communicate to the host machine via Ethernet, currently configured to run at 100Mbps. 

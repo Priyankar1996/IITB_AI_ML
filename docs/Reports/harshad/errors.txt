@@ -1,0 +1,56 @@
+page 10 
+  typo "necessry"
+  The entire paragraph should be rewritten.  Use "The processor .. " instead of "Processor ..."
+  Do not use "Lets see", instead use "We examine each interface in detail"
+
+  typo "interfce"
+
+  Sentence ".  so this" change to ". So this"  
+
+---------------------------------------------------------------------
+page 11 is too causal.. lots of syntax and construction errors.
+
+  Rewrite!
+
+     - new sentence starts with capital
+     - don't say "see 2.3 for ..", but "See Section 2.3 for ...."
+
+  Undefined reference "??"
+---------------------------------------------------------------------
+
+page 13
+
+   typo in 2.2 title
+     use "Interface data structures" instead of "Interfaces data structures"
+
+page 14
+    see notes on page 11 above.
+
+      Remove sentence "These are all interface decisions taken lets now move on to NIC design."
+      Avoid use of "Lets ...." too casual.
+
+	Figure 2.2 Show interface to MAC!!
+
+
+     Give link to registers file map table in Section 2.3.1
+     Put the parser code as part of a Figure.
+	Use verbatim environment inside figure to show pseudo code (many places!)
+
+page 17
+     undefined reference ??
+
+     What is Table 2.7 "ref file"?
+
+     Section 2.4 is badly written and structured.  Rewrite!
+
+     Section 2.5 what is it...
+
+page 21
+	undefined reference ?? (Section 3.3)
+
+Lots of work needed!
+
+
+
+
+

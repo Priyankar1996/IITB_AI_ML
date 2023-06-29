@@ -1,0 +1,105 @@
+Page 4 (abstract) 
+   "integrate a cluster of eight engines ..."
+   "average computation rate of 300GOPS, and image throughput of xxx images/second"
+
+Page 10 
+   "cuts down the design and verification time" (instead of production time)
+
+Page 10 (Section Goals)
+
+   Use active mode..  For example
+
+    In this thesis, we summarize the following work
+      - the design, verification and characterization of an AI/ML inference
+        engine for the UNET architecture.  The design was done entirely using
+        algorithmic hardware design techniques using the AHIR-V2 tool chain,
+        and, is fully functional and exhibits competitive performance relative to reported work.
+
+     - validation of the accelerator engine on FPGA, using the VCU128 FPGA card.
+
+     - incorporation of the accelerator engine in a system-on-chip, demonstration
+       of an end-to-end image analysis chain.
+
+     - scaling the number of engines in the SOC and characterization of the
+       speedup obtained.
+
+Page 12
+     Do not use \newline etc to create paragraphs.  If you leave a blank space,
+     latex will generate a paragraph break for you.   The \newline creates
+     a discontinuity.
+
+     Equation 2.1 notation not clear.  For example, what does output[r,c,chl] mean?
+     Same for input[r:r+n-1 ... ] etc
+
+     Notation issue is also there in equations on page 14 etc.
+
+
+Page 14
+     undefined reference to something "[?]"
+
+Page 17
+     Dont start a sentence with Fig. ..
+   
+     Avoid
+
+     "Fig 2.1 shows the ...."
+
+     Instead, use active voice
+  
+    " In Fig 2.1, we show the ..."
+
+Page 18
+
+     "The design involves two aspects"
+
+Page 19
+     Notation..  what does this mean?
+
+     "for r in 1:2:r_0 do "  
+
+    and what does this mean?
+     "for c in 1:c_0 do "
+
+    etc...
+
+
+Page 21
+	"clock" instead of "clodk"
+
+Page 21
+
+    typo "kernelsand"
+
+    change "brings down bandwidth negligible" to "brings down bandwidth to neglibile levels"
+
+Page 22
+
+    Use "until" instead of "till"
+
+    Use "The convolution module is" instead of "Convolution module is"
+
+Page 23
+
+    
+   Use "The accumulator is" instead of "Accumulator is"
+
+   Typo "This modules reads" 
+   Typo "One of the other functionality of "   (use "functionalities")
+
+Page 24
+
+   Typo, also which input module?
+   "This input modules does ..."  ??
+
+   Did you mean "The input module does ..."
+
+   3.3.2
+   typo "This set of modules are responsible" change to "is responsible"
+
+Page 33 
+   typos, spellcheck.
+
+Page 36
+   typo "whic h"
+
+

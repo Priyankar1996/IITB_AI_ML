@@ -356,7 +356,7 @@ The primary requirement from the engine is that it should be able to perform all
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{block_dia.jpg}
+	\includegraphics[width=\textwidth]{updated_modules.pdf}
     \caption{Block Diagram For The System Implementation}
     \label{fig:block_dia}
 \end{figure}
@@ -486,7 +486,15 @@ This modules reads the input tensor from the memory, and sends it to the core fo
 \item Since the output produces two rows at a time, having two input rows provides an opportunity to cascade multiple engines to eliminate intermediate memory accesses.
 \end{enumerate}
 
-All the input modules have support for padding with zeros by sending in zeros at the desired positions. This enables us to prevent restructuring of the tensor to enable zero-padding. They call a two concurrent submodules to fetch one row each - the first module handles the odd numbered rows, while the second handles the even numbered rows. The modules ensure that the zeros created due to padding are transmitted to the singleFetch module.
+All the input modules have support for padding with zeros by sending in zeros at the desired positions. This enables us to prevent restructuring of the tensor to enable zero-padding. They call a two concurrent submodules to fetch one row each - the first module handles the odd numbered rows, while the second handles the even numbered rows. The modules ensure that the zeros created due to padding are transmitted to the singleFetch module. Fig~\ref{fig:inputModules} represents the organisation of the input modules in the system.
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{inputModule.pdf}
+    \caption{Organisation of the input modules}
+    \label{fig:inputModules}
+\end{figure}
 
 \subsubsection{Single Fetch}
 
@@ -534,8 +542,14 @@ As this module transmits kernel values for 8 channels in parallel, we get loop u
 
 \subsection{Output Modules}
 
-The output modules receives the data from the accumulator, and writes them back into the memory after applying the required operations. If the number of output channels is not a multiple of 8, it packs the data into words before writing it into memory. All the send modules are equipped to perform non-linear activation on the output data which is received from the accumulator through two sets of eight FIFOs each 32bit wide.
+The output modules receives the data from the accumulator, and writes them back into the memory after applying the required operations. If the number of output channels is not a multiple of 8, it packs the data into words before writing it into memory. All the send modules are equipped to perform non-linear activation on the output data which is received from the accumulator through two sets of eight FIFOs each 32bit wide. The organisation of the modules in the system is shown in Fig~\ref{fig:outputModules}.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{outputModule.pdf}
+    \caption{Organisation of the output modules}
+    \label{fig:outputModules}
+\end{figure}
 \subsubsection{Scaling}
 
 The received data is sent to the scaler module, which translates the data by multiplying with a 32-bit scale value which is fixed for a given stage of the network. When the multiplication is done, the data is sent back to the calling module for shifting the data to obtain the final value. This way, a high accuracy can be obtained by minimising the loss of information. During a read from the accumulator, 16 outputs are fetched, but only 1 scaler is used as the accumulator provides data once every $\dfrac{3n}{8}+ 1$ cycles, where n is the number of input channels. Thus, if the number of input channels is 128, writeback happens once every 49 cycles, and hence the multiplier associated with the scaler module can be shared across all outputs.

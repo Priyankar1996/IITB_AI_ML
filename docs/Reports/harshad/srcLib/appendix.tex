@@ -2,8 +2,7 @@
 \begin{appendices}
 \renewcommand{\thechapter}{\Roman{chapter}}
 
-	
-	
+\iffalse
 \chapter{}\label{a1}
 \begin{lstlisting}[language=Verilog, caption= tmp code template,label={label:1}] 
 module sum(
@@ -15,8 +14,130 @@ module sum(
 
 endmodule
 \end{lstlisting}
+\fi
+
+	
+\chapter{}
+	\begin{algorithm}[htbp]
+		\centering
+		\begin{verbatim}
+		typedef struct _CortosQueueHeader {
+		        uint32_t totalMsgs; // current total messages
+		        uint32_t readIndex;
+		        uint32_t writeIndex;
+		        uint32_t length;
+		        uint32_t msgSizeInBytes;
+		        uint8_t *lock;
+		        uint8_t *bget_addr;
+		        // if misc == 1, then assume single writer 
+		        // and single reader and don't use locks
+		        uint32_t misc;
+		} CortosQueueHeader;
+		\end{verbatim}
+		\caption{Cortos Queue Header}
+		\label{alg:QueueHDR}
+	\end{algorithm}
 
 
+
+	\begin{algorithm}[htbp]
+		\centering
+		\begin{verbatim}
+			loop1 :
+			if(enable_by_processor)
+			       loop2 :
+			       -> read from MAC
+			       -> if(Header) 
+			                -> send to header & packet pipe
+			                -> goto loop2
+			       -> else
+			       	        -> send to packet pipe
+			       	        -> goto loop2
+			else
+			       -> goto loop1
+		\end{verbatim}
+		\caption{Parser pseudo code}
+		\label{alg:ParserCode}
+	\end{algorithm}
+
+
+	
+	\begin{algorithm}
+		\centering
+		\begin{verbatim}
+			loop1 :
+			if(enable_by_processor)
+			       loop2 :
+			       -> count = 0;
+			       -> buf_addr = pop from free queue
+			       loop2.1:
+			       -> Read from header_pipe and write to buff_addr
+			       -> count++
+			       -> if(!header_end)
+			       	        -> goto loop2.1
+			       loop2.2:
+			       -> Read from packet pipe and write to buf_addr 
+			       -> count++
+			       -> if(last_chunk)
+			       	        -> write count and last bytemast to buf_addr[0].
+			       	        -> push buf_addr to rx_queue.
+			                -> goto loop2
+			       -> else
+			       	        -> goto loop2.2
+			else
+			       -> goto loop1
+		\end{verbatim}
+		\caption{Receive engine psuedo code}
+		\label{alg:RecEngine}
+	\end{algorithm}
+
+\begin{algorithm}
+		\centering
+		\begin{verbatim}
+			loop1 : 
+			if(enable_by_processor)
+			        loop2:
+			        -> buf_addr = try to pop tx_queue
+			        -> if(pop successful)
+			                -> Rx = read control data(buf_addr[0]) 
+			                -> count = extractCountFromRx(Rx)
+			                loop3:
+			                -> read packet from buf_addr
+			                -> send out to MAC
+			                -> count--
+			                -> if(count == 0)
+			                        -> push buf_addr to free_queue.
+			                        -> goto loop2 
+			                -> else
+			                        -> goto loop3
+			        -> else
+			                        -> goto loop2
+			->else
+			        goto loop1
+		\end{verbatim}
+		\caption{Transmit engine psuedo code}
+		\label{alg:TxEngine}
+	\end{algorithm}
+
+\chapter{}
+
+
+	Description of Prototype router software designe by Niral Networks.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\iffalse
 \begin{algorithm}
 \caption{Tmp alg template to use.}\label{alg:cap}
 \begin{algorithmic}
@@ -36,5 +157,5 @@ endmodule
 \EndWhile
 \end{algorithmic}
 \end{algorithm}
-
+\fi
 \end{appendices}

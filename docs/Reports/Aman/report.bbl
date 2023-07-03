@@ -1,0 +1,138 @@
+\begin{thebibliography}{10}
+
+\bibitem{UNET}
+O.~Ronneberger, P.~Fischer, and T.~Brox, ``U-net: Convolutional networks for
+  biomedical image segmentation,'' in {\em Medical Image Computing and
+  Computer-Assisted Intervention -- MICCAI 2015} (N.~Navab, J.~Hornegger, W.~M.
+  Wells, and A.~F. Frangi, eds.), (Cham), pp.~234--241, Springer International
+  Publishing, 2015.
+
+\bibitem{convImg}
+A.~Kumar, ``Real-world applications of convolutional neural networks,'' 2021.
+
+\bibitem{CNNs}
+K.~O'Shea and R.~Nash, ``An introduction to convolutional neural networks,''
+  {\em CoRR}, vol.~abs/1511.08458, 2015.
+
+\bibitem{SVMs}
+M.~Hearst, S.~Dumais, E.~Osuna, J.~Platt, and B.~Scholkopf, ``Support vector
+  machines,'' {\em IEEE Intelligent Systems and their Applications}, vol.~13,
+  no.~4, pp.~18--28, 1998.
+
+\bibitem{LeNet}
+Y.~Lecun, L.~Bottou, Y.~Bengio, and P.~Haffner, ``Gradient-based learning
+  applied to document recognition,'' {\em Proceedings of the IEEE}, vol.~86,
+  no.~11, pp.~2278--2324, 1998.
+
+\bibitem{CNN1}
+D.~Ulyanov, A.~Vedaldi, and V.~Lempitsky, ``Improved texture networks:
+  Maximizing quality and diversity in feed-forward stylization and texture
+  synthesis,'' in {\em 2017 IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, pp.~4105--4113, 2017.
+
+\bibitem{GoogleNet}
+C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,
+  V.~Vanhoucke, and A.~Rabinovich, ``Going deeper with convolutions,'' in {\em
+  2015 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pp.~1--9, 2015.
+
+\bibitem{ALexNet}
+A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton, ``Imagenet classification with
+  deep convolutional neural networks,'' in {\em Proceedings of the 25th
+  International Conference on Neural Information Processing Systems - Volume
+  1}, NIPS'12, (Red Hook, NY, USA), p.~1097–1105, Curran Associates Inc.,
+  2012.
+
+\bibitem{ResNet}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
+  recognition,'' in {\em 2016 IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, pp.~770--778, 2016.
+
+\bibitem{YOLO}
+J.~Redmon, S.~Divvala, R.~Girshick, and A.~Farhadi, ``You only look once:
+  Unified, real-time object detection,'' in {\em 2016 IEEE Conference on
+  Computer Vision and Pattern Recognition (CVPR)}, pp.~779--788, 2016.
+
+\bibitem{CNN7}
+J.~Kim, J.~K. Lee, and K.~M. Lee, ``Accurate image super-resolution using very
+  deep convolutional networks,'' in {\em 2016 IEEE Conference on Computer
+  Vision and Pattern Recognition (CVPR)}, pp.~1646--1654, 2016.
+
+\bibitem{CNN5}
+Y.~Choi, M.~Choi, M.~Kim, J.-W. Ha, S.~Kim, and J.~Choo, ``Stargan: Unified
+  generative adversarial networks for multi-domain image-to-image
+  translation,'' in {\em 2018 IEEE/CVF Conference on Computer Vision and
+  Pattern Recognition}, pp.~8789--8797, 2018.
+
+\bibitem{FPGA1}
+C.~Zhang, P.~Li, G.~Sun, Y.~Guan, B.~Xiao, and J.~Cong, ``Optimizing fpga-based
+  accelerator design for deep convolutional neural networks,'' in {\em
+  Proceedings of the 2015 ACM/SIGDA International Symposium on
+  Field-Programmable Gate Arrays}, FPGA '15, (New York, NY, USA), p.~161–170,
+  Association for Computing Machinery, 2015.
+
+\bibitem{FPGA2}
+J.~Qiu, J.~Wang, S.~Yao, K.~Guo, B.~Li, E.~Zhou, J.~Yu, T.~Tang, N.~Xu,
+  S.~Song, Y.~Wang, and H.~Yang, ``Going deeper with embedded fpga platform for
+  convolutional neural network,'' in {\em Proceedings of the 2016 ACM/SIGDA
+  International Symposium on Field-Programmable Gate Arrays}, FPGA '16, (New
+  York, NY, USA), p.~26–35, Association for Computing Machinery, 2016.
+
+\bibitem{FPGA3}
+M.~Cho and Y.~Kim, ``Fpga-based convolutional neural network accelerator with
+  resource-optimized approximate multiply-accumulate unit,'' {\em Electronics},
+  vol.~10, no.~22, 2021.
+
+\bibitem{ahir}
+S.~Sahasrabuddhe, H.~Raja, K.~Arya, and M.~Desai, ``Ahir: A hardware
+  intermediate representation for hardware generation from high-level
+  programs,'' pp.~245--250, 01 2007.
+
+\bibitem{TPU}
+N.~P. Jouppi, C.~Young, N.~Patil, D.~Patterson, G.~Agrawal, R.~Bajwa, S.~Bates,
+  S.~Bhatia, N.~Boden, A.~Borchers, R.~Boyle, P.~luc Cantin, C.~Chao, C.~Clark,
+  J.~Coriell, M.~Daley, M.~Dau, J.~Dean, B.~Gelb, T.~V. Ghaemmaghami,
+  R.~Gottipati, W.~Gulland, R.~Hagmann, C.~R. Ho, D.~Hogberg, J.~Hu, R.~Hundt,
+  D.~Hurt, J.~Ibarz, A.~Jaffey, A.~Jaworski, A.~Kaplan, H.~Khaitan, A.~Koch,
+  N.~Kumar, S.~Lacy, J.~Laudon, J.~Law, D.~Le, C.~Leary, Z.~Liu, K.~Lucke,
+  A.~Lundin, G.~MacKean, A.~Maggiore, M.~Mahony, K.~Miller, R.~Nagarajan,
+  R.~Narayanaswami, R.~Ni, K.~Nix, T.~Norrie, M.~Omernick, N.~Penukonda,
+  A.~Phelps, and J.~Ross, ``In-datacenter performance analysis of a tensor
+  processing unit,'' 2017.
+
+\bibitem{29}
+Y.~Ma, Y.~Cao, S.~Vrudhula, and J.-S. Seo, ``Automatic compilation of diverse
+  cnns onto high-performance fpga accelerators,'' {\em IEEE Transactions on
+  Computer-Aided Design of Integrated Circuits and Systems}, vol.~39, no.~2,
+  pp.~424--437, 2020.
+
+\bibitem{28}
+W.~Huang, H.~Wu, Q.~Chen, C.~Luo, S.~Zeng, T.~Li, and Y.~Huang, ``Fpga-based
+  high-throughput cnn hardware accelerator with high computing resource
+  utilization ratio,'' {\em IEEE Transactions on Neural Networks and Learning
+  Systems}, vol.~33, no.~8, pp.~4069--4083, 2022.
+
+\bibitem{layerCons}
+X.~Wei, Y.~Liang, and J.~Cong, ``Overcoming data transfer bottlenecks in
+  fpga-based dnn accelerators via layer conscious memory management,'' in {\em
+  2019 56th ACM/IEEE Design Automation Conference (DAC)}, pp.~1--6, 2019.
+
+\bibitem{BFP}
+X.~Lian, Z.~Liu, Z.~Song, J.~Dai, W.~Zhou, and X.~Ji, ``High-performance
+  fpga-based cnn accelerator with block-floating-point arithmetic,'' {\em IEEE
+  Transactions on Very Large Scale Integration (VLSI) Systems}, vol.~27, no.~8,
+  pp.~1874--1885, 2019.
+
+\bibitem{citeUNET1}
+S.~Liu, H.~Fan, X.~Niu, H.-c. Ng, Y.~Chu, and W.~LUK, ``Optimizing cnn-based
+  segmentation with deeply customized convolutional and deconvolutional
+  architectures on fpga,'' {\em ACM Trans. Reconfigurable Technol. Syst.},
+  vol.~11, dec 2018.
+
+\bibitem{citeUNET2}
+S.~Liu and W.~Luk, ``Towards an efficient accelerator for dnn-based remote
+  sensing image segmentation on fpgas,'' in {\em 2019 29th International
+  Conference on Field Programmable Logic and Applications (FPL)}, pp.~187--193,
+  2019.
+
+\end{thebibliography}

@@ -161,11 +161,11 @@ is   approved for the degree of\\
 \begin{center}
     \begin{tabular}{c c}
         ..................................................... & .....................................................\\
-        Prof. Madhav P. Desai & Prof. D. Manjunath\\
+        Prof. Madhav P. Desai & Prof. Kavi Arya\\
         (Supervisor)     & (Examiner)\\
         \\\\
         ..................................................... & .....................................................\\
-        Prof.   & Prof. Kavi Arya\\
+        Prof. Kavi Arya   & Prof. D. Manjunath\\
         (Chairman) & (Examiner)\\
     \end{tabular}
 \end{center}
@@ -294,9 +294,19 @@ By achieving these goals, this research aims to enhance the AJIT processor's cap
    Implementing reliable communication over Ethernet presents a challenge that requires careful software design. This involves developing protocols and algorithms to ensure the reliable exchange of information between the AJIT processor and external devices connected via Ethernet. The software design should handle packet loss, retransmissions, flow control, and other mechanisms to guarantee the integrity and timeliness of data transmission in the networked environment.
 
 		\subsection{Software Design for SOC Firmware in AI/ML Acceleration Application}
-   In the context of the AI/ML acceleration application, a significant challenge lies in the software design of the system-on-chip (SoC) firmware. This involves developing firmware that efficiently interacts with the network interface, handles data transmission and reception, and interfaces with the AI/ML acceleration modules. The firmware should be optimized for performance, ensuring seamless integration of the AI/ML application with the Ethernet interface and leveraging the network acceleration capabilities of the AJIT processor.\\
+   In the context of the AI/ML acceleration application, a significant challenge lies in the software design of the system-on-chip (SoC) firmware. This involves developing firmware that efficiently interacts with the network interface, handles data transmission and reception, and interfaces with the AI/ML acceleration modules. The firmware should be optimized for performance, ensuring seamless integration of the AI/ML application with the Ethernet interface and leveraging the network acceleration capabilities of the AJIT processor.\\\\
 
 
+
+
+
+	The brief description of chapter's is as follows,
+
+	\begin{itemize}
+		\item Chapter~\ref{2}. Design and Validation of Network Interface Controller : In this chapter we describe the design of the NIC in detail which is then followed by the performance.
+		\item Chapter~\ref{3}. SoC Design and Validation : The integration of Ethernet sub-system and accelrator is described and results are shown.
+		\item Chapter~\ref{4}. Conclusion \& Future Work : Written conclsion of the work done and what can be future work options are described.
+	\end{itemize}
 
 %\section{Background} \label{1.1}
 
@@ -491,7 +501,6 @@ At startup, the processor initializes the queues by allocating memory for them a
 				\label{tab:NIC_REG}
 			\end{table}
 
-		%\subsection{Packet Storage Format}
 
 		\subsection{Parser}
 				The parser daemon receives data from the MAC (Media Access Control) through a pipe and extracts relevant information from Ethernet packets. It utilizes a state machine to process chunks of data and identifies essential details such as source and destination MAC addresses, type/length field, and packet data. The parsed information is then forwarded to receive engine daemon. The algorithm~\ref{alg:ParserCode} shows psuedo code of parser.
@@ -548,45 +557,44 @@ At startup, the processor initializes the queues by allocating memory for them a
 				\item \textbf{releaseLock}: This module is used to release the acquired queue lock.
 			\end{enumerate}	
 
-	\section{Test Setup}
-	\section{Validation and Performance}
-		The data rate found using 1x1x32 (single core single-threaded) AJIT processor are as shown in table~\ref{table_dataRate}
-		\begin{table*}[htbp]
-			\caption{Data rate achieved for differnet number of packets \& packet sizes}
-			\begin{center}
-				\begin{tabular}{|c|c|c|c|}
-					\hline
-					& \multicolumn{3}{c|}{\textbf{Packet Size}(in Bytes)}\\
-					\hline
-					\textbf{No. of Packets}& \textbf{48}			& \textbf{136}			& \textbf{236} 	  \\
-					\hline
-					&  \multicolumn{3}{c|}{\textbf{Data Rate}(in Mbps)}\\	
-					\hline
-					1			& 11.3316		  	& 31.7085			& 51.2869 \\
-					\hline
-					10			& 18.8431		  	& 57.2255			& 102.4069\\
-					\hline
-					100			& 22.4589		  	& 64.1140			& 110.9845\\
-%					\hline
-%					500			& 22.9792		  	& 64.0819			& 114.2853\\
-					\hline
-					1000			& 23.0982			& 64.0665			& 114.4293\\
-%					\hline
-%					5000			& 23.0336			& 64.3663			& 114.7432\\
-					\hline
-					10000			& 23.0892			& 64.3163			& 114.7907\\
-					\hline
-					50000			& 23.0983			& 64.4662			& 114.8123\\
-					\hline
-				\end{tabular}
-				\label{table_dataRate}
-			\end{center}
-		\end{table*}
-	
-	Only NIC with Memory we are able to achieve 433.2847 Mbps for 1750 packets of size 146 Bytes.
+ \section{Validation and Performance}
+                The data rate found using 1x1x32 (single core single-threaded) AJIT processor are as shown in table~\ref{table_dataRate}. The peak performance achived in this case is 114.81Mbps.
+                \begin{table*}[htbp]
+                        \caption{Data rate achieved for differnet number of packets \& packet sizes}
+                        \begin{center}
+                                \begin{tabular}{|c|c|c|c|}
+                                        \hline
+                                        & \multicolumn{3}{c|}{\textbf{Packet Size}(in Bytes)}\\
+                                        \hline
+                                        \textbf{No. of Packets}& \textbf{48}                    & \textbf{136}                  & \textbf{236}    \\
+                                        \hline
+                                        &  \multicolumn{3}{c|}{\textbf{Data Rate}(in Mbps)}\\
+                                        \hline
+                                        1                       & 11.3316                       & 31.7085                       & 51.2869 \\
+                                        \hline
+                                        10                      & 18.8431                       & 57.2255                       & 102.4069\\
+                                        \hline
+                                        100                     & 22.4589                       & 64.1140                       & 110.9845\\
+%                                       \hline
+%                                       500                     & 22.9792                       & 64.0819                       & 114.2853\\
+                                        \hline
+                                        1000                    & 23.0982                       & 64.0665                       & 114.4293\\
+%                                       \hline
+%                                       5000                    & 23.0336                       & 64.3663                       & 114.7432\\
+                                        \hline
+                                        10000                   & 23.0892                       & 64.3163                       & 114.7907\\
+                                        \hline
+                                        50000                   & 23.0983                       & 64.4662                       & 114.8123\\
+                                        \hline
+                                \end{tabular}
+                                \label{table_dataRate}
+                        \end{center}
+                \end{table*}
 
-
+        To avoid the processor from locking queues the setup was designed where processor will first generate 1750 packets of size 146 bytes, and push them to tx\_queue. NIC will read the tx\_queue and send the packets out during this time. The peak performance achieved is 433.2847 Mbps in this case.
  
+ 
+	 This chapter focused on NIC architecture and interfaces which was then followed by NIC's performance. Now we describe the design and validation of SoC using this NIC and an accelerator in the next chapter.
 %Table \ref{table:a} lists out energy, timing, and power values for some of the sensors depicted in \cite{3}:
 %\begin{table}[ht]
 %\centering % used for centering table
@@ -713,33 +721,24 @@ The accelerator also has an interrupt daemon that waits on bit 4 of r0, and sets
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\chapter{Conclusion \& Future Work} \label{5}
-\rule[10pt]{\linewidth}{3pt}
+\chapter{Conclusion \& Future Work} \label{4}
+\rule[10pt]{\linewidth}{3pt}	
 
-All these points will be elaborated.
+	The research and work shows that NIC is designed successfully using AHIR-V2 tools. Then it is integrated with the AJIT SoC prototype. A successful integration is also done to use NIC to provide inputs and output to the AI/ML accelerator. The design can provide speed upto 114Mbps with processor and 433Mbps alone. Also the design gives 2.38fps rate for the acceleration example.
+	
+	This performance can further be incereased by adding multiple memory banks in case of accleratior SoC and by having some advnaced packet flow mechanisms. The NIC can act as building block for multiple applications like Router, Switches and other network appliances.
+	
+	The NIC design can be modified to add intelligence to it so that it can do self routing as well as can apply some security algorithms on packets.
 
-\section{Conclusion}
-\begin{itemize}
-		\item  Successfully designed and tested NIC
-		\item  Successful integration of NIC with AJIT SoC prototype
-		\item  Demonstrated network accelerated AI/ML application Integration
-	\end{itemize}	
-
-\section{Future work}
-	\begin{itemize}
-		\item Improvement in Data Rates
-		\item  Router application
-		\item  Smart NIC
-	\end{itemize}
 \input{appendix.tex}
 
 %\bibliographystyle{ieee}
 %\bibliography{reference}
 \clearpage
-\addcontentsline{toc}{chapter}{Bibliography}
-\begin{thebibliography}{99}
+%\addcontentsline{toc}{chapter}{Bibliography}
+%\begin{thebibliography}{99}
 
 %%\bibitem{1} G. Saini and M. Shojaei Baghini, "A Generic Power Management Circuit for Energy Harvesters With Shared Components Between the MPPT and Regulator," in IEEE Transactions on Very Large Scale Integration (VLSI) Systems, vol. 27, no. 3, pp. 535-548, March 2019, doi: 10.1109/TVLSI.2018.2885928. 
 
-\end{thebibliography}
+%\end{thebibliography}
 \end{document}

@@ -1,0 +1,61 @@
+#FIG 3.2  Produced by xfig version 3.2.5c
+Landscape
+Center
+Metric
+A4      
+100.00
+Single
+-2
+1200 2
+2 1 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 2
+	 4860 4635 10260 4680
+2 2 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5
+	 3915 8010 15615 8010 15615 9675 3915 9675 3915 8010
+2 2 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5
+	 3825 11430 15750 11430 15750 12510 3825 12510 3825 11430
+2 2 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5
+	 3825 12555 16245 12555 16245 13455 3825 13455 3825 12555
+2 2 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5
+	 3780 13500 14940 13500 14940 14490 3780 14490 3780 13500
+2 2 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5
+	 3015 1800 10035 1800 10035 3645 3015 3645 3015 1800
+2 2 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5
+	 3015 3735 10845 3735 10845 6165 3015 6165 3015 3735
+4 0 0 50 -1 0 18 0.0000 4 270 1470 2115 1710 Networking\001
+4 0 0 50 -1 0 18 0.0000 4 270 4440 3015 2025 - Design and verification of the NIC\001
+4 0 0 50 -1 0 18 0.0000 4 210 1185 4860 2295 - Aa code\001
+4 0 0 50 -1 0 18 0.0000 4 210 2370 4860 2655 - Aa2C testbenches\001
+4 0 0 50 -1 0 18 0.0000 4 210 3015 4860 3015 - Generated VHDL code\001
+4 0 0 50 -1 0 18 0.0000 4 210 2520 4860 3375 - VHDL testbenches\001
+4 0 0 50 -1 0 18 0.0000 4 270 3750 3105 3960  Integration of NIC with MAC\001
+4 0 0 50 -1 0 18 0.0000 4 270 3495 4725 4725   Testbench for Verilog code\001
+4 0 0 50 -1 0 18 0.0000 4 270 1890 8280 4770 (does not exist)\001
+4 0 0 50 -1 0 18 0.0000 4 270 2895 4725 4365   Verilog interface code\001
+4 0 0 50 -1 0 18 0.0000 4 210 3750 4725 5625         Testbench for MAC with \001
+4 0 0 50 -1 0 18 0.0000 4 270 5115 5580 5940 Verilog mac interface (on Xilinx Vivado)\001
+4 0 0 50 -1 0 18 0.0000 4 210 870 3240 6615 KC705\001
+4 0 0 50 -1 0 18 0.0000 4 270 5505 4095 6885 NIC + MAC (loopback) test setup on Vivado\001
+4 0 0 50 -1 0 18 0.0000 4 270 2940 4095 7245 Driver for loopback test\001
+4 0 0 50 -1 0 18 0.0000 4 270 5610 4095 8370 Processor + NIC + MAC test setup on Vivado\001
+4 0 0 50 -1 0 18 0.0000 4 255 2370 4095 8730 Driver for ping test\001
+4 0 0 50 -1 0 18 0.0000 4 255 1860 4095 9090 Ping test setup \001
+4 0 0 50 -1 0 18 0.0000 4 270 2505 4095 7605 Loopback test setup \001
+4 0 0 50 -1 0 18 0.0000 4 270 9330 5400 7875 VHDL, Verilog, Toplevel, Constraints, Vivado scripts, IP generation scripts\001
+4 0 0 50 -1 0 18 0.0000 4 195 1200 6615 7605 for MAC \001
+4 0 0 50 -1 0 18 0.0000 4 270 9375 6075 9405 VHDL, Verilog, Processor EDIF, Constraints, Vivado scripts, IP generation \001
+4 0 0 50 -1 0 18 0.0000 4 195 1095 3285 10215 VCU128\001
+4 0 0 50 -1 0 18 0.0000 4 270 2445 3285 10575           4x2x64 setup \001
+4 0 0 50 -1 0 18 0.0000 4 270 2295 3285 11655          4x1x64 setup\001
+4 0 0 50 -1 0 18 0.0000 4 0 1575 3285 12015                      \001
+4 0 0 50 -1 0 18 0.0000 4 270 9450 3285 11295                      Cortos2 setup:  config.yaml, test applications, minicom logs etc.\001
+4 0 0 50 -1 0 18 0.0000 4 255 1680 4815 12330 Cortos2 setup\001
+4 0 0 50 -1 0 18 0.0000 4 270 6135 6525 12375 : config.yaml, niral application, minicom logs etc.\001
+4 0 0 50 -1 0 18 0.0000 4 195 2040 3870 12870 SOC for AI/ML \001
+4 0 0 50 -1 0 18 0.0000 4 270 12195 3870 13230             VHDL, Verilog, Proc. EDIF, Toplevel, Constraints, Vivado scripts, IP scripts, Accel VHDL\001
+4 0 0 50 -1 0 18 0.0000 4 270 12435 3285 10935                     VHDL, Verilog, Proc. EDIF, Toplevel, Constraints, Vivado scripts, IP generation scripts.\001
+4 0 0 50 -1 0 18 0.0000 4 270 10860 4815 11970 VHDL, Verilog, Proc. EDIF Toplevel, Constraints, Vivado scripts, IP generation scripts.\001
+4 0 0 50 -1 0 18 0.0000 4 270 5175 3870 13815 Standalone Processor + NIC + MAC setup\001
+4 0 0 50 -1 0 18 0.0000 4 0 900 3870 14175             \001
+4 0 0 50 -1 0 18 0.0000 4 270 10395 3780 14265             VHDL, Verilog, Proc. EDIF, Toplevel, Constraints, Vivado scripts, IP scripts\001
+4 0 0 50 -1 0 18 0.0000 4 270 3720 4770 5130 Xilinx MAC  reference design\001
+4 0 0 50 -1 0 18 0.0000 4 195 750 2655 12960 Aman\001

@@ -1,0 +1,29 @@
+#FIG 3.2  Produced by xfig version 3.2.5c
+Landscape
+Center
+Metric
+A4      
+100.00
+Single
+-2
+1200 2
+4 0 0 50 -1 0 18 0.0000 4 270 6180 3285 6705 Accelerator Aa code development and verification\001
+4 0 0 50 -1 0 18 0.0000 4 210 3390 3870 7020 - Aa code of the accelerator\001
+4 0 0 50 -1 0 18 0.0000 4 255 5610 3870 7380              - README: interfaces, assumptions, \001
+4 0 0 50 -1 0 18 0.0000 4 270 10155 3870 7740              - code, code documentation (put it in the Aa file itself as much as possible)\001
+4 0 0 50 -1 0 18 0.0000 4 270 4725 3870 8100              - build scripts (Make-files etc)\001
+4 0 0 50 -1 0 18 0.0000 4 270 9195 3870 8460              - testbenches (per module), with README makefile run script etc.\001
+4 0 0 50 -1 0 18 0.0000 4 270 5970 3870 8820              - run data (training results) kernels etc....\001
+4 0 0 50 -1 0 18 0.0000 4 210 2340 3195 9990 KC705 based work\001
+4 0 0 50 -1 0 18 0.0000 4 270 10365 4140 10395 Toplevel (with uart interface), vhdl, constraints, vivado synthesis script (kamran IP) \001
+4 0 0 50 -1 0 18 0.0000 4 255 1065 4140 10755  Driver (\001
+4 0 0 50 -1 0 18 0.0000 4 270 6525 5220 10800 write kernels and images to DUT, results from DUT)\001
+4 0 0 50 -1 0 18 0.0000 4 195 1095 3240 11835 VCU128\001
+4 0 0 50 -1 0 18 0.0000 4 270 7500 4005 12195 Standalone accelerator test (same as in KC705, using UART)\001
+4 0 0 50 -1 0 18 0.0000 4 270 10365 4005 12555 Toplevel (with uart interface), vhdl, constraints, vivado synthesis script (kamran IP) \001
+4 0 0 50 -1 0 18 0.0000 4 270 6525 4050 12960 write kernels and images to DUT, results from DUT)\001
+4 0 0 50 -1 0 18 0.0000 4 195 585 4005 13635 SOC\001
+4 0 0 50 -1 0 18 0.0000 4 270 5145 4005 14355 Driver on host side (shared with Harshad)\001
+4 0 0 50 -1 0 18 0.0000 4 210 1830 4005 14715 Processor code\001
+4 0 0 50 -1 0 18 0.0000 4 270 12885 4005 13995 Toplevel, vhdl, constraints, proc edif vivado synth script, IP (DDR4 controller gen, Ethernet ref Harshad)\001
+4 0 0 50 -1 0 18 0.0000 4 270 3015 4005 15030 Sample minicom output.\001

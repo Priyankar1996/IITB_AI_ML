@@ -1,27 +1,27 @@
 page 10 
-  typo "necessry"
-  The entire paragraph should be rewritten.  Use "The processor .. " instead of "Processor ..."
-  Do not use "Lets see", instead use "We examine each interface in detail"
+  typo "necessry" - done
+  The entire paragraph should be rewritten.  Use "The processor .. " instead of "Processor ..." - done
+  Do not use "Lets see", instead use "We examine each interface in detail" - done
 
-  typo "interfce"
+  typo "interfce" - done 
 
-  Sentence ".  so this" change to ". So this"  
+  Sentence ".  so this" change to ". So this"  - done
 
 ---------------------------------------------------------------------
 page 11 is too causal.. lots of syntax and construction errors.
 
   Rewrite!
 
-     - new sentence starts with capital
-     - don't say "see 2.3 for ..", but "See Section 2.3 for ...."
+     - new sentence starts with capital - Primarily done will keep in mind.
+     - don't say "see 2.3 for ..", but "See Section 2.3 for ...." - almost done
 
-  Undefined reference "??"
+  Undefined reference "??" - done
 ---------------------------------------------------------------------
 
 page 13
 
    typo in 2.2 title
-     use "Interface data structures" instead of "Interfaces data structures"
+     use "Interface data structures" instead of "Interfaces data structures" -done
 
 page 14
     see notes on page 11 above.
@@ -32,21 +32,22 @@ page 14
 	Figure 2.2 Show interface to MAC!!
 
 
-     Give link to registers file map table in Section 2.3.1
-     Put the parser code as part of a Figure.
+     Give link to registers file map table in Section 2.3.1 - done
+     
+	Put the parser code as part of a Figure.
 	Use verbatim environment inside figure to show pseudo code (many places!)
 
 page 17
-     undefined reference ??
+     undefined reference ?? -done
 
-     What is Table 2.7 "ref file"?
+     What is Table 2.7 "ref file"? -done
 
-     Section 2.4 is badly written and structured.  Rewrite!
+     Section 2.4 is badly written and structured.  Rewrite! - done
 
-     Section 2.5 what is it...
+     Section 2.5 what is it... - will be adding the test setup explanation.
 
 page 21
-	undefined reference ?? (Section 3.3)
+	undefined reference ?? (Section 3.3) - this section is removed as its more of Accelerator side.
 
 Lots of work needed!
 

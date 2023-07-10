@@ -1,0 +1,189 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <string.h>
+#include <time.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <signal.h>
+
+#include "sized_tensor.h"
+ 
+#include <pipeHandler.h>
+#include <Pipes.h>
+#include <pthreadUtils.h>
+#ifndef SW
+#include "vhdlCStubs.h"
+#endif
+
+TensorDescriptor desc_T,desc_B,desc_K;
+
+void hear_timer()
+{
+    fprintf(stderr,"hear_timer is running.\n");
+    while(1)
+    {
+    uint32_t t;
+    uint64_t time_taken = read_uint64("time_pipe");
+    t = time_taken>>32;
+//    if (((t>>16) != 0) && (t&65535!=0))
+	fprintf(stderr,"Time taken at call %x is %x \n",t,time_taken);
+    }
+}
+
+DEFINE_THREAD(hear_timer);
+
+int main(int argc, char**argv){
+
+	fprintf(stderr,"Entering testbench main program\n");
+
+	srand(time(0));
+
+	FILE *file, *outFile, *octaveInFile;
+	if ((file = fopen(argv[1],"r")) == NULL){
+		fprintf(stderr,"Input File error\n");
+		exit(-1);
+	}
+	if ((outFile = fopen("COutFile.txt","w")) == NULL){
+		fprintf(stderr,"Output File error\n");
+		exit(-1);
+	}
+	char *oct = "octaveInput.txt";
+	if ((octaveInFile = fopen(oct,"w")) == NULL){
+		fprintf(stderr,"Octave Input File error\n");
+		exit(-1);
+	}
+	fprintf(stderr,"Defined and opened files\n");
+
+	PTHREAD_DECL(hear_timer);
+	PTHREAD_CREATE(hear_timer);
+
+	fprintf(stderr,"Reading files\n");
+
+	uint8_t rand_data=1;
+	//fscanf(file,"%hhd",&rand_data);
+
+
+	uint16_t length,stride,pad,pool,CT;
+	uint16_t shft_val = 0;
+	uint32_t scale_val = 1;
+
+	desc_T.number_of_dimensions = 3;
+	desc_B.number_of_dimensions = 3;
+	int i;
+	for (i = 0;i < desc_T.number_of_dimensions;i++){
+		fscanf(file,"%d",&desc_T.dimensions[i]);
+		fprintf(octaveInFile,"%d\n",desc_T.dimensions[i]);
+		write_uint8("maxpool_input_pipe",desc_T.dimensions[i]>>8);
+		write_uint8("maxpool_input_pipe",desc_T.dimensions[i]&0xFF);
+	
+		fscanf(file,"%d",&desc_K.dimensions[(i+1)%3]);
+		fprintf(octaveInFile,"%d\n",desc_K.dimensions[(i+1)%3]);
+	}
+	desc_K.number_of_dimensions = 4;
+	desc_K.dimensions[3] = desc_T.dimensions[2];
+	desc_B.dimensions[0] = (1 + (desc_T.dimensions[0]+2*pad-desc_K.dimensions[1])/stride);
+	desc_B.dimensions[1] = (1 + (desc_T.dimensions[1]+2*pad-desc_K.dimensions[2])/stride);
+	desc_B.dimensions[2] = desc_K.dimensions[0];
+
+	fscanf(file,"%u",&scale_val);
+	fscanf(file,"%hu",&shft_val);
+	fscanf(file,"%hu",&pad);
+	fscanf(file,"%hu",&pool);
+	fscanf(file,"%u",&CT);
+
+	fprintf(octaveInFile,"%d\n",scale_val);
+	fprintf(octaveInFile,"%d\n",shft_val);
+	stride = 1;
+	fprintf(octaveInFile,"%hu\n",pad);
+	fprintf(octaveInFile,"%hu\n",pool);
+	fprintf(octaveInFile,"%d\n",CT);
+	
+
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[0]>>8);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[0]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[1]>>8);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[1]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[2]>>8);
+	write_uint8("maxpool_input_pipe",desc_B.dimensions[2]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]>>8);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[1]&0xFF);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]>>8);
+	write_uint8("maxpool_input_pipe",desc_K.dimensions[2]&0xFF);
+	write_uint8("maxpool_input_pipe",shft_val>>8);
+	write_uint8("maxpool_input_pipe",shft_val&0xFF);
+	write_uint8("maxpool_input_pipe",pad>>8);
+	write_uint8("maxpool_input_pipe",pad&0xFF);
+	write_uint8("maxpool_input_pipe",scale_val>>24);
+	write_uint8("maxpool_input_pipe",scale_val>>16);
+	write_uint8("maxpool_input_pipe",scale_val>>8);
+	write_uint8("maxpool_input_pipe",scale_val);
+	
+
+	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);
+
+	int8_t temp[4];
+	for (i = 0; i < size; i++)
+	{
+		if (rand_data)	temp[i&3] = rand();	//Random data
+		else temp[i&3] = i+1;					//Sequential data
+		fprintf(octaveInFile,"%hhd\n",temp[i&3]);
+		write_uint8("maxpool_input_pipe",temp[i&3]);
+		fprintf(stderr,"Sent element %d\n",i);
+	}
+
+	size = __NumberOfElementsInSizedTensor__(desc_K);
+
+	for (i = 0; i < size; i++)
+	{
+		if (rand_data)	temp[i&3] = rand();	//Random data
+		else temp[i&3] = i+1;					//Sequential data
+		fprintf(octaveInFile,"%hhd\n",temp[i&3]);
+		write_uint8("maxpool_input_pipe",temp[i&3]);
+		fprintf(stderr,"Sent kernel element %d\n",i);
+	}
+	fclose(octaveInFile);
+
+	fprintf(stderr,"Checkpoint\n");
+	
+	desc_B.dimensions[0] >>= pool;
+	desc_B.dimensions[1] >>= pool;
+
+	fprintf(outFile,"Size of output is ");
+	for (i =0; i<desc_B.number_of_dimensions;i++)
+	{
+		fprintf(outFile,"%hu ",desc_B.dimensions[i]);
+	}
+	fprintf(outFile,"\n");
+	size = __NumberOfElementsInSizedTensor__(desc_B);
+	fprintf(stderr,"Size of output is %d\n",size );
+	fprintf(stderr,"Reading back the values from hardware\n");
+	
+	int8_t val;
+	for (i = 0; i < size; i++)
+	{
+		val = read_uint8("maxpool_output_pipe");
+		fprintf(outFile,"%d %hhd\n",i+1, val);
+		fprintf(stderr,"%d %hhd\n",i+1, val);
+	}
+	
+	fprintf(stderr,"Read back the values from hardware\n");
+
+	fclose(file);
+	fclose(outFile);
+	int system(const char *command);
+	fprintf(stderr,"Calling reference implementation\n");
+
+	char arr[200] = "octave octaveFile <";
+	strcat(arr,oct);
+	strcat(arr," >");
+	if (concat!=0) strcat(arr," cct_file.txt ");
+	strcat(arr," octaveOutFile.txt");
+	system(arr);
+
+	printf("If no message is printed after this one, there is no error!!\n");
+
+	system("cmp COutFile.txt OctaveOutFile.txt");
+
+return 0;
+
+}

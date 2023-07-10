@@ -1,0 +1,141 @@
+// Access the input tensor and write to iput pipe
+$module [access_T]
+$in(row_in rt ct chl_in rk pad : $uint<16> num_parts_1 : $uint<8>)
+$out()
+$is
+{
+	m_factor := ($bitcast ($uint<32>) (ct*chl_in))
+	m2_factor := (m_factor << 1)
+	bit0 := (pad [] 0)
+	bit1 := (pad [] 1)
+	addr1 := ($mux bit0 m_factor 0)
+	addr2 := ($mux bit0 0 m_factor)
+	addr3 := (addr1 + ($mux (bit1 | bit0) 0 m2_factor))
+	addr4 := (addr2 + ($mux bit1 0 m2_factor))
+	mode_3 := (rk == 3)
+	cnt1 := ($mux (pad > 1) rt (rt - 2))
+	cnt2 := ($mux (pad > 0) rt (rt - 2))
+	
+	$parallelblock [access_block]
+	{
+		$call singleFetch (row_in ct pad chl_in num_parts_1) ()
+		$call loadInput_in1 (addr1 row_in ct chl_in pad num_parts_1) ()
+		//$call inputDataFetcher1 ( addr1 m_factor m2_factor cnt1 num_parts_1) ()
+		$call loadInput_in2 (addr2 row_in ct chl_in pad num_parts_1) ()
+		//$call inputDataFetcher2 ( addr2 m_factor m2_factor cnt2 num_parts_1) ()
+		//$call loadInput_in3 (addr3 row_in ct chl_in pad num_parts_1) ()
+		//$call inputDataFetcher3 ( addr3 m_factor m2_factor cnt2 num_parts_1) ()
+		//$guard (mode_3) $call loadInput_in4 (addr4 row_in ct chl_in pad num_parts_1) ()
+		//$guard (mode_3) $call inputDataFetcher4 ( addr4 m_factor m2_factor cnt1 num_parts_1) ()
+	}
+}
+
+$module [inputModule8]
+$in(row_in ct chl_in rk pad: $uint<16> num_parts : $uint<8>)
+$out()
+$is
+{
+	mode_3 := (rk == 3)
+	$parallelblock [blk]
+	{
+	$call singleFetch (row_in ct pad chl_in num_parts) ()
+	$branchblock [access_block]
+	{
+	ct_new := (ct + (pad<<1))
+	row_size_total := ($bitcast ($uint<32>) (ct_new * chl_in))
+	p_chl_in := ($bitcast ($uint<32>) (pad*chl_in))
+	m_factor := ($bitcast ($uint<32>) (ct*chl_in))
+	m2_factor := (m_factor << 1)
+	m3_factor := (m2_factor+m_factor)
+	addr_init := (-1*(($bitcast ($uint<32>) pad)*m_factor))
+
+		// Pipeline for sending inputs
+		$dopipeline $depth 15 $buffering 2 $fullrate
+		$merge $entry $loopback
+		$phi address := addr_init $on $entry n_address $on $loopback
+		$phi row1 := ($bitcast ($uint<16>) 0) $on $entry n_row1 $on $loopback
+		$phi mycounter := ($bitcast ($uint<32>) row_size_total) $on $entry n_mycounter $on $loopback
+		$phi part_cnt := ($bitcast ($uint<8>) 0) $on $entry np_cnt $on $loopback
+		$endmerge
+
+		// $call timer (4) (time_pipe)
+		$volatile next_row :=  (mycounter == 1)
+		$volatile tmp_cnt := (mycounter - 1)
+		$volatile n_mycounter := ($mux next_row row_size_total tmp_cnt ) 
+
+		$volatile update_row := ($mux next_row (row1 + N_ROWS_S) row1 )
+		$volatile continue_flag1 := (update_row < (row_in+2))
+
+		$volatile mc_lt_p := ((mycounter <= p_chl_in) | (mycounter > (row_size_total - p_chl_in))) 
+		$volatile n_row1 := ($mux continue_flag1 update_row 0)
+		$volatile n_address := ($mux continue_flag1 (address + (($mux next_row m_factor 0) + ($mux mc_lt_p 0 1))) addr_init)
+		$volatile np_cnt := (part_cnt + ($mux continue_flag1 0 1))
+
+		$volatile p1_zero := (mc_lt_p | ((row1 < pad) | (row1 >= ((row_in + 3) - pad))))
+		$volatile p2_zero := (mc_lt_p | (((row1+1) < pad) | (row1 >= ((row_in + 2)- pad))))
+		//$volatile p3_zero := (mc_lt_p | (((row1+2) < pad) | (row1 >= ((row_in + 1)- pad))))
+		//$volatile p4_zero := (mc_lt_p | (((row1+3) < pad) | (row1 >= (row_in - pad))))
+		$volatile addr2 := (address+ m_factor)
+		//$volatile addr3 := (address+ m2_factor)
+		//$volatile addr4 := (address+ m3_factor)
+
+		$guard (~p1_zero) val1 := T[0][address]
+		$guard (~p2_zero) val2 := T[0][addr2]
+		//$guard (~p3_zero) val3 := T[0][addr3]
+		//$guard (~p4_zero) val4 := T[0][addr4]
+		
+		send_1 := ($mux p1_zero 0 val1)
+		prev_core_ip1 := send_1
+		prev_core_ip2 := ($mux p2_zero 0 val2)
+		//core_ip3 := ($mux p3_zero 0 val3)
+		//$guard (mode_3) core_ip4 := ($mux p4_zero 0 val4)
+		//time_pipe := ($bitcast ($uint<64>) (p1_zero && p2_zero))
+		$while (continue_flag1 | (part_cnt < num_parts))
+
+	}
+	}
+}
+
+
+$module [singleFetch] $in (rt ct pad chl_in : $uint<16> max_parts : $uint<8>) $out  ()
+$is
+{
+	$branchblock [block]
+	{
+		cnt_max := ((ct + (pad << 1))*chl_in)
+		$dopipeline $depth 15 $fullrate
+		$merge $entry $loopback
+		$phi start := ($bitcast ($uint<1>) 1) $on $entry n_start $on $loopback
+		$phi cnt := ($bitcast ($uint<16>) 1) $on $entry n_cnt $on $loopback
+		$phi row := ($bitcast ($uint<16>) 0) $on $entry n_row $on $loopback
+		$phi parts := 0 $on $entry n_parts $on $loopback
+		$endmerge
+		val_read1 := prev_core_ip1
+		val_read2 := prev_core_ip2
+
+		$volatile change := (cnt == cnt_max)
+		n_cnt := ($mux change 1 (cnt+1))
+		incr_row := (row + N_ROWS_S)
+		update_row := ($mux change incr_row row)
+		chng_prt := (update_row > rt)
+		n_row := ($mux chng_prt 0 update_row)
+		n_parts := ($mux chng_prt (parts + 1) parts)
+		n_start := (n_row == 0)
+		$volatile end := (incr_row > rt)
+		$guard (~end) core_ip1 := val_read1
+		$guard (~start) core_ip3 := val_read1
+		$guard (~end) core_ip2 := val_read2
+		$guard (~start) core_ip4 := val_read2
+
+		$while (n_parts <= max_parts)
+	}
+}
+
+#define num 1
+#include inputInner.aa
+#define num 2
+#include inputInner.aa
+//# define num 3
+//# include inputInner.aa
+//# define num 4
+//# include inputInner.aa

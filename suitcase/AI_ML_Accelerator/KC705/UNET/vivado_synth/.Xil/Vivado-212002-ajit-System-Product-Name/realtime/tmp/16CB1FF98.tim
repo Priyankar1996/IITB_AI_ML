@@ -1,0 +1,5 @@
+s             clk           SR[0]       7690 -2147483648 -2147483648       7690
+s             clk          I32996       4430 -2147483648 -2147483648       4430
+s             clk          I32995       4430 -2147483648 -2147483648       4430
+t             clk processor/convolveCore_instance/data_path.OutportGroup_25.conv4_kp1_write_25_gI/BaseGen[0].gCase.SampleOnly.sgis/fsm_state       1460 -2147483648 -2147483648       1460
+s             clk processor/convolveCore_instance/data_path.OutportGroup_25.conv4_kp1_write_25_gI/BaseGen[0].gCase.SampleOnly.sgis/fsm_state       4430 -2147483648 -2147483648       4430

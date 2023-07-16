@@ -1,0 +1,5 @@
+s             clk           reset       7690 -2147483648 -2147483648       7690
+s             clk          I39694       4430 -2147483648 -2147483648       4430
+s             clk          I39693       4430 -2147483648 -2147483648       4430
+t             clk processor/convolveCore_instance/data_path.ApIntToApIntSigned_group_932.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/fsm_state       1460 -2147483648 -2147483648       1460
+s             clk processor/convolveCore_instance/data_path.ApIntToApIntSigned_group_932.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/fsm_state       4430 -2147483648 -2147483648       4430

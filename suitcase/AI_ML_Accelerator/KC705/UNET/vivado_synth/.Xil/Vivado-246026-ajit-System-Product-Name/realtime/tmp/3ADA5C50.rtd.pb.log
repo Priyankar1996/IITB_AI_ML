@@ -1,0 +1,19 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'sendModule8_CP_22218.cp_element_204_delay/UnitDelay.ack_reg' into 'sendModule8_CP_22218.cp_element_197_delay/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'sendModule8_CP_22218.sendModule8_cp_element_group_37.gj_sendModule8_cp_element_group_37/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'sendModule8_CP_22218.sendModule8_cp_element_group_16.gj_sendModule8_cp_element_group_16/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'sendModule8_CP_22218.sendModule8_cp_element_group_58.gj_sendModule8_cp_element_group_58/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'sendModule8_CP_22218.sendModule8_cp_element_group_16.gj_sendModule8_cp_element_group_16/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'sendModule8_CP_22218.sendModule8_cp_element_group_77.gj_sendModule8_cp_element_group_77/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'sendModule8_CP_22218.sendModule8_cp_element_group_16.gj_sendModule8_cp_element_group_16/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'sendModule8_CP_22218.sendModule8_cp_element_group_94.gj_sendModule8_cp_element_group_94/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'sendModule8_CP_22218.sendModule8_cp_element_group_16.gj_sendModule8_cp_element_group_16/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (sendModule8_instance/\data_path.writeModule_convolution_call_group_0.CallReq /\RxGen[1].rxBuf/FRR.bufRptr/data_reg_reg[7] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (sendModule8_instance/\data_path.writeModule_convolution_call_group_0.CallReq /\RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[7] )
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+1
+WORKER_RUN_ENDED

@@ -63,7 +63,7 @@ int main(int argc, char**argv){
 	//fscanf(file,"%hhd",&rand_data);
 
 
-	uint16_t length,stride,pad,pool,CT;
+	uint16_t length,stride,pad,pool,CT,concat,act;
 	uint16_t shft_val = 0;
 	uint32_t scale_val = 1;
 
@@ -89,14 +89,18 @@ int main(int argc, char**argv){
 	fscanf(file,"%hu",&shft_val);
 	fscanf(file,"%hu",&pad);
 	fscanf(file,"%hu",&pool);
+	fscanf(file,"%hu",&act);
 	fscanf(file,"%u",&CT);
+	fscanf(file,"%u",&concat);
 
 	fprintf(octaveInFile,"%d\n",scale_val);
 	fprintf(octaveInFile,"%d\n",shft_val);
 	stride = 1;
 	fprintf(octaveInFile,"%hu\n",pad);
 	fprintf(octaveInFile,"%hu\n",pool);
+	fprintf(octaveInFile,"%hu\n",act);
 	fprintf(octaveInFile,"%d\n",CT);
+	fprintf(octaveInFile,"%d\n",concat);
 	
 
 	write_uint8("maxpool_input_pipe",desc_B.dimensions[0]>>8);
@@ -117,6 +121,9 @@ int main(int argc, char**argv){
 	write_uint8("maxpool_input_pipe",scale_val>>16);
 	write_uint8("maxpool_input_pipe",scale_val>>8);
 	write_uint8("maxpool_input_pipe",scale_val);
+	write_uint8("maxpool_input_pipe",pool);
+	write_uint8("maxpool_input_pipe",concat);
+	write_uint8("maxpool_input_pipe",act);
 	
 
 	uint64_t size = __NumberOfElementsInSizedTensor__(desc_T);

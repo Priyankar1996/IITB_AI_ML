@@ -1,0 +1,190 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5544] ROM "spiMaster/" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5546] ROM "soft_reset" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "soft_reset" won't be mapped to RAM because it is too sparse
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[15]
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[14]
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[13]
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[12]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[15]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[14]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[13]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[12]
+WARNING: [Synth 8-3331] design SplitGuardInterface__parameterized1411 has unconnected port sa_in[1]
+WARNING: [Synth 8-3331] design SplitGuardInterface__parameterized1411 has unconnected port sa_in[0]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[511]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[510]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[509]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[508]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[507]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[506]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[505]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[504]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[503]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[502]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[501]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[500]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[499]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[498]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[497]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[496]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[495]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[494]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[493]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[492]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[491]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[490]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[489]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[488]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[487]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[486]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[485]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[484]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[483]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[482]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[481]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[480]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[479]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[478]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[477]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[476]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[475]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[474]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[473]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[472]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[471]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[470]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[469]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[468]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[467]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[466]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[465]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[464]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[463]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[462]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[461]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[460]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[459]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[458]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[457]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[456]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[455]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[454]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[453]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[452]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[451]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[450]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[449]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[448]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[447]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[446]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[445]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[444]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[443]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[442]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[441]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[440]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[439]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[438]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[437]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[436]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[435]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[434]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[433]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[432]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[431]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[430]
+INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.writeEnableDisableSpiFlash_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.caller_mtag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\recvByteOverSpi_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendAddressToSpi_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[25] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.n_bm_496_478_buf_block.n_bm_496_478_buf/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.sendByteOverSpi_call_group_2.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[12] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendAddressToSpi_instance/data_path.sendByteOverSpi_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[12] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendAddressToSpi_instance/data_path.sendByteOverSpi_call_group_0.CallReq/RxGen[1].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\writeEnableDisableSpiFlash_instance/data_path.sendByteOverSpi_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\writeEnableDisableSpiFlash_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.recvByteOverSpi_call_group_3.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[4] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[61] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\flash_frontend_daemon_instance/out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_instance/data_path.ApConcat_group_1.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[8] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\recvByteOverSpi_instance/data_path.ApConcat_group_1.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[8] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_instance/data_path.ApConcat_group_3.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[9] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\afb_bridge_inst/acb_afb_bridge_daemon_instance /\data_path.InportGroup_0.AFB_BUS_RESPONSE_read_0/ProTx[1].ulreg/noBypass.read_data_reg[32] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\afb_bridge_inst/acb_afb_bridge_daemon_instance /\data_path.InportGroup_0.AFB_BUS_RESPONSE_read_0/ProTx[0].ulreg/noBypass.read_data_reg[32] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.RetGen[1].fsm.tag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.RetGen[0].fsm.tag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[12] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.call_mdata_reg[11] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.RetGen[2].fsm.tag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[9] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[13] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\afb_bridge_inst/acb_afb_bridge_daemon_instance /\out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[14] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_clk_divide_reg[2] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (flash_spi_master_inst/\spiMaster/spi_clk_divide_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_clk_divide_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[11] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[15] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (flash_spi_master_inst/\spiMaster/transfer_length_reg[0] )
+WARNING: [Synth 8-3332] Sequential element (fatal_error_reg) is unused and will be removed from module ACB_to_UI_EA.
+WARNING: [Synth 8-3332] Sequential element (acb_afb_bridge_daemon_CP_0.acb_afb_bridge_daemon_do_while_stmt_144_terminator_253/lt_place/token_latch_reg[0]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[109]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[99]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[98]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[97]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[96]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[95]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[94]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[93]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[92]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[91]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[90]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[89]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[88]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[66]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[65]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_1.CORE_BUS_REQUEST_read_1/ub/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[64]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.OutportGroup_0.AFB_BUS_REQUEST_write_0/BufGen[0].update_ack_reg[0]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.OutportGroup_0.AFB_BUS_REQUEST_write_0/BufGen[1].update_ack_reg[1]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (out_buffer/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.full_flag_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[1]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tagIlock/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[1]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tagIlock/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (out_buffer/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[1]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (out_buffer/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[0]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (out_buffer/fsm_state_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tagIlock/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.fsm_state_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tagIlock/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.unload_ack_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tagIlock/NoFlowThrough.interlockBuf.l_fsm_state_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[3].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tag_ilock_write_req_symbol_join.gj_tag_ilock_write_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tag_ilock_write_req_symbol_join.gj_tag_ilock_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tag_ilock_write_req_symbol_join.gj_tag_ilock_write_req_symbol_join/placegen[2].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tag_ilock_read_req_symbol_join.gj_tag_ilock_read_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tag_ilock_read_req_symbol_join.gj_tag_ilock_read_req_symbol_join/placegen[2].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (tag_ilock_read_req_symbol_join.gj_tag_ilock_read_req_symbol_join/placegen[3].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_0.AFB_BUS_RESPONSE_read_0/ProTx[0].ulreg/noBypass.read_data_reg[32]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (data_path.InportGroup_0.AFB_BUS_RESPONSE_read_0/ProTx[1].ulreg/noBypass.read_data_reg[32]) is unused and will be removed from module acb_afb_bridge_daemon.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[61]) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[6]) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[5]) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/tagIlock/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0]) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/out_buffer/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[32]) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/accessFlashMem_CP_497.accessFlashMem_cp_element_group_24.gj_accessFlashMem_cp_element_group_24/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/accessFlashMem_CP_497.accessFlashMem_cp_element_group_24.gj_accessFlashMem_cp_element_group_24/placegen[2].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/accessFlashMem_CP_497.accessFlashMem_cp_element_group_24.gj_accessFlashMem_cp_element_group_24/placegen[3].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module afb_flash_rw_controller.
+WARNING: [Synth 8-3332] Sequential element (accessFlashMem_instance/accessFlashMem_CP_497.accessFlashMem_cp_element_group_34.gj_accessFlashMem_cp_element_group_34/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg) is unused and will be removed from module afb_flash_rw_controller.
+INFO: [Common 17-14] Message 'Synth 8-3332' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.

@@ -1,0 +1,119 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[3].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+DSP Report: Generating DSP x, operation Mode is: C+A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: C+A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: -C'+A2*B2+1-1.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: register C is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP data_path.type_cast_1453_inst_block.type_cast_1453_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg, operation Mode is: (A2*B2)'.
+DSP Report: register B is absorbed into DSP data_path.type_cast_1453_inst_block.type_cast_1453_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register A is absorbed into DSP data_path.type_cast_1453_inst_block.type_cast_1453_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register data_path.type_cast_1453_inst_block.type_cast_1453_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.type_cast_1453_inst_block.type_cast_1453_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: operator x is absorbed into DSP data_path.type_cast_1453_inst_block.type_cast_1453_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: Generating DSP x, operation Mode is: A*B''.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'kernelModule_generic_CP_17713.kernelModule_generic_cp_element_group_34.gj_kernelModule_generic_cp_element_group_34/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'kernelModule_generic_CP_17713.kernelModule_generic_cp_element_group_15.gj_kernelModule_generic_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'kernelModule_generic_CP_17713.kernelModule_generic_cp_element_group_53.gj_kernelModule_generic_cp_element_group_53/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'kernelModule_generic_CP_17713.kernelModule_generic_cp_element_group_15.gj_kernelModule_generic_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'kernelModule_generic_CP_17713.kernelModule_generic_cp_element_group_72.gj_kernelModule_generic_cp_element_group_72/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'kernelModule_generic_CP_17713.kernelModule_generic_cp_element_group_15.gj_kernelModule_generic_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+DSP Report: Generating DSP data_path.type_cast_10050_inst_block.type_cast_10050_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg, operation Mode is: (C:0xffffffffffff)+A2*B2.
+DSP Report: register B is absorbed into DSP data_path.type_cast_10050_inst_block.type_cast_10050_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.type_cast_10050_inst_block.type_cast_10050_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register data_path.type_cast_10050_inst_block.type_cast_10050_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.type_cast_10050_inst_block.type_cast_10050_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: operator x is absorbed into DSP data_path.type_cast_10050_inst_block.type_cast_10050_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: operator x is absorbed into DSP data_path.type_cast_10050_inst_block.type_cast_10050_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5545] ROM "result" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5545] ROM "result" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[5].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+WARNING: [Synth 8-3917] design ahir_system__GCB2 has port tag_in[1] driven by constant 0
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[63]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[62]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[61]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[60]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[59]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[58]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[57]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[56]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[55]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[54]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[53]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[52]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[51]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[50]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[49]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[48]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[47]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[46]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[45]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[44]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[43]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[42]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[41]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[40]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[39]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[38]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[37]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[36]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[35]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[34]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[33]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[32]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[31]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[30]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[29]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[28]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[27]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[26]
+WARNING: [Synth 8-3331] design writeModule_convTranspose has unconnected port memoryModule_return_data[25]
+INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule1_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[104] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (readModule1_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[32] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule_generic_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[72] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule_generic_instance/\data_path.readModule_convolutionk_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule_convTranspose_arbiter/\multipleRequesters.caller_mtag_reg_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (ct_core_instance/\data_path.writeModule_convTranspose_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[63] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (ct_core_instance/\data_path.writeModule_convTranspose_call_group_2.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[95] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule_generic_instance/\data_path.ApIntSHL_group_21.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (readModule1_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[63] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule1_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[1].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[96] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule1_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[96] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (readModule_convolutionk_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[63] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (readModule_convolutionk_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[96] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule_convTranspose_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[1].rxBuf/FRR.bufRptr/data_reg_reg[96] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule_convTranspose_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[96] )

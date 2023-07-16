@@ -1,0 +1,62 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'singleFetch_CP_5453.singleFetch_cp_element_group_34.gj_singleFetch_cp_element_group_34/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'singleFetch_CP_5453.singleFetch_cp_element_group_15.gj_singleFetch_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'singleFetch_CP_5453.singleFetch_cp_element_group_51.gj_singleFetch_cp_element_group_51/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'singleFetch_CP_5453.singleFetch_cp_element_group_15.gj_singleFetch_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'singleFetch_CP_5453.singleFetch_cp_element_group_70.gj_singleFetch_cp_element_group_70/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'singleFetch_CP_5453.singleFetch_cp_element_group_15.gj_singleFetch_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5545] ROM "result" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x1ffff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: (PCIN>>17)+A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5545] ROM "result" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x1ffff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: (PCIN>>17)+A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (inputModuleConcat_instance/\data_path.type_cast_4198_inst_block.type_cast_4198_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (inputModule8_instance/\data_path.type_cast_3802_inst_block.type_cast_3802_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[31] )

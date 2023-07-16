@@ -1,0 +1,99 @@
+xilinx rtfpga
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'loadKernel_CP_4383.loadKernel_cp_element_group_34.gj_loadKernel_cp_element_group_34/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'loadKernel_CP_4383.loadKernel_cp_element_group_15.gj_loadKernel_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'loadKernel_CP_4383.loadKernel_cp_element_group_53.gj_loadKernel_cp_element_group_53/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'loadKernel_CP_4383.loadKernel_cp_element_group_15.gj_loadKernel_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'loadKernel_CP_4383.loadKernel_cp_element_group_72.gj_loadKernel_cp_element_group_72/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'loadKernel_CP_4383.loadKernel_cp_element_group_15.gj_loadKernel_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP data_path.type_cast_2195_inst_block.type_cast_2195_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg, operation Mode is: (C:0xffffffffffff)+A2*B2.
+DSP Report: register B is absorbed into DSP data_path.type_cast_2195_inst_block.type_cast_2195_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.type_cast_2195_inst_block.type_cast_2195_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register data_path.type_cast_2195_inst_block.type_cast_2195_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.type_cast_2195_inst_block.type_cast_2195_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: operator x is absorbed into DSP data_path.type_cast_2195_inst_block.type_cast_2195_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: operator x is absorbed into DSP data_path.type_cast_2195_inst_block.type_cast_2195_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe3_return_data[0]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe4_return_data[0]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe2_return_data[0]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe1_return_data[0]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe5_return_data[0]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe6_return_data[0]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe8_return_data[0]
+WARNING: [Synth 8-3331] design loadKernel has unconnected port writeToPipe7_return_data[0]
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (loadKernel_instance/\data_path.ApIntSHL_group_35.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0] )
+WARNING: [Synth 8-3332] Sequential element (req_registered_reg[1]) is unused and will be removed from module PhiBase__parameterized113.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[63]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[62]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[61]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[60]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[59]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[58]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[57]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[56]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[55]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[54]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[53]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[52]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[51]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[50]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[49]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[48]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[47]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[46]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[45]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[44]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[43]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[42]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[41]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[40]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[39]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[38]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[37]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[36]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[35]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[34]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[15]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[14]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[13]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[12]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[11]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[10]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[9]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[8]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[7]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[6]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[5]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[4]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[3]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[2]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[1]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0]) is unused and will be removed from module loadKernel.
+WARNING: [Synth 8-3332] Sequential element (data_path.ApIntSHL_group_35.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0]) is unused and will be removed from module loadKernel.

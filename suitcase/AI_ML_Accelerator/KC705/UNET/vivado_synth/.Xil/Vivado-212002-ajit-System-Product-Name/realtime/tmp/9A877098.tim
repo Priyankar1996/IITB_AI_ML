@@ -1,0 +1,9 @@
+s             clk           reset       7690 -2147483648 -2147483648       7690
+s             clk processor/convolveCore_instance/convolveCore_CP_3682_elements_1052       8210 -2147483648 -2147483648       8210
+s             clk       I46174[0]       8210 -2147483648 -2147483648       8210
+t             clk      O132789[0]       9360 -2147483648 -2147483648       9360
+c processor/convolveCore_instance/convolveCore_CP_3682_elements_1052      O132789[0]       6300       6300 -2147483648 -2147483648
+c       I46174[0]      O132789[0]       7900       7900 -2147483648 -2147483648
+t             clk            E[0]       9360 -2147483648 -2147483648       9360
+c processor/convolveCore_instance/convolveCore_CP_3682_elements_1052            E[0]       7900       7900 -2147483648 -2147483648
+c       I46174[0]            E[0]       6300       6300 -2147483648 -2147483648

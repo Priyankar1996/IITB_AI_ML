@@ -1,0 +1,14 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_4964.convolveCore_cp_element_group_78.gj_convolveCore_cp_element_group_78/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_4964.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_4964.convolveCore_cp_element_group_57.gj_convolveCore_cp_element_group_57/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_4964.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_4964.convolveCore_cp_element_group_36.gj_convolveCore_cp_element_group_36/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_4964.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_4964.convolveCore_cp_element_group_15.gj_convolveCore_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_4964.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port cr_out[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O873[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O875[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O877[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O879[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O881[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O883[0] driven by constant 0

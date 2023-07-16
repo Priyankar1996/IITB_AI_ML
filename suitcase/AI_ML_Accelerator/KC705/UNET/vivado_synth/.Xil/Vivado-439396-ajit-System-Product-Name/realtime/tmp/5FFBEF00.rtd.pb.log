@@ -1,0 +1,55 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'access_T_CP_430.access_T_cp_element_group_51.gj_access_T_cp_element_group_51/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'access_T_CP_430.access_T_cp_element_group_32.gj_access_T_cp_element_group_32/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'access_T_CP_430.access_T_cp_element_group_70.gj_access_T_cp_element_group_70/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'access_T_CP_430.access_T_cp_element_group_32.gj_access_T_cp_element_group_32/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5545] ROM "result" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x1ffff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: (PCIN>>17)+A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'convolution3D_3_instance/out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolution3D_3_instance/in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "convolution3D_3_instance/result" won't be mapped to RAM because it is too sparse
+DSP Report: Generating DSP convolution3D_3_instance/x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP convolution3D_3_instance/x.
+DSP Report: register A is absorbed into DSP convolution3D_3_instance/x.
+DSP Report: operator convolution3D_3_instance/x is absorbed into DSP convolution3D_3_instance/x.
+DSP Report: Generating DSP convolution3D_3_instance/x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP convolution3D_3_instance/x.
+DSP Report: operator convolution3D_3_instance/x is absorbed into DSP convolution3D_3_instance/x.
+DSP Report: operator convolution3D_3_instance/x is absorbed into DSP convolution3D_3_instance/x.
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port accumulator_call_tag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port loadKernel_call_tag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port convolveCore_call_tag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port sendModule_call_tag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port sendModulePool_call_tag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port call_mtag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port O1082[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port O1085[0] driven by constant 0
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (access_T_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[104] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\convolution3D_3_instance/data_path.access_T_call_group_1.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (access_T_instance/\data_path.type_cast_381_inst_block.type_cast_381_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\convolution3D_3_instance/data_path.sendModulePool_call_group_5.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[47] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\convolution3D_3_instance/data_path.sendModule_call_group_4.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[47] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\convolution3D_3_instance/data_path.convolveCore_call_group_2.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[63] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\convolution3D_3_instance/data_path.loadKernel_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\convolution3D_3_instance/data_path.accumulator_call_group_3.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[63] )

@@ -1,0 +1,4 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'timerDaemon_auto_run/start_req_reg' into 'systemTOP_auto_run/start_req_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13194]
+WARNING: [Synth 8-3917] design ahir_system__GCB9 has port call_mtag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB9 has port O1152[0] driven by constant 0

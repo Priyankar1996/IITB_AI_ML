@@ -1,0 +1,5 @@
+s             clk           reset       7690 -2147483648 -2147483648       7690
+s             clk          I39428       4430 -2147483648 -2147483648       4430
+s             clk          I39427       4430 -2147483648 -2147483648       4430
+t             clk processor/convolveCore_instance/data_path.InportGroup_10.conv4_kp2_read_10_gI/BaseGen[0].gCase.UpdateOnly.sgiu/fsm_state       1460 -2147483648 -2147483648       1460
+s             clk processor/convolveCore_instance/data_path.InportGroup_10.conv4_kp2_read_10_gI/BaseGen[0].gCase.UpdateOnly.sgiu/fsm_state       4430 -2147483648 -2147483648       4430

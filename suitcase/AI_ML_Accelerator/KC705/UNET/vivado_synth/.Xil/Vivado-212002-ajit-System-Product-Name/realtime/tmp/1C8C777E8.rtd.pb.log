@@ -1,0 +1,14 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_3682.convolveCore_cp_element_group_77.gj_convolveCore_cp_element_group_77/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_3682.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_3682.convolveCore_cp_element_group_57.gj_convolveCore_cp_element_group_57/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_3682.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_3682.convolveCore_cp_element_group_36.gj_convolveCore_cp_element_group_36/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_3682.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'convolveCore_CP_3682.convolveCore_cp_element_group_15.gj_convolveCore_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'convolveCore_CP_3682.convolveCore_cp_element_group_97.gj_convolveCore_cp_element_group_97/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port cr_out[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O1031[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O1037[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O1050[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O1052[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O1054[0] driven by constant 0
+WARNING: [Synth 8-3917] design convolveCore__GB4 has port O1056[0] driven by constant 0

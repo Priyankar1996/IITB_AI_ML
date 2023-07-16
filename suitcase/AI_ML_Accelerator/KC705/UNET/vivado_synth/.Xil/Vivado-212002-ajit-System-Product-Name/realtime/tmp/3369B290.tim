@@ -1,0 +1,11 @@
+s             CLK        preds[0]       7630 -2147483648 -2147483648       7630
+s             CLK        preds[1]       7630 -2147483648 -2147483648       7630
+s             CLK        preds[2]       7630 -2147483648 -2147483648       7630
+s             CLK            E[0]       4280 -2147483648 -2147483648       4280
+s             CLK           reset       7690 -2147483648 -2147483648       7690
+c        preds[0] processor/convolveCore_instance/convolveCore_CP_3682_elements_787 -2147483648 -2147483648       7900       7900
+c        preds[1] processor/convolveCore_instance/convolveCore_CP_3682_elements_787 -2147483648 -2147483648       7900       7900
+c        preds[2] processor/convolveCore_instance/convolveCore_CP_3682_elements_787 -2147483648 -2147483648       7900       7900
+t             CLK processor/convolveCore_instance/convolveCore_CP_3682_elements_787 -2147483648 -2147483648 -2147483648 -2147483648
+s             CLK processor/convolveCore_instance/convolveCore_CP_3682_elements_787       4430 -2147483648 -2147483648       4430
+t             CLK      O114775[0]       1460 -2147483648 -2147483648       1460

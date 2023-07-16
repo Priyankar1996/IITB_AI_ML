@@ -1,0 +1,5 @@
+s             clk           reset       7690 -2147483648 -2147483648       7690
+s             clk processor/convolveCore_instance/convolveCore_CP_3682.convolveCore_cp_element_group_1449.gj_convolveCore_cp_element_group_1449/placegen[1].placeBlock.pI/p_3_out       4430 -2147483648 -2147483648       4430
+s             clk          I46473       4430 -2147483648 -2147483648       4430
+t             clk processor/convolveCore_instance/convolveCore_CP_3682.convolveCore_cp_element_group_1449.gj_convolveCore_cp_element_group_1449/placegen[1].placeBlock.pI/non_zero       1460 -2147483648 -2147483648       1460
+s             clk processor/convolveCore_instance/convolveCore_CP_3682.convolveCore_cp_element_group_1449.gj_convolveCore_cp_element_group_1449/placegen[1].placeBlock.pI/non_zero       4430 -2147483648 -2147483648       4430

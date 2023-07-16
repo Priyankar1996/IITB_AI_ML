@@ -1,0 +1,38 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'kernelModule8_CP_4872.kernelModule8_cp_element_group_34.gj_kernelModule8_cp_element_group_34/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'kernelModule8_CP_4872.kernelModule8_cp_element_group_15.gj_kernelModule8_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'kernelModule8_CP_4872.kernelModule8_cp_element_group_53.gj_kernelModule8_cp_element_group_53/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'kernelModule8_CP_4872.kernelModule8_cp_element_group_15.gj_kernelModule8_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'kernelModule8_CP_4872.kernelModule8_cp_element_group_72.gj_kernelModule8_cp_element_group_72/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'kernelModule8_CP_4872.kernelModule8_cp_element_group_15.gj_kernelModule8_cp_element_group_15/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP data_path.type_cast_2486_inst_block.type_cast_2486_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg, operation Mode is: (C:0xffffffffffff)+A2*B2.
+DSP Report: register B is absorbed into DSP data_path.type_cast_2486_inst_block.type_cast_2486_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.type_cast_2486_inst_block.type_cast_2486_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: register data_path.type_cast_2486_inst_block.type_cast_2486_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.type_cast_2486_inst_block.type_cast_2486_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: operator x is absorbed into DSP data_path.type_cast_2486_inst_block.type_cast_2486_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+DSP Report: operator x is absorbed into DSP data_path.type_cast_2486_inst_block.type_cast_2486_inst/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg.
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port tag_in[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port O473[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port O474[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port O475[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port O476[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB4 has port O477[1] driven by constant 0
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe2_return_data[0]
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe1_return_data[0]
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe3_return_data[0]
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe6_return_data[0]
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe7_return_data[0]
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe4_return_data[0]
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe8_return_data[0]
+WARNING: [Synth 8-3331] design kernelModule8 has unconnected port writeToPipe5_return_data[0]
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule8_instance/\data_path.ApIntSHL_group_35.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0] )
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.
+1
+WORKER_RUN_ENDED
+INFO: [Common 17-41] Interrupt caught. Command should exit soon.

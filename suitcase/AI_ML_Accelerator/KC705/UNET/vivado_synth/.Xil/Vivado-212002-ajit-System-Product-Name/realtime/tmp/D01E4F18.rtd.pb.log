@@ -1,0 +1,79 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-5544] ROM "spiMaster/" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5546] ROM "soft_reset" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "soft_reset" won't be mapped to RAM because it is too sparse
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[15]
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[14]
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[13]
+WARNING: [Synth 8-3331] design configurable_uart has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[12]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[15]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[14]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[13]
+WARNING: [Synth 8-3331] design configurable_uart__1 has unconnected port CONFIG_UART_BAUD_CONTROL_WORD[12]
+WARNING: [Synth 8-3331] design SplitGuardInterface__parameterized1371 has unconnected port sa_in[1]
+WARNING: [Synth 8-3331] design SplitGuardInterface__parameterized1371 has unconnected port sa_in[0]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[511]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[510]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[509]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[508]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[507]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[506]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[505]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[504]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[503]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[502]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[501]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[500]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[499]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[498]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[497]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[496]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[495]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[494]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[493]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[492]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[491]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[490]
+WARNING: [Synth 8-3331] design ACB_to_UI_EA has unconnected port app_rd_data[489]
+INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.writeEnableDisableSpiFlash_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.caller_mtag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\recvByteOverSpi_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendAddressToSpi_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[25] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.n_bm_496_478_buf_block.n_bm_496_478_buf/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.sendByteOverSpi_call_group_2.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[12] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendAddressToSpi_instance/data_path.sendByteOverSpi_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[12] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendAddressToSpi_instance/data_path.sendByteOverSpi_call_group_0.CallReq/RxGen[1].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\writeEnableDisableSpiFlash_instance/data_path.sendByteOverSpi_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\writeEnableDisableSpiFlash_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/data_path.recvByteOverSpi_call_group_3.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[4] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\accessFlashMem_instance/in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[61] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\flash_frontend_daemon_instance/out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (debug_uart_inst/\uart_inst/bridgeInst/tx_register_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_instance/data_path.ApConcat_group_1.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[8] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\recvByteOverSpi_instance/data_path.ApConcat_group_1.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[8] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_instance/data_path.ApConcat_group_3.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[9] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\afb_bridge_inst/acb_afb_bridge_daemon_instance /\data_path.InportGroup_0.AFB_BUS_RESPONSE_read_0/ProTx[1].ulreg/noBypass.read_data_reg[32] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\afb_bridge_inst/acb_afb_bridge_daemon_instance /\data_path.InportGroup_0.AFB_BUS_RESPONSE_read_0/ProTx[0].ulreg/noBypass.read_data_reg[32] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.RetGen[1].fsm.tag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.RetGen[0].fsm.tag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[12] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.call_mdata_reg[11] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_controller/\sendByteOverSpi_arbiter/baseArbiter/multipleRequesters.RetGen[2].fsm.tag_reg_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[9] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[13] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\afb_bridge_inst/acb_afb_bridge_daemon_instance /\out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[14] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_clk_divide_reg[2] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (flash_spi_master_inst/\spiMaster/spi_clk_divide_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_clk_divide_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[11] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (flash_spi_master_inst/\spiMaster/spi_data_buf_reg[15] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (flash_spi_master_inst/\spiMaster/transfer_length_reg[0] )

@@ -1,0 +1,153 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[3].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[3].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5545] ROM "result" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5545] ROM "result" won't be mapped to RAM because address size (32) is larger than maximum supported(25)
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[6].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[63]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[62]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[61]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[60]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[59]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[58]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[57]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[56]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[55]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[54]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[53]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[52]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[51]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[50]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[49]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[48]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[47]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[46]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[45]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[44]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[43]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[42]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[41]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[40]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[39]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[38]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[37]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[36]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[35]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[34]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[33]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[32]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[31]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[30]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[29]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[28]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[27]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[26]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[25]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[24]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[23]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[22]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[21]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[20]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[19]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[18]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[17]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[16]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[15]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[14]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[13]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[12]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[11]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[10]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[9]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[8]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[7]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[6]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[5]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[4]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[3]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[2]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[1]
+WARNING: [Synth 8-3331] design writeModule_convolution has unconnected port memoryModule_return_data[0]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[63]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[62]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[61]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[60]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[59]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[58]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[57]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[56]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[55]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[54]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[53]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[52]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[51]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[50]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[49]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[48]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[47]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[46]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[45]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[44]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[43]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[42]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[41]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[40]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[39]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[38]
+WARNING: [Synth 8-3331] design writeModule1 has unconnected port memoryModule_return_data[37]
+INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (readModule1_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[32] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule1_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[104] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (readModule_convolutionk2_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (readModule_convolution2_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (readModule1_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (readModule_convolutionk2_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[104] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (readModule_convolution2_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[104] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (writeModule1_instance/\data_path.memoryModule_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[104] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (memoryModule_arbiter/\multipleRequesters.caller_mtag_reg_reg[0] )

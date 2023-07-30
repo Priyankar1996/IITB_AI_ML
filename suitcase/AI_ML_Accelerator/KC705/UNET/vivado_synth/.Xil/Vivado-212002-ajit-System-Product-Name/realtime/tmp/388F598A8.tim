@@ -1,0 +1,14 @@
+s             clk        push_ack       9860 -2147483648 -2147483648       9860
+s             clk processor/convolveCore_instance/convolveCore_CP_3682_elements_3072      13060 -2147483648 -2147483648      13060
+s             clk       I33035[0]      13060 -2147483648 -2147483648      13060
+s             clk           SR[0]       7690 -2147483648 -2147483648       7690
+c processor/convolveCore_instance/convolveCore_CP_3682_elements_3072 conv8_kp2_pipe_write_req[0]       7900       7900 -2147483648 -2147483648
+c       I33035[0] conv8_kp2_pipe_write_req[0]       7900       7900 -2147483648 -2147483648
+t             clk conv8_kp2_pipe_write_req[0]       6160 -2147483648 -2147483648       6160
+c        push_ack        preds[0]      11150      11150 -2147483648 -2147483648
+c processor/convolveCore_instance/convolveCore_CP_3682_elements_3072        preds[0]      14350      14350 -2147483648 -2147483648
+c       I33035[0]        preds[0]      14350      14350 -2147483648 -2147483648
+c       I33035[0]        preds[0]       3630       3630 -2147483648 -2147483648
+t             clk        preds[0]      11010 -2147483648 -2147483648      11010
+s             clk        preds[0]       1080 -2147483648 -2147483648       1080
+t             clk      O102888[0]       1460 -2147483648 -2147483648       1460

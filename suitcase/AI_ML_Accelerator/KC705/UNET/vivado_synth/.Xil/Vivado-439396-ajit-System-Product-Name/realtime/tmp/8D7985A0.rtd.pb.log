@@ -1,0 +1,35 @@
+xilinx rtfpga
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'inputModule_generic_CP_18014.inputModule_generic_cp_element_group_51.gj_inputModule_generic_cp_element_group_51/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'inputModule_generic_CP_18014.inputModule_generic_cp_element_group_34.gj_inputModule_generic_cp_element_group_34/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'inputModule_generic_CP_18014.inputModule_generic_cp_element_group_70.gj_inputModule_generic_cp_element_group_70/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'inputModule_generic_CP_18014.inputModule_generic_cp_element_group_34.gj_inputModule_generic_cp_element_group_34/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A*(B:0x1ffff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: (PCIN>>17)+A*(B:0x7fff).
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port call_mtag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O1087[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O1088[4] driven by constant 0
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (inputModule_generic_instance/\data_path.readModule_convolution_call_group_0.CallReq /\RxGen[3].rxBuf/FRR.bufRptr/data_reg_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (inputModule_generic_instance/\data_path.readModule_convolution_call_group_0.CallReq /\RxGen[2].rxBuf/FRR.bufRptr/data_reg_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (inputModule_generic_instance/\data_path.readModule_convolution_call_group_0.CallReq /\RxGen[1].rxBuf/FRR.bufRptr/data_reg_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (inputModule_generic_instance/\data_path.readModule_convolution_call_group_0.CallReq /\RxGen[0].rxBuf/FRR.bufRptr/data_reg_reg[31] )

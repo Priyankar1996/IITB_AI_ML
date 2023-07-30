@@ -1,0 +1,17 @@
+xilinx rtfpga
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "result" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[4].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/KC705_WITH_DRAM/UNET/vhdl_libs/ahir.vhdl:13367]
+WARNING: [Synth 8-3917] design ahir_system__GCB12 has port call_mtag[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB12 has port O1830[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB12 has port O1850[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB12 has port O1858[0] driven by constant 0

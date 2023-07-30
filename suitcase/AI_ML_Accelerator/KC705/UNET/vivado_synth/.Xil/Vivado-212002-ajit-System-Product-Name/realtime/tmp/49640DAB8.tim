@@ -1,0 +1,4 @@
+s             clk processor/convolveCore_instance/convolveCore_CP_3682.convolveCore_cp_element_group_2966.gj_convolveCore_cp_element_group_2966/placegen[1].placeBlock.pI/p_1_out       1710 -2147483648 -2147483648       1710
+s             clk          I47500       4380 -2147483648 -2147483648       4380
+t             clk processor/convolveCore_instance/convolveCore_CP_3682.convolveCore_cp_element_group_2966.gj_convolveCore_cp_element_group_2966/placegen[1].placeBlock.pI/non_zero       1460 -2147483648 -2147483648       1460
+s             clk processor/convolveCore_instance/convolveCore_CP_3682.convolveCore_cp_element_group_2966.gj_convolveCore_cp_element_group_2966/placegen[1].placeBlock.pI/non_zero       5980 -2147483648 -2147483648       5980

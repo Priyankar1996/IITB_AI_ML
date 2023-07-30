@@ -1,0 +1,5 @@
+s             clk           reset       7690 -2147483648 -2147483648       7690
+s             clk          I39510       4430 -2147483648 -2147483648       4430
+s             clk          I39509       4430 -2147483648 -2147483648       4430
+t             clk processor/convolveCore_instance/data_path.OutportGroup_10.acc_pipe2_3_write_10/BufGen[0].rxB/fsm_state       1460 -2147483648 -2147483648       1460
+s             clk processor/convolveCore_instance/data_path.OutportGroup_10.acc_pipe2_3_write_10/BufGen[0].rxB/fsm_state       4430 -2147483648 -2147483648       4430

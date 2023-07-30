@@ -1,0 +1,103 @@
+xilinx rtfpga
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[6].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+DSP Report: Generating DSP x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP x.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-5546] ROM "result" won't be mapped to RAM because it is too sparse
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+DSP Report: Generating DSP x, operation Mode is: A2*B.
+DSP Report: register A is absorbed into DSP x.
+DSP Report: operator x is absorbed into DSP x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+DSP Report: Generating DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x, operation Mode is: A*B2.
+DSP Report: register B is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: operator data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: operator data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: Generating DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x, operation Mode is: A2*B2.
+DSP Report: register B is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: register A is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: operator data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: operator data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: Generating DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x, operation Mode is: (PCIN>>17)+A2*B2.
+DSP Report: register B is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: register in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: operator data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+DSP Report: operator data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x is absorbed into DSP data_path.ApIntMul_group_0.UnsharedOperator/comb_block/x.
+INFO: [Synth 8-4471] merging register 'out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'in_buffer_unload_req_symbol_join.gj_in_buffer_unload_req_symbol_join/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'Divider_CP_0.Divider_cp_element_group_35.gj_Divider_cp_element_group_35/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'Divider_CP_0.Divider_cp_element_group_16.gj_Divider_cp_element_group_16/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'Divider_CP_0.Divider_cp_element_group_88.gj_Divider_cp_element_group_88/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'Divider_CP_0.Divider_cp_element_group_71.gj_Divider_cp_element_group_71/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'Divider_CP_0.Divider_cp_element_group_107.gj_Divider_cp_element_group_107/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'Divider_CP_0.Divider_cp_element_group_71.gj_Divider_cp_element_group_71/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'Divider_CP_0.Divider_cp_element_group_126.gj_Divider_cp_element_group_126/placegen[2].placeBlock.dly/UnitDelay.ack_reg' into 'Divider_CP_0.Divider_cp_element_group_71.gj_Divider_cp_element_group_71/placegen[2].placeBlock.dly/UnitDelay.ack_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13367]
+INFO: [Synth 8-4471] merging register 'systemTOP_auto_run/start_req_reg' into 'timerDaemon_auto_run/start_req_reg' [/home/aiml/Desktop/IITB_AI_ML/ahir_release/vhdl/ahir.vhdl:13194]
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port tag_in[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O479[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O480[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O481[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O482[0] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O483[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O484[1] driven by constant 0
+WARNING: [Synth 8-3917] design ahir_system__GCB5 has port O485[1] driven by constant 0
+WARNING: [Synth 8-3331] design SplitGuardInterface__parameterized69 has unconnected port guards[1]
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.Divider_call_group_0.CallReq/RxGen[1].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.TopMult_call_group_1.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (Divider_instance/\data_path.ndiv_157_140_buf_block.ndiv_157_140_buf/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (timer_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (Divider_instance/\data_path.ext_div_133_174_buf_block.ext_div_133_174_buf/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[16] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (Divider_instance/\data_path.ndiv_2_195_171_buf_block.ndiv_2_195_171_buf/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[16] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (TopMult_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[64] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (Divider_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[33] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (sendModule_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[97] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule_instance/\in_buffer/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[72] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[17].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[16].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[15].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[14].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[13].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[12].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[11].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[10].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[9].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[8].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[7].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[6].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[5].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[4].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[3].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[2].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[1].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (systemTOP_instance/\data_path.convolutionAll_call_group_2.CallReq /\RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[127] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.sendModule_call_group_10.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[8] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (memoryModule_instance/\data_path.ApConcat_group_0.UnsharedOperator/noFlowThrough.ilb/NoFlowThrough.interlockBuf.buf/NotRevisedCase.ShallowCase.ulReg/noBypass.read_data_reg[109] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.sendPool_call_group_12.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[64] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.sendModule8_call_group_11.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.inputModuleConcat_call_group_7.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.inputModuleCT_call_group_6.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.inputModule8_call_group_5.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[63] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.accumulator_call_group_9.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[63] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.convolveCore_call_group_8.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[87] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.kernelModule8_call_group_3.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule_instance/\data_path.kernelModule_in1_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[103] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule_instance/\data_path.kernelModule_in2_call_group_1.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[103] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (kernelModule_instance/\data_path.kernelModule_in3_call_group_2.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[103] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (sendModule_instance/\data_path.sendInner2_call_group_1.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[128] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (sendModule_instance/\data_path.sendInner1_call_group_0.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[128] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (timerDaemon_instance/\out_buffer_write_req_symbol_join.gj_out_buffer_write_req_symbol_join/placegen[1].placeBlock.pI/CapEqOne.non_zero_reg )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.TopMult_call_group_1.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[46] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.kernelModule_call_group_2.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[26] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (convolutionAll_instance/\data_path.sendModule_call_group_10.CallReq/RxGen[0].rxBuf/notFRR.bufPipe/Shallow.notSaveSlot.queue/qD1.RB.data_reg_reg[96] )

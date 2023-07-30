@@ -16,8 +16,8 @@ all: HW
 LLVM2AAOPTS=-extract_do_while=true --storageinit=true -pipedepths=pipedepths.txt
 #LLVM2AAOPTS=--storageinit=true
 
-MODULES=src/acc_proc_test/pipes.aa src/accelerator_processor_interface.aa src/readWriteModules.aa src/ConvAll/conv_compiled.aa 
-INCLUDES=-Isrc/ConvAll 
+MODULES=src/acc_proc_test/pipes.aa src/accelerator_processor_interface.aa src/readWriteModules.aa src/Convolution/conv_compiled.aa 
+INCLUDES=-Isrc/Convolution 
 
 #PROGDEFS=-DUNROLLED
 PROGDEFS=
@@ -25,23 +25,11 @@ TOPMODULES_ACC= -T accelerator_control_daemon -T accelerator_worker_daemon -T ac
 
 # five steps from C to vhdl simulator.
 HW: aalink aa2vc  vc2vhdl vhdlsim
-AA2C : aalink aa2c aa2cbuild
-HW: aalink aa2vc  vc2vhdl  vhdlsim
-
-# C to llvm byte-code.. use clang.
-c2llvmbc: src/prog.c
-	clang -O3 -m32 -std=gnu89 $(PROGDEFS)  -I$(SOCKETLIB_INCLUDE) -emit-llvm -c src/prog.c $(INCLUDES)
-	opt --indvars --loopsimplify prog.o -o prog.opt.o
-	llvm-dis prog.opt.o
-
-# llvm byte-code to Aa..
-llvmbc2aa:  prog.opt.o 
-	llvm2aa $(LLVM2AAOPTS)  prog.opt.o | vcFormat >  prog.aa
 
 # link and optimize
-aalink: src/timer.aa prog.aa $(MODULES)
-	AaPreprocess -I src/ConvAll src/ConvAll/conv_macro.aa -o src/ConvAll/conv_compiled.aa
-	AaLinkExtMem prog.aa src/timer.aa src/decl.aa $(MODULES) | vcFormat > prog.linked.aa
+aalink: src/timer.aa $(MODULES)
+	AaPreprocess -I src/Convolution src/Convolution/conv_macro.aa -o src/Convolution/conv_compiled.aa
+	AaLinkExtMem src/timer.aa src/decl.aa $(MODULES) | vcFormat > prog.linked.aa
 	AaOpt -C prog.linked.aa | vcFormat > prog.linked.C.opt.aa
 	AaOpt -B prog.linked.C.opt.aa | vcFormat > prog.linked.opt.aa
 
@@ -57,12 +45,12 @@ vc2vhdl: prog.vc
 	rm -f *unformatted_vhdl
 
 vhdlsim: TB GHDL
-TB: testbench.c vhdlCStubs.h vhdlCStubs.c
+TB: Testbench/testbench.c vhdlCStubs.h vhdlCStubs.c
 	gcc -c vhdlCStubs.c -I./ -I$(SOCKETLIB_INCLUDE) -Isrc
-	gcc -c testbench.c -I./ -I$(SOCKETLIB_INCLUDE) -Isrc
+	gcc -c Testbench/testbench.c -I./ -I$(SOCKETLIB_INCLUDE) -Isrc
 	gcc -o testbench_hw testbench.o vhdlCStubs.o  -L$(SOCKETLIB_LIB) -lSocketLibPipeHandler -lpthread
 
-GHDL: ai_ml_engine.vhdl ai_ml_engine_test_bench.vhdl testbench.c vhdlCStubs.h vhdlCStubs.c
+GHDL: ai_ml_engine.vhdl ai_ml_engine_test_bench.vhdl Testbench/testbench.c vhdlCStubs.h vhdlCStubs.c
 	ghdl --clean
 	ghdl --remove
 	ghdl -i --work=GhdlLink  $(VHDL_LIB)/GhdlLink.vhdl
